@@ -52,7 +52,7 @@ export function mountHeader(rootSel = "#hanai-header") {
     <div class="hanai-header-inner">
       <a class="brand" href="/">
         <span class="brand-logo">汉</span>
-        <span>Hanai Lab</span>
+        <span>Chuxin</span>
       </a>
       <nav class="hanai-nav">
         <a href="/">Khoá học</a>
@@ -105,7 +105,7 @@ function openSignInModal() {
     el(
       "div",
       { class: "hanai-modal-card" },
-      el("h3", {}, "Đăng nhập Hanai Lab"),
+      el("h3", {}, "Đăng nhập"),
       el(
         "button",
         {
