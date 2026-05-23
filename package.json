@@ -14,10 +14,14 @@
     "sync:emulator": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 pnpm --filter scripts sync",
     "extract": "pnpm --filter scripts extract",
     "emulators": "firebase emulators:start",
-    "deploy": "pnpm build && firebase deploy"
+    "deploy": "pnpm build && firebase deploy",
+    "deploy:hosting": "pnpm build && node scripts/deploy-ftp.mjs",
+    "deploy:hosting:only": "node scripts/deploy-ftp.mjs"
   },
   "devDependencies": {
+    "dotenv": "^17.4.2",
     "firebase-tools": "^13.20.2",
+    "ftp-deploy": "^2.4.7",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   }

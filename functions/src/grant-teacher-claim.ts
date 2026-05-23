@@ -17,6 +17,7 @@ const TEACHER_EMAILS = new Set<string>([
 ]);
 
 export const onUserCreate = beforeUserCreated(async (event) => {
+  if (!event.data) return;
   const email = event.data.email?.toLowerCase();
   if (!email) return;
   if (!TEACHER_EMAILS.has(email)) return;
