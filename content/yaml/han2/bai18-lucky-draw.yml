@@ -1,0 +1,20 @@
+id: han2-bai18-lucky-draw
+course: han2
+order: 18
+title: "Bài 18 — Bốc thăm chủ đề luyện nói"
+subtitle: "Nhấn nút để bốc thăm một chủ đề ngẫu nhiên, sau đó nói 1 phút"
+interactionType: lucky-draw
+estimatedMinutes: 10
+drawCount: 1
+tags: [speaking, game]
+outcomes:
+  - "Hãy giới thiệu về gia đình bạn (我的家庭)."
+  - "Hãy nói về món ăn bạn thích nhất (我最喜欢的菜)."
+  - "Mô tả một ngày cuối tuần điển hình của bạn (我的周末)."
+  - "Kể về thành phố quê hương bạn (我的家乡)."
+  - "Bạn đã đi du lịch nơi nào đáng nhớ? (难忘的旅行)"
+  - "Người bạn thân nhất của bạn là ai? (我最好的朋友)"
+  - "Sở thích của bạn là gì? (我的爱好)"
+  - "Mô tả phòng của bạn (我的房间)."
+  - "Hãy nói về 1 ngày lễ quan trọng (一个重要的节日)."
+  - "Bạn muốn làm nghề gì trong tương lai? (我的理想职业)"

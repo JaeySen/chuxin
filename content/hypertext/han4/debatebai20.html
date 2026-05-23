@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语辩论训练助手 - Chinese Debate Assistant</title>
+    <style>
+        :root {
+            --primary-red: #C41E3A; /* Chinese Red */
+            --primary-gold: #D4AF37; /* Gold */
+            --bg-paper: #F9F7F2; /* Rice Paper */
+            --text-ink: #2C2C2C; /* Ink Black */
+            --accent-blue: #2c5282;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimHei", 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-paper);
+            color: var(--text-ink);
+            margin: 0;
+            padding: 0;
+            background-image: radial-gradient(#e5e5e5 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Control Visibility of Vietnamese */
+        .vn-text {
+            display: none;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            color: #666;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        body.show-vietnamese .vn-text {
+            display: block;
+        }
+
+        /* --- Header Section --- */
+        header {
+            background: var(--primary-red);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border-bottom: 4px solid var(--primary-gold);
+        }
+
+        h1 { margin: 0; font-size: 2rem; letter-spacing: 3px; font-weight: bold; }
+        .sub-header { font-size: 1rem; opacity: 0.9; margin-top: 5px; }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        /* --- Sidebar (Controls) --- */
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            border: 1px solid #e2e8f0;
+            position: sticky;
+            top: 20px;
+        }
+
+        .control-group { margin-bottom: 25px; border-bottom: 1px dashed #ccc; padding-bottom: 20px; }
+        .control-group:last-child { border-bottom: none; }
+        
+        h3 { color: var(--primary-red); margin-top: 0; border-left: 4px solid var(--primary-gold); padding-left: 10px; font-size: 1.1rem; }
+
+        /* Buttons */
+        .btn-full { width: 100%; margin-bottom: 8px; }
+        
+        .topic-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .topic-btn:hover { border-color: var(--primary-red); background: #fff5f5; }
+        .topic-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
+
+        /* Toggle VN Button */
+        .toggle-vn-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .toggle-vn-btn:hover { background-color: #2a4365; }
+
+        /* Timer */
+        .timer-display {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            color: var(--text-ink);
+            margin: 10px 0;
+        }
+        .timer-controls { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-start { background: #38a169; color: white; }
+        .btn-stop { background: #e53e3e; color: white; }
+        .btn-reset { background: #718096; color: white; }
+        .btn-time { background: #edf2f7; color: #4a5568; font-size: 0.8rem; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Randomizer */
+        .randomizer-box { text-align: center; }
+        #randomResult { 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            margin-top: 10px; 
+            min-height: 40px;
+            color: var(--primary-red);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        .topic-title-display {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            text-align: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .topic-desc-display {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Content Structure */
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--text-ink);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .vocab-column {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .col-header {
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.1rem;
+        }
+        .header-pro { background: #2f855a; } /* Positive */
+        .header-con { background: #c53030; } /* Negative */
+        .header-tool { background: #2b6cb0; } /* Blue */
+
+        .word-list { padding: 15px; }
+        .word-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f7f7f7;
+        }
+        .word-item:last-child { border-bottom: none; }
+        
+        .cn-text { font-size: 1.25rem; font-weight: bold; color: #333; }
+        .pinyin { font-size: 0.9rem; color: #888; margin-left: 5px; }
+        
+        /* Sample Paragraph Box */
+        .sample-box {
+            background: #f8f9fa;
+            border-left: 4px solid;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+            line-height: 1.6;
+        }
+        .sample-pro { border-left-color: #2f855a; background: #f0fff4; }
+        .sample-con { border-left-color: #c53030; background: #fff5f5; }
+
+        /* Pattern Box */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .pattern-card {
+            background: #ebf8ff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bee3f8;
+        }
+        .pattern-label {
+            font-size: 0.9rem;
+            color: #2b6cb0;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            .vocab-grid { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>汉语辩论训练助手</h1>
+    <div class="sub-header">Minh老师的中文课堂 | 互动教学系统</div>
+</header>
+
+<div class="container">
+    <!-- Sidebar: Controls -->
+    <aside class="sidebar">
+        <!-- Language Toggle -->
+        <div class="control-group">
+            <button class="toggle-vn-btn btn-full" onclick="toggleLanguage()">
+                <span id="langIcon">👁️</span> 显示/隐藏 越南语
+            </button>
+        </div>
+
+        <!-- Topic Selector -->
+        <div class="control-group">
+            <h3>1. 选择辩题 (Chủ đề)</h3>
+            <button class="topic-btn active" onclick="switchTopic(1)">
+                辩题一：职责与情感<br>
+                <span class="vn-text" style="font-weight:normal; font-size:0.8rem">Chủ đề 1: Trách nhiệm & Tình cảm</span>
+            </button>
+            <button class="topic-btn" onclick="switchTopic(2)">
+                辩题二：理想与现实<br>
+                <span class="vn-text" style="font-weight:normal; font-size:0.8rem">Chủ đề 2: Lý tưởng & Thực tế</span>
+            </button>
+        </div>
+
+        <!-- Timer -->
+        <div class="control-group">
+            <h3>2. 计时器 (Đồng hồ)</h3>
+            <div class="timer-display" id="timer">00:00</div>
+            <div class="timer-controls" style="margin-bottom: 10px;">
+                <button class="btn btn-time" onclick="setTimer(60)">1分钟</button>
+                <button class="btn btn-time" onclick="setTimer(120)">2分钟</button>
+                <button class="btn btn-time" onclick="setTimer(180)">3分钟</button>
+            </div>
+            <div class="timer-controls">
+                <button class="btn btn-start" onclick="startTimer()">开始</button>
+                <button class="btn btn-stop" onclick="stopTimer()">停止</button>
+                <button class="btn btn-reset" onclick="resetTimer()">重置</button>
+            </div>
+        </div>
+
+        <!-- Randomizer -->
+        <div class="control-group">
+            <h3>3. 角色分配 (Phân vai)</h3>
+            <div class="randomizer-box">
+                <button class="btn btn-reset" style="background: var(--primary-gold); color: black; width: 100%;" onclick="pickSide()">🎲 随机抽取 (Quay)</button>
+                <div id="randomResult">...</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dynamic Content Container -->
+        
+        <!-- TOPIC 1 -->
+        <div id="content-topic-1" class="topic-section active">
+            <div class="topic-title-display">辩题一：警察助人是“分内之事”还是“值得颂扬”？</div>
+            <div class="topic-desc-display">
+                <span class="vn-text">Hành động giúp dân của cảnh sát là "trách nhiệm" hay "đáng tôn vinh"?</span>
+            </div>
+
+            <!-- Vocabulary Section -->
+            <div class="section-title">💡 核心词汇 (Từ vựng cốt lõi)</div>
+            <div class="vocab-grid">
+                <!-- Pro Side -->
+                <div class="vocab-column">
+                    <div class="col-header header-pro">正方：值得颂扬 (Ủng hộ)</div>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <div><span class="cn-text">无微不至</span><span class="pinyin">Wú wēi bú zhì</span></div>
+                            <span class="vn-text">Tỉ mỉ, chu đáo mọi mặt</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">弘扬正气</span><span class="pinyin">Hóngyáng zhèngqì</span></div>
+                            <span class="vn-text">Phát huy lẽ phải/chính khí</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">凡人善举</span><span class="pinyin">Fánrén shànjǔ</span></div>
+                            <span class="vn-text">Việc tốt của người bình thường</span>
+                        </div>
+                         <div class="word-item">
+                            <div><span class="cn-text">急人所急</span><span class="pinyin">Jírénsuǒjí</span></div>
+                            <span class="vn-text">Lo nỗi lo của người khác</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">鱼水情深</span><span class="pinyin">Yúshuǐ qíngshēn</span></div>
+                            <span class="vn-text">Tình quân dân thắm thiết như cá với nước</span>
+                        </div>
+                    </div>
+                    <!-- Sample Paragraph Pro -->
+                    <div class="sample-box sample-pro">
+                        <strong>🗣️ 参考段落 (Đoạn văn mẫu):</strong><br>
+                        虽然警察拿工资，但这并不意味着他们的付出是理所当然的。当他们弯腰为孩子系鞋带时，这已经超越了法律的规定，而是一种人性的温暖。这种行为值得我们所有的掌声。
+                        <span class="vn-text"><br>👉 Tuy cảnh sát nhận lương, nhưng không có nghĩa sự cống hiến của họ là hiển nhiên. Khi họ cúi xuống buộc dây giày cho trẻ, điều đó đã vượt qua quy định luật pháp, đó là sự ấm áp của tình người. Hành động này xứng đáng nhận được tràng pháo tay của chúng ta.</span>
+                    </div>
+                </div>
+
+                <!-- Con Side -->
+                <div class="vocab-column">
+                    <div class="col-header header-con">反方：理所当然 (Phản đối)</div>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <div><span class="cn-text">履行职责</span><span class="pinyin">Lǚxíng zhízé</span></div>
+                            <span class="vn-text">Thực hiện chức trách</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">职业素养</span><span class="pinyin">Zhíyè sùyǎng</span></div>
+                            <span class="vn-text">Tố chất nghề nghiệp chuyên nghiệp</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">纳税人</span><span class="pinyin">Nàshuìrén</span></div>
+                            <span class="vn-text">Người đóng thuế</span>
+                        </div>
+                         <div class="word-item">
+                            <div><span class="cn-text">大惊小怪</span><span class="pinyin">Dàjīngxiǎoguài</span></div>
+                            <span class="vn-text">Chuyện bé xé ra to/Kinh ngạc thái quá</span>
+                        </div>
+                         <div class="word-item">
+                            <div><span class="cn-text">本职工作</span><span class="pinyin">Běnzhí gōngzuò</span></div>
+                            <span class="vn-text">Công việc bổn phận</span>
+                        </div>
+                    </div>
+                    <!-- Sample Paragraph Con -->
+                    <div class="sample-box sample-con">
+                        <strong>🗣️ 参考段落 (Đoạn văn mẫu):</strong><br>
+                        我不认为我们需要过度夸奖警察。就像医生治病、老师教书一样，这只是他们的职业。我们作为纳税人支付薪水，他们提供服务，这是一种公平的契约关系，没什么可感动的。
+                        <span class="vn-text"><br>👉 Tôi không nghĩ chúng ta cần quá khen ngợi cảnh sát. Giống như bác sĩ chữa bệnh, giáo viên dạy học, đây chỉ là nghề nghiệp của họ. Chúng ta là người đóng thuế trả lương, họ cung cấp dịch vụ, đây là quan hệ hợp đồng công bằng, không có gì phải cảm động.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOPIC 2 -->
+        <div id="content-topic-2" class="topic-section" style="display:none;">
+            <div class="topic-title-display">辩题二：“有困难找警察”是现实还是空话？</div>
+            <div class="topic-desc-display">
+                <span class="vn-text">Khẩu hiệu "Có khó khăn tìm cảnh sát": Luôn đúng hay chỉ là Lý tưởng hóa?</span>
+            </div>
+
+            <!-- Vocabulary Section -->
+            <div class="section-title">💡 核心词汇 (Từ vựng cốt lõi)</div>
+            <div class="vocab-grid">
+                <!-- Pro Side -->
+                <div class="vocab-column">
+                    <div class="col-header header-pro">正方：现实写照 (Thực tế)</div>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <div><span class="cn-text">社会治安</span><span class="pinyin">Shèhuì zhì'ān</span></div>
+                            <span class="vn-text">Trị an xã hội</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">可靠</span><span class="pinyin">Kěkào</span></div>
+                            <span class="vn-text">Đáng tin cậy</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">以身作则</span><span class="pinyin">Yǐshēnzuòzé</span></div>
+                            <span class="vn-text">Lấy mình làm gương</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">普及</span><span class="pinyin">Pǔjí</span></div>
+                            <span class="vn-text">Phổ cập/Phổ biến rộng rãi</span>
+                        </div>
+                    </div>
+                    <div class="sample-box sample-pro">
+                        <strong>🗣️ 参考段落 (Đoạn văn mẫu):</strong><br>
+                        这句口号绝不是空话。在中国，无论是丢了钱包还是迷路，警察总是第一时间出现。绝大多数警察都在尽职尽责地保护人民的安全。如果你去过国外，你就会知道中国的治安有多好。
+                        <span class="vn-text"><br>👉 Khẩu hiệu này tuyệt đối không sáo rỗng. Ở TQ, dù mất ví hay lạc đường, cảnh sát luôn xuất hiện đầu tiên. Đại đa số cảnh sát đều tận tụy bảo vệ an toàn cho dân. Nếu bạn từng ra nước ngoài, bạn sẽ biết trị an TQ tốt thế nào.</span>
+                    </div>
+                </div>
+
+                <!-- Con Side -->
+                <div class="vocab-column">
+                    <div class="col-header header-con">反方：理想主义 (Lý tưởng hóa)</div>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <div><span class="cn-text">形式主义</span><span class="pinyin">Xíngshì zhǔyì</span></div>
+                            <span class="vn-text">Chủ nghĩa hình thức (làm màu)</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">害群之马</span><span class="pinyin">Hàiqúnzhīmǎ</span></div>
+                            <span class="vn-text">Con sâu làm rầu nồi canh</span>
+                        </div>
+                        <div class="word-item">
+                            <div><span class="cn-text">暴力执法</span><span class="pinyin">Bàolì zhífǎ</span></div>
+                            <span class="vn-text">Thực thi pháp luật bạo lực</span>
+                        </div>
+                         <div class="word-item">
+                            <div><span class="cn-text">滥用权力</span><span class="pinyin">Lànyòng quánlì</span></div>
+                            <span class="vn-text">Lạm dụng quyền lực</span>
+                        </div>
+                    </div>
+                    <div class="sample-box sample-con">
+                        <strong>🗣️ 参考段落 (Đoạn văn mẫu):</strong><br>
+                        口号虽然好听，但现实往往很复杂。我们也看到过新闻报道警察态度恶劣，甚至打人的事件。如果不解决这些“害群之马”，这句口号就只是一句好听的空话而已。
+                        <span class="vn-text"><br>👉 Khẩu hiệu tuy hay, nhưng thực tế phức tạp. Chúng ta từng thấy tin tức cảnh sát thái độ tồi, thậm chí đánh người. Nếu không giải quyết những "con sâu làm rầu nồi canh" này, khẩu hiệu chỉ là lời nói suông êm tai mà thôi.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Tools Section (Always Visible) -->
+        <div style="margin-top: 40px;">
+            <div class="section-title">🛠️ 辩论万能句型 (Mẫu câu tranh biện vạn năng)</div>
+            <div class="pattern-grid">
+                <!-- Opening -->
+                <div class="pattern-card">
+                    <span class="pattern-label">1. 陈述观点 (Đưa quan điểm)</span>
+                    <div style="margin-bottom:8px;">🔹 <strong>我方认为……</strong> (Wǒfāng rènwéi...)<br><span class="vn-text">Phe tôi cho rằng...</span></div>
+                    <div style="margin-bottom:8px;">🔹 <strong>众所周知……</strong> (Zhòngsuǒzhōuzhī...)<br><span class="vn-text">Ai cũng biết rằng...</span></div>
+                    <div>🔹 <strong>不可否认的是……</strong> (Bùkě fǒurèn de shì...)<br><span class="vn-text">Không thể phủ nhận là...</span></div>
+                </div>
+
+                <!-- Rebuttal -->
+                <div class="pattern-card">
+                    <span class="pattern-label">2. 反驳对方 (Phản bác)</span>
+                    <div style="margin-bottom:8px;">🔹 <strong>对方辩友错了……</strong> (Duìfāng biànyǒu cuòle...)<br><span class="vn-text">Bạn phía đối diện sai rồi...</span></div>
+                    <div style="margin-bottom:8px;">🔹 <strong>这只是个别现象……</strong> (Zhè zhǐshì gèbié xiànxiàng...)<br><span class="vn-text">Đây chỉ là hiện tượng cá biệt...</span></div>
+                    <div>🔹 <strong>请问对方辩友……</strong> (Qǐngwèn duìfāng biànyǒu...)<br><span class="vn-text">Xin hỏi bạn đội bạn...</span></div>
+                </div>
+
+                <!-- Closing -->
+                <div class="pattern-card">
+                    <span class="pattern-label">3. 总结陈词 (Kết luận)</span>
+                    <div style="margin-bottom:8px;">🔹 <strong>综上所述……</strong> (Zōngshàngsuǒshù...)<br><span class="vn-text">Tóm lại những điều trên...</span></div>
+                    <div>🔹 <strong>因此，我方坚持认为……</strong> (Yīncǐ, wǒfāng jiānchí rènwéi...)<br><span class="vn-text">Vì vậy, phe tôi kiên trì cho rằng...</span></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    // --- Toggle Language ---
+    let isVnVisible = false;
+    function toggleLanguage() {
+        isVnVisible = !isVnVisible;
+        const body = document.body;
+        const btnIcon = document.getElementById('langIcon');
+        
+        if(isVnVisible) {
+            body.classList.add('show-vietnamese');
+            btnIcon.innerText = '🙈'; // Icon for hiding
+        } else {
+            body.classList.remove('show-vietnamese');
+            btnIcon.innerText = '👁️'; // Icon for showing
+        }
+    }
+
+    // --- Switch Topic Logic ---
+    function switchTopic(id) {
+        // Toggle Content Sections
+        document.getElementById('content-topic-1').style.display = (id === 1) ? 'block' : 'none';
+        document.getElementById('content-topic-2').style.display = (id === 2) ? 'block' : 'none';
+
+        // Toggle Buttons
+        const btns = document.querySelectorAll('.topic-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        btns[id-1].classList.add('active');
+    }
+
+    // --- Timer Logic ---
+    let timerInterval;
+    let timeLeft = 0;
+
+    function updateTimerDisplay() {
+        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const s = (timeLeft % 60).toString().padStart(2, '0');
+        const display = document.getElementById('timer');
+        display.innerText = `${m}:${s}`;
+        
+        if (timeLeft > 0 && timeLeft <= 10) {
+            display.style.color = '#e53e3e';
+        } else {
+            display.style.color = '#2C2C2C';
+        }
+    }
+
+    function setTimer(seconds) {
+        stopTimer();
+        timeLeft = seconds;
+        updateTimerDisplay();
+    }
+
+    function startTimer() {
+        if (timerInterval) return;
+        if (timeLeft === 0) return;
+        
+        timerInterval = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else {
+                stopTimer();
+                alert("时间到! (Hết giờ!)");
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    function resetTimer() {
+        stopTimer();
+        timeLeft = 0;
+        updateTimerDisplay();
+    }
+
+    // --- Randomizer Logic ---
+    function pickSide() {
+        const resultDiv = document.getElementById('randomResult');
+        resultDiv.style.opacity = 0;
+        
+        setTimeout(() => {
+            const sides = [
+                { text: "正方: 值得颂扬 (Phe Ủng hộ)", color: "#2f855a" },
+                { text: "反方: 理所当然 (Phe Phản đối)", color: "#c53030" }
+            ];
+            const random = sides[Math.floor(Math.random() * sides.length)];
+            
+            resultDiv.innerText = random.text;
+            resultDiv.style.color = random.color;
+            resultDiv.style.opacity = 1;
+        }, 200);
+    }
+</script>
+
+</body>
+</html>

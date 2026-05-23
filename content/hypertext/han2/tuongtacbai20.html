@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu bài tập tương tác: Chúc mừng sinh nhật</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .task-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem; /* Add some space between list items */
+        }
+        .task-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #16a34a; /* green-600 */
+            font-weight: bold;
+        }
+        .translation {
+            color: #4b5563; /* text-gray-600 */
+            font-size: 0.9em;
+            margin-left: 8px;
+        }
+        #scenario-translation {
+             display: none;
+             margin-top: 1rem;
+             padding: 1rem;
+             background-color: #f3f4f6; /* bg-gray-100 */
+             border-left: 4px solid #6b7280; /* border-gray-500 */
+             border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-4xl mx-auto">
+        <!-- Màn hình giới thiệu -->
+        <div id="introduction-screen" class="screen bg-white p-6 md:p-8 rounded-2xl shadow-2xl">
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800">口语练习：祝你生日快乐</h1>
+                <p class="text-lg text-gray-600 mt-2">Bài tập khẩu ngữ: Chúc mừng sinh nhật</p>
+            </div>
+            <div class="mt-8 text-center">
+                <h2 class="text-2xl font-bold text-gray-700">练习背景 (Bối cảnh bài tập)</h2>
+                <div id="scenario-chinese" class="mt-4 text-xl text-gray-800 leading-relaxed">
+                    <p>A 和 B 是同学，他们偶然遇到了。聊天的时候，他们发现共同的朋友C的生日快到了。于是，他们决定秘密地为C举办一个惊喜生日晚会。</p>
+                </div>
+                <div id="scenario-translation">
+                    <p class="font-semibold text-gray-700">Pinyin:</p>
+                    <p class="text-gray-600 italic">A hé B shì tóngxué, tāmen ǒurán yùdào le. Liáotiān de shíhou, tāmen fāxiàn gòngtóng de péngyǒu C de shēngrì kuài dào le. Yúshì, tāmen juédìng mìmì de wèi C jǔbàn yí ge jīngxǐ shēngrì wǎnhuì.</p>
+                    <hr class="my-3">
+                    <p class="font-semibold text-gray-700">Dịch nghĩa:</p>
+                    <p class="text-gray-600">A và B là bạn học, họ tình cờ gặp nhau. Khi nói chuyện, họ phát hiện ra sinh nhật của người bạn chung là C sắp đến. Vì vậy, họ quyết định bí mật tổ chức một bữa tiệc sinh nhật bất ngờ cho C.</p>
+                </div>
+                <button id="toggle-translation-btn" class="mt-6 bg-blue-100 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-200 transition-colors">
+                    Hiển thị Pinyin & Dịch nghĩa
+                </button>
+            </div>
+            <button id="start-exercise-btn" class="mt-8 w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-colors text-lg">
+                开始练习 (Bắt đầu luyện tập)
+            </button>
+        </div>
+
+        <!-- Màn hình chọn nhân vật -->
+        <div id="character-selection" class="screen">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800">选择你的角色</h1>
+                <p class="text-lg text-gray-600 mt-2">Chọn một nhân vật để nhận nhiệm vụ bí mật của bạn!</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Các thẻ nhân vật -->
+                <div class="card bg-white rounded-2xl shadow-lg p-6 text-center cursor-pointer" onclick="showRole('A')">
+                    <div class="text-6xl mb-4">😎</div>
+                    <h2 class="text-2xl font-bold text-blue-600">Nhân vật A (角色A)</h2>
+                    <p class="text-gray-500 mt-2">Người chủ động, nhiệt tình</p>
+                </div>
+                <div class="card bg-white rounded-2xl shadow-lg p-6 text-center cursor-pointer" onclick="showRole('B')">
+                    <div class="text-6xl mb-4">🤗</div>
+                    <h2 class="text-2xl font-bold text-green-600">Nhân vật B (角色B)</h2>
+                    <p class="text-gray-500 mt-2">Người bạn tốt bụng, hay giúp đỡ</p>
+                </div>
+                <div class="card bg-white rounded-2xl shadow-lg p-6 text-center cursor-pointer" onclick="showRole('C')">
+                    <div class="text-6xl mb-4">🥳</div>
+                    <h2 class="text-2xl font-bold text-purple-600">Nhân vật C (角色C)</h2>
+                    <p class="text-gray-500 mt-2">Người bạn sắp có sinh nhật</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Màn hình hiển thị vai trò -->
+        <div id="role-display" class="screen bg-white p-6 md:p-8 rounded-2xl shadow-2xl">
+            <div id="role-content"></div>
+            <button onclick="goBack()" class="mt-8 w-full bg-gray-700 text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors">
+                返回角色选择 (Chọn lại nhân vật khác)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const introductionScreen = document.getElementById('introduction-screen');
+        const characterSelectionScreen = document.getElementById('character-selection');
+        const roleDisplayScreen = document.getElementById('role-display');
+        const toggleTranslationBtn = document.getElementById('toggle-translation-btn');
+        const startExerciseBtn = document.getElementById('start-exercise-btn');
+        const scenarioTranslation = document.getElementById('scenario-translation');
+        const roleContent = document.getElementById('role-content');
+        
+        // --- Data ---
+        const roles = {
+            'A': {
+                name_vi: 'Nhân vật A',
+                name_zh: '角色A',
+                name_py: 'Juésè A',
+                color: 'blue',
+                description_vi: 'Bạn là người chủ động và nhiệt tình. Bạn muốn tổ chức một bữa tiệc sinh nhật thật vui cho C.',
+                description_zh: '你是一个主动热情的人。你想为C举办一个有趣的生日晚会。',
+                description_py: 'Nǐ shì yí ge zhǔdòng rèqíng de rén. Nǐ xiǎng wèi C jǔbàn yí ge yǒuqù de shēngrì wǎnhuì.',
+                secret_info_title_vi: 'Thông tin bí mật',
+                secret_info_title_zh: '秘密信息',
+                secret_info_title_py: 'Mìmì xìnxī',
+                tasks_title_vi: 'Nhiệm vụ của bạn',
+                tasks_title_zh: '你的任务',
+                tasks_title_py: 'Nǐ de rènwù',
+                secret_info: `
+                    <li>Bạn biết C rất thích bánh kem vị sô-cô-la. <span class="translation">(你知道C很喜欢巧克力蛋糕 - Nǐ zhīdào C hěn xǐhuān qiǎokèlì dàngāo)</span></li>
+                    <li>Bạn có 2 lựa chọn về <strong>thời gian (时间)</strong>: 7 giờ tối thứ Bảy hoặc 6 giờ tối Chủ nhật. Bạn muốn tổ chức vào thứ Bảy hơn.</li>
+                    <li>Địa chỉ nhà bạn là 123 Đường Hạnh Phúc. <span class="translation">(你家的地址是幸福路123号 - Nǐ jiā de dìzhǐ shì Xìngfú Lù 123 hào)</span></li>
+                `,
+                tasks: `
+                    <li>Hỏi B về <strong>dự định cuối tuần (周末的打算)</strong>.</li>
+                    <li>Hỏi B <strong>sinh năm nào (哪年出生)</strong> và <strong>cầm tinh con gì (属什么)</strong>.</li>
+                    <li>Đề xuất ý tưởng <strong>tổ chức một buổi tiệc tối (举办一个晚会)</strong> cho C.</li>
+                    <li>Thảo luận với B để <strong>chuẩn bị quà và bánh (准备礼物和蛋糕)</strong>.</li>
+                    <li>Chốt kế hoạch và mời B <strong>nhất định phải tham gia (一定要参加)</strong>.</li>
+                    <li>Khéo léo gọi điện mời C đến nhà <strong>ăn tối (吃晚饭)</strong>.</li>
+                `
+            },
+            'B': {
+                name_vi: 'Nhân vật B',
+                name_zh: '角色B',
+                name_py: 'Juésè B',
+                color: 'green',
+                description_vi: 'Bạn là một người bạn tốt và luôn sẵn lòng giúp đỡ. Bạn cũng rất quý C.',
+                description_zh: '你是一个乐于助人的好朋友。你也很喜欢C。',
+                description_py: 'Nǐ shì yí ge lèyú zhùrén de hǎo péngyǒu. Nǐ yě hěn xǐhuān C.',
+                secret_info_title_vi: 'Thông tin bí mật',
+                secret_info_title_zh: '秘密信息',
+                secret_info_title_py: 'Mìmì xìnxī',
+                tasks_title_vi: 'Nhiệm vụ của bạn',
+                tasks_title_zh: '你的任务',
+                tasks_title_py: 'Nǐ de rènwù',
+                secret_info: `
+                    <li>Bạn vừa thấy một cặp tai nghe rất đẹp, có thể là món quà tuyệt vời cho C.</li>
+                    <li>Bạn rảnh cả ngày thứ Bảy, nhưng bận sau 5 giờ chiều Chủ nhật. <span class="translation">(你星期六整天有空，但星期天下午五点以后没空 - Nǐ xīngqīliù zhěng tiān yǒu kòng, dàn xīngqītiān xiàwǔ wǔ diǎn yǐhòu méi kòng)</span></li>
+                    <li>Bạn biết C <strong>sinh năm (出生)</strong> 2002, nhưng không chắc đó là con giáp gì.</li>
+                `,
+                tasks: `
+                    <li>Trả lời các câu hỏi của A.</li>
+                    <li>Hưởng ứng nhiệt tình kế hoạch tổ chức sinh nhật.</li>
+                    <li>Thảo luận với A về việc mua quà. Gợi ý món quà bạn biết.</li>
+                    <li>Hỏi rõ A về <strong>thời gian và địa điểm cụ thể (具体的时间和地点)</strong>.</li>
+                    <li>Cùng A tạo bất ngờ cho C tại bữa tiệc.</li>
+                `
+            },
+            'C': {
+                name_vi: 'Nhân vật C',
+                name_zh: '角色C',
+                name_py: 'Juésè C',
+                color: 'purple',
+                description_vi: 'Bạn là người sắp có sinh nhật. Bạn không biết gì về kế hoạch của A và B.',
+                description_zh: '你是快要过生日的人。你不知道A和B的计划。',
+                description_py: 'Nǐ shì kuàiyào guò shēngrì de rén. Nǐ bù zhīdào A hé B de jìhuà.',
+                secret_info_title_vi: 'Thông tin bí mật',
+                secret_info_title_zh: '秘密信息',
+                secret_info_title_py: 'Mìmì xìnxī',
+                tasks_title_vi: 'Nhiệm vụ của bạn',
+                tasks_title_zh: '你的任务',
+                tasks_title_py: 'Nǐ de rènwù',
+                secret_info: `
+                    <li>Sinh nhật chính xác của bạn là vào Chủ nhật, không phải thứ Bảy. <span class="translation">(你的生日是星期天，不是星期六 - Nǐ de shēngrì shì xīngqītiān, búshì xīngqīliù)</span></li>
+                    <li>Bạn <strong>sinh năm 2002 (二零零二年出生)</strong>, <strong>cầm tinh con Ngựa (属马)</strong>.</li>
+                    <li>Bạn chưa có <strong>dự định gì (没什么打算)</strong> cho cuối tuần.</li>
+                `,
+                tasks: `
+                    <li>Bạn sẽ nhận được một cuộc gọi từ A hoặc B. Hãy trả lời tự nhiên.</li>
+                    <li>Khi đến dự tiệc, hãy thể hiện sự ngạc nhiên và vui mừng.</li>
+                    <li>Cảm ơn mọi người và cùng nhau <strong>đón sinh nhật (一起过生日)</strong>.</li>
+                    <li>Bạn có thể "tinh nghịch" tiết lộ sinh nhật của mình là vào Chủ nhật để xem phản ứng của mọi người.</li>
+                `
+            }
+        };
+
+        const vocabulary = `
+            <h3 class="text-xl font-bold text-gray-700 mt-6 mb-3">Từ vựng trọng tâm (重点词汇)</h3>
+            <ul class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-gray-600">
+                <li>出生 (chūshēng)</li><li>生肖 (shēngxiào)</li><li>属 (shǔ)</li>
+                <li>打算 (dǎsuàn)</li><li>准备 (zhǔnbèi)</li><li>正好 (zhènghǎo)</li>
+                <li>过 (guò)</li><li>举行 (jǔxíng)</li><li>晚会 (wǎnhuì)</li>
+                <li>参加 (cānjiā)</li><li>时间 (shíjiān)</li><li>一定 (yídìng)</li>
+                <li>祝 (zhù)</li>
+            </ul>
+        `;
+        
+        // --- Functions ---
+        function showScreen(screenElement) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            screenElement.style.display = 'block';
+        }
+
+        function showRole(roleKey) {
+            const role = roles[roleKey];
+            roleContent.innerHTML = `
+                <div class="text-center mb-6 border-b pb-6">
+                    <h2 class="text-3xl font-bold text-${role.color}-600">${role.name_vi} (${role.name_zh})</h2>
+                    <p class="text-gray-500 mt-1 italic">${role.name_py}</p>
+                    <p class="text-gray-700 mt-4">${role.description_vi}</p>
+                    <p class="text-gray-600 mt-1">${role.description_zh}</p>
+                    <p class="text-gray-500 mt-1 italic text-sm">${role.description_py}</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-${role.color}-50 border-l-4 border-${role.color}-500 p-4 rounded-r-lg">
+                        <h3 class="text-xl font-bold text-${role.color}-800 mb-3">🤫 ${role.secret_info_title_vi} (${role.secret_info_title_zh})</h3>
+                        <p class="text-sm italic text-${role.color}-600 mb-3">${role.secret_info_title_py}</p>
+                        <ul class="task-list space-y-2 text-gray-700">${role.secret_info}</ul>
+                    </div>
+                     <div class="bg-gray-50 border-l-4 border-gray-400 p-4 rounded-r-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">🎯 ${role.tasks_title_vi} (${role.tasks_title_zh})</h3>
+                        <p class="text-sm italic text-gray-600 mb-3">${role.tasks_title_py}</p>
+                        <ul class="task-list space-y-2 text-gray-700">${role.tasks}</ul>
+                    </div>
+                </div>
+                ${vocabulary}
+            `;
+            showScreen(roleDisplayScreen);
+        }
+
+        function goBack() {
+            showScreen(characterSelectionScreen);
+        }
+
+        // --- Event Listeners ---
+        toggleTranslationBtn.addEventListener('click', () => {
+            const isHidden = scenarioTranslation.style.display === 'none';
+            scenarioTranslation.style.display = isHidden ? 'block' : 'none';
+            toggleTranslationBtn.textContent = isHidden ? 'Ẩn Pinyin & Dịch nghĩa' : 'Hiển thị Pinyin & Dịch nghĩa';
+        });
+
+        startExerciseBtn.addEventListener('click', () => {
+            showScreen(characterSelectionScreen);
+        });
+        
+        // --- Initial Load ---
+        window.onload = () => {
+            showScreen(introductionScreen);
+        };
+    </script>
+</body>
+</html>

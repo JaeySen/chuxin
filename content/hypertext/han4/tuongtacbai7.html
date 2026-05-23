@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Luyện Tập Khẩu Ngữ - Bài 19</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .tab-btn.active {
+            background-color: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .phrase-item, .translatable {
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .phrase-item:hover {
+            background-color: #f8fafc;
+            transform: scale(1.02);
+        }
+        .details, .vietnamese-translation {
+            display: none;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .vietnamese-translation {
+            color: #475569;
+            font-style: italic;
+            border-left: 2px solid #cbd5e1;
+        }
+        .details {
+             border-left: 2px solid #e2e8f0;
+        }
+        .translate-icon {
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            display: inline-block;
+            margin-left: 8px;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+        }
+        .translatable:hover .translate-icon {
+            opacity: 1;
+        }
+        .btn {
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .assigned-student {
+            animation: popIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- TIÊU ĐỀ -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">口语练习：第19课</h1>
+            <p class="text-lg text-slate-600 mt-2">我的腿被自行车撞伤了</p>
+        </div>
+
+        <!-- HỆ THỐNG TABS -->
+        <div class="mb-8">
+            <div class="bg-slate-200 p-2 rounded-xl flex space-x-2 max-w-md mx-auto">
+                <button data-tab="activity1" class="tab-btn active w-full text-center font-semibold text-slate-700 py-3 px-4 rounded-lg transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                    活动一：个人叙事
+                </button>
+                <button data-tab="activity2" class="tab-btn w-full text-center font-semibold text-slate-700 py-3 px-4 rounded-lg transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0118 15v3h-2zM4.75 12.094A5.973 5.973 0 004 15v3H2v-3a3.005 3.005 0 012.25-2.906z" /></svg>
+                    活动二：角色扮演
+                </button>
+            </div>
+        </div>
+
+        <!-- NỘI DUNG TABS -->
+        <div>
+            <!-- Hoạt động 1: Kể chuyện cá nhân -->
+            <div id="activity1" class="tab-content active">
+                <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+                    <div class="translatable">
+                        <h2 class="text-2xl font-bold text-orange-600 mb-4 inline">活动一：个人叙事 (我倒霉的一天)</h2>
+                        <div class="vietnamese-translation pl-4"><h2 class="text-2xl font-bold text-orange-600 mb-4">Hoạt động 1: Kể chuyện cá nhân (Một ngày xui xẻo của tôi)</h2></div>
+                    </div>
+                     <div class="translatable text-slate-600 mb-6">
+                        <p class="inline">请讲述你倒霉的一天（可以是真实的或想象的），类似于大山的故事。</p>
+                        <div class="vietnamese-translation pl-4"><p>Hãy kể lại một ngày xui xẻo của bạn (có thể là thật hoặc tưởng tượng) tương tự như câu chuyện của nhân vật Đại Sơn.</p></div>
+                    </div>
+                    
+                    <div class="bg-orange-50 border-l-4 border-orange-400 p-5 rounded-r-lg mb-8">
+                        <div class="translatable">
+                            <h3 class="font-bold text-lg text-orange-800 mb-3 inline">提纲建议</h3>
+                            <div class="vietnamese-translation pl-4"><h3 class="font-bold text-lg text-orange-800 mb-3">Dàn ý gợi ý</h3></div>
+                        </div>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-700">
+                            <li class="translatable"><b>开头：</b>事情发生在什么时候？你在做什么？<div class="vietnamese-translation pl-4"><b>Mở đầu:</b> Chuyện xảy ra khi nào? Bạn đang làm gì?</div></li>
+                            <li class="translatable"><b>经过：</b>发生了什么倒霉事？（丢东西、遇到坏天气、被误会等）<div class="vietnamese-translation pl-4"><b>Diễn biến:</b> Chuyện không may gì đã xảy ra? (Bị mất đồ, gặp thời tiết xấu, bị hiểu nhầm...)</div></li>
+                            <li class="translatable"><b>感受：</b>你当时感觉怎么样？（倒霉、可气、不好意思等）<div class="vietnamese-translation pl-4"><b>Cảm xúc:</b> Lúc đó bạn cảm thấy thế nào? (倒霉, 可气, 不好意思...)</div></li>
+                            <li class="translatable"><b>结果：</b>最后事情怎么样了？你学到了什么？<div class="vietnamese-translation pl-4"><b>Kết quả:</b> Cuối cùng mọi chuyện ra sao? Bạn học được bài học gì?</div></li>
+                        </ol>
+                    </div>
+
+                    <div>
+                        <div class="translatable">
+                            <h3 class="font-bold text-lg text-orange-800 mb-4 inline">句型建议</h3>
+                            <div class="vietnamese-translation pl-4"><h3 class="font-bold text-lg text-orange-800 mb-4">Gợi ý từ vựng & cấu trúc</h3></div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="phrase-item border border-slate-200 p-4 rounded-xl"><p class="font-semibold text-slate-800">我的钱包/自行车/手机 + <span class="text-red-600">被/让/叫</span> + 小偷/人 + 偷走了/骑走了。</p><div class="details text-sm"><p class="text-blue-600">Wǒ de qiánbāo/zìxíngchē/shǒujī + bèi/ràng/jiào + xiǎotōu/rén + tōuzǒule/qízǒule.</p><p class="text-slate-500">Ví tiền/xe đạp/điện thoại của tôi bị kẻ trộm/người ta lấy mất/dắt đi rồi.</p></div></div>
+                            <div class="phrase-item border border-slate-200 p-4 rounded-xl"><p class="font-semibold text-slate-800">我没带雨伞，<span class="text-red-600">被</span>雨淋得像落汤鸡<span class="text-red-600">似的</span>。</p><div class="details text-sm"><p class="text-blue-600">Wǒ méi dài yǔsǎn, bèi yǔ lín dé xiàng luòtāngjī shìde.</p><p class="text-slate-500">Tôi không mang ô, bị mưa ướt như chuột lột.</p></div></div>
+                            <div class="phrase-item border border-slate-200 p-4 rounded-xl"><p class="font-semibold text-slate-800">因为...，我<span class="text-red-600">被</span>...罚了...块钱。</p><div class="details text-sm"><p class="text-blue-600">Yīnwèi..., wǒ bèi...fále...kuài qián.</p><p class="text-slate-500">Bởi vì..., tôi bị...phạt...đồng.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hoạt động 2: Đóng vai -->
+            <div id="activity2" class="tab-content">
+                <div class="bg-white p-6 rounded-2xl shadow-xl mb-8 max-w-2xl mx-auto">
+                    <div class="translatable text-center">
+                        <h2 class="text-2xl font-bold mb-4 text-blue-800 inline">角色分配工具</h2>
+                        <div class="vietnamese-translation"><h2 class="text-2xl font-bold mb-4 text-blue-800">Công cụ chia vai</h2></div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="translatable">
+                            <label for="student-names" class="block text-sm font-medium text-slate-700 mb-2 inline">输入学生姓名（每行一个）：</label>
+                            <div class="vietnamese-translation pl-4"><label class="block text-sm font-medium text-slate-700 mb-2">Nhập tên học sinh (mỗi tên một dòng):</label></div>
+                        </div>
+                        <textarea id="student-names" rows="6" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="阮文A&#10;陈氏B&#10;黎文C"></textarea>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button id="assign-roles-btn" class="btn w-full sm:w-auto bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700">随机分配角色</button>
+                        <button id="reset-btn" class="btn w-full sm:w-auto bg-slate-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-slate-600">重置</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+                        <div class="translatable"><h3 class="text-2xl font-bold text-red-600 mb-2 inline">角色A：受害者（玛丽）</h3><div class="vietnamese-translation pl-4"><h3 class="text-2xl font-bold text-red-600 mb-2">Vai A: Người bị tai nạn (玛丽)</h3></div></div>
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mb-4">
+                            <div class="translatable"><p class="font-semibold inline">情景：</p><div class="vietnamese-translation pl-4"><p class="font-semibold">Tình huống:</p></div></div>
+                            <div class="translatable"><p class="text-slate-700 inline">你刚被一辆自行车撞倒了。你的腿受伤了，正在流血。你的朋友（角色B）跑过来问候你。</p><div class="vietnamese-translation pl-4"><p class="text-slate-700">Bạn vừa bị xe đạp đâm phải. Chân bạn bị thương và đang chảy máu. Bạn của bạn (Người B) chạy đến hỏi thăm.</p></div></div>
+                        </div>
+                        <div class="mb-4 min-h-[60px]">
+                            <div class="translatable"><h4 class="font-semibold text-slate-800 inline">扮演学生：</h4><div class="vietnamese-translation pl-4"><h4 class="font-semibold text-slate-800">Học sinh vào vai:</h4></div></div>
+                            <ul id="role-a-list" class="list-disc list-inside text-slate-600 mt-1"></ul>
+                        </div>
+                        <div>
+                            <div class="translatable"><h4 class="font-semibold text-slate-800 mb-2 inline">句型建议：</h4><div class="vietnamese-translation pl-4"><h4 class="font-semibold text-slate-800 mb-2">Gợi ý câu nói:</h4></div></div>
+                            <ul class="space-y-2">
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>我的腿被自行车撞倒了。</p><div class="details"><p class="text-blue-600">Wǒ de tuǐ bèi zìxíngchē zhuàng dǎole.</p><p class="text-slate-500">Chân của tôi bị xe đạp đâm ngã rồi.</p></div></li>
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>流了一点儿血，不要紧。</p><div class="details"><p class="text-blue-600">Liúle yīdiǎnr xiě, bùyàojǐn.</p><p class="text-slate-500">Chảy một chút máu, không sao đâu.</p></div></li>
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>还好，没伤着骨头。</p><div class="details"><p class="text-blue-600">Hái hǎo, méi shāng zháo gǔtou.</p><p class="text-slate-500">May mà không bị thương vào xương.</p></div></li>
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>你又不是故意的。</p><div class="details"><p class="text-blue-600">Nǐ yòu bùshì gùyì de.</p><p class="text-slate-500">Bạn cũng đâu phải cố ý.</p></div></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+                        <div class="translatable"><h3 class="text-2xl font-bold text-blue-600 mb-2 inline">角色B：问候者（罗兰）</h3><div class="vietnamese-translation pl-4"><h3 class="text-2xl font-bold text-blue-600 mb-2">Vai B: Người hỏi thăm (罗兰)</h3></div></div>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-4">
+                            <div class="translatable"><p class="font-semibold inline">情景：</p><div class="vietnamese-translation pl-4"><p class="font-semibold">Tình huống:</p></div></div>
+                            <div class="translatable"><p class="text-slate-700 inline">你看到你的朋友（角色A）出事了。你很担心，跑过去询问情况并提出建议。</p><div class="vietnamese-translation pl-4"><p class="text-slate-700">Bạn thấy bạn mình (Người A) bị tai nạn. Bạn lo lắng chạy đến hỏi thăm tình hình và đưa ra lời khuyên.</p></div></div>
+                        </div>
+                        <div class="mb-4 min-h-[60px]">
+                            <div class="translatable"><h4 class="font-semibold text-slate-800 inline">扮演学生：</h4><div class="vietnamese-translation pl-4"><h4 class="font-semibold text-slate-800">Học sinh vào vai:</h4></div></div>
+                            <ul id="role-b-list" class="list-disc list-inside text-slate-600 mt-1"></ul>
+                        </div>
+                        <div>
+                            <div class="translatable"><h4 class="font-semibold text-slate-800 mb-2 inline">句型建议：</h4><div class="vietnamese-translation pl-4"><h4 class="font-semibold text-slate-800 mb-2">Gợi ý câu nói:</h4></div></div>
+                            <ul class="space-y-2">
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>你的腿怎么了？</p><div class="details"><p class="text-blue-600">Nǐ de tuǐ zěnmeliǎo?</p><p class="text-slate-500">Chân của bạn bị sao vậy?</p></div></li>
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>要紧吗？</p><div class="details"><p class="text-blue-600">Yàojǐn ma?</p><p class="text-slate-500">Có nghiêm trọng không?</p></div></li>
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>伤着骨头了没有？</p><div class="details"><p class="text-blue-600">Shāng zháo gǔtoule méiyǒu?</p><p class="text-slate-500">Có bị thương vào xương không?</p></div></li>
+                                <li class="phrase-item border border-slate-200 p-3 rounded-lg"><p>骑车上街的时候，一定要特别小心。</p><div class="details"><p class="text-blue-600">Qí chē shàng jiē de shíhòu, yīdìng yào tèbié xiǎoxīn.</p><p class="text-slate-500">Lúc đi xe ra đường, nhất định phải hết sức cẩn thận.</p></div></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logic cho Tabs
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(item => item.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+
+            // Logic phân vai
+            const assignBtn = document.getElementById('assign-roles-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const studentNamesTextarea = document.getElementById('student-names');
+            const roleAList = document.getElementById('role-a-list');
+            const roleBList = document.getElementById('role-b-list');
+            assignBtn.addEventListener('click', function() {
+                const names = studentNamesTextarea.value.split('\n').filter(name => name.trim() !== '');
+                if (names.length < 2) {
+                    alert('请输入至少两个学生姓名进行角色分配。');
+                    return;
+                }
+                for (let i = names.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [names[i], names[j]] = [names[j], names[i]];
+                }
+                roleAList.innerHTML = '';
+                roleBList.innerHTML = '';
+                const midpoint = Math.ceil(names.length / 2);
+                const roleAStudents = names.slice(0, midpoint);
+                const roleBStudents = names.slice(midpoint);
+                roleAStudents.forEach(name => {
+                    const li = document.createElement('li');
+                    li.textContent = name.trim();
+                    li.className = 'assigned-student';
+                    roleAList.appendChild(li);
+                });
+                roleBStudents.forEach(name => {
+                    const li = document.createElement('li');
+                    li.textContent = name.trim();
+                    li.className = 'assigned-student';
+                    roleBList.appendChild(li);
+                });
+            });
+            resetBtn.addEventListener('click', function() {
+                studentNamesTextarea.value = '';
+                roleAList.innerHTML = '';
+                roleBList.innerHTML = '';
+            });
+
+            // Logic ẩn/hiện chi tiết câu
+            document.querySelectorAll('.phrase-item').forEach(item => {
+                item.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const details = this.querySelector('.details');
+                    if (details) {
+                         details.style.display = details.style.display === 'block' ? 'none' : 'block';
+                    }
+                });
+            });
+
+            // Logic ẩn/hiện bản dịch
+            document.querySelectorAll('.translatable').forEach(item => {
+                item.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const translation = this.querySelector('.vietnamese-translation');
+                    if (translation) {
+                        translation.style.display = translation.style.display === 'block' ? 'none' : 'block';
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

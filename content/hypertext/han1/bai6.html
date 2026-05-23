@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Ôn Tập Tiếng Trung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .game-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+        .section {
+            display: none; /* Ẩn tất cả các phần ban đầu */
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .section.active {
+            display: block; /* Hiển thị phần hiện tại */
+        }
+        h1, h2 {
+            color: #007bff;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* CSS cho control-buttons có thể bỏ đi nếu không còn nút nào khác */
+        /* .control-buttons button {
+            background-color: #28a745; 
+        }
+        .control-buttons button:hover {
+            background-color: #1e7e34;
+        } */
+        #timerDisplay, #hintArea {
+            margin: 15px 0;
+            font-size: 18px;
+            color: #dc3545; 
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .pinyin-hint {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .sentence-words button {
+            background-color: #ffc107; 
+            color: #333;
+            margin: 5px;
+        }
+        .sentence-words button:hover {
+            background-color: #e0a800;
+        }
+        .drop-area {
+            border: 2px dashed #007bff;
+            padding: 10px;
+            min-height: 50px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .drop-area span {
+            padding: 8px;
+            background-color: #e9ecef;
+            margin: 3px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .dialogue-text {
+            text-align: left;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e9f7fd;
+            border-left: 5px solid #007bff;
+            line-height: 1.6;
+        }
+        .hanzi-line {
+            margin-bottom: 2px; 
+        }
+        .pinyin-dialogue-line {
+            font-size: 0.9em;
+            color: #555555;
+            margin-bottom: 8px; 
+        }
+        .question-container {
+            margin-bottom:15px;
+            text-align: left;
+        }
+        .options button {
+            display: block;
+            width: calc(100% - 10px);
+            margin: 5px 0;
+            text-align: left;
+            background-color: #6c757d;
+        }
+        .options button:hover {
+            background-color: #5a6268;
+        }
+        #summaryPage ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+        #summaryPage li {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .error-detail {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: .75rem 1.25rem;
+            margin-top: .5rem;
+            border: 1px solid transparent;
+            border-radius: .25rem;
+        }
+        .cute-icon {
+            font-size: 20px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1><span class="cute-icon">🏮</span> Trò Chơi Ôn Tập Tiếng Trung <span class="cute-icon">🏮</span></h1>
+        
+        <div id="timerDisplay">Thời gian: 00:00</div>
+        <div id="hintArea">💡 Gợi ý sẽ xuất hiện ở đây!</div>
+
+        <div id="startPage" class="section active">
+            <h2>Chào mừng bạn đến với trò chơi! <span class="cute-icon">🎉</span></h2>
+            <p>Hãy sẵn sàng để ôn tập kiến thức tiếng Trung của mình nhé!</p>
+            <button onclick="startGame()">Bắt đầu chơi <span class="cute-icon">🚀</span></button>
+        </div>
+
+        <div id="part1" class="section">
+            <h2>Phần 1: Điền Từ <span class="cute-icon">✍️</span></h2>
+            <p id="part1Instruction">Hãy điền chữ Hán tương ứng với nghĩa tiếng Việt và gợi ý Pinyin nhé. Cố lên nào! <span class="cute-icon">💪</span></p>
+            <div id="p1QuestionArea">
+                <p>Nghĩa tiếng Việt: <strong id="p1VietMeaning"></strong></p>
+                <p class="pinyin-hint">Pinyin: <em id="p1PinyinHint"></em></p>
+                <input type="text" id="p1AnswerInput" placeholder="Nhập chữ Hán">
+                <button onclick="checkPart1Answer()">Kiểm tra</button>
+            </div>
+            <div id="p1Feedback" class="feedback"></div>
+        </div>
+
+        <div id="part2" class="section">
+            <h2>Phần 2: Sắp Xếp Câu <span class="cute-icon">🧩</span></h2>
+            <p id="part2Instruction">Hãy sắp xếp các từ bị xáo trộn để tạo thành câu đúng nghĩa. Kéo và thả hoặc click để chọn nhé! <span class="cute-icon">👍</span></p>
+            <p>Nghĩa tiếng Việt tham khảo: <strong id="p2VietMeaningRef"></strong></p>
+            <div id="p2ScrambledWords" class="sentence-words">
+            </div>
+            <p>Câu của bạn:</p>
+            <div id="p2DropArea" class="drop-area">
+            </div>
+            <button onclick="clearDroppedWords()">Làm lại</button>
+            <button onclick="checkPart2Answer()">Kiểm tra</button>
+            <div id="p2Feedback" class="feedback"></div>
+        </div>
+
+        <div id="part3" class="section">
+            <h2>Phần 3: Đọc Hiểu <span class="cute-icon">📖</span></h2>
+            <p id="part3Instruction">Đọc đoạn văn sau và chọn đáp án đúng cho câu hỏi. Chú ý nhé! <span class="cute-icon">🧐</span></p>
+            <button id="showPinyinBtn" onclick="togglePinyin()">Ẩn/Hiện Pinyin</button>
+            <div id="p3Dialogue" class="dialogue-text">
+            </div>
+            <div id="p3QuestionContainer" class="question-container">
+                <p id="p3QuestionText"></p>
+                <div id="p3Options" class="options">
+                </div>
+            </div>
+            <div id="p3Feedback" class="feedback"></div>
+            <div id="p3VietTranslationOnError" class="feedback" style="color: blue; margin-top: 10px;"></div>
+        </div>
+
+        <div id="summaryPage" class="section">
+            <h2>Tổng Kết <span class="cute-icon">🏆</span></h2>
+            <p>Chúc mừng bạn đã hoàn thành trò chơi! <span class="cute-icon">🥳</span></p>
+            <p>Tổng thời gian làm bài: <span id="totalTime"></span></p>
+            <p>Số câu đúng: <span id="correctAnswers"></span></p>
+            <p>Số câu sai: <span id="incorrectAnswers"></span></p>
+            <h3>Chi tiết lỗi sai:</h3>
+            <ul id="errorDetails">
+            </ul>
+            <button onclick="restartGame()">Chơi lại <span class="cute-icon">🔁</span></button>
+        </div>
+
+        </div>
+
+    <script>
+        // Dữ liệu cho trò chơi
+        const vocabList = [
+            { hanzi: "越南", pinyin: "Yuènán", viet: "Việt Nam" },
+            { hanzi: "中国", pinyin: "Zhōngguó", viet: "Trung Quốc" },
+            { hanzi: "德国", pinyin: "Déguó", viet: "Đức" },
+            { hanzi: "日本", pinyin: "Rìběn", viet: "Nhật Bản" },
+            { hanzi: "法国", pinyin: "Fǎguó", viet: "Pháp" },
+            { hanzi: "美国", pinyin: "Měiguó", viet: "Mỹ" },
+            { hanzi: "韩国", pinyin: "Hánguó", viet: "Hàn Quốc" },
+            { hanzi: "俄罗斯", pinyin: "Éluósī", viet: "Nga" },
+            { hanzi: "西班牙", pinyin: "Xībānyá", viet: "Tây Ban Nha" },
+            { hanzi: "英国", pinyin: "Yīngguó", viet: "Anh" },
+            { hanzi: "书", pinyin: "Shū", viet: "Sách" },
+            { hanzi: "杂志", pinyin: "Zázhì", viet: "Tạp chí" },
+            { hanzi: "谁", pinyin: "Shéi", viet: "Ai" },
+            { hanzi: "认识", pinyin: "Rènshi", viet: "Biết" },
+            { hanzi: "高兴", pinyin: "Gāoxìng", viet: "Vui vẻ" }
+        ];
+
+        const sentenceList = [
+            { correct: "他问我。", pinyin: "Tā wèn wǒ.", scrambledParts: ["问", "我", "他", "。"], viet: "Anh ấy hỏi tôi." },
+            { correct: "他问你什么？", pinyin: "Tā wèn nǐ shénme?", scrambledParts: ["问", "你", "他", "什么", "？"], viet: "Anh ấy hỏi bạn cái gì?" },
+            { correct: "请问，您贵姓？", pinyin: "Qǐngwèn, nín guìxìng?", scrambledParts: ["贵姓", "您", "，", "请问", "？"], viet: "Xin hỏi, quý danh của ngài là gì?" },
+            { correct: "请问，你贵姓？", pinyin: "Qǐngwèn, nǐ guìxìng?", scrambledParts: ["贵姓", "你", "，", "请问", "？"], viet: "Xin hỏi, bạn họ gì?" },
+            { correct: "你姓什么？", pinyin: "Nǐ xìng shénme?", scrambledParts: ["什么", "你", "姓", "？"], viet: "Bạn họ gì?" },
+            { correct: "我姓张。", pinyin: "Wǒ xìng Zhāng.", scrambledParts: ["张", "我", "姓", "。"], viet: "Tôi họ Trương." },
+            { correct: "你叫什么？", pinyin: "Nǐ jiào shénme?", scrambledParts: ["叫", "什么", "你", "？"], viet: "Bạn tên gì?" },
+            { correct: "你叫什么名字？", pinyin: "Nǐ jiào shénme míngzi?", scrambledParts: ["名字", "你", "什么", "叫", "？"], viet: "Bạn tên là gì?" },
+            { correct: "你的名字是什么？", pinyin: "Nǐ de míngzi shì shénme?", scrambledParts: ["是", "名字", "什么", "你", "的", "？"], viet: "Tên của bạn là gì?" },
+            { correct: "你学习什么？", pinyin: "Nǐ xuéxí shénme?", scrambledParts: ["什么", "你", "学习", "？"], viet: "Bạn học cái gì?" },
+            { correct: "你喝什么？", pinyin: "Nǐ hē shénme?", scrambledParts: ["喝", "什么", "你", "？"], viet: "Bạn uống gì?" },
+            { correct: "你是哪国人？", pinyin: "Nǐ shì nǎ guó rén?", scrambledParts: ["人", "你", "国", "哪", "是", "？"], viet: "Bạn là người nước nào?" },
+            { correct: "我是越南人。", pinyin: "Wǒ shì Yuènán rén.", scrambledParts: ["人", "我", "越南", "是", "。"], viet: "Tôi là người Việt Nam." },
+            { correct: "这是书。", pinyin: "Zhè shì shū.", scrambledParts: ["书", "这", "是", "。"], viet: "Đây là sách." },
+            { correct: "这是中文书。", pinyin: "Zhè shì Zhōngwén shū.", scrambledParts: ["书", "中文", "这", "是", "。"], viet: "Đây là sách tiếng Trung." },
+            { correct: "这是老师的书。", pinyin: "Zhè shì lǎoshī de shū.", scrambledParts: ["的", "书", "老师", "这", "是", "。"], viet: "Đây là sách của giáo viên." },
+            { correct: "这是什么？", pinyin: "Zhè shì shénme?", scrambledParts: ["是", "这", "什么", "？"], viet: "Đây là cái gì?" },
+            { correct: "这是什么书？", pinyin: "Zhè shì shénme shū?", scrambledParts: ["书", "什么", "这", "是", "？"], viet: "Đây là sách gì?" },
+            { correct: "这是谁的书？", pinyin: "Zhè shì shéi de shū?", scrambledParts: ["的", "谁", "书", "这", "是", "？"], viet: "Đây là sách của ai?" }
+        ];
+        
+        const readingContent = {
+            dialogueHanzi: "A: 你好！\nB: 你好！\nA: 请问，你叫什么名字？\nB: 我叫安娜。\nA: 你是哪国人？\nB: 我是美国人。你是哪国人？\nA: 我是日本人，我叫田中。认识你很高兴。\nB: 认识你，我也很高兴。\nA: 你好！安娜。\nB: 你好！田中。\nA: 安娜，这是谁的书？\nB: 我的书。\nA: 这是你的英文杂志吗？\nB: 不是。",
+            dialoguePinyin: "A: Nǐ hǎo!\nB: Nǐ hǎo!\nA: Qǐngwèn, nǐ jiào shénme míngzi?\nB: Wǒ jiào Ānnà.\nA: Nǐ shì nǎ guó rén?\nB: Wǒ shì Měiguó rén. Nǐ shì nǎ guó rén?\nA: Wǒ shì Rìběn rén, wǒ jiào Tiánzhōng. Rènshi nǐ hěn gāoxìng.\nB: Rènshi nǐ, wǒ yě hěn gāoxìng.\nA: Nǐ hǎo! Ānnà.\nB: Nǐ hǎo! Tiánzhōng.\nA: Ānnà, zhè shì shéi de shū?\nB: Wǒ de shū.\nA: Zhè shì nǐ de Yīngwén zázhì ma?\nB: Bú shì.",
+            questions: [
+                { 
+                    questionText: "A叫什么名字？", 
+                    options: [
+                        { text: "安娜", pinyin: "Ānnà", correct: false },
+                        { text: "田中", pinyin: "Tiánzhōng", correct: true },
+                        { text: "中田", pinyin: "Zhōngtián", correct: false },
+                        { text: "日本", pinyin: "Rìběn", correct: false }
+                    ],
+                    vietMeaning: "A tên là gì?"
+                },
+                { 
+                    questionText: "B叫什么名字？", 
+                    options: [
+                        { text: "田中", pinyin: "Tiánzhōng", correct: false },
+                        { text: "安娜", pinyin: "Ānnà", correct: true },
+                        { text: "安妮", pinyin: "Ānnī", correct: false },
+                        { text: "美国", pinyin: "Měiguó", correct: false }
+                    ],
+                    vietMeaning: "B tên là gì?"
+                },
+                { 
+                    questionText: "B是哪国人？", 
+                    options: [
+                        { text: "日本人", pinyin: "Rìběn rén", correct: false },
+                        { text: "英国人", pinyin: "Yīngguó rén", correct: false },
+                        { text: "美国人", pinyin: "Měiguó rén", correct: true },
+                        { text: "加拿大人", pinyin: "Jiānádà rén", correct: false }
+                    ],
+                    vietMeaning: "B là người nước nào?"
+                },
+                { 
+                    questionText: "A是哪国人？", 
+                    options: [
+                        { text: "美国人", pinyin: "Měiguó rén", correct: false },
+                        { text: "日本人", pinyin: "Rìběn rén", correct: true },
+                        { text: "韩国人", pinyin: "Hánguó rén", correct: false },
+                        { text: "中国人", pinyin: "Zhōngguó rén", correct: false }
+                    ],
+                    vietMeaning: "A là người nước nào?"
+                }
+            ]
+        };
+
+        // Trạng thái trò chơi
+        let currentPart = 0; 
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let errors = 0;
+        let errorDetailsList = [];
+        let timerInterval;
+        let secondsElapsed = 0;
+        let part1Attempts = 0;
+        let pinyinVisible = false;
+
+        // DOM Elements
+        const sections = document.querySelectorAll('.section');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const hintArea = document.getElementById('hintArea');
+        
+        const p1VietMeaningEl = document.getElementById('p1VietMeaning');
+        const p1PinyinHintEl = document.getElementById('p1PinyinHint');
+        const p1AnswerInputEl = document.getElementById('p1AnswerInput');
+        const p1FeedbackEl = document.getElementById('p1Feedback');
+
+        const p2VietMeaningRefEl = document.getElementById('p2VietMeaningRef');
+        const p2ScrambledWordsEl = document.getElementById('p2ScrambledWords');
+        const p2DropAreaEl = document.getElementById('p2DropArea');
+        const p2FeedbackEl = document.getElementById('p2Feedback');
+        let p2CurrentDroppedWords = [];
+
+        const p3DialogueEl = document.getElementById('p3Dialogue');
+        const showPinyinBtnEl = document.getElementById('showPinyinBtn');
+        const p3QuestionTextEl = document.getElementById('p3QuestionText');
+        const p3OptionsEl = document.getElementById('p3Options');
+        const p3FeedbackEl = document.getElementById('p3Feedback');
+        const p3VietTranslationOnErrorEl = document.getElementById('p3VietTranslationOnError');
+
+        const totalTimeEl = document.getElementById('totalTime');
+        const correctAnswersEl = document.getElementById('correctAnswers');
+        const incorrectAnswersEl = document.getElementById('incorrectAnswers');
+        const errorDetailsEl = document.getElementById('errorDetails');
+        // const nextPartButton = document.getElementById('nextPartButton'); // Đã xóa
+
+
+        function updateHint(newHint = "Hãy chú ý nhé! 😉") {
+            hintArea.innerHTML = `💡 ${newHint}`;
+        }
+
+        function showSection(sectionId) {
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            updateHint(); 
+        }
+
+        function startTimer() {
+            secondsElapsed = 0;
+            clearInterval(timerInterval); 
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const minutes = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                const seconds = (secondsElapsed % 60).toString().padStart(2, '0');
+                timerDisplay.textContent = `Thời gian: ${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function startGame() {
+            currentPart = 1; // Bắt đầu từ Phần 1
+            score = 0;
+            errors = 0;
+            errorDetailsList = [];
+            secondsElapsed = 0;
+            startTimer();
+            loadPart1();
+            // nextPartButton.style.display = 'inline-block'; // Đã xóa
+        }
+        
+        function restartGame() {
+            currentPart = 0;
+            showSection('startPage');
+            // nextPartButton.style.display = 'none'; // Đã xóa
+            stopTimer();
+            timerDisplay.textContent = `Thời gian: 00:00`;
+        }
+
+        function loadPart1() {
+            currentQuestionIndex = 0; 
+            showSection('part1');
+            displayVocabQuestion();
+            updateHint("Điền chữ Hán đúng nào! Bạn có 3 lần thử cho mỗi từ. 🧐");
+        }
+
+        function displayVocabQuestion() {
+            if (currentQuestionIndex < vocabList.length) {
+                const currentVocab = vocabList[currentQuestionIndex];
+                p1VietMeaningEl.textContent = currentVocab.viet;
+                p1PinyinHintEl.textContent = currentVocab.pinyin;
+                p1AnswerInputEl.value = '';
+                p1FeedbackEl.textContent = '';
+                part1Attempts = 0;
+                p1AnswerInputEl.focus();
+            } else {
+                // alert("Hoàn thành Phần 1! 🎉"); // Thông báo này có thể không cần thiết nếu chuyển phần tự động
+                nextPart(); // Tự động chuyển sang phần tiếp theo
+            }
+        }
+
+        function checkPart1Answer() {
+            const userAnswer = p1AnswerInputEl.value.trim();
+            const correctAnswer = vocabList[currentQuestionIndex].hanzi;
+
+            if (userAnswer === correctAnswer) {
+                p1FeedbackEl.innerHTML = "Đúng rồi! <span class='cute-icon'>✅</span>";
+                p1FeedbackEl.className = 'feedback correct';
+                score++;
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    displayVocabQuestion();
+                }, 1000);
+            } else {
+                part1Attempts++;
+                if (part1Attempts >= 3) {
+                    p1FeedbackEl.innerHTML = `Sai rồi <span class='cute-icon'>❌</span>. Đáp án đúng là: <strong>${correctAnswer}</strong>`;
+                    p1FeedbackEl.className = 'feedback incorrect';
+                    errors++;
+                    errorDetailsList.push({ part: 1, question: `Từ: ${vocabList[currentQuestionIndex].viet}`, correctAnswer: correctAnswer, yourAnswer: userAnswer });
+                    setTimeout(() => {
+                        currentQuestionIndex++;
+                        displayVocabQuestion();
+                    }, 2500);
+                } else {
+                    p1FeedbackEl.innerHTML = `Sai rồi <span class='cute-icon'>❌</span>. Bạn còn ${3 - part1Attempts} lần thử.`;
+                    p1FeedbackEl.className = 'feedback incorrect';
+                }
+            }
+        }
+        
+        function loadPart2() {
+            currentQuestionIndex = 0;
+            showSection('part2');
+            displaySentenceQuestion();
+            updateHint("Kéo thả hoặc nhấn vào các từ để sắp xếp thành câu hoàn chỉnh. Cố lên! 🤗");
+        }
+
+        function displaySentenceQuestion() {
+            if (currentQuestionIndex < sentenceList.length) {
+                const currentSentence = sentenceList[currentQuestionIndex];
+                p2VietMeaningRefEl.textContent = currentSentence.viet;
+                p2ScrambledWordsEl.innerHTML = '';
+                p2DropAreaEl.innerHTML = '';
+                p2CurrentDroppedWords = [];
+                p2FeedbackEl.textContent = '';
+
+                let partsToDisplay = [...currentSentence.scrambledParts];
+                partsToDisplay.forEach((word, index) => {
+                    const wordButton = document.createElement('button');
+                    wordButton.textContent = word;
+                    wordButton.onclick = () => addWordToDropArea(word, wordButton);
+                    p2ScrambledWordsEl.appendChild(wordButton);
+                });
+            } else {
+                // alert("Hoàn thành Phần 2! 🎉");
+                nextPart();
+            }
+        }
+        
+        function addWordToDropArea(word, buttonElement) {
+            p2CurrentDroppedWords.push(word);
+            const wordSpan = document.createElement('span');
+            wordSpan.textContent = word;
+            wordSpan.onclick = () => removeWordFromDropArea(word, wordSpan, buttonElement);
+            p2DropAreaEl.appendChild(wordSpan);
+            buttonElement.style.display = 'none'; 
+            p2FeedbackEl.textContent = ''; 
+        }
+
+        function removeWordFromDropArea(word, spanElement, buttonElement) {
+            p2DropAreaEl.removeChild(spanElement);
+            const wordIndex = p2CurrentDroppedWords.indexOf(word);
+            if (wordIndex > -1) {
+                p2CurrentDroppedWords.splice(wordIndex, 1);
+            }
+            if (buttonElement) buttonElement.style.display = 'inline-block'; 
+        }
+
+        function clearDroppedWords() {
+            p2DropAreaEl.innerHTML = '';
+            p2CurrentDroppedWords = [];
+            const buttons = p2ScrambledWordsEl.getElementsByTagName('button');
+            for (let button of buttons) {
+                button.style.display = 'inline-block';
+            }
+            p2FeedbackEl.textContent = '';
+        }
+
+        function checkPart2Answer() {
+            const userAnswer = p2CurrentDroppedWords.join('');
+            const correctAnswer = sentenceList[currentQuestionIndex].correct;
+
+            if (userAnswer === correctAnswer) {
+                p2FeedbackEl.innerHTML = "Chính xác! <span class='cute-icon'>✅</span>";
+                p2FeedbackEl.className = 'feedback correct';
+                score++;
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    displaySentenceQuestion();
+                }, 1500);
+            } else {
+                p2FeedbackEl.innerHTML = `Chưa đúng rồi <span class='cute-icon'>❌</span>. Đáp án đúng: <strong>${correctAnswer}</strong>`;
+                p2FeedbackEl.className = 'feedback incorrect';
+                errors++;
+                 errorDetailsList.push({ part: 2, question: `Câu: ${sentenceList[currentQuestionIndex].viet}`, correctAnswer: correctAnswer, yourAnswer: userAnswer });
+                setTimeout(() => { // Có thể cho người dùng thử lại thay vì tự động chuyển
+                    currentQuestionIndex++;
+                    displaySentenceQuestion();
+                }, 3000);
+            }
+        }
+
+        function loadPart3() {
+            currentQuestionIndex = 0;
+            pinyinVisible = false; 
+            showPinyinBtnEl.textContent = "Hiện Pinyin"; 
+            showSection('part3');
+            displayReadingQuestion();
+            updateHint("Đọc kỹ đoạn hội thoại và chọn đáp án đúng nhé! 🤔");
+        }
+        
+        function togglePinyin() {
+            pinyinVisible = !pinyinVisible;
+            displayDialogueContent(); 
+            showPinyinBtnEl.textContent = pinyinVisible ? "Ẩn Pinyin" : "Hiện Pinyin";
+        }
+
+        function displayDialogueContent() { 
+            const hanziLines = readingContent.dialogueHanzi.split('\n');
+            const pinyinLines = readingContent.dialoguePinyin.split('\n');
+            let htmlOutput = "";
+
+            for (let i = 0; i < hanziLines.length; i++) {
+                if (hanziLines[i].trim() === "") { 
+                    htmlOutput += "<br>"; 
+                    continue;
+                }
+                htmlOutput += `<div class="hanzi-line">${hanziLines[i]}</div>`;
+                if (pinyinVisible && pinyinLines[i]) { 
+                    htmlOutput += `<div class="pinyin-dialogue-line">${pinyinLines[i]}</div>`;
+                }
+            }
+            p3DialogueEl.innerHTML = htmlOutput;
+        }
+
+        function displayReadingQuestion() {
+            displayDialogueContent(); 
+            p3VietTranslationOnErrorEl.textContent = ''; 
+
+            if (currentQuestionIndex < readingContent.questions.length) {
+                const currentQ = readingContent.questions[currentQuestionIndex];
+                p3QuestionTextEl.textContent = currentQ.questionText;
+                p3OptionsEl.innerHTML = '';
+                currentQ.options.forEach((option, index) => {
+                    const optButton = document.createElement('button');
+                    optButton.textContent = `${String.fromCharCode(65 + index)}. ${option.text} (${option.pinyin})`;
+                    optButton.onclick = () => checkPart3Answer(option.correct, currentQ.vietMeaning);
+                    p3OptionsEl.appendChild(optButton);
+                });
+                p3FeedbackEl.textContent = '';
+            } else {
+                // alert("Hoàn thành Phần 3! 🎉");
+                nextPart();
+            }
+        }
+        
+        function checkPart3Answer(isCorrect, vietMeaning) {
+            if (isCorrect) {
+                p3FeedbackEl.innerHTML = "Tuyệt vời! <span class='cute-icon'>✅</span>";
+                p3FeedbackEl.className = 'feedback correct';
+                score++;
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    displayReadingQuestion();
+                }, 1000);
+            } else {
+                p3FeedbackEl.innerHTML = "Không đúng rồi <span class='cute-icon'>❌</span>.";
+                p3FeedbackEl.className = 'feedback incorrect';
+                p3VietTranslationOnErrorEl.textContent = `Gợi ý nghĩa câu hỏi: ${vietMeaning}`;
+                errors++;
+                const currentQ = readingContent.questions[currentQuestionIndex];
+                const correctOpt = currentQ.options.find(opt => opt.correct);
+                errorDetailsList.push({ part: 3, question: currentQ.questionText, correctAnswer: correctOpt.text, yourAnswer: ' lựa chọn sai' }); // Cần lấy câu trả lời của người dùng
+                 setTimeout(() => { 
+                    currentQuestionIndex++;
+                    displayReadingQuestion();
+                }, 3000);
+            }
+        }
+
+        function showSummary() {
+            stopTimer();
+            showSection('summaryPage');
+            totalTimeEl.textContent = timerDisplay.textContent.replace('Thời gian: ', '');
+            correctAnswersEl.textContent = score;
+            incorrectAnswersEl.textContent = errors;
+            
+            errorDetailsEl.innerHTML = ''; 
+            if (errorDetailsList.length > 0) {
+                errorDetailsList.forEach(err => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Phần ${err.part}</strong> - ${err.question}: Bạn chọn <span class="error-detail">${err.yourAnswer}</span>. Đáp án đúng: <strong>${err.correctAnswer}</strong>`;
+                    errorDetailsEl.appendChild(li);
+                });
+            } else {
+                errorDetailsEl.innerHTML = "<li>Bạn không mắc lỗi nào! Xuất sắc! <span class='cute-icon'>🌟</span></li>";
+            }
+            // nextPartButton.style.display = 'none'; // Đã xóa
+            updateHint("Xem lại kết quả của mình nào! Bạn đã làm rất tốt! 😊");
+        }
+
+        function nextPart() {
+            // Hàm này giờ chỉ được gọi khi một phần hoàn thành
+            currentPart++;
+            currentQuestionIndex = 0; 
+
+            // Bỏ qua logic kiểm tra currentPart === 1 && document.getElementById('startPage').classList.contains('active')
+            // vì startGame sẽ trực tiếp gọi loadPart1()
+            if (currentPart === 2) { // Sau khi Phần 1 hoàn thành
+                loadPart2();
+            } else if (currentPart === 3) { // Sau khi Phần 2 hoàn thành
+                loadPart3();
+            } else if (currentPart >= 4) { // Sau khi Phần 3 hoàn thành
+                showSummary();
+            }
+        }
+
+        // Khởi tạo trò chơi
+        showSection('startPage');
+        // nextPartButton.style.display = 'none'; // Đã xóa
+
+    </script>
+</body>
+</html>

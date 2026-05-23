@@ -1,0 +1,34 @@
+id: han1-bai2-mcq
+course: han1
+order: 2
+title: "Bài 2 — Trắc nghiệm chào hỏi"
+subtitle: "Chọn đáp án đúng cho mỗi câu"
+interactionType: mcq
+estimatedMinutes: 8
+tags: [quiz, greetings]
+questions:
+  - prompt: "你好 nghĩa là gì?"
+    options: ["Tạm biệt", "Xin chào", "Cảm ơn", "Xin lỗi"]
+    correctIndex: 1
+    explanation: "你好 (nǐ hǎo) là cách chào hỏi cơ bản nhất."
+  - prompt: "Cách nói «Cảm ơn» trong tiếng Trung là?"
+    options: ["再见", "对不起", "谢谢", "请问"]
+    correctIndex: 2
+  - prompt: "«对不起» được dùng khi nào?"
+    options:
+      - "Khi muốn cảm ơn ai đó"
+      - "Khi muốn tạm biệt"
+      - "Khi muốn xin lỗi"
+      - "Khi muốn mời ai đó vào"
+    correctIndex: 2
+    explanation: "对不起 (duì bu qǐ) = Xin lỗi."
+  - prompt: "Phiên âm pinyin của 再见 là gì?"
+    options: ["zài jiàn", "zǎi jiān", "cài jiàn", "zài jiān"]
+    correctIndex: 0
+  - prompt: "Khi ai đó nói «对不起», câu trả lời lịch sự là?"
+    options: ["谢谢", "你好", "没关系", "再见"]
+    correctIndex: 2
+    explanation: "没关系 (méi guān xi) = Không sao."
+  - prompt: "Câu nào sau đây dùng để chào tạm biệt?"
+    options: ["你好！", "谢谢！", "对不起！", "再见！"]
+    correctIndex: 3

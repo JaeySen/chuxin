@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LỚP HỌC TRỰC TUYẾN DDK CHINESE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom global styles */
+        :root {
+            /* Bảng màu mới dựa trên hình ảnh tham khảo */
+            --color-primary-orange: #FF8C00; /* Cam chính cho tương tác (từ nút trong ảnh) */
+            --color-primary-orange-hover: #E07B00; /* Cam đậm hơn khi hover */
+            
+            --color-header-title-blue: #004A99; /* Xanh dương đậm cho tiêu đề chính của trang */
+            --color-section-title-blue: #105EAD; /* Xanh dương cho tiêu đề các mục (Hán ngữ 1, etc.) */
+
+            --color-text-dark: #2c3e50;    /* Xám xanh đậm cho văn bản chính */
+            --color-text-medium: #55606B;  /* Xám vừa cho văn bản phụ, văn bản thẻ ban đầu */
+            --color-text-light: #7f8c8d;   /* Xám nhạt cho footer */
+
+            --color-background-body: #F4F8FB; /* Xanh dương rất nhạt cho nền trang */
+            --color-background-card: rgba(255, 255, 255, 0.8); /* Nền thẻ glass, tăng độ mờ nhẹ */
+            --color-border-card: rgba(190, 210, 230, 0.6);   /* Viền thẻ xanh nhạt hơn */
+            --color-border-divider: #D8E2EB; /* Viền chia mục */
+            
+            --color-shadow-soft: rgba(44, 62, 80, 0.12); /* Đổ bóng nhẹ nhàng hơn */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: var(--color-background-body);
+            color: var(--color-text-dark);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0eafc; /* Màu nền scrollbar nhạt hơn */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a7bce8; /* Màu thumb scrollbar */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8eabd8;
+        }
+
+        /* Glass card style using new CSS variables */
+        .glass-card {
+            background: var(--color-background-card);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1px solid var(--color-border-card);
+            box-shadow: 0 6px 20px 0 var(--color-shadow-soft);
+        }
+
+        .focus\:ring-primary-orange:focus {
+             box-shadow: 0 0 0 3px var(--color-primary-orange); /* Cập nhật focus ring */
+        }
+    </style>
+</head>
+<body> <header class="py-10 md:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight" style="color: var(--color-header-title-blue);">
+                TRANG WEB HỌC TRỰC TUYẾN DDK CHINESE
+            </h1>
+            <p class="mt-4 text-lg sm:text-xl" style="color: var(--color-text-medium);">
+                Trợ lý đắc lực để bạn chinh phục tiếng Trung cùng DDK Chinese
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+         <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                SỔ ĐẦU BÀI
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/portal/tiendohoctap" target="_blank" title="sổ đầu bài"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">THEO DÕI SỐ BUỔI</span>
+                    </a>
+                </li>
+                  </section>
+ <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                BÀI KIỂM TRA GIỮA KỲ CUỐI KỲ
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/portal/dekiemtra" target="_blank" title="đề kiểm tra"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">ĐỀ KIỂM TRA</span>
+                    </a>
+                </li>
+            
+          </section>
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                Giáo trình hán ngữ 1
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/han1/bai1" target="_blank" title="Chơi Ôn tập bài 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai2" target="_blank" title="Chơi Ôn tập bài 2"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai3" target="_blank" title="Chơi Ôn tập bài 3"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai3review" target="_blank" title="Chơi Ôn tập đầu giờ bài 3"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập đầu giờ bài 3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai4" target="_blank" title="Chơi Ôn tập bài 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 4</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai5" target="_blank" title="Chơi Ôn tập bài 5"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 5</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/bai6" target="_blank" title="Chơi Ôn tập bài 6"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 6</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai7" target="_blank" title="Chơi Ôn tập bài 7"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 7</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai8" target="_blank" title="Chơi Ôn tập bài 8"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 8</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai9" target="_blank" title="Chơi Ôn tập bài 9"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 9</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/ontap10" target="_blank" title="Chơi Ôn tập bài 10"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 10</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai11" target="_blank" title="Chơi Ôn tập bài 11"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 11</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/bai12" target="_blank" title="Chơi Ôn tập bài 12"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 12</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai13" target="_blank" title="Chơi Ôn tập bài 13"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 13</span>
+                    </a>
+                </li>
+                   <li>
+                    <a href="https://unknown.github.io/han1/bai14" target="_blank" title="Chơi Ôn tập bài 14"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 14</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/bai15" target="_blank" title="Chơi Ôn tập bài 15"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 15</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                Giáo trình hán ngữ 2
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                 <li>
+                    <a href="https://unknown.github.io/han2/bai16" target="_blank" title="Ôn tập bài 16"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 16</span>
+                    </a>
+                      <li>
+                    <a href="https://unknown.github.io/han2/ontapbai17" target="_blank" title="Ôn tập bài 17"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 17</span>
+                    </a>
+                           <li>
+                    <a href="https://unknown.github.io/han2/ontapbai18" target="_blank" title="Ôn tập bài 18"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 18</span>
+                    </a>
+                                <li>
+                    <a href="https://unknown.github.io/han2/ontapbai19" target="_blank" title="Ôn tập bài 19"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 19</span>
+                    </a>
+                </li>
+                        <li>
+                    <a href="https://unknown.github.io/han2/ontapbai20" target="_blank" title="Ôn tập bài 20"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 20</span>
+                    </a>
+                </li>
+                 </li>
+                        <li>
+                    <a href="https://unknown.github.io/han2/bai21" target="_blank" title="Ôn tập bài 21"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 21</span>
+                    </a>
+                </li>
+                 </li>
+                        <li>
+                    <a href="https://unknown.github.io/han2/bai22" target="_blank" title="Ôn tập bài 22"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 22</span>
+                    </a>
+                </li>
+                 </li>
+                        <li>
+                    <a href="https://unknown.github.io/han2/bai23" target="_blank" title="Ôn tập bài 23"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 23</span>
+                    </a>
+                </li>
+                 </li>
+                        <li>
+                    <a href="https://unknown.github.io/han2/bai24" target="_blank" title="Ôn tập bài 24"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 24</span>
+                    </a>
+                </li>
+                     <li>
+                    <a href="https://unknown.github.io/han2/bai25" target="_blank" title="Ôn tập bài 25"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 25</span>
+                    </a>
+                </li>
+                     <li>
+                    <a href="https://unknown.github.io/han2/ontapcuoikihan2" target="_blank" title="Ôn tập cuối kì hán 2"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập cuối kì hán 2</span>
+                    </a>
+                </li>
+        
+            </ul>
+        </section>
+                
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                Giáo trình hán ngữ 4
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                 <li>
+                    <a href="https://unknown.github.io/han4/han4bai1" target="_blank" title="Chơi Ôn tập bài 1 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/bai2" target="_blank" title="Chơi Ôn tập bài 2 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/bai3" target="_blank" title="Chơi Ôn tập bài 3 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 3</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/bai4" target="_blank" title="Chơi Ôn tập bài 4 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 4</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/bai5" target="_blank" title="Chơi Ôn tập bài 5 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 5</span>
+                    </a>
+                </li>
+                   <li>
+                    <a href="https://unknown.github.io/han4/bai6" target="_blank" title="Chơi Ôn tập bài 6 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 6</span>
+                    </a>
+                </li>
+                   <li>
+                    <a href="https://unknown.github.io/han4/bai7" target="_blank" title="Chơi Ôn tập bài 7 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 7</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/ontapbai8" target="_blank" title="Chơi Ôn tập bài 8.1 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 8.1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/ontapbai88" target="_blank" title="Chơi Ôn tập bài 8.2 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 8.2</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/baitapbai9" target="_blank" title="Chơi Ôn tập bài 9.1 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 9.1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/baitapbai92" target="_blank" title="Chơi Ôn tập bài 9.2 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 9.2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/bai22" target="_blank" title="Chơi Ôn tập bài 10"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 10</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/bai23" target="_blank" title="Chơi Ôn tập bài 11 (Hán 4)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Ôn tập bài 11/span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                POA Sơ cấp 2
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/poa/chuji2bai1" target="_blank" title="Chơi Bài 1 (POA sơ cấp 2)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 1</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/poa/chuji2bai2" target="_blank" title="Chơi Bài 2 (POA sơ cấp 2)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 2</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/poa/chuji2bai3" target="_blank" title="Chơi Bài 3 (POA sơ cấp 2)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 3</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                POA Trung cấp
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/poa/zhongji1" target="_blank" title="Chơi Bài 1 (POA Trung cấp)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/poa/zhongjibai2" target="_blank" title="Chơi Bài 2 (POA Trung cấp)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 2</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/poa/zhongjibai4" target="_blank" title="Chơi Bài 4 (POA Trung cấp)"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 2</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                PHIẾU BÀI TẬP TRÊN LỚP HÁN 1 - NHÓM
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                 <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai1" target="_blank" title="PHIẾU BÀI TẬP BÀI 1 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 1 HÁN 1</span>
+                    </a>
+                     </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai2" target="_blank" title="PHIẾU BÀI TẬP BÀI 2 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 2 HÁN 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai3" target="_blank" title="PHIẾU BÀI TẬP BÀI 3 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 3 HÁN 1</span>
+                    </a>
+                </li>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai4han1" target="_blank" title="PHIẾU BÀI TẬP BÀI 4 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 4 HÁN 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai5" target="_blank" title="PHIẾU BÀI TẬP BÀI 5 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 5 HÁN 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/phieubaitapbai7" target="_blank" title="PHIẾU BÀI TẬP BÀI 7 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 7 HÁN 1</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/muabantraicaybai8" target="_blank" title="MUA BÁN TRÁI CÂY BÀI 8"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">MUA BÁN TRÁI CÂY BÀI 8</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/demsobai9" target="_blank" title="BÀI TẬP ĐẾM SỐ BÀI 9 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">BÀI TẬP ĐẾM SỐ BÀI 9 HÁN 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai9p2" target="_blank" title="BÀI TẬP ĐẾM SỐ BÀI 9.2 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">BÀI TẬP ĐẾM SỐ BÀI 9.2 HÁN 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/luyentaphoithoaibai9" target="_blank" title="BÀI TẬP ĐÓNG VAI BÀI 9 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">BÀI TẬP ĐÓNG VAI BÀI 9 HÁN 1</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai10" target="_blank" title="BÀI TẬP TƯƠNG TÁC BÀI 10 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">BÀI TẬP TƯƠNG TÁC BÀI 10 HÁN 1</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/tuongtac11" target="_blank" title="BÀI TẬP TƯƠNG TÁC BÀI 11 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">BÀI TẬP TƯƠNG TÁC BÀI 11 HÁN 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/tuongtacbai12" target="_blank" title="BÀI TẬP TƯƠNG TÁC BÀI 12 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">BÀI TẬP TƯƠNG TÁC BÀI 12 HÁN 1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/phieubaitapbai14" target="_blank" title="PHIẾU BÀI TẬP BÀI 14 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 14 HÁN 1</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han1/baiphongvan15" target="_blank" title="PHIẾU BÀI TẬP BÀI 15 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 15 HÁN 1</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+        
+         <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                PHIẾU BÀI TẬP TRÊN LỚP HÁN 2
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                  <li>
+                    <a href="https://unknown.github.io/han2/tuongtacbai13" target="_blank" title="PHIẾU BÀI TẬP BÀI 13 HÁN 2 P1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 13 HÁN 2 P1</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han2/phieukhaosatbai16" target="_blank" title="PHIẾU BÀI TẬP BÀI 16 HÁN 2 P1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 16 HÁN 2 P1</span>
+                    </a>
+                </li>
+                    <li>
+                    <a href="https://unknown.github.io/han1/phieutuongtac16buoi2" target="_blank" title="PHIẾU BÀI TẬP BÀI 16 HÁN 2 P2"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 16 HÁN 2 P2</span>
+                    </a>
+                </li>
+                 </li>
+                    <li>
+                    <a href="https://unknown.github.io/han2/tuongtacbai17" target="_blank" title="PHIẾU BÀI TẬP BÀI 17 HÁN 2 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 17 HÁN 2 </span>
+                    </a>
+                </li>
+                    <li>
+                    <a href="https://unknown.github.io/han2/tuongtacbai18" target="_blank" title="PHIẾU BÀI TẬP BÀI 18 HÁN 2 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 18 HÁN 2 </span>
+                    </a>
+                </li>
+                    <li>
+                    <a href="https://unknown.github.io/han2/tuongtac19" target="_blank" title="PHIẾU BÀI TẬP BÀI 19 HÁN 2 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 19 HÁN 2 </span>
+                    </a>
+                          <li>
+                    <a href="https://unknown.github.io/han2/tuongtacbai20" target="_blank" title="PHIẾU BÀI TẬP BÀI 20 HÁN 2 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 20 HÁN 2 </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han2/tuongtacbai21" target="_blank" title="PHIẾU BÀI TẬP BÀI 21 HÁN 2 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 21 HÁN 2 </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han2/tuongtacbai22" target="_blank" title="PHIẾU BÀI TẬP BÀI 22 HÁN 2 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 22 HÁN 2 </span>
+                    </a>
+                </li>
+          </section>
+
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                PHIẾU BÀI TẬP TRÊN LỚP HÁN 4
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                 <li>
+                    <a href="https://unknown.github.io/han4/phieubtbai4" target="_blank" title="PHIẾU BÀI TẬP BÀI 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 4</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/tuongtacbai6" target="_blank" title="PHIẾU BÀI TẬP BÀI 6"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 6</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/tuongtacbai7" target="_blank" title="PHIẾU BÀI TẬP BÀI 7"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 7</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/tuongtacbai8" target="_blank" title="PHIẾU BÀI TẬP BÀI 8"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 8</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han4/tuongtacbai9" target="_blank" title="PHIẾU BÀI TẬP BÀI 9"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU BÀI TẬP BÀI 9</span>
+                    </a>
+                </li>
+                 </ul>
+             </section>
+        
+         <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                PHIẾU BÀI TẬP TRÊN LỚP POA SƠ CẤP 2
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/poa/chuji2tuongtacbai3" target="_blank" title="PHIẾU TƯƠNG TÁC BÀI 3"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU TƯƠNG TÁC BÀI 3</span>
+                    </a>
+                </li>
+                   <li>
+                    <a href="https://unknown.github.io/poa/tuongtacpoasc4" target="_blank" title="PHIẾU TƯƠNG TÁC BÀI 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU TƯƠNG TÁC BÀI 4</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/poa/poachuji2bai5" target="_blank" title="PHIẾU TƯƠNG TÁC BÀI 5"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU TƯƠNG TÁC BÀI 5</span>
+                    </a>
+                </li>
+          </section>
+        
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                PHIẾU BÀI TẬP TRÊN LỚP POA TRUNG CẤP
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/poa/tuongtaczhongjibai4" target="_blank" title="PHIẾU TƯƠNG TÁC BÀI 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">PHIẾU TƯƠNG TÁC BÀI 4</span>
+                    </a>
+                </li>
+          </section>
+
+         <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                BÀI ĐỌC NÂNG CAO
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/han2/baidoc24tietkhi" target="_blank" title="24 TIẾT KHÍ"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">24 TIẾT KHÍ</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han4/nguphapbai8" target="_blank" title="NGỮ PHÁP BÀI 8 HÁN 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">NGỮ PHÁP BÀI 8 HÁN 4</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/tuvungbai9" target="_blank" title="TỪ VỰNG BÀI 9 HÁN 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">TỪ VỰNG BÀI 9 HÁN 4</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/nguphapbai9han4" target="_blank" title="NGỮ PHÁP BÀI 9 HÁN 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">NGỮ PHÁP BÀI 9 HÁN 4</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/baidochonnhanhsk4" target="_blank" title="TÌNH TRẠNG HÔN NHÂN HIỆN NAY"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">TÌNH TRẠNG HÔN NHÂN HIỆN NAY</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han4/baitapdocthanhngu" target="_blank" title="开天辟地"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">开天辟地</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/baidocconmot" target="_blank" title="独生子女"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">独生子女</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han2/baidocxuanvan" target="_blank" title="春晚"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">春晚</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han2/lotan" target="_blank" title="鲁迅"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Lỗ Tấn</span>
+                    </a>
+                </li>
+          </section>
+         </section>
+
+         <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                LUYỆN TẬP NGOÀI
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/han1/ontap1" target="_blank" title="ôn tập 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">ôn tập 1</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han4/nguphapbai8" target="_blank" title="NGỮ PHÁP BÀI 8 HÁN 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">NGỮ PHÁP BÀI 8 HÁN 4</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han4/tuvungbai9" target="_blank" title="NGỮ PHÁP BÀI 9 HÁN 4"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">NGỮ PHÁP BÀI 9 HÁN 4</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/nguphapbai14" target="_blank" title="NGỮ PHÁP BÀI 14 HÁN 1"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">NGỮ PHÁP BÀI 14 HÁN 1</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han4/cauchude" target="_blank" title="NGỮ PHÁP BỔ NGỮ TRÌNH ĐỘ/ TÌNH THÁI"
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">NGỮ PHÁP BỔ NGỮ TRÌNH ĐỘ/ TÌNH THÁI</span>
+                    </a>
+                </li>
+                
+          </section>
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                LUYỆN TẬP DỊCH HÁN NGỮ 1
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                  <li>
+                    <a href="https://unknown.github.io/han1/bai3dich" target="_blank" title="Bài 3 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/dichbai6" target="_blank" title="Bài 6 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 6</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han1/bai7dich" target="_blank" title="Bài 7 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 7</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/bai8dich" target="_blank" title="Bài 8 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 8</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han1/bai9dich" target="_blank" title="Bài 9 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 9</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han1/bai10dich" target="_blank" title="Bài 10 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 10</span>
+                    </a>
+                </li>
+                  <li>
+                    <a href="https://unknown.github.io/han1/bai11dich" target="_blank" title="Bài 11 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 11</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/bai12dich" target="_blank" title="Bài 12 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 12</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/han1/bai13dich" target="_blank" title="Bài 13 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 13</span>
+                    </a>
+                </li>
+          </section>
+          </section>
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                LUYỆN TẬP DỊCH HÁN NGỮ 2
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/han1/dichbai6" target="_blank" title="Bài 6 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 6</span>
+                    </a>
+                </li>
+                  </section>
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                THỰC NGHIÊM BÀI 1
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/poa/thucnghiembai1" target="_blank" title="Bài 1 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 1</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="https://unknown.github.io/portal/thucnghiemtuan2" target="_blank" title="Bài 2 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 2</span>
+                    </a>
+                </li>
+                  </section>
+                 <section class="mb-12 md:mb-16">
+            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                BÀI GIẢNG VER 2 HÁN 1
+            </h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                <li>
+                    <a href="https://unknown.github.io/han1/baigiangbai7" target="_blank" title="Bài 7 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 7</span>
+                    </a>
+                </li>
+                         <li>
+                    <a href="https://unknown.github.io/han1/baigiangbai8" target="_blank" title="Bài 8 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 8</span>
+                    </a>
+                </li>
+                   <li>
+                    <a href="https://unknown.github.io/han1/baigiangbai9" target="_blank" title="Bài 9 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 9</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://unknown.github.io/han1/bai10giaoan" target="_blank" title="Bài 10 "
+                       class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                        <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">Bài 10</span>
+                    </a>
+                </li>
+                
+    </main>
+
+    <footer class="mt-16 md:mt-24 py-8 border-t" style="border-color: var(--color-border-divider);">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm" style="color: var(--color-text-light);">&copy; 2025 unknown. Thiết kế lấy cảm hứng từ Apple & hình ảnh tham khảo.</p>
+        </div>
+    </footer>
+    <script>
+        // Script để xử lý class group-hover cho màu chữ trên thẻ
+        document.querySelectorAll('.group').forEach(card => {
+            const span = card.querySelector('span');
+            if (span) {
+                card.addEventListener('mouseenter', () => {
+                    span.style.color = 'var(--color-primary-orange)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    // Đảm bảo màu chữ trở lại đúng màu ban đầu khi không hover
+                    span.style.color = 'var(--color-text-medium)';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

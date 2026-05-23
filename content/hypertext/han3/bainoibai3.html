@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK3演讲练习：年轻人应该租房还是买房？</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #ff7bac;
+            --secondary-color: #6a89cc;
+            --light-color: #f9f3ff;
+            --text-color: #333;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            background-color: #f5f7ff;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            background-color: white;
+            padding: 18px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .speech-section {
+                grid-column: 1 / span 2;
+            }
+            
+            .vocabulary-section {
+                grid-column: 1 / span 2;
+            }
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ffebf3;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            background-color: #ffebf3;
+            padding: 10px;
+            border-radius: 50%;
+        }
+        
+        .point-card {
+            background-color: var(--light-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .point-card.buy {
+            border-left-color: var(--secondary-color);
+        }
+        
+        .point-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .point-card.buy .point-title {
+            color: var(--secondary-color);
+        }
+        
+        .example {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 12px;
+            border: 1px dashed #ddd;
+            position: relative;
+        }
+        
+        .example::before {
+            content: "例";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+        
+        .example.buy::before {
+            background-color: var(--secondary-color);
+        }
+        
+        .pinyin {
+            color: #666;
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .vietnamese {
+            color: #2c7873;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f9f8;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .vietnamese.show {
+            display: block;
+        }
+        
+        .pinyin.show {
+            display: block;
+        }
+        
+        .vocabulary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .vocabulary-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .vocabulary-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .vocabulary-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .vocabulary-table tr:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .speech-structure {
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        
+        .structure-step {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .practice-area {
+            background-color: #fff9e6;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .practice-title {
+            font-size: 1.2rem;
+            color: #e6a700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .record-btn {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+        
+        .record-btn:hover {
+            background-color: #ff5252;
+            transform: scale(1.05);
+        }
+        
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        .language-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 1;
+        }
+        
+        .mobile-warning {
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-warning {
+                display: block;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .section {
+                padding: 20px 15px;
+            }
+            
+            .vocabulary-table {
+                font-size: 0.9rem;
+            }
+            
+            .vocabulary-table th, 
+            .vocabulary-table td {
+                padding: 10px 8px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="mobile-warning">
+            <i class="fas fa-mobile-alt"></i> 提示：在手机上建议横屏使用以获得更好体验
+        </div>
+        
+        <header>
+            <div class="language-indicator">
+                <i class="fas fa-globe-asia"></i> 中文/越南语
+            </div>
+            <h1>🎤 HSK3级演讲：年轻人应该租房还是买房？</h1>
+            <p class="subtitle">Trình độ HSK3: Người trẻ nên thuê nhà hay mua nhà?</p>
+        </header>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="togglePinyinBtn">
+                <i class="fas fa-language"></i> 切换拼音 (Bật/tắt pinyin)
+            </button>
+            <button class="btn btn-secondary" id="toggleVietnameseBtn">
+                <i class="fas fa-vietnam"></i> 切换越南语 (Bật/tắt tiếng Việt)
+            </button>
+            <button class="btn btn-outline" id="practiceBtn">
+                <i class="fas fa-microphone"></i> 开始练习 (Bắt đầu luyện tập)
+            </button>
+        </div>
+        
+        <div class="content">
+            <div class="section speech-section">
+                <h2 class="section-title"><i class="fas fa-home"></i> 演讲内容 (Nội dung bài phát biểu)</h2>
+                
+                <div class="speech-structure">
+                    <h3>📝 演讲结构 (Cấu trúc bài phát biểu)</h3>
+                    <div class="structure-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <strong>开头：介绍话题 (Mở đầu: Giới thiệu chủ đề)</strong>
+                            <p class="pinyin">Jīntiān wǒ xiǎng tán yī tán niánqīng rén yīnggāi zū fángzi háishì mǎi fángzi.</p>
+                            <p class="vietnamese">Hôm nay tôi muốn nói về việc người trẻ nên thuê nhà hay mua nhà.</p>
+                        </div>
+                    </div>
+                    <div class="structure-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <strong>主体：租房和买房的优缺点 (Thân bài: Ưu nhược điểm của thuê nhà và mua nhà)</strong>
+                            <p>分别讨论租房和买房的优缺点 (Thảo luận lần lượt ưu nhược điểm của thuê nhà và mua nhà)</p>
+                        </div>
+                    </div>
+                    <div class="structure-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <strong>结尾：总结观点 (Kết luận: Tóm tắt quan điểm)</strong>
+                            <p>给出个人建议，礼貌收尾 (Đưa ra đề xuất cá nhân, kết thúc lịch sự)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="practice-area" id="practiceArea" style="display: none;">
+                    <h3 class="practice-title"><i class="fas fa-clock"></i> 演讲练习 (Luyện tập phát biểu)</h3>
+                    <p>请按照上面的结构，用1-2分钟完成演讲 (Hãy hoàn thành bài phát biểu trong 1-2 phút theo cấu trúc trên)</p>
+                    <div class="timer" id="timer">02:00</div>
+                    <button class="record-btn" id="recordBtn">
+                        <i class="fas fa-microphone"></i> 开始录音 (Bắt đầu ghi âm)
+                    </button>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-thumbs-up"></i> 租房子的优点 (Ưu điểm của thuê nhà)</h2>
+                
+                <div class="point-card">
+                    <div class="point-title">1. 灵活 (Linh hoạt)</div>
+                    <p>换工作、换城市都很方便。</p>
+                    <p class="pinyin">Huàn gōngzuò, huàn chéngshì dōu hěn fāngbiàn.</p>
+                    <p class="vietnamese">Thay đổi công việc, chuyển thành phố đều rất thuận tiện.</p>
+                    <div class="example">
+                        <p>"租房子很灵活。比如，如果你换了新工作去别的城市，你可以马上搬家。"</p>
+                        <p class="pinyin">"Zū fángzi hěn línghuó. Bǐrú, rúguǒ nǐ huànle xīn gōngzuò qù biéde chéngshì, nǐ kěyǐ mǎshàng bānjiā."</p>
+                        <p class="vietnamese">"Thuê nhà rất linh hoạt. Ví dụ, nếu bạn đổi công việc mới đến thành phố khác, bạn có thể chuyển nhà ngay."</p>
+                    </div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-title">2. 省钱 (Tiết kiệm tiền)</div>
+                    <p>不用付高额首付，房租可能比房贷便宜。</p>
+                    <p class="pinyin">Bùyòng fù gāo'é shǒufù, fángzū kěnéng bǐ fángdài piányi.</p>
+                    <p class="vietnamese">Không cần trả khoản trả trước cao, tiền thuê nhà có thể rẻ hơn tiền vay mua nhà.</p>
+                    <div class="example">
+                        <p>"租房子比较省钱，你不需要付很多首付，每月房租有时候比房贷少。"</p>
+                        <p class="pinyin">"Zū fángzi bǐjiào shěngqián, nǐ bù xūyào fù hěnduō shǒufù, měi yuè fángzū yǒu shíhòu bǐ fángdài shǎo."</p>
+                        <p class="vietnamese">"Thuê nhà tương đối tiết kiệm tiền, bạn không cần trả nhiều tiền trả trước, tiền thuê nhà hàng tháng đôi khi ít hơn tiền vay mua nhà."</p>
+                    </div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-title">3. 压力小 (Ít áp lực)</div>
+                    <p>不用还银行贷款，生活更轻松。</p>
+                    <p class="pinyin">Bùyòng huán yínháng dàikuǎn, shēnghuó gèng qīngsōng.</p>
+                    <p class="vietnamese">Không cần trả nợ ngân hàng, cuộc sống thoải mái hơn.</p>
+                    <div class="example">
+                        <p>"租房子的压力小，你不用还房贷，生活没那么紧张。"</p>
+                        <p class="pinyin">"Zū fángzi de yālì xiǎo, nǐ bùyòng huán fángdài, shēnghuó méi nàme jǐnzhāng."</p>
+                        <p class="vietnamese">"Áp lực thuê nhà nhỏ, bạn không cần trả nợ mua nhà, cuộc sống không căng thẳng như vậy."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-thumbs-down"></i> 租房子的缺点 (Nhược điểm của thuê nhà)</h2>
+                
+                <div class="point-card">
+                    <div class="point-title">1. 不稳定 (Không ổn định)</div>
+                    <p>房东可能让你搬走，不能随便装修。</p>
+                    <p class="pinyin">Fángdōng kěnéng ràng nǐ bān zǒu, bùnéng suíbiàn zhuāngxiū.</p>
+                    <p class="vietnamese">Chủ nhà có thể yêu cầu bạn chuyển đi, không thể tùy tiện sửa sang.</p>
+                    <div class="example">
+                        <p>"但租房子也有缺点，比如房东可能突然让你搬走，你也不能随便装修房子。"</p>
+                        <p class="pinyin">"Dàn zū fángzi yě yǒu quēdiǎn, bǐrú fángdōng kěnéng túrán ràng nǐ bān zǒu, nǐ yě bùnéng suíbiàn zhuāngxiū fángzi."</p>
+                        <p class="vietnamese">"Nhưng thuê nhà cũng có nhược điểm, ví dụ chủ nhà có thể đột ngột yêu cầu bạn chuyển đi, bạn cũng không thể tùy tiện sửa sang nhà cửa."</p>
+                    </div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-title">2. 没有归属感 (Không có cảm giác thuộc về)</div>
+                    <p>不是自己的家，感觉不踏实。</p>
+                    <p class="pinyin">Bùshì zìjǐ de jiā, gǎnjué bù tāshi.</p>
+                    <p class="vietnamese">Không phải nhà của mình, cảm thấy không an tâm.</p>
+                    <div class="example">
+                        <p>"租房子不是自己的家，有时候没有归属感。"</p>
+                        <p class="pinyin">"Zū fángzi bùshì zìjǐ de jiā, yǒu shíhòu méiyǒu guīshǔgǎn."</p>
+                        <p class="vietnamese">"Thuê nhà không phải nhà của mình, đôi khi không có cảm giác thuộc về."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-thumbs-up"></i> 买房子的优点 (Ưu điểm của mua nhà)</h2>
+                
+                <div class="point-card buy">
+                    <div class="point-title">1. 稳定 (Ổn định)</div>
+                    <p>自己的房子，不用担心搬家。</p>
+                    <p class="pinyin">Zìjǐ de fángzi, bùyòng dānxīn bānjiā.</p>
+                    <p class="vietnamese">Nhà của mình, không cần lo lắng chuyển nhà.</p>
+                    <div class="example buy">
+                        <p>"买房子很稳定，这是你自己的家，不用担心房东让你搬走。"</p>
+                        <p class="pinyin">"Mǎi fángzi hěn wěndìng, zhè shì nǐ zìjǐ de jiā, bùyòng dānxīn fángdōng ràng nǐ bān zǒu."</p>
+                        <p class="vietnamese">"Mua nhà rất ổn định, đây là nhà của chính bạn, không cần lo lắng chủ nhà yêu cầu bạn chuyển đi."</p>
+                    </div>
+                </div>
+                
+                <div class="point-card buy">
+                    <div class="point-title">2. 有归属感 (Có cảm giác thuộc về)</div>
+                    <p>可以按喜好装修，感觉踏实。</p>
+                    <p class="pinyin">Kěyǐ àn xǐhào zhuāngxiū, gǎnjué tāshi.</p>
+                    <p class="vietnamese">Có thể sửa sang theo sở thích, cảm thấy an tâm.</p>
+                    <div class="example buy">
+                        <p>"你可以自己装修房子，住在里面有很强的归属感。"</p>
+                        <p class="pinyin">"Nǐ kěyǐ zìjǐ zhuāngxiū fángzi, zhù zài lǐmiàn yǒu hěn qiáng de guīshǔgǎn."</p>
+                        <p class="vietnamese">"Bạn có thể tự sửa sang nhà cửa, sống trong đó có cảm giác thuộc về rất mạnh."</p>
+                    </div>
+                </div>
+                
+                <div class="point-card buy">
+                    <div class="point-title">3. 投资 (Đầu tư)</div>
+                    <p>房子可能涨价，以后能卖钱。</p>
+                    <p class="pinyin">Fángzi kěnéng zhǎngjià, yǐhòu néng mài qián.</p>
+                    <p class="vietnamese">Nhà có thể tăng giá, sau này có thể bán lấy tiền.</p>
+                    <div class="example buy">
+                        <p>"买房子也是一种投资，以后房子涨价了，你可以卖了赚钱。"</p>
+                        <p class="pinyin">"Mǎi fángzi yě shì yī zhǒng tóuzī, yǐhòu fángzi zhǎngjiàle, nǐ kěyǐ màile zhuànqián."</p>
+                        <p class="vietnamese">"Mua nhà cũng là một loại đầu tư, sau này nhà tăng giá, bạn có thể bán để kiếm tiền."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-thumbs-down"></i> 买房子的缺点 (Nhược điểm của mua nhà)</h2>
+                
+                <div class="point-card buy">
+                    <div class="point-title">1. 压力大 (Áp lực lớn)</div>
+                    <p>需要付首付，每月还房贷，生活紧张。</p>
+                    <p class="pinyin">Xūyào fù shǒufù, měi yuè huán fángdài, shēnghuó jǐnzhāng.</p>
+                    <p class="vietnamese">Cần trả tiền trả trước, hàng tháng trả nợ mua nhà, cuộc sống căng thẳng.</p>
+                    <div class="example buy">
+                        <p>"但买房子压力很大，你要付很多首付，每月还要还房贷。"</p>
+                        <p class="pinyin">"Dàn mǎi fángzi yālì hěn dà, nǐ yào fù hěnduō shǒufù, měi yuè hái yào huán fángdài."</p>
+                        <p class="vietnamese">"Nhưng mua nhà áp lực rất lớn, bạn phải trả nhiều tiền trả trước, hàng tháng còn phải trả nợ mua nhà."</p>
+                    </div>
+                </div>
+                
+                <div class="point-card buy">
+                    <div class="point-title">2. 不灵活 (Không linh hoạt)</div>
+                    <p>换城市时房子不好处理。</p>
+                    <p class="pinyin">Huàn chéngshì shí fángzi bù hǎo chǔlǐ.</p>
+                    <p class="vietnamese">Khi chuyển thành phố, nhà không dễ xử lý.</p>
+                    <div class="example buy">
+                        <p>"如果你换城市工作，房子不好卖也不好租，很不灵活。"</p>
+                        <p class="pinyin">"Rúguǒ nǐ huàn chéngshì gōngzuò, fángzi bù hǎo mài yě bù hǎo zū, hěn bù línghuó."</p>
+                        <p class="vietnamese">"Nếu bạn chuyển thành phố làm việc, nhà không dễ bán cũng không dễ cho thuê, rất không linh hoạt."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section vocabulary-section">
+                <h2 class="section-title"><i class="fas fa-book-open"></i> 生词学习 (Học từ mới)</h2>
+                
+                <table class="vocabulary-table">
+                    <thead>
+                        <tr>
+                            <th>生词 (Từ mới)</th>
+                            <th>拼音 (Pinyin)</th>
+                            <th>意思 (Nghĩa)</th>
+                            <th>例句 (Ví dụ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>租房子</td>
+                            <td>zū fáng zi</td>
+                            <td>thuê nhà</td>
+                            <td>我现在租房子住，每月2000块。</td>
+                        </tr>
+                        <tr>
+                            <td>买房子</td>
+                            <td>mǎi fáng zi</td>
+                            <td>mua nhà</td>
+                            <td>我爸妈想在城里买房子。</td>
+                        </tr>
+                        <tr>
+                            <td>年轻人</td>
+                            <td>nián qīng rén</td>
+                            <td>người trẻ</td>
+                            <td>很多年轻人喜欢去大城市工作。</td>
+                        </tr>
+                        <tr>
+                            <td>压力</td>
+                            <td>yā lì</td>
+                            <td>áp lực</td>
+                            <td>买房子的压力很大。</td>
+                        </tr>
+                        <tr>
+                            <td>稳定</td>
+                            <td>wěn dìng</td>
+                            <td>ổn định</td>
+                            <td>买房子的生活更稳定。</td>
+                        </tr>
+                        <tr>
+                            <td>灵活</td>
+                            <td>líng huó</td>
+                            <td>linh hoạt</td>
+                            <td>租房子很灵活，换工作可以搬家。</td>
+                        </tr>
+                        <tr>
+                            <td>归属感</td>
+                            <td>guī shǔ gǎn</td>
+                            <td>cảm giác thuộc về</td>
+                            <td>住在自己的房子里有归属感。</td>
+                        </tr>
+                        <tr>
+                            <td>首付</td>
+                            <td>shǒu fù</td>
+                            <td>tiền trả trước</td>
+                            <td>买房子需要付首付。</td>
+                        </tr>
+                        <tr>
+                            <td>房贷</td>
+                            <td>fáng dài</td>
+                            <td>nợ mua nhà</td>
+                            <td>我朋友每月还房贷。</td>
+                        </tr>
+                        <tr>
+                            <td>装修</td>
+                            <td>zhuāng xiū</td>
+                            <td>sửa sang, trang trí</td>
+                            <td>我们可以自己装修房子。</td>
+                        </tr>
+                        <tr>
+                            <td>搬家</td>
+                            <td>bān jiā</td>
+                            <td>chuyển nhà</td>
+                            <td>我下个月要搬家。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 25px; padding: 20px; background-color: #f0f7ff; border-radius: 12px;">
+                    <h3>常用逻辑表达 (Cách diễn đạt logic thường dùng)</h3>
+                    <p><span class="highlight">一方面…另一方面…</span> (yī fāng miàn… lìng yī fāng miàn…) - Một mặt... mặt khác...</p>
+                    <p class="example">租房子一方面很灵活，另一方面没有归属感。</p>
+                    
+                    <p><span class="highlight">比如</span> (bǐ rú) - Ví dụ</p>
+                    <p class="example">比如，你换了新工作，就可以马上搬家。</p>
+                    
+                    <p><span class="highlight">因为…所以…</span> (yīn wèi… suǒ yǐ…) - Vì... nên...</p>
+                    <p class="example">因为租房子压力小，所以很多年轻人选择租房。</p>
+                    
+                    <p><span class="highlight">我觉得</span> (wǒ jué de) - Tôi nghĩ rằng</p>
+                    <p class="example">我觉得年轻人可以先租房，再买房。</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-flag-checkered"></i> 结尾：总结观点 (Kết luận: Tóm tắt quan điểm)</h2>
+                
+                <div class="point-card" style="background-color: #e8f5e9; border-left-color: #4caf50;">
+                    <div class="point-title" style="color: #2e7d32;">个人建议 (Đề xuất cá nhân)</div>
+                    <p>"我觉得，年轻人刚开始工作可以先租房子。等工作稳定、有足够的钱了，再买房子。这样既灵活，又没有太大压力。"</p>
+                    <p class="pinyin">"Wǒ juéde, niánqīng rén gāng kāishǐ gōngzuò kěyǐ xiān zū fángzi. Děng gōngzuò wěndìng, yǒu zúgòu de qiánle, zài mǎi fángzi. Zhèyàng jì línghuó, yòu méiyǒu tài dà yālì."</p>
+                    <p class="vietnamese">"Tôi nghĩ rằng, người trẻ mới bắt đầu làm việc có thể thuê nhà trước. Đợi đến khi công việc ổn định, có đủ tiền rồi, mới mua nhà. Như vậy vừa linh hoạt, vừa không có áp lực quá lớn."</p>
+                </div>
+                
+                <div class="point-card" style="margin-top: 20px; background-color: #fff3e0; border-left-color: #ff9800;">
+                    <div class="point-title" style="color: #ef6c00;">礼貌收尾 (Kết thúc lịch sự)</div>
+                    <p>"谢谢大家！"</p>
+                    <p class="pinyin">"Xièxiè dàjiā!"</p>
+                    <p class="vietnamese">"Cảm ơn mọi người!"</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>中文国际教育教师设计 - HSK3级演讲练习平台</p>
+            <p>Thiết kế bởi giáo viên giáo dục tiếng Trung quốc tế - Nền tảng luyện tập phát biểu HSK3</p>
+            <p>© 2023 - 使用HTML/CSS/JS实现 (Được xây dựng bằng HTML/CSS/JS)</p>
+        </footer>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const togglePinyinBtn = document.getElementById('togglePinyinBtn');
+        const toggleVietnameseBtn = document.getElementById('toggleVietnameseBtn');
+        const practiceBtn = document.getElementById('practiceBtn');
+        const practiceArea = document.getElementById('practiceArea');
+        const recordBtn = document.getElementById('recordBtn');
+        const timer = document.getElementById('timer');
+        
+        // 拼音显示状态
+        let pinyinVisible = false;
+        // 越南语显示状态
+        let vietnameseVisible = false;
+        // 练习模式状态
+        let practiceMode = false;
+        // 计时器变量
+        let timerInterval;
+        let timeLeft = 120; // 2分钟 = 120秒
+        
+        // 切换拼音显示
+        togglePinyinBtn.addEventListener('click', function() {
+            pinyinVisible = !pinyinVisible;
+            const pinyinElements = document.querySelectorAll('.pinyin');
+            
+            pinyinElements.forEach(el => {
+                if (pinyinVisible) {
+                    el.style.display = 'block';
+                    el.classList.add('show');
+                } else {
+                    el.style.display = 'none';
+                    el.classList.remove('show');
+                }
+            });
+            
+            // 更新按钮文本
+            togglePinyinBtn.innerHTML = pinyinVisible ? 
+                '<i class="fas fa-language"></i> 隐藏拼音 (Tắt pinyin)' : 
+                '<i class="fas fa-language"></i> 切换拼音 (Bật/tắt pinyin)';
+        });
+        
+        // 切换越南语显示
+        toggleVietnameseBtn.addEventListener('click', function() {
+            vietnameseVisible = !vietnameseVisible;
+            const vietnameseElements = document.querySelectorAll('.vietnamese');
+            
+            vietnameseElements.forEach(el => {
+                if (vietnameseVisible) {
+                    el.style.display = 'block';
+                    el.classList.add('show');
+                } else {
+                    el.style.display = 'none';
+                    el.classList.remove('show');
+                }
+            });
+            
+            // 更新按钮文本
+            toggleVietnameseBtn.innerHTML = vietnameseVisible ? 
+                '<i class="fas fa-vietnam"></i> 隐藏越南语 (Tắt tiếng Việt)' : 
+                '<i class="fas fa-vietnam"></i> 切换越南语 (Bật/tắt tiếng Việt)';
+        });
+        
+        // 切换练习模式
+        practiceBtn.addEventListener('click', function() {
+            practiceMode = !practiceMode;
+            
+            if (practiceMode) {
+                practiceArea.style.display = 'block';
+                practiceBtn.innerHTML = '<i class="fas fa-stop"></i> 结束练习 (Kết thúc luyện tập)';
+                practiceBtn.classList.add('btn-primary');
+                practiceBtn.classList.remove('btn-outline');
+                
+                // 滚动到练习区域
+                practiceArea.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                practiceArea.style.display = 'none';
+                practiceBtn.innerHTML = '<i class="fas fa-microphone"></i> 开始练习 (Bắt đầu luyện tập)';
+                practiceBtn.classList.remove('btn-primary');
+                practiceBtn.classList.add('btn-outline');
+                
+                // 停止计时器
+                stopTimer();
+                // 停止录音动画
+                recordBtn.classList.remove('recording');
+                recordBtn.innerHTML = '<i class="fas fa-microphone"></i> 开始录音 (Bắt đầu ghi âm)';
+            }
+        });
+        
+        // 开始/停止录音
+        let isRecording = false;
+        recordBtn.addEventListener('click', function() {
+            isRecording = !isRecording;
+            
+            if (isRecording) {
+                // 开始录音（模拟）
+                recordBtn.innerHTML = '<i class="fas fa-stop-circle"></i> 停止录音 (Dừng ghi âm)';
+                recordBtn.classList.add('recording');
+                
+                // 开始计时器
+                startTimer();
+            } else {
+                // 停止录音（模拟）
+                recordBtn.innerHTML = '<i class="fas fa-microphone"></i> 开始录音 (Bắt đầu ghi âm)';
+                recordBtn.classList.remove('recording');
+                
+                // 显示完成消息
+                alert('录音已保存！你可以在"文件"应用中找到录音文件。\nGhi âm đã được lưu! Bạn có thể tìm thấy tệp ghi âm trong ứng dụng "Files".');
+                
+                // 停止计时器
+                stopTimer();
+            }
+        });
+        
+        // 计时器函数
+        function startTimer() {
+            // 重置时间
+            timeLeft = 120;
+            updateTimerDisplay();
+            
+            // 开始计时
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    recordBtn.click(); // 自动停止录音
+                    alert('时间到！演讲练习结束。\nHết giờ! Bài luyện tập phát biểu kết thúc.');
+                }
+            }, 1000);
+        }
+        
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // 时间少于30秒时改变颜色
+            if (timeLeft <= 30) {
+                timer.style.color = '#ff5252';
+            } else if (timeLeft <= 60) {
+                timer.style.color = '#ff9800';
+            } else {
+                timer.style.color = 'var(--primary-color)';
+            }
+        }
+        
+        // 初始化：默认显示拼音
+        window.addEventListener('DOMContentLoaded', function() {
+            // 默认显示拼音
+            togglePinyinBtn.click();
+            
+            // 添加一些交互效果
+            const pointCards = document.querySelectorAll('.point-card');
+            pointCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 添加词汇表行点击效果
+            const tableRows = document.querySelectorAll('.vocabulary-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    // 移除之前的高亮
+                    tableRows.forEach(r => r.style.backgroundColor = '');
+                    
+                    // 高亮当前行
+                    this.style.backgroundColor = '#e3f2fd';
+                    
+                    // 获取词汇和拼音
+                    const cells = this.cells;
+                    const word = cells[0].textContent;
+                    const pinyin = cells[1].textContent;
+                    const meaning = cells[2].textContent;
+                    const example = cells[3].textContent;
+                    
+                    // 显示提示
+                    alert(`词汇: ${word}\n拼音: ${pinyin}\n意思: ${meaning}\n例句: ${example}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

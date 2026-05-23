@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập dịch Trung-Việt vui vẻ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #f0f8ff; /* AliceBlue */
+            --container-bg: #ffffff;
+            --card-bg: #fff8e1; /* Cornsilk */
+            --card-border: #ffe0b2; /* Mocassin */
+            --text-color: #3d405b;
+            --header-color: #e07a5f; /* Terra Cotta */
+            --button-check-bg: #81b29a; /* Cambridge Blue */
+            --button-reset-bg: #f28482; /* Pastel Red */
+            --button-hint-bg: #8e9aaf; /* Queen Blue */
+            --correct-bg: #e8f5e9;
+            --correct-color: #2e7d32;
+            --correct-border: #a5d6a7;
+            --incorrect-bg: #ffebee;
+            --incorrect-color: #c62828;
+            --incorrect-border: #ef9a9a;
+            --score-bg: #e3f2fd;
+            --score-color: #1e88e5;
+            --shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        body {
+            font-family: 'Mali', cursive;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #quiz-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--container-bg);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--header-color);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px dashed var(--header-color);
+            padding-bottom: 10px;
+            margin-top: 2.5rem;
+        }
+
+        .exercise-card {
+            background-color: var(--card-bg);
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .question {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-answer {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .user-answer:focus {
+            outline: none;
+            border-color: var(--button-hint-bg);
+        }
+
+        .controls {
+            margin-top: 0.75rem;
+        }
+
+        .btn {
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn-hint {
+            background-color: var(--button-hint-bg);
+        }
+
+        .hint-box {
+            font-size: 0.95rem;
+            color: var(--button-hint-bg);
+            margin-top: 0.75rem;
+            padding: 0.5rem 0;
+            display: none; /* Ẩn ban đầu */
+        }
+
+        .feedback-box {
+            margin-top: 1rem;
+            font-size: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            display: none; /* Ẩn ban đầu */
+        }
+
+        .main-controls {
+            text-align: center;
+            margin-top: 3rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn-main {
+            font-size: 1.2rem;
+            padding: 0.8rem 2rem;
+        }
+
+        #check-btn {
+            background-color: var(--button-check-bg);
+        }
+
+        #reset-btn {
+            background-color: var(--button-reset-bg);
+        }
+        
+        #check-btn:disabled, #reset-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #score-container {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--score-bg);
+            border-radius: 15px;
+            color: var(--score-color);
+            display: none; /* Ẩn ban đầu */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <h1>Bài tập dịch Trung-Việt 👋</h1>
+        
+        <div id="part1-container">
+            <h2>Phần 1: Dịch Việt → Trung</h2>
+        </div>
+
+        <div id="part2-container">
+            <h2>Phần 2: Dịch Trung → Việt</h2>
+        </div>
+
+        <div id="score-container"></div>
+
+        <div class="main-controls">
+            <button id="check-btn" class="btn btn-main">Kiểm tra đáp án</button>
+            <button id="reset-btn" class="btn btn-main">Làm lại từ đầu</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dữ liệu bài tập mới - Bài "明天见" - 20 câu
+            const exercises = [
+                // Phần 1: Việt → Trung (10 questions)
+                { id: 1, type: 'vt', question: 'Hôm nay tôi đi bưu điện gửi thư.', answer: '今天我去邮局寄信。', hint: '"Bưu điện" là "邮局", "gửi thư" là "寄信".' },
+                { id: 2, type: 'vt', question: 'Hôm qua ba tôi đi Bắc Kinh.', answer: '昨天我爸爸去北京。', hint: '"Hôm qua" là "昨天".' },
+                { id: 3, type: 'vt', question: 'Ngày mai tôi học tiếng Trung.', answer: '明天我学汉语。', hint: '"Ngày mai" là "明天".' },
+                { id: 4, type: 'vt', question: 'Em trai tôi không học tiếng Đức.', answer: '我弟弟不学德语。', hint: '"Tiếng Đức" là "德语".' },
+                { id: 5, type: 'vt', question: 'Em gái học tiếng Anh.', answer: '妹妹学英语。', hint: '"Tiếng Anh" là "英语".' },
+                { id: 6, type: 'vt', question: 'Anh ấy đi ngân hàng rút tiền.', answer: '他去银行取钱。', hint: '"Ngân hàng" là "银行", "rút tiền" là "取钱".' },
+                { id: 7, type: 'vt', question: 'Bạn có đi bưu điện không?', answer: '你去邮局吗？', hint: 'Dùng "吗" ở cuối câu để hỏi.' },
+                { id: 8, type: 'vt', question: 'Không đi.', answer: '不去。', hint: 'Cách trả lời phủ định ngắn gọn.' },
+                { id: 9, type: 'vt', question: 'Bạn học tiếng Hán à?', answer: '你学汉语吗？', hint: 'Câu hỏi xác nhận thông tin.' },
+                { id: 10, type: 'vt', question: 'Hẹn gặp lại ngày mai!', answer: '明天见！', hint: 'Câu chào tạm biệt thông dụng.' },
+                
+                // Phần 2: Trung → Việt (10 questions)
+                { id: 11, type: 'tv', question: '我去邮局寄信。', answer: 'Tôi đi bưu điện gửi thư.', hint: '邮局 là bưu điện, 寄信 là gửi thư.' },
+                { id: 12, type: 'tv', question: '他们去北京吗？', answer: 'Họ đi Bắc Kinh à?', hint: '北京 là Bắc Kinh.' },
+                { id: 13, type: 'tv', question: '对，他们去北京。', answer: 'Đúng, họ đi Bắc Kinh.', hint: '"对" có nghĩa là "đúng".' },
+                { id: 14, type: 'tv', question: '我去银行取钱。', answer: 'Tôi đi ngân hàng rút tiền.', hint: '银行 là ngân hàng, 取钱 là rút tiền.' },
+                { id: 15, type: 'tv', question: '你学英语吗？', answer: 'Bạn học tiếng Anh à?', hint: '英语 là tiếng Anh.' },
+                { id: 16, type: 'tv', question: '不，学汉语。', answer: 'Không, học tiếng Hán.', hint: '汉语 là tiếng Hán.' },
+                { id: 17, type: 'tv', question: '明天见！', answer: 'Hẹn gặp lại ngày mai!', hint: 'Đây là câu chào tạm biệt.' },
+                { id: 18, type: 'tv', question: '昨天妈妈去邮局。', answer: 'Hôm qua mẹ đi bưu điện.', hint: '昨天 là hôm qua.' },
+                { id: 19, type: 'tv', question: '今天弟弟不学德语。', answer: 'Hôm nay em trai không học tiếng Đức.', hint: '德语 là tiếng Đức.' },
+                { id: 20, type: 'tv', question: '哥哥去银行吗？', answer: 'Anh trai đi ngân hàng à?', hint: '哥哥 là anh trai.' }
+            ];
+
+            const part1Container = document.getElementById('part1-container');
+            const part2Container = document.getElementById('part2-container');
+            const checkBtn = document.getElementById('check-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const scoreContainer = document.getElementById('score-container');
+
+            function renderExercises() {
+                part1Container.innerHTML = '<h2>Phần 1: Dịch Việt → Trung</h2>';
+                part2Container.innerHTML = '<h2>Phần 2: Dịch Trung → Việt</h2>';
+                
+                exercises.forEach((ex, index) => {
+                    const exerciseHTML = `
+                        <div class="exercise-card" id="card-${index}">
+                            <div class="question">${index + 1}. ${ex.question}</div>
+                            <input type="text" class="user-answer" id="answer-${index}" placeholder="Nhập câu trả lời của bạn...">
+                            <div class="controls">
+                                <button class="btn btn-hint" data-index="${index}">💡 Gợi ý</button>
+                            </div>
+                            <div class="hint-box" id="hint-${index}"></div>
+                            <div class="feedback-box" id="feedback-${index}"></div>
+                        </div>
+                    `;
+                    if (ex.type === 'vt') {
+                        part1Container.innerHTML += exerciseHTML;
+                    } else {
+                        part2Container.innerHTML += exerciseHTML;
+                    }
+                });
+                
+                document.querySelectorAll('.btn-hint').forEach(button => {
+                    button.addEventListener('click', showHint);
+                });
+            }
+
+            function showHint(event) {
+                const index = event.target.dataset.index;
+                const hintBox = document.getElementById(`hint-${index}`);
+                hintBox.innerHTML = `<strong>Gợi ý:</strong> ${exercises[index].hint}`;
+                hintBox.style.display = 'block';
+                event.target.disabled = true;
+            }
+            
+            function checkAnswers() {
+                let score = 0;
+                exercises.forEach((ex, index) => {
+                    const userAnswerInput = document.getElementById(`answer-${index}`);
+                    const userAnswer = userAnswerInput.value.trim();
+                    const correctAnswer = ex.answer;
+                    const feedbackBox = document.getElementById(`feedback-${index}`);
+                    
+                    const normalizedUserAnswer = userAnswer.replace(/[.？，。!！]/g, ''); // Bỏ thêm dấu chấm than
+                    const normalizedCorrectAnswer = correctAnswer.replace(/[.？，。!！]/g, ''); // Bỏ thêm dấu chấm than
+
+                    if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                        score++;
+                        userAnswerInput.style.borderColor = 'var(--correct-border)';
+                        feedbackBox.innerHTML = '✅ <strong>Chính xác!</strong>';
+                        feedbackBox.style.color = 'var(--correct-color)';
+                        feedbackBox.style.backgroundColor = 'var(--correct-bg)';
+                    } else {
+                        userAnswerInput.style.borderColor = 'var(--incorrect-border)';
+                        feedbackBox.innerHTML = `❌ <strong>Chưa đúng.</strong> Đáp án đúng là: <br><strong>${correctAnswer}</strong>`;
+                        feedbackBox.style.color = 'var(--incorrect-color)';
+                        feedbackBox.style.backgroundColor = 'var(--incorrect-bg)';
+                    }
+                    feedbackBox.style.display = 'block';
+                    userAnswerInput.disabled = true;
+                });
+
+                scoreContainer.innerHTML = `Bạn đã trả lời đúng ${score}/${exercises.length} câu! Chúc mừng! 🎉`;
+                scoreContainer.style.display = 'block';
+
+                checkBtn.disabled = true;
+                resetBtn.disabled = false;
+                document.querySelectorAll('.btn-hint').forEach(b => b.disabled = true);
+            }
+
+            function resetQuiz() {
+                renderExercises();
+                scoreContainer.style.display = 'none';
+                scoreContainer.innerHTML = '';
+                checkBtn.disabled = false;
+                resetBtn.disabled = true;
+            }
+
+            checkBtn.addEventListener('click', checkAnswers);
+            resetBtn.addEventListener('click', resetQuiz);
+
+            renderExercises();
+            resetBtn.disabled = true;
+
+        });
+    </script>
+</body>
+</html>
+

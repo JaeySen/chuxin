@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LỚP HỌC TRỰC TUYẾN DDK CHINESE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom global styles */
+        :root {
+            --color-primary-orange: #FF8C00;
+            --color-primary-orange-hover: #E07B00;
+            --color-header-title-blue: #004A99;
+            --color-section-title-blue: #105EAD;
+            --color-text-dark: #2c3e50;
+            --color-text-medium: #55606B;
+            --color-text-light: #7f8c8d;
+            --color-background-body: #F4F8FB;
+            --color-background-card: rgba(255, 255, 255, 0.8);
+            --color-border-card: rgba(190, 210, 230, 0.6);
+            --color-border-divider: #D8E2EB;
+            --color-shadow-soft: rgba(44, 62, 80, 0.12);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: var(--color-background-body);
+            color: var(--color-text-dark);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0eafc;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a7bce8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8eabd8;
+        }
+
+        /* Glass card style */
+        .glass-card {
+            background: var(--color-background-card);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1px solid var(--color-border-card);
+            box-shadow: 0 6px 20px 0 var(--color-shadow-soft);
+        }
+
+        .focus\:ring-primary-orange:focus {
+             box-shadow: 0 0 0 3px var(--color-primary-orange);
+        }
+
+        /* Ẩn/hiện phần tử */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Phần đăng nhập -->
+    <div id="loginSection" class="min-h-screen flex flex-col justify-center items-center px-4">
+        <div class="max-w-md w-full glass-card rounded-2xl p-8">
+            <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--color-header-title-blue);">
+                ĐĂNG NHẬP
+            </h2>
+            <div class="space-y-6">
+                <div>
+                    <label for="code" class="block text-sm font-medium mb-2" style="color: var(--color-text-medium);">
+                        Nhập mã truy cập
+                    </label>
+                    <input 
+                        type="password" 
+                        id="code" 
+                        placeholder="Nhập mã của bạn..." 
+                        class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all"
+                        style="border-color: var(--color-border-card); background: var(--color-background-card); color: var(--color-text-dark);"
+                        onkeypress="handleKeyPress(event)"
+                    >
+                </div>
+                <button 
+                    id="loginBtn"
+                    class="w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+                    style="background-color: var(--color-primary-orange);"
+                    onclick="checkCode()"
+                >
+                    ĐĂNG NHẬP
+                </button>
+                <div id="message" class="text-center text-sm mt-4 hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toàn bộ nội dung chính (ban đầu ẩn) -->
+    <div id="mainContent" class="hidden">
+        <header class="py-10 md:py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight" style="color: var(--color-header-title-blue);">
+                    TRANG WEB HỌC TRỰC TUYẾN DDK CHINESE
+                </h1>
+                <p class="mt-4 text-lg sm:text-xl" style="color: var(--color-text-medium);">
+                    Trợ lý đắc lực để bạn chinh phục tiếng Trung cùng DDK Chinese
+                </p>
+                <button 
+                    onclick="logout()"
+                    class="mt-8 px-6 py-2 rounded-lg font-semibold text-white transition-all duration-300 hover:shadow-lg"
+                    style="background-color: var(--color-primary-orange);"
+                >
+                    ĐĂNG XUẤT
+                </button>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- DÁN TOÀN BỘ NỘI DUNG CÁC SECTION CỦA BẠN VÀO ĐÂY -->
+            <!-- Bắt đầu dán từ đây -->
+
+            <section class="mb-12 md:mb-16">
+                <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                    SỔ ĐẦU BÀI
+                </h2>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                    <li>
+                        <a href="https://unknown.github.io/portal/tiendohoctap" target="_blank" title="sổ đầu bài"
+                           class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                            <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">THEO DÕI SỐ BUỔI</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="mb-12 md:mb-16">
+                <h2 class="text-2xl sm:text-3xl font-semibold mb-6 sm:mb-8 pb-3 border-b" style="color: var(--color-section-title-blue); border-color: var(--color-border-divider);">
+                    BÀI KIỂM TRA GIỮA KỲ CUỐI KỲ
+                </h2>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
+                    <li>
+                        <a href="https://unknown.github.io/han1/bai1" target="_blank" title="đề kiểm tra"
+                           class="glass-card flex flex-col items-center justify-center h-32 sm:h-36 p-4 rounded-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1.5 hover:shadow-xl focus:outline-none focus\:ring-primary-orange group">
+                            <span class="text-center font-medium transition-colors" style="color: var(--color-text-medium);">ĐỀ KIỂM TRA</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Dán tiếp tất cả các section còn lại của bạn ở đây -->
+            <!-- ... -->
+            <!-- Kết thúc dán ở đây -->
+
+        </main>
+
+        <footer class="mt-16 md:mt-24 py-8 border-t" style="border-color: var(--color-border-divider);">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <p class="text-sm" style="color: var(--color-text-light);">&copy; 2025 unknown. Thiết kế lấy cảm hứng từ Apple & hình ảnh tham khảo.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // CẤU HÌNH API URL (Giữ nguyên link của bạn)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0UuBeAYAEUcmx81DU6S1MxpJBm_VOutbkBvTGzl__bV2FvEPAtllTcBpn0gizsWEa/exec";
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        document.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('ddkLoggedIn');
+            if (isLoggedIn === 'true') {
+                showMainContent();
+            }
+        });
+
+        // Hàm xử lý phím Enter
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkCode();
+            }
+        }
+
+        // --- HÀM KIỂM TRA MÃ (ĐÃ NÂNG CẤP) ---
+        async function checkCode() {
+            const inputEl = document.getElementById('code');
+            // 1. Cắt khoảng trắng thừa ngay từ đầu vào
+            const code = inputEl.value.trim(); 
+            const message = document.getElementById('message');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!code) {
+                showMessage('Vui lòng nhập mã truy cập!', 'error');
+                return;
+            }
+
+            // Hiển thị trạng thái loading
+            loginBtn.innerHTML = 'ĐANG KIỂM TRA...';
+            loginBtn.disabled = true;
+            message.classList.add('hidden'); // Ẩn thông báo cũ
+
+            try {
+                // 2. Thêm tham số redirect: 'follow' để trình duyệt tự động đi theo link chuyển hướng của Google
+                const response = await fetch(`${SCRIPT_URL}?code=${encodeURIComponent(code)}`, {
+                    method: 'GET',
+                    redirect: 'follow' 
+                });
+
+                // 3. Không dùng .json() ngay, mà lấy .text() trước để kiểm tra xem Server trả về cái gì
+                const textResult = await response.text();
+                
+                // Debug: In kết quả ra màn hình console (F12) để soi lỗi
+                console.log("Server trả về:", textResult);
+
+                let data;
+                try {
+                    // Cố gắng chuyển đổi text sang JSON
+                    data = JSON.parse(textResult);
+                } catch (e) {
+                    // Nếu lỗi ở đây, tức là Server trả về HTML (Lỗi quyền truy cập) chứ không phải JSON
+                    throw new Error("Lỗi kết nối: Không thể đọc dữ liệu từ Server. (Khả năng do chưa set quyền 'Anyone')");
+                }
+                
+                if (data.valid === true) {
+                    // Đăng nhập thành công
+                    showMessage(data.message || 'Đăng nhập thành công!', 'success');
+                    localStorage.setItem('ddkLoggedIn', 'true');
+                    setTimeout(showMainContent, 1000);
+                } else {
+                    // Đăng nhập thất bại (Sai mã)
+                    showMessage(data.message || 'Mã truy cập không đúng!', 'error');
+                }
+
+            } catch (error) {
+                console.error('Chi tiết lỗi:', error);
+                // Hiển thị lỗi cụ thể ra màn hình để bạn biết đường sửa
+                showMessage('Lỗi: ' + error.message, 'error');
+            } finally {
+                // Khôi phục trạng thái nút
+                loginBtn.innerHTML = 'ĐĂNG NHẬP';
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Hàm hiển thị thông báo
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.classList.remove('hidden');
+            
+            if (type === 'success') {
+                message.style.color = '#10B981'; // Xanh lá
+            } else {
+                message.style.color = '#EF4444'; // Đỏ
+            }
+        }
+
+        // Hàm hiển thị nội dung chính
+        function showMainContent() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            
+            // Xử lý link: Xóa noreferrer và thêm opener để Web Con nhận diện được Web Cha
+            document.querySelectorAll('a').forEach(link => {
+                link.removeAttribute('rel');
+                link.setAttribute('rel', 'opener');
+            });
+            
+            setupHoverEffects();
+        }
+
+        // Hàm đăng xuất
+        function logout() {
+            localStorage.removeItem('ddkLoggedIn');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('code').value = '';
+            document.getElementById('message').classList.add('hidden');
+        }
+
+        // Hàm thiết lập hiệu ứng hover
+        function setupHoverEffects() {
+            document.querySelectorAll('.group').forEach(card => {
+                const span = card.querySelector('span');
+                if (span) {
+                    card.addEventListener('mouseenter', () => {
+                        span.style.color = 'var(--color-primary-orange)';
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        span.style.color = 'var(--color-text-medium)';
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

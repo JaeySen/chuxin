@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 10: Ông ấy sống ở đâu? (他住在哪儿?)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f0fdfa; color: #134e4a; }
+        .cn-text { font-family: 'Noto Sans SC', sans-serif; }
+        
+        /* Card Flip Effect */
+        .perspective-1000 { perspective: 1000px; }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .flip-card-front { background-color: white; border: 2px solid #ccfbf1; }
+        .flip-card-back { background-color: #14b8a6; color: white; transform: rotateY(180deg); border: 2px solid #0f766e; }
+
+        /* District Button Grid */
+        .district-btn {
+            transition: all 0.2s;
+        }
+        .district-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+        }
+        .district-btn.active {
+            background-color: #0f766e;
+            color: white;
+            border-color: #0f766e;
+        }
+
+        /* Reading Section Styles */
+        .reading-line {
+            transition: background-color 0.3s;
+        }
+        .reading-line:hover {
+            background-color: #f0fdfa;
+        }
+
+        /* Custom Scroll */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #14b8a6; border-radius: 4px; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Nav -->
+    <nav class="bg-teal-700 text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-yellow-300"></i>
+                <span>Hán ngữ 1 - Bài 10</span>
+            </h1>
+            <div class="hidden md:flex space-x-4 text-sm font-medium">
+                <a href="#vocab" class="hover:text-teal-200 transition">Từ vựng</a>
+                <a href="#districts" class="hover:text-teal-200 transition">Địa danh</a>
+                <a href="#grammar" class="hover:text-teal-200 transition">Ngữ pháp</a>
+                <a href="#reading" class="hover:text-teal-200 transition">Đọc hiểu</a>
+                <a href="#practice" class="hover:text-teal-200 transition">Thực hành</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white py-12 text-center border-b border-teal-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-5xl font-bold text-teal-800 mb-4 cn-text">他住在哪儿?</h2>
+            <h3 class="text-2xl text-slate-500 mb-4">Tā zhù zài nǎr?</h3>
+            <p class="text-teal-600 italic">Chủ đề: Hỏi địa chỉ, Số điện thoại & Các quận huyện TP.HCM</p>
+        </div>
+    </header>
+
+    <!-- 1. VOCABULARY -->
+    <section id="vocab" class="py-12 bg-teal-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-teal-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">1</div>
+                <h2 class="text-2xl font-bold text-teal-900">Từ vựng (生词)</h2>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+                <button onclick="filterVocab('all')" class="px-4 py-1 rounded-full bg-teal-600 text-white text-sm hover:bg-teal-700 shadow transition">Tất cả</button>
+                <button onclick="filterVocab('place')" class="px-4 py-1 rounded-full bg-white text-teal-600 border border-teal-200 text-sm hover:bg-teal-50 shadow transition">Địa điểm</button>
+                <button onclick="filterVocab('action')" class="px-4 py-1 rounded-full bg-white text-teal-600 border border-teal-200 text-sm hover:bg-teal-50 shadow transition">Hành động</button>
+                <button onclick="filterVocab('contact')" class="px-4 py-1 rounded-full bg-white text-teal-600 border border-teal-200 text-sm hover:bg-teal-50 shadow transition">Liên lạc</button>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6" id="vocab-container">
+                <!-- JS Injected -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. HCMC DISTRICTS -->
+    <section id="districts" class="py-12 bg-white border-t border-teal-100">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-teal-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">2</div>
+                <h2 class="text-2xl font-bold text-teal-900">Địa danh TP.HCM (胡志明市)</h2>
+            </div>
+            
+            <p class="text-center text-gray-500 mb-6 italic">Bấm vào tên quận/huyện để xem tiếng Trung</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Map/List -->
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-inner">
+                    <h3 class="font-bold text-teal-800 mb-4 text-center">Chọn khu vực của bạn:</h3>
+                    <div class="grid grid-cols-3 gap-2" id="district-grid">
+                        <!-- JS Injected Buttons -->
+                    </div>
+                </div>
+
+                <!-- Display Result -->
+                <div class="flex flex-col justify-center items-center bg-teal-800 text-white p-8 rounded-xl shadow-xl text-center relative overflow-hidden">
+                    <i class="fas fa-map-marked-alt text-teal-700 text-9xl absolute opacity-20 -bottom-4 -right-4"></i>
+                    <div id="district-display">
+                        <p class="text-teal-300 text-sm uppercase font-bold tracking-wider mb-2">Tiếng Trung</p>
+                        <h3 class="text-5xl font-bold cn-text mb-2" id="disp-cn">...</h3>
+                        <p class="text-2xl text-yellow-300 mb-6 font-mono" id="disp-py">...</p>
+                        
+                        <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm w-full">
+                            <p class="text-sm text-teal-100 mb-1">Mẫu câu hỏi:</p>
+                            <p class="cn-text text-xl">你住在<span class="text-yellow-300" id="disp-sample">哪儿</span>？</p>
+                            <p class="text-xs text-teal-200 mt-1">(Nǐ zhù zài nǎr?)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. GRAMMAR & PHONE NUMBERS -->
+    <section id="grammar" class="py-12 bg-teal-50 border-t border-teal-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-teal-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">3</div>
+                <h2 class="text-2xl font-bold text-teal-900">Ngữ pháp & Số điện thoại</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Grammar Cards -->
+                <div class="space-y-4">
+                    <div class="bg-white p-5 rounded-lg border-l-4 border-teal-500 shadow-sm">
+                        <h4 class="font-bold text-teal-800 text-lg mb-2">1. Hỏi nơi ở (住 - Zhù)</h4>
+                        <p class="text-gray-600 mb-2">Cấu trúc: <strong>Chủ ngữ + 住 + 在 + Địa điểm</strong></p>
+                        <p class="cn-text text-xl text-teal-600">A: 你住在哪儿？</p>
+                        <p class="cn-text text-xl text-teal-600">B: 我住在第十郡。</p>
+                        <p class="text-xs text-gray-400 italic mt-1">(Tôi sống ở Quận 10)</p>
+                    </div>
+                    
+                    <div class="bg-white p-5 rounded-lg border-l-4 border-yellow-500 shadow-sm">
+                        <h4 class="font-bold text-yellow-700 text-lg mb-2">2. Quy tắc số 1 (Yāo)</h4>
+                        <p class="text-gray-600">Trong số điện thoại, số phòng, số nhà: Số <strong>1 (Yī)</strong> đọc thành <strong>Yāo</strong>.</p>
+                        <p class="text-sm mt-2">Ví dụ: 110 -> Yāo yāo líng.</p>
+                    </div>
+                </div>
+
+                <!-- Phone Number Tool -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-teal-200">
+                    <h3 class="text-xl font-bold text-teal-800 mb-4 text-center"><i class="fas fa-mobile-alt mr-2"></i>Máy đọc số điện thoại</h3>
+                    <p class="text-sm text-gray-500 mb-4 text-center">Nhập số điện thoại để xem cách đọc chuẩn (Yāo).</p>
+                    
+                    <div class="flex gap-2 mb-6">
+                        <input type="text" id="phone-input" class="w-full border-2 border-teal-100 rounded-lg px-4 py-2 text-center text-xl tracking-widest outline-none focus:border-teal-500" placeholder="0908..." maxlength="12">
+                    </div>
+                    
+                    <div id="phone-result" class="bg-gray-100 p-4 rounded-lg text-center min-h-[80px] flex flex-col justify-center items-center">
+                        <p class="text-gray-400 italic text-sm">Kết quả sẽ hiện ở đây...</p>
+                    </div>
+                    
+                    <button onclick="readPhone()" class="w-full mt-4 bg-teal-600 text-white py-2 rounded-lg font-bold hover:bg-teal-700 transition">Đọc số (Dú hàomǎ)</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. READING SECTION (NEW) -->
+    <section id="reading" class="py-12 bg-white border-t border-teal-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-teal-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">4</div>
+                <h2 class="text-2xl font-bold text-teal-900">Đọc hiểu (阅读)</h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto bg-slate-50 p-8 rounded-xl shadow-inner border border-slate-200">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-slate-700">Giới thiệu bản thân</h3>
+                    <div class="space-x-2">
+                        <button onclick="toggleReadingPinyin()" class="text-xs bg-teal-600 text-white px-3 py-1 rounded hover:bg-teal-700">Ẩn/Hiện Pinyin</button>
+                        <button onclick="toggleReadingMeaning()" class="text-xs bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Ẩn/Hiện Nghĩa</button>
+                    </div>
+                </div>
+
+                <div class="space-y-6 text-lg">
+                    <!-- Line 1 -->
+                    <div class="reading-line p-2 rounded">
+                        <p class="reading-pinyin text-sm text-teal-600 mb-1">Wǒ yě shì Húzhìmíng Shì rén.</p>
+                        <p class="cn-text text-2xl text-slate-800">我也是胡志明市人。</p>
+                        <p class="reading-meaning text-sm text-gray-500 italic mt-1 hidden">Tôi cũng là người Thành phố Hồ Chí Minh.</p>
+                    </div>
+                    <!-- Line 2 -->
+                    <div class="reading-line p-2 rounded">
+                        <p class="reading-pinyin text-sm text-teal-600 mb-1">Wǒ jiā zài Xīnpíng jùn. Wǒ bù cháng zài jiā, wǒ zhù zài xuéxiào de sùshè.</p>
+                        <p class="cn-text text-2xl text-slate-800">我家在新平郡。我不常在家，我住在学校的宿舍。</p>
+                        <p class="reading-meaning text-sm text-gray-500 italic mt-1 hidden">Nhà tôi ở quận Tân Bình. Tôi không thường ở nhà, tôi sống ở ký túc xá của trường.</p>
+                    </div>
+                    <!-- Line 3 -->
+                    <div class="reading-line p-2 rounded">
+                        <p class="reading-pinyin text-sm text-teal-600 mb-1">Wǒ de sùshè zài sān lóu, sān yāo sì hào fángjiān.</p>
+                        <p class="cn-text text-2xl text-slate-800">我的宿舍在三楼，三一四号房间 (314)。</p>
+                        <p class="reading-meaning text-sm text-gray-500 italic mt-1 hidden">Ký túc xá của tôi ở tầng 3, phòng số 314.</p>
+                    </div>
+                    <!-- Line 4 -->
+                    <div class="reading-line p-2 rounded">
+                        <p class="reading-pinyin text-sm text-teal-600 mb-1">Nǐ de diànhuà hàomǎ shì duōshao?</p>
+                        <p class="cn-text text-2xl text-slate-800">你的电话号码是多少？</p>
+                        <p class="reading-meaning text-sm text-gray-500 italic mt-1 hidden">Số điện thoại của bạn là bao nhiêu?</p>
+                    </div>
+                    <!-- Line 5 -->
+                    <div class="reading-line p-2 rounded">
+                        <p class="reading-pinyin text-sm text-teal-600 mb-1">Shì líng jiǔ líng bā, yāo èr sān, sì wǔ liù.</p>
+                        <p class="cn-text text-2xl text-slate-800">是 0908 123 456。</p>
+                        <p class="reading-meaning text-sm text-gray-500 italic mt-1 hidden">Là 0908 123 456.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. PRACTICE -->
+    <section id="practice" class="py-12 bg-teal-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-teal-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">5</div>
+                <h2 class="text-2xl font-bold text-teal-900">Thực hành (Luyện tập)</h2>
+            </div>
+
+            <div class="max-w-3xl mx-auto bg-yellow-50 p-8 rounded-xl border border-yellow-200 shadow-md">
+                <h3 class="text-xl font-bold text-yellow-800 mb-4 text-center">Sắp xếp câu (Sentence Building)</h3>
+                <div class="text-center mb-6">
+                    <p class="text-gray-600 mb-2">Hãy sắp xếp các từ sau thành câu hoàn chỉnh:</p>
+                    <p class="font-bold text-teal-700">"Tôi sống ở tầng 12, phòng 108"</p>
+                </div>
+
+                <div id="word-bank" class="flex flex-wrap justify-center gap-3 mb-6 min-h-[50px]">
+                    <!-- Words injected by JS -->
+                </div>
+
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="font-bold text-gray-400 text-sm">Đáp án:</span>
+                    <div id="answer-box" class="flex-grow border-b-2 border-teal-300 min-h-[40px] flex flex-wrap items-center gap-2 px-2 text-lg font-bold text-teal-800"></div>
+                </div>
+
+                <div class="text-center space-x-4">
+                    <button onclick="checkSentence()" class="bg-teal-600 text-white px-6 py-2 rounded shadow hover:bg-teal-700">Kiểm tra</button>
+                    <button onclick="resetGame()" class="bg-gray-400 text-white px-6 py-2 rounded shadow hover:bg-gray-500">Làm lại</button>
+                </div>
+                <p id="game-msg" class="text-center mt-4 h-6 font-bold"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-teal-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="font-bold mb-2">Bài tập về nhà</p>
+            <p class="text-teal-200 text-sm">1. Viết địa chỉ nhà của bạn bằng tiếng Trung.</p>
+            <p class="text-teal-200 text-sm">2. Hỏi số điện thoại của 3 người bạn trong lớp.</p>
+            <p class="text-xs text-gray-500 mt-4">Hán ngữ 1 - Bài 10 | Created by AI Assistant</p>
+        </div>
+    </footer>
+
+    <script>
+        /* --- 1. VOCABULARY --- */
+        const vocabList = [
+            { h: '办公室', p: 'Bàngōngshì', m: 'Văn phòng', type: 'place', icon: '🏢', ex: '他在办公室。<br>Tā zài bàngōngshì.<br>Anh ấy đang ở văn phòng.' },
+            { h: '家', p: 'Jiā', m: 'Nhà', type: 'place', icon: '🏠', ex: '我回家。<br>Wǒ huí jiā.<br>Tôi về nhà.' },
+            { h: '房间', p: 'Fángjiān', m: 'Căn phòng', type: 'place', icon: '🚪', ex: '这是我的房间。<br>Zhè shì wǒ de fángjiān.<br>Đây là phòng của tôi.' },
+            { h: '楼', p: 'Lóu', m: 'Tòa nhà/Tầng', type: 'place', icon: '🏢', ex: '我住八楼。<br>Wǒ zhù bā lóu.<br>Tôi sống ở tầng 8.' },
+            { h: '住', p: 'Zhù', m: 'Sống/Ở', type: 'action', icon: '🛌', ex: '你住哪儿？<br>Nǐ zhù nǎr?<br>Bạn sống ở đâu?' },
+            { h: '在', p: 'Zài', m: 'Ở (tại)', type: 'action', icon: '📍', ex: '我在学校。<br>Wǒ zài xuéxiào.<br>Tôi đang ở trường học.' },
+            { h: '找', p: 'Zhǎo', m: 'Tìm', type: 'action', icon: '🔍', ex: '你找谁？<br>Nǐ zhǎo shéi?<br>Bạn tìm ai?' },
+            { h: '知道', p: 'Zhīdao', m: 'Biết', type: 'action', icon: '💡', ex: '我不知道。<br>Wǒ bù zhīdao.<br>Tôi không biết.' },
+            { h: '电话', p: 'Diànhuà', m: 'Điện thoại', type: 'contact', icon: '☎️', ex: '我在打电话。<br>Wǒ zài dǎ diànhuà.<br>Tôi đang gọi điện thoại.' },
+            { h: '手机', p: 'Shǒujī', m: 'Di động', type: 'contact', icon: '📱', ex: '这是你的手机吗？<br>Zhè shì nǐ de shǒujī ma?<br>Đây là điện thoại của bạn phải không?' },
+            { h: '号码', p: 'Hàomǎ', m: 'Số/Mã', type: 'contact', icon: '🔢', ex: '你的电话号码是多少？<br>Nǐ de diànhuà hàomǎ shì duōshao?<br>Số điện thoại của bạn là bao nhiêu?' },
+            { h: '号', p: 'Hào', m: 'Số (nhà/ngày)', type: 'contact', icon: '№', ex: '今天几号？<br>Jīntiān jǐ hào?<br>Hôm nay là ngày mấy?' }
+        ];
+
+        function renderVocab(filter) {
+            const container = document.getElementById('vocab-container');
+            container.innerHTML = '';
+            vocabList.forEach(w => {
+                if(filter === 'all' || w.type === filter) {
+                    const card = document.createElement('div');
+                    card.className = 'flip-card h-56 cursor-pointer perspective-1000';
+                    card.innerHTML = `
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front bg-white">
+                                <div class="text-4xl mb-2">${w.icon}</div>
+                                <div class="text-2xl font-bold cn-text text-teal-800">${w.h}</div>
+                                <div class="text-teal-600 font-medium">${w.p}</div>
+                                <div class="text-xs text-gray-300 absolute bottom-2">Click lật</div>
+                            </div>
+                            <div class="flip-card-back flex flex-col justify-center items-center p-2">
+                                <div class="text-xl font-bold mb-2">${w.m}</div>
+                                <div class="text-xs bg-white/20 p-2 rounded w-full">
+                                    Example:<br><span class="italic text-left inline-block">${w.ex}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    card.onclick = () => card.classList.toggle('flipped');
+                    container.appendChild(card);
+                }
+            });
+        }
+        renderVocab('all');
+        function filterVocab(t) { renderVocab(t); }
+
+        /* --- 2. DISTRICTS DATA (FROM PDF) --- */
+        const districts = [
+            { vn: 'TP HCM', cn: '胡志明市', py: 'Húzhìmíng shì' },
+            { vn: 'Quận 1', cn: '第1郡', py: 'Dì-yī jùn' },
+            { vn: 'Quận 2', cn: '第2郡', py: 'Dì-èr jùn' },
+            { vn: 'Quận 3', cn: '第3郡', py: 'Dì-sān jùn' },
+            { vn: 'Quận 4', cn: '第4郡', py: 'Dì-sì jùn' },
+            { vn: 'Quận 5', cn: '第5郡', py: 'Dì-wǔ jùn' },
+            { vn: 'Quận 6', cn: '第6郡', py: 'Dì-liù jùn' },
+            { vn: 'Quận 7', cn: '第7郡', py: 'Dì-qī jùn' },
+            { vn: 'Quận 8', cn: '第8郡', py: 'Dì-bā jùn' },
+            { vn: 'Quận 9', cn: '第9郡', py: 'Dì-jiǔ jùn' },
+            { vn: 'Quận 10', cn: '第10郡', py: 'Dì-shí jùn' },
+            { vn: 'Quận 11', cn: '第11郡', py: 'Dì-shíyī jùn' },
+            { vn: 'Quận 12', cn: '第12郡', py: 'Dì-shíèr jùn' },
+            { vn: 'Gò Vấp', cn: '旧邑郡', py: 'Jiùyì jùn' },
+            { vn: 'Tân Bình', cn: '新平郡', py: 'Xīnpíng jùn' },
+            { vn: 'Tân Phú', cn: '新富郡', py: 'Xīnfù jùn' },
+            { vn: 'Bình Thạnh', cn: '平盛郡', py: 'Píngshèng jùn' },
+            { vn: 'Phú Nhuận', cn: '富润郡', py: 'Fùrùn jùn' },
+            { vn: 'Bình Tân', cn: '平新郡', py: 'Píngxīn jùn' },
+            { vn: 'Thủ Đức', cn: '守德市', py: 'Shǒudé shì' }
+        ];
+
+        function initDistricts() {
+            const grid = document.getElementById('district-grid');
+            districts.forEach(d => {
+                const btn = document.createElement('button');
+                btn.className = 'district-btn border border-teal-200 bg-white text-teal-700 py-2 rounded text-sm font-medium';
+                btn.innerText = d.vn;
+                btn.onclick = () => showDistrict(d, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        function showDistrict(d, btn) {
+            // UI Update
+            document.querySelectorAll('.district-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Content Update
+            document.getElementById('disp-cn').innerText = d.cn;
+            document.getElementById('disp-py').innerText = d.py;
+            document.getElementById('disp-sample').innerText = d.cn;
+        }
+        initDistricts();
+
+        /* --- 3. PHONE NUMBER LOGIC --- */
+        const numMap = {
+            '0': {py: 'Líng', cn: '零'}, '1': {py: 'Yāo', cn: '一'}, '2': {py: 'Èr', cn: '二'},
+            '3': {py: 'Sān', cn: '三'}, '4': {py: 'Sì', cn: '四'}, '5': {py: 'Wǔ', cn: '五'},
+            '6': {py: 'Liù', cn: '六'}, '7': {py: 'Qī', cn: '七'}, '8': {py: 'Bā', cn: '八'}, '9': {py: 'Jiǔ', cn: '九'}
+        };
+
+        function readPhone() {
+            const input = document.getElementById('phone-input').value;
+            const resDiv = document.getElementById('phone-result');
+            
+            if(!input || isNaN(input)) {
+                resDiv.innerHTML = `<p class="text-red-500 font-bold">Vui lòng nhập số hợp lệ!</p>`;
+                return;
+            }
+
+            let pyStr = "";
+            let cnStr = "";
+            
+            for(let char of input) {
+                if(numMap[char]) {
+                    // Highlight YAO rule
+                    if(char === '1') {
+                        pyStr += `<span class="text-red-600 font-bold mx-1">Yāo</span>`;
+                        cnStr += `<span class="text-red-600 font-bold mx-1">一</span>`;
+                    } else {
+                        pyStr += `<span class="mx-1">${numMap[char].py}</span>`;
+                        cnStr += `<span class="mx-1">${numMap[char].cn}</span>`;
+                    }
+                }
+            }
+
+            resDiv.innerHTML = `
+                <p class="text-3xl cn-text mb-2 text-teal-800">${cnStr}</p>
+                <p class="text-lg font-mono text-teal-600">${pyStr}</p>
+            `;
+        }
+
+        /* --- 4. READING SECTION LOGIC --- */
+        let readingPinyinVisible = true;
+        let readingMeaningVisible = false;
+
+        function toggleReadingPinyin() {
+            readingPinyinVisible = !readingPinyinVisible;
+            document.querySelectorAll('.reading-pinyin').forEach(el => {
+                el.style.display = readingPinyinVisible ? 'block' : 'none';
+            });
+        }
+
+        function toggleReadingMeaning() {
+            readingMeaningVisible = !readingMeaningVisible;
+            document.querySelectorAll('.reading-meaning').forEach(el => {
+                el.style.display = readingMeaningVisible ? 'block' : 'none';
+            });
+        }
+
+        /* --- 5. PRACTICE GAME --- */
+        const sentenceWords = [
+            {id:1, txt:'我 (Wǒ)'}, {id:2, txt:'住 (zhù)'}, {id:3, txt:'在 (zài)'}, 
+            {id:4, txt:'十二楼 (shíèr lóu)'}, {id:5, txt:'一零八号 (yāo líng bā hào)'}
+        ];
+        // Target: Wǒ zhù zài shíèr lóu yāo líng bā hào
+        const correctOrder = [1, 2, 3, 4, 5];
+        let userOrder = [];
+
+        function initGame() {
+            const bank = document.getElementById('word-bank');
+            bank.innerHTML = '';
+            // Shuffle
+            const shuffled = [...sentenceWords].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach(w => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-white border-2 border-teal-200 px-3 py-1 rounded-lg hover:bg-teal-50 transition text-sm font-bold text-teal-800';
+                btn.innerText = w.txt;
+                btn.onclick = () => addToAnswer(w, btn);
+                bank.appendChild(btn);
+            });
+        }
+
+        function addToAnswer(word, btn) {
+            btn.classList.add('hidden'); // Hide from bank
+            userOrder.push(word.id);
+            
+            const ansBox = document.getElementById('answer-box');
+            const span = document.createElement('span');
+            span.className = 'bg-teal-100 px-2 rounded cursor-pointer hover:bg-red-100';
+            span.innerText = word.txt;
+            span.onclick = () => {
+                // Remove logic simplified: just reset game for now or simple remove
+                resetGame(); 
+            };
+            ansBox.appendChild(span);
+        }
+
+        function checkSentence() {
+            const msg = document.getElementById('game-msg');
+            if(JSON.stringify(userOrder) === JSON.stringify(correctOrder)) {
+                msg.innerText = "Chính xác! (Wǒ zhù zài shíèr lóu yāo líng bā hào)";
+                msg.className = "text-center mt-4 h-6 font-bold text-green-600";
+            } else {
+                msg.innerText = "Chưa đúng. Gợi ý: Chủ ngữ + Zhù + Zài + Tầng + Số phòng";
+                msg.className = "text-center mt-4 h-6 font-bold text-red-500";
+            }
+        }
+
+        function resetGame() {
+            userOrder = [];
+            document.getElementById('answer-box').innerHTML = '';
+            document.getElementById('game-msg').innerText = '';
+            initGame();
+        }
+        initGame();
+
+    </script>
+</body>
+</html>

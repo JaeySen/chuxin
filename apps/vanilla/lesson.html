@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hanai Lab — Bài học</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/styles.css" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+  <script src="/shared/firebase-config.js"></script>
+</head>
+<body>
+  <header id="hanai-header" class="hanai-header"></header>
+
+  <main class="lesson-shell">
+    <a href="/" class="muted" style="text-decoration:none;">← Tất cả bài học</a>
+    <div class="lesson-card" style="margin-top: 14px;">
+      <h1 class="lesson-title" id="lesson-title">Đang tải…</h1>
+      <p class="lesson-subtitle" id="lesson-subtitle"></p>
+      <div class="engine-host" id="engine-host"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { fetchLesson } from "/shared/firebase.js";
+    import { mountHeader, requireAuth, $, el } from "/shared/ui.js";
+
+    const ENGINES = {
+      flashcard: () => import("/engines/flashcard.js"),
+      mcq: () => import("/engines/mcq.js"),
+      "fill-blank": () => import("/engines/fill-blank.js"),
+      translate: () => import("/engines/translate.js"),
+      "match-pairs": () => import("/engines/match-pairs.js"),
+      "listen-pick": () => import("/engines/listen-pick.js"),
+      "listen-tf": () => import("/engines/listen-tf.js"),
+      "reading-toggle": () => import("/engines/reading-toggle.js"),
+      "reading-tooltip": () => import("/engines/reading-tooltip.js"),
+      "counting-grid": () => import("/engines/counting-grid.js"),
+      "lucky-draw": () => import("/engines/lucky-draw.js"),
+      "role-play": () => import("/engines/role-play.js"),
+      debate: () => import("/engines/debate.js"),
+      worksheet: () => import("/engines/worksheet.js"),
+      dialogue: () => import("/engines/dialogue.js"),
+      "grammar-tabs": () => import("/engines/grammar-tabs.js"),
+    };
+
+    mountHeader();
+
+    const params = new URLSearchParams(location.search);
+    const lessonId = params.get("id");
+    const host = $("#engine-host");
+
+    if (!lessonId) {
+      host.appendChild(el("div", { class: "feedback feedback-bad" }, "Thiếu tham số ?id=..."));
+    } else {
+      requireAuth(async () => {
+        try {
+          const lesson = await fetchLesson(lessonId);
+          if (!lesson) {
+            host.appendChild(el("div", { class: "feedback feedback-bad" }, `Không tìm thấy bài học «${lessonId}». Đã chạy sync chưa?`));
+            return;
+          }
+          $("#lesson-title").textContent = lesson.title;
+          $("#lesson-subtitle").textContent = lesson.subtitle ?? "";
+
+          const loader = ENGINES[lesson.interactionType];
+          if (!loader) {
+            host.appendChild(el("div", { class: "feedback feedback-bad" }, `Chưa có engine cho loại «${lesson.interactionType}».`));
+            return;
+          }
+          const mod = await loader();
+          mod.mount(host, lesson);
+        } catch (e) {
+          console.error(e);
+          host.appendChild(el("div", { class: "feedback feedback-bad" }, `Lỗi: ${e.message}`));
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Học Tập Tương Tác: Tiếng Trung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .hanzi {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 2.5;
+        }
+        .pinyin, .meaning {
+            display: none;
+            font-size: 0.9rem;
+            color: #ef4444; /* Red for Pinyin */
+        }
+        .meaning {
+            color: #3b82f6; /* Blue for meaning */
+        }
+        .show-pinyin .pinyin, .show-meaning .meaning {
+            display: block;
+        }
+        .correct {
+            border: 2px solid #22c55e;
+            background-color: #f0fdf4;
+        }
+        .incorrect {
+            border: 2px solid #ef4444;
+            background-color: #fef2f2;
+        }
+        .feedback {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct-feedback {
+            color: #22c55e;
+        }
+        .incorrect-feedback {
+            color: #ef4444;
+        }
+        .content-section {
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            background-color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800">PHIẾU HỌC TẬP TƯƠNG TÁC</h1>
+            <p class="text-lg text-gray-500 mt-2">Interactive Chinese Reading Worksheet</p>
+        </header>
+
+        <!-- Reading 1: Beijing's Seasons (Updated) -->
+        <section class="content-section shadow-lg">
+            <header class="text-center mb-6 border-b pb-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">北京的四季</h2>
+                <p class="text-xl md:text-2xl text-blue-600 mt-2">Bài 1: Bốn mùa ở Bắc Kinh</p>
+            </header>
+
+            <main class="mb-8 prose prose-lg max-w-none">
+                <div class="flex flex-wrap gap-4 justify-center mb-6">
+                    <button class="toggle-pinyin-btn bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105" data-target="text-content-1">Ẩn/Hiện Pinyin</button>
+                    <button class="toggle-meaning-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105" data-target="text-content-1">Ẩn/Hiện Nghĩa</button>
+                </div>
+
+                <div id="text-content-1" class="space-y-4 text-justify">
+                    <p>
+                        <span class="hanzi" data-pinyin="Běijīng shì Zhōngguó de shǒudū." data-meaning="Bắc Kinh là thủ đô của Trung Quốc.">北京是中国的首都。</span>
+                        <span class="hanzi" data-pinyin="Tā shì Zhōngguó běifāng de yí ge dà chéngshì." data-meaning="Nó là một thành phố lớn ở phía bắc Trung Quốc.">她是中国北方的一个大城市。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Běijīng sìjì fēnmíng." data-meaning="Bốn mùa ở Bắc Kinh rất rõ rệt.">北京四季分明。</span>
+                        <span class="hanzi" data-pinyin="Sān yuè dào wǔ yuè shì chūnjì," data-meaning="Tháng 3 đến tháng 5 là mùa xuân,">3月到5月是春季，</span>
+                        <span class="hanzi" data-pinyin="liù yuè dào bā yuè shì xiàjì," data-meaning="tháng 6 đến tháng 8 là mùa hè,">6月到8月是夏季，</span>
+                        <span class="hanzi" data-pinyin="jiǔ yuè, shí yuè shì qiūjì," data-meaning="tháng 9, tháng 10 là mùa thu,">9月、10月是秋季，</span>
+                        <span class="hanzi" data-pinyin="shíyī yuè dào dì'èr nián de sān yuèchū shì dōngjì." data-meaning="tháng 11 đến đầu tháng 3 năm sau là mùa đông.">11月到第二年的三月初是冬季。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Běijīng de chūntiān chángcháng guā fēng, qìhòu gānzào, hěn shǎo xià yǔ." data-meaning="Mùa xuân ở Bắc Kinh thường có gió, khí hậu khô hanh, rất ít mưa.">北京的春天常常刮风，气候干燥，很少下雨。</span>
+                        <span class="hanzi" data-pinyin="Sì, wǔ yuèfèn shì huār de jìjié, dàochù dōu kěyǐ kàndào xiānhuā, hóng de, huáng de, bái de, fěn de, fēicháng hǎokàn." data-meaning="Tháng 4, tháng 5 là mùa của hoa, khắp nơi đều có thể nhìn thấy hoa tươi, màu đỏ, màu vàng, màu trắng, màu hồng, vô cùng đẹp mắt.">四、五月份是花儿的季节，到处都可以看到鲜花，红的、黄的、白的、粉的，非常好看。</span>
+                        <span class="hanzi" data-pinyin="Běijīng de chūntiān shì měilì de." data-meaning="Mùa xuân của Bắc Kinh thật đẹp.">北京的春天是美丽的。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Běijīng de xiàtiān bǐjiào rè," data-meaning="Mùa hè ở Bắc Kinh tương đối nóng,">北京的夏天比较热，</span>
+                        <span class="hanzi" data-pinyin="qī yuè xiàxún dào bā yuè shàngxún zuì rè," data-meaning="cuối tháng 7 đến đầu tháng 8 là nóng nhất,">7月下旬到8月上旬最热，</span>
+                        <span class="hanzi" data-pinyin="rì píngjūn qìwēn yìbān zài èrshíwǔliù dù," data-meaning="nhiệt độ trung bình ban ngày thường ở mức 25-26 độ,">日平均气温一般在二十五六度，</span>
+                        <span class="hanzi" data-pinyin="bā yuè píngjūn zuìgāo wēndù jiāngjìn 30 dù." data-meaning="nhiệt độ cao nhất trung bình tháng 8 gần 30 độ.">8月平均最高温度将近30度。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Běijīng de qiūtiān tiānqì hěn hǎo, bù lěng yě bú rè, hěn shǎo guā fēng, yě hěn shǎo xià yǔ." data-meaning="Mùa thu ở Bắc Kinh thời tiết rất đẹp, không lạnh cũng không nóng, rất ít gió, cũng rất ít mưa.">北京的秋天天气很好，不冷也不热，很少刮风，也很少下雨。</span>
+                        <span class="hanzi" data-pinyin="Zhè shíhou chángcháng kàndào lánlán de tiān shàng piāozhe báibái de yún, kōngqì yě hěn qīngxīn." data-meaning="Lúc này thường thấy trời xanh mây trắng, không khí cũng rất trong lành.">这时候常常看到蓝蓝的天上飘着白白的云，空气也很清新。</span>
+                        <span class="hanzi" data-pinyin="Qiūtiān shì Běijīng zuì hǎo de jìjié." data-meaning="Mùa thu là mùa đẹp nhất ở Bắc Kinh.">秋天是北京最好的季节。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Běijīng de dōngtiān hěn lěng, qìhòu hěn gānzào, chángcháng guā xīběi fēng, yǒushíhou huì xià xuě." data-meaning="Mùa đông ở Bắc Kinh rất lạnh, khí hậu rất khô, thường có gió tây bắc, đôi khi có tuyết rơi.">北京的冬天很冷，气候很干燥，常常刮西北风，有时候会下雪。</span>
+                        <span class="hanzi" data-pinyin="Xià xuě de shíhou, rénmen tèbié gāoxìng, zài xuědì lǐ zhàoxiàng, duī xuěrén, dǎ xuězhàng." data-meaning="Khi tuyết rơi, mọi người đặc biệt vui mừng, chụp ảnh trong tuyết, đắp người tuyết, chơi ném tuyết.">下雪的时候，人们特别高兴，在雪地里照相、堆雪人、打雪仗。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Běijīng de sìjì gè yǒu tèdiǎn." data-meaning="Bốn mùa ở Bắc Kinh đều có đặc điểm riêng.">北京的四季各有特点。</span>
+                        <span class="hanzi" data-pinyin="Shēnghuó zài Běijīng, néng gǎnshòu dào lěng, nuǎn, rè, liáng sì zhǒng qìhòu." data-meaning="Sống ở Bắc Kinh, có thể cảm nhận được bốn loại khí hậu lạnh, ấm, nóng, mát.">生活在北京，能感受到冷、暖、热、凉四种气候。</span>
+                        <span class="hanzi" data-pinyin="Nǐ zuì xǐhuān tā de nǎge jìjié ne?" data-meaning="Bạn thích nhất mùa nào của nơi đây?">你最喜欢她的哪个季节呢？</span>
+                    </p>
+                </div>
+            </main>
+            
+            <section class="exercises mt-10 border-t pt-8">
+                <h3 class="text-2xl font-bold text-center text-gray-700 mb-6">Bài tập thực hành (Bài 1)</h3>
+                <div class="mb-8 p-6 bg-gray-50 rounded-xl">
+                    <h4 class="text-xl font-semibold mb-4">1. 判断正误 (Phán đoán Đúng/Sai)</h4>
+                    <div id="true-false-questions-1" class="space-y-4"></div>
+                </div>
+                <div class="p-6 bg-gray-50 rounded-xl">
+                    <h4 class="text-xl font-semibold mb-4">2. 选词填空 (Chọn từ điền vào chỗ trống)</h4>
+                    <div id="fill-blank-questions-1" class="space-y-4"></div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Reading 2: 24 Solar Terms -->
+        <section class="content-section shadow-lg">
+            <header class="text-center mb-6 border-b pb-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">二十四节气</h2>
+                <p class="text-xl md:text-2xl text-green-600 mt-2">Bài 2: 24 Tiết khí</p>
+            </header>
+
+            <main class="mb-8 prose prose-lg max-w-none">
+                <div class="flex flex-wrap gap-4 justify-center mb-6">
+                    <button class="toggle-pinyin-btn bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105" data-target="text-content-2">Ẩn/Hiện Pinyin</button>
+                    <button class="toggle-meaning-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105" data-target="text-content-2">Ẩn/Hiện Nghĩa</button>
+                </div>
+
+                <div id="text-content-2" class="space-y-4 text-justify">
+                    <p>
+                        <span class="hanzi" data-pinyin="Èrshísì jiéqì shì gǔdài Zhōngguó rén zài nóngyè shēngchǎn shíjiàn zhōng zhújiàn chuànglì de." data-meaning="24 tiết khí là do người Trung Quốc cổ đại dần dần sáng tạo ra trong thực tiễn sản xuất nông nghiệp.">二十四节气是古代中国人在农业生产实践中逐渐创立的。</span>
+                        <span class="hanzi" data-pinyin="Kāishǐ de shíhòu yī nián zhǐ fēn chūn, qiū liǎng jì, hòulái yòu fēn wéi chūn, xià, qiū, dōng sìjì, yǐhòu yòu bùduàn bǔchōng, wánshàn." data-meaning="Lúc đầu một năm chỉ chia làm hai mùa xuân, thu, sau này lại chia thành bốn mùa xuân, hạ, thu, đông, sau đó không ngừng bổ sung và hoàn thiện.">开始的时候一年只分春、秋两季，后来又分为春、夏、秋、冬四季，以后又不断补充、完善。</span>
+                        <span class="hanzi" data-pinyin="Dàole gōngyuán qián 200 nián zuǒyòu, jiù yǒule xiàng xiànzài zhèyàng de èrshísì gè jiéqìle." data-meaning="Đến khoảng năm 200 trước Công nguyên, đã có 24 tiết khí như hiện nay.">到了公元前200年左右，就有了像现在这样的二十四个节气了。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Èrshísì gè jiéqì xiànzài gōnglì zhōng de rìqí biànhuà bù dà: Yībān shàngbànnián zài měi gè yuè de 6 hào, 21 hào, xiàbànnián zài měi gè yuè de 8 hào, 23 hào, yǒushíhou rìqí huì chà yī liǎng tiān." data-meaning="Ngày của 24 tiết khí trong lịch dương hiện nay không thay đổi nhiều: nửa đầu năm thường vào ngày 6, 21 hàng tháng, nửa cuối năm vào ngày 8, 23 hàng tháng, đôi khi ngày có thể chênh lệch một hai ngày.">二十四个节气现在公历中的日期变化不大：一般上半年在每个月的6号、21号，下半年在每个月的8号、23号，有时候日期会差一两天。</span>
+                    </p>
+                    <p>
+                        <span class="hanzi" data-pinyin="Èrshísì jiéqì de míngchēng hěn yǒuyìsi, cóng jiéqì de míngchēng shàng rénmen kěyǐ zhīdào shì shénme jìjié, dàgài huì shì shénme yàng de tiānqì." data-meaning="Tên gọi của 24 tiết khí rất thú vị, từ tên gọi mọi người có thể biết đó là mùa nào, thời tiết có thể sẽ như thế nào.">二十四个节气的名称很有意思，从节气的名称上人们可以知道是什么季节，大概会是什么样的天气。</span>
+                        <span class="hanzi" data-pinyin="Bǐrú: Lìchūn, Lìxià, Lìqiū, Lìdōng, “lì” shì jíjiāng kāishǐ de yìsi, suǒyǐ zhè sì gè jiéqì fēnbié biǎoshì chūntiān, xiàtiān, qiūtiān hé dōngtiān jiù yào kāishǐle." data-meaning="Ví dụ: Lập xuân, Lập hạ, Lập thu, Lập đông, “lập” có nghĩa là sắp bắt đầu, vì vậy bốn tiết khí này lần lượt biểu thị mùa xuân, mùa hè, mùa thu và mùa đông sắp bắt đầu.">比如：立春、立夏、立秋、立冬，“立”是即将开始的意思，所以这四个节气分别表示春天、夏天、秋天和冬天就要开始了。</span>
+                        <span class="hanzi" data-pinyin="Zài bǐrú: Xiàzhì, Dōngzhì, “zhì” shì dàolái de yìsi, zhè liǎng gè jiéqì fēnbié biǎoshì xiàtiān, dōngtiān yǐjīng dàolái." data-meaning="Ví dụ khác: Hạ chí, Đông chí, “chí” có nghĩa là đã đến, hai tiết khí này lần lượt biểu thị mùa hè, mùa đông đã đến.">再比如：夏至、冬至，“至”是到来的意思，这两个节气分别表示夏天、冬天已经到来。</span>
+                        <span class="hanzi" data-pinyin="Yòu rú: Chūnfēn, Qiūfēn, “fēn” yǒu píngfēn de yìsi, zài zhè liǎng tiān, báitiān, hēiyè zhènghǎo yīyàng cháng." data-meaning="Lại ví dụ: Xuân phân, Thu phân, “phân” có nghĩa là chia đều, trong hai ngày này, ngày và đêm dài bằng nhau.">又如：春分、秋分，“分”有平分的意思，在这两天，白天、黑夜正好一样长。</span>
+                        <span class="hanzi" data-pinyin="“Shǔ” de yìsi shì rè, suǒyǐ “Xiǎoshǔ”“Dàshǔ” gàosù rénmen yī nián zhōng zuì rè de shíhòu dàole." data-meaning="“Thử” có nghĩa là nóng, vì vậy “Tiểu thử”, “Đại thử” cho mọi người biết thời điểm nóng nhất trong năm đã đến.">“暑”的意思是热，所以“小暑”“大暑”告诉人们一年中最热的时候到了。</span>
+                        <span class="hanzi" data-pinyin="“Hán” de yìsi shì lěng, “Xiǎohán”“Dàhán” gàosù rénmen yī nián zhōng zuì lěng de shíhòu láile." data-meaning="“Hàn” có nghĩa là lạnh, “Tiểu hàn”, “Đại hàn” cho mọi người biết thời điểm lạnh nhất trong năm đã đến.">“寒”的意思是冷，“小寒”“大寒”告诉人们一年中最冷的时候来了。</span>
+                        <span class="hanzi" data-pinyin="Cǐwài, dāng “Yǔshuǐ”“Shuāngjiàng”“Xiǎoxuě”“Dàxuě” děng jiéqì dàolái shí, rénmen yě jiù zhīdào gāi chūxiàn shénme yàng de tiānqìle." data-meaning="Ngoài ra, khi các tiết khí như “Vũ thủy”, “Sương giáng”, “Tiểu tuyết”, “Đại tuyết” đến, mọi người cũng sẽ biết nên xuất hiện loại thời tiết nào.">此外，当“雨水”“霜降”“小雪”“大雪”等节气到来时，人们也就知道该出现什么样的天气了。</span>
+                    </p>
+                     <p>
+                        <span class="hanzi" data-pinyin="Zěnme yàng, xiǎng zhīdào èrshísì jiéqì dōu shì shénme ma? Gàosù nǐ ba, tāmen shì:" data-meaning="Thế nào, bạn có muốn biết 24 tiết khí là gì không? Nói cho bạn biết nhé, chúng là:">怎么样，想知道二十四节气都是什么吗？告诉你吧，它们是:</span><br>
+                        <span class="hanzi" data-pinyin="Lìchūn, Yǔshuǐ, Jīngzhé, Chūnfēn, Qīngmíng, Gǔyǔ." data-meaning="Lập xuân, Vũ thủy, Kinh trập, Xuân phân, Thanh minh, Cốc vũ.">立春	雨水	惊蛰	春分	清明	谷雨</span><br>
+                        <span class="hanzi" data-pinyin="Lìxià, Xiǎomǎn, Mángzhòng, Xiàzhì, Xiǎoshǔ, Dàshǔ." data-meaning="Lập hạ, Tiểu mãn, Mang chủng, Hạ chí, Tiểu thử, Đại thử.">立夏 小满 芒种 夏至 小暑 大暑</span><br>
+                        <span class="hanzi" data-pinyin="Lìqiū, Chǔshǔ, Báilù, Qiūfēn, Hánlù, Shuāngjiàng." data-meaning="Lập thu, Xử thử, Bạch lộ, Thu phân, Hàn lộ, Sương giáng.">立秋 处暑 白露 秋分 寒露 霜降</span><br>
+                        <span class="hanzi" data-pinyin="Lìdōng, Xiǎoxuě, Dàxuě, Dōngzhì, Xiǎohán, Dàhán." data-meaning="Lập đông, Tiểu tuyết, Đại tuyết, Đông chí, Tiểu hàn, Đại hàn.">立冬 小雪 大雪 冬至 小寒 大寒</span>
+                    </p>
+                </div>
+            </main>
+
+            <section class="exercises mt-10 border-t pt-8">
+                <h3 class="text-2xl font-bold text-center text-gray-700 mb-6">Bài tập thực hành (Bài 2)</h3>
+                <div class="mb-8 p-6 bg-gray-50 rounded-xl">
+                    <h4 class="text-xl font-semibold mb-4">3. 连一连 (Nối Tiết khí với ý nghĩa)</h4>
+                    <div id="matching-questions-2" class="space-y-4"></div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Global Controls -->
+        <div class="mt-8 text-center p-6 bg-white rounded-2xl shadow-lg">
+            <button id="check-answers-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105 mr-4">Kiểm tra tất cả</button>
+            <button id="reset-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105">Làm lại từ đầu</button>
+            <div id="results" class="mt-6 text-center text-2xl font-bold"></div>
+        </div>
+
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- Data for Exercises ---
+        const exercises = {
+            part1: {
+                trueFalse: [
+                    { question: "在北京, 春夏、秋、冬四个季节各有三个月长。", answer: false },
+                    { question: "北京的春天风很多,雨很少。", answer: true },
+                    { question: "北京最好的季节是秋天。", answer: true },
+                    { question: "冬天北京很冷,常常刮风,还常常下雪。", answer: true } // Updated based on full text
+                ],
+                fillBlank: [
+                    { sentence: ['北京的', '常常刮风。'], options: ['春天', '春'], answer: '春天' },
+                    { sentence: ['房间里太热了,你', '窗户,好吗?'], options: ['开放', '打开'], answer: '打开' },
+                    { sentence: ['他对中国古典文学', '了兴趣。'], options: ['感', '产生'], answer: '产生' },
+                    { sentence: ['他不但汉语说得好,', '汉字也写得好。'], options: ['和', '而且'], answer: '而且' }
+                ]
+            },
+            part2: {
+                matching: [
+                    { term: '立春 (Lìchūn)', meaning: 'Mùa xuân sắp bắt đầu', options: ['Thời điểm lạnh nhất năm', 'Mùa xuân sắp bắt đầu', 'Ngày hè đã đến', 'Ngày đêm dài bằng nhau'] },
+                    { term: '夏至 (Xiàzhì)', meaning: 'Ngày hè đã đến', options: ['Mùa xuân sắp bắt đầu', 'Ngày hè đã đến', 'Ngày đêm dài bằng nhau', 'Thời điểm nóng nhất năm'] },
+                    { term: '秋分 (Qiūfēn)', meaning: 'Ngày đêm dài bằng nhau', options: ['Bắt đầu có sương', 'Ngày đêm dài bằng nhau', 'Mùa thu sắp bắt đầu', 'Trời bắt đầu lạnh'] },
+                    { term: '大寒 (Dàhán)', meaning: 'Thời điểm lạnh nhất năm', options: ['Có tuyết lớn', 'Ngày đông đã đến', 'Thời điểm lạnh nhất năm', 'Mùa đông sắp bắt đầu'] }
+                ]
+            }
+        };
+
+        // --- General Functions ---
+        function setupInteractiveText() {
+            document.querySelectorAll('.hanzi').forEach(span => {
+                if(span.children.length > 0) return; // Already setup
+                const pinyin = span.dataset.pinyin;
+                const meaning = span.dataset.meaning;
+                if (!pinyin && !meaning) return;
+
+                const pinyinEl = document.createElement('span');
+                pinyinEl.className = 'pinyin';
+                pinyinEl.textContent = pinyin;
+
+                const meaningEl = document.createElement('span');
+                meaningEl.className = 'meaning';
+                meaningEl.textContent = meaning;
+
+                span.appendChild(pinyinEl);
+                span.appendChild(meaningEl);
+            });
+        }
+
+        function setupToggleButtons() {
+            document.querySelectorAll('.toggle-pinyin-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.dataset.target;
+                    document.getElementById(targetId).classList.toggle('show-pinyin');
+                });
+            });
+            document.querySelectorAll('.toggle-meaning-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.dataset.target;
+                    document.getElementById(targetId).classList.toggle('show-meaning');
+                });
+            });
+        }
+
+        function renderExercises() {
+            // Part 1: True/False
+            const tfContainer = document.getElementById('true-false-questions-1');
+            tfContainer.innerHTML = '';
+            exercises.part1.trueFalse.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'question-item p-3 bg-white rounded-lg shadow-sm';
+                div.innerHTML = `
+                    <p class="mb-2 text-gray-700">${index + 1}. ${q.question}</p>
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center cursor-pointer"><input type="radio" name="tf-q1-${index}" value="true" class="form-radio h-5 w-5 text-blue-600"><span class="ml-2">Đúng (✓)</span></label>
+                        <label class="flex items-center cursor-pointer"><input type="radio" name="tf-q1-${index}" value="false" class="form-radio h-5 w-5 text-red-600"><span class="ml-2">Sai (✗)</span></label>
+                        <span id="tf-feedback-1-${index}" class="feedback"></span>
+                    </div>`;
+                tfContainer.appendChild(div);
+            });
+
+            // Part 1: Fill Blank
+            const fbContainer = document.getElementById('fill-blank-questions-1');
+            fbContainer.innerHTML = '';
+            exercises.part1.fillBlank.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'question-item p-3 bg-white rounded-lg shadow-sm flex items-center flex-wrap';
+                const selectId = `fb-q1-${index}`;
+                let optionsHtml = q.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                div.innerHTML = `
+                    <p class="text-gray-700 mr-2">${index + 1}. ${q.sentence[0]}</p>
+                    <select id="${selectId}" class="form-select rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <option value="">-- Chọn --</option>${optionsHtml}
+                    </select>
+                    <p class="text-gray-700 ml-2">${q.sentence[1]}</p>
+                    <span id="fb-feedback-1-${index}" class="feedback"></span>`;
+                fbContainer.appendChild(div);
+            });
+            
+            // Part 2: Matching
+            const matchContainer = document.getElementById('matching-questions-2');
+            matchContainer.innerHTML = '';
+            exercises.part2.matching.forEach((q, index) => {
+                 const div = document.createElement('div');
+                 div.className = 'question-item p-3 bg-white rounded-lg shadow-sm flex items-center flex-wrap gap-4';
+                 const selectId = `match-q2-${index}`;
+                 // Shuffle options for more of a challenge
+                 const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+                 let optionsHtml = shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                 div.innerHTML = `
+                    <p class="font-semibold text-gray-800 w-full sm:w-auto">${index + 1}. ${q.term}:</p>
+                    <select id="${selectId}" class="form-select rounded-md border-gray-300 shadow-sm w-full sm:w-auto flex-grow">
+                        <option value="">-- Chọn ý nghĩa --</option>${optionsHtml}
+                    </select>
+                    <span id="match-feedback-2-${index}" class="feedback"></span>`;
+                 matchContainer.appendChild(div);
+            });
+        }
+        
+        function checkAnswers() {
+            let correctCount = 0;
+            let totalCount = 0;
+
+            // Check Part 1 - True/False
+            exercises.part1.trueFalse.forEach((q, index) => {
+                totalCount++;
+                const selected = document.querySelector(`input[name="tf-q1-${index}"]:checked`);
+                const feedbackEl = document.getElementById(`tf-feedback-1-${index}`);
+                const itemEl = selected ? selected.closest('.question-item') : document.querySelector(`input[name="tf-q1-${index}"]`).closest('.question-item');
+                itemEl.classList.remove('correct', 'incorrect');
+                if (selected && (selected.value === 'true') === q.answer) {
+                    itemEl.classList.add('correct');
+                    feedbackEl.textContent = 'Chính xác!';
+                    feedbackEl.className = 'feedback correct-feedback';
+                    correctCount++;
+                } else {
+                    itemEl.classList.add('incorrect');
+                    feedbackEl.textContent = `Sai! Đáp án đúng là ${q.answer ? 'Đúng' : 'Sai'}.`;
+                    feedbackEl.className = 'feedback incorrect-feedback';
+                }
+            });
+
+            // Check Part 1 - Fill Blank
+            exercises.part1.fillBlank.forEach((q, index) => {
+                totalCount++;
+                const selectEl = document.getElementById(`fb-q1-${index}`);
+                const feedbackEl = document.getElementById(`fb-feedback-1-${index}`);
+                const itemEl = selectEl.closest('.question-item');
+                itemEl.classList.remove('correct', 'incorrect');
+                if (selectEl.value === q.answer) {
+                    itemEl.classList.add('correct');
+                    feedbackEl.textContent = 'Chính xác!';
+                    feedbackEl.className = 'feedback correct-feedback';
+                    correctCount++;
+                } else {
+                    itemEl.classList.add('incorrect');
+                    feedbackEl.textContent = `Sai! Đáp án là "${q.answer}".`;
+                    feedbackEl.className = 'feedback incorrect-feedback';
+                }
+            });
+
+            // Check Part 2 - Matching
+            exercises.part2.matching.forEach((q, index) => {
+                totalCount++;
+                const selectEl = document.getElementById(`match-q2-${index}`);
+                const feedbackEl = document.getElementById(`match-feedback-2-${index}`);
+                const itemEl = selectEl.closest('.question-item');
+                itemEl.classList.remove('correct', 'incorrect');
+                if (selectEl.value === q.meaning) {
+                     itemEl.classList.add('correct');
+                     feedbackEl.textContent = 'Chính xác!';
+                     feedbackEl.className = 'feedback correct-feedback';
+                     correctCount++;
+                } else {
+                     itemEl.classList.add('incorrect');
+                     feedbackEl.textContent = `Sai! Đáp án đúng là "${q.meaning}".`;
+                     feedbackEl.className = 'feedback incorrect-feedback';
+                }
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.textContent = `Tổng kết: Bạn đã trả lời đúng ${correctCount} / ${totalCount} câu!`;
+            resultsDiv.className = `mt-6 text-center text-2xl font-bold ${correctCount > totalCount / 2 ? 'text-green-600' : 'text-red-600'}`;
+        }
+        
+        // --- Event Listeners ---
+        document.getElementById('check-answers-btn').addEventListener('click', checkAnswers);
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            renderExercises();
+            document.getElementById('results').textContent = '';
+            document.getElementById('results').className = 'mt-6 text-center text-2xl font-bold';
+        });
+
+        // --- Initial Load ---
+        setupInteractiveText();
+        setupToggleButtons();
+        renderExercises();
+    });
+    </script>
+
+</body>
+</html>

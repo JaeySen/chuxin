@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Từ Vựng Tương Tác - Bài 15 (v2)</title>
+    <style>
+        /* CSS Styling */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #4a69bd;
+            --secondary-color: #1e3799;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-color: #343a40;
+            --pinyin-color: #6c757d;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --warning-color: #ff9f43;
+        }
+
+        body {
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-container {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #f1f3f5;
+            box-sizing: border-box;
+        }
+        
+        #progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        #progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--pinyin-color);
+            margin-top: 5px;
+        }
+        
+        .flashcard-container {
+            padding: 30px;
+        }
+
+        .flashcard {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #word {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        #pinyin {
+            font-size: 20px;
+            color: var(--pinyin-color);
+            margin-top: 5px;
+        }
+
+        .example-section {
+            margin-top: 30px;
+            background: #f1f3f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .example-section h3 {
+            margin-top: 0;
+            font-size: 16px;
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        #sentence {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 22px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        #sentence-pinyin {
+             font-size: 16px;
+             color: var(--pinyin-color);
+             margin-top: 8px;
+             font-style: italic;
+        }
+
+        .translation-section {
+             margin-top: 20px;
+        }
+        
+        .translation-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        #translation-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            resize: vertical;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        #translation-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.2);
+        }
+
+        .action-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+
+        /* NEW: Styling for the Show Translation Button */
+        #show-translation-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: var(--warning-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #show-translation-btn:hover {
+            background-color: #e67e22;
+        }
+
+        /* NEW: Styling for the Correct Answer display */
+        #correct-translation {
+            display: none; /* Hidden by default */
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 5px solid var(--success-color);
+            border-radius: 4px;
+            color: #2e7d32;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding: 20px 30px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .nav-btn, #save-pdf-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-btn:hover, #save-pdf-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #save-pdf-btn {
+            background-color: var(--success-color);
+            display: none; /* Hidden by default */
+            margin: 20px auto 0;
+        }
+
+        /* Styles for PDF output */
+        #results {
+            display: none;
+            padding: 20px;
+        }
+        
+        .result-item {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .result-item h3 {
+            font-family: 'Noto Sans SC', sans-serif;
+            color: #333;
+        }
+
+        .result-item p {
+            margin: 5px 0;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background-color: #fff;
+            }
+            .app-container {
+                display: none !important;
+            }
+            #results {
+                display: block !important;
+                box-shadow: none;
+                border: none;
+            }
+            .result-item {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="progress-container">
+            <div id="progress-text">Từ 1/41</div>
+            <div id="progress-bar">
+                <div id="progress-bar-inner"></div>
+            </div>
+        </div>
+
+        <div class="flashcard-container">
+            <div class="flashcard">
+                <h1 id="word"></h1>
+                <p id="pinyin"></p>
+            </div>
+            
+            <div class="example-section">
+                 <h3>Câu ví dụ:</h3>
+                 <p id="sentence"></p>
+                 <p id="sentence-pinyin"></p>
+            </div>
+
+            <div class="translation-section">
+                <label for="translation-input">Nhập bản dịch của bạn vào đây:</label>
+                <textarea id="translation-input" placeholder="Dịch câu ví dụ sang tiếng Việt..."></textarea>
+                
+                <div class="action-area">
+                    <button id="show-translation-btn">Xem đáp án</button>
+                </div>
+
+                <div id="correct-translation"></div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" class="nav-btn">Từ Trước</button>
+            <button id="save-pdf-btn">Lưu Bài Làm (PDF)</button>
+            <button id="next-btn" class="nav-btn">Từ Tiếp Theo</button>
+        </div>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        // JavaScript Logic
+        const vocabulary = [
+            // UPDATED: Added 'correctTranslation' field
+            { word: '演员', pinyin: 'yǎnyuán', sentence: '我一点儿也听不懂京剧演员唱的是什么，只是觉得很热闹。', sentencePinyin: 'Wǒ yīdiǎnr yě tīng bù dǒng jīngjù yǎnyuán chàng de shì shénme, zhǐshì juédé hěn rènào.', userTranslation: '', correctTranslation: 'Tôi không thể hiểu diễn viên Kinh kịch đang hát gì cả, chỉ cảm thấy rất náo nhiệt.' },
+            { word: '脸谱', pinyin: 'liǎnpǔ', sentence: '我很喜欢京剧的脸谱，它用各种颜色来表现人物的性格。', sentencePinyin: 'Wǒ hěn xǐhuān jīngjù de liǎnpǔ, tā yòng gèzhǒng yánsè lái biǎoxiàn rénwù de xìnggé.', userTranslation: '', correctTranslation: 'Tôi rất thích mặt nạ của Kinh kịch, nó dùng nhiều màu sắc khác nhau để thể hiện tính cách nhân vật.' },
+            { word: '武打', pinyin: 'wǔdǎ', sentence: '我觉得京剧的武打动作十分精彩。', sentencePinyin: 'Wǒ juédé jīngjù de wǔdǎ dòngzuò shífēn jīngcǎi.', userTranslation: '', correctTranslation: 'Tôi thấy các pha võ thuật trong Kinh kịch vô cùng đặc sắc.' },
+            { word: '服装', pinyin: 'fúzhuāng', sentence: '京剧的服装也很美，我想买一套带回国去。', sentencePinyin: 'Jīngjù de fúzhuāng yě hěn měi, wǒ xiǎng mǎi yī tào dài huíguó qù.', userTranslation: '', correctTranslation: 'Trang phục của Kinh kịch cũng rất đẹp, tôi muốn mua một bộ mang về nước.' },
+            { word: '动作', pinyin: 'dòngzuò', sentence: '演员的动作优美，表演很精彩。', sentencePinyin: 'Yǎnyuán de dòngzuò yōuměi, biǎoyǎn hěn jīngcǎi.', userTranslation: '', correctTranslation: 'Động tác của diễn viên rất uyển chuyển, phần trình diễn rất đặc sắc.' },
+            { word: '人物', pinyin: 'rénwù', sentence: '通过脸谱，我们可以了解人物的社会地位和性格。', sentencePinyin: 'Tōngguò liǎnpǔ, wǒmen kěyǐ liǎojiě rénwù de shèhuì dìwèi hé xìnggé.', userTranslation: '', correctTranslation: 'Thông qua mặt nạ, chúng ta có thể hiểu được địa vị xã hội và tính cách của nhân vật.' },
+            { word: '社会', pinyin: 'shèhuì', sentence: '京剧脸谱能表现人物的社会地位。', sentencePinyin: 'Jīngjù liǎnpǔ néng biǎoxiàn rénwù de shèhuì dìwèi.', userTranslation: '', correctTranslation: 'Mặt nạ Kinh kịch có thể thể hiện địa vị xã hội của nhân vật.' },
+            { word: '地位', pinyin: 'dìwèi', sentence: '这种脸谱说明了这个人物有很高的社会地位。', sentencePinyin: 'Zhè zhǒng liǎnpǔ shuōmíngle zhège rénwù yǒu hěn gāo de shèhuì dìwèi.', userTranslation: '', correctTranslation: 'Loại mặt nạ này cho thấy nhân vật này có địa vị xã hội rất cao.' },
+            { word: '性格', pinyin: 'xìnggé', sentence: '不同的脸谱表现人物不同的性格。', sentencePinyin: 'Bùtóng de liǎnpǔ biǎoxiàn rénwù bùtóng de xìnggé.', userTranslation: '', correctTranslation: 'Những chiếc mặt nạ khác nhau thể hiện tính cách khác nhau của nhân vật.' },
+            { word: '艺术', pinyin: 'yìshù', sentence: '京剧是中国的传统艺术，要学好汉语也应该多了解一些中国文化。', sentencePinyin: 'Jīngjù shì zhōngguó de chuántǒng yìshù, yào xuéhǎo hànyǔ yě yīnggāi duō liǎojiě yīxiē zhōngguó wénhuà.', userTranslation: '', correctTranslation: 'Tôi nghĩ, Kinh kịch là nghệ thuật truyền thống của Trung Quốc, muốn học tốt tiếng Hán cũng nên tìm hiểu thêm về văn hoá Trung Quốc.' },
+            { word: '说明书', pinyin: 'shuōmíngshū', sentence: '我买了一张说明书，可是上面全是中文，我看不懂。', sentencePinyin: 'Wǒ mǎile yī zhāng shuōmíngshū, kěshì shàngmiàn quán shì zhōngwén, wǒ kàn bù dǒng.', userTranslation: '', correctTranslation: 'Tôi đã mua một bản thuyết minh, nhưng trên đó toàn là tiếng Trung, tôi không đọc hiểu.' },
+            { word: '古代', pinyin: 'gǔdài', sentence: '这个京剧讲的是一个古代神话故事。', sentencePinyin: 'Zhège jīngjù jiǎng de shì yīgè gǔdài shénhuà gùshì.', userTranslation: '', correctTranslation: 'Vở Kinh kịch này kể về một câu chuyện thần thoại cổ đại.' },
+            { word: '神话', pinyin: 'shénhuà', sentence: '我很喜欢听古代的神话故事。', sentencePinyin: 'Wǒ hěn xǐhuān tīng gǔdài de shénhuà gùshì.', userTranslation: '', correctTranslation: 'Tôi rất thích nghe những câu chuyện thần thoại cổ đại.' },
+            { word: '天上', pinyin: 'tiānshàng', sentence: '故事说的是天上一个仙女，很羡慕人间的生活。', sentencePinyin: 'Gùshì shuō de shì tiānshàng yīgè xiānnǚ, hěn xiànmù rénjiān de shēnghuó.', userTranslation: '', correctTranslation: 'Câu chuyện kể về một nàng tiên trên trời, rất ngưỡng mộ cuộc sống nơi trần gian.' },
+            { word: '仙女', pinyin: 'xiānnǚ', sentence: '这个神话故事里的仙女非常美丽。', sentencePinyin: 'Zhège shénhuà gùshì lǐ de xiānnǚ fēicháng měilì.', userTranslation: '', correctTranslation: 'Nàng tiên trong câu chuyện thần thoại này vô cùng xinh đẹp.' },
+            { word: '人间', pinyin: 'rénjiān', sentence: '仙女偷偷来到人间，跟一个小伙子结了婚。', sentencePinyin: 'Xiānnǚ tōutōu láidào rénjiān, gēn yīgè xiǎohuǒzi jiéle hūn.', userTranslation: '', correctTranslation: 'Nàng tiên đã lén xuống trần gian, kết hôn với một chàng trai.' },
+            { word: '内容', pinyin: 'nèiróng', sentence: '虽然说明书看不懂，但是演出的内容我大概看懂了。', sentencePinyin: 'Suīrán shuōmíngshū kàn bù dǒng, dànshì yǎnchū de nèiróng wǒ dàgài kàn dǒngle.', userTranslation: '', correctTranslation: 'Mặc dù không đọc hiểu bản thuyết minh, nhưng nội dung của vở diễn thì tôi đã xem hiểu được đại khái.' },
+            { word: '富翁', pinyin: 'fùwēng', sentence: '故事里，那个富翁坐着马车要去楚国。', sentencePinyin: 'Gùshì lǐ, nàge fùwēng zuòzhe mǎchē yào qù chǔ guó.', userTranslation: '', correctTranslation: 'Trong câu chuyện, vị phú ông đó ngồi xe ngựa muốn đến nước Sở.' },
+            { word: '技术', pinyin: 'jìshù', sentence: '富翁说他的车夫赶车的技术特别好。', sentencePinyin: 'Fùwēng shuō tā de chēfū gǎnchē de jìshù tèbié hǎo.', userTranslation: '', correctTranslation: 'Phú ông nói kỹ thuật đánh xe của người phu xe của ông ấy đặc biệt tốt.' },
+            { word: '道理', pinyin: 'dàolǐ', sentence: '老人觉得这位先生简直不懂道理。', sentencePinyin: 'Lǎorén juédé zhè wèi xiānshēng jiǎnzhí bù dǒng dàolǐ.', userTranslation: '', correctTranslation: 'Ông lão cảm thấy vị tiên sinh này thật không hiểu đạo lý.' },
+            { word: '猜', pinyin: 'cāi', sentence: '看了演出能猜得出大概的意思。', sentencePinyin: 'Kànle yǎnchū néng cāi dé chū dàgài de yìsi.', userTranslation: '', correctTranslation: 'Xem xong buổi diễn có thể đoán ra được đại ý.' },
+            { word: '了解', pinyin: 'liǎojiě', sentence: '我想多了解一些中国文化。', sentencePinyin: 'Wǒ xiǎng duō liǎojiě yīxiē zhōngguó wénhuà.', userTranslation: '', correctTranslation: 'Tôi muốn tìm hiểu thêm một chút về văn hóa Trung Quốc.' },
+            { word: '羡慕', pinyin: 'xiànmù', sentence: '天上的仙女很羡慕人间的生活。', sentencePinyin: 'Tiānshàng de xiānnǚ hěn xiànmù rénjiān de shēnghuó.', userTranslation: '', correctTranslation: 'Nàng tiên trên trời rất ngưỡng mộ cuộc sống nơi trần thế.' },
+            { word: '表现', pinyin: 'biǎoxiàn', sentence: '京剧用各种脸谱来表现人物的性格。', sentencePinyin: 'Jīngjù yòng gèzhǒng liǎnpǔ lái biǎoxiàn rénwù de xìnggé.', userTranslation: '', correctTranslation: 'Kinh kịch dùng các loại mặt nạ để thể hiện tính cách nhân vật.' },
+            { word: '约', pinyin: 'yuē', sentence: '昨天我给山本打电话，约她晚上一起去看京剧。', sentencePinyin: 'Zuótiān wǒ gěi shānběn dǎ diànhuà, yuē tā wǎnshàng yīqǐ qù kàn jīngjù.', userTranslation: '', correctTranslation: 'Hôm qua tôi gọi điện cho Yamamoto, hẹn cô ấy tối cùng đi xem Kinh kịch.' },
+            { word: '了', pinyin: 'liǎo', sentence: '她晚上有事，去不了。', sentencePinyin: 'Tā wǎnshàng yǒushì, qù bùliǎo.', userTranslation: '', correctTranslation: 'Tối cô ấy có việc, không đi được.' },
+            { word: '上下班', pinyin: 'shàngxiàbān', sentence: '现在是上下班时间，路上人多车也多。', sentencePinyin: 'Xiànzài shì shàngxiàbān shíjiān, lùshàng rén duō chē yě duō.', userTranslation: '', correctTranslation: 'Bây giờ là giờ đi làm và tan tầm, trên đường người đông xe cũng đông.' },
+            { word: '担心', pinyin: 'dānxīn', sentence: '我担心买不到票，但是山本说票好买。', sentencePinyin: 'Wǒ dānxīn mǎi bù dào piào, dànshì shānběn shuō piào hǎo mǎi.', userTranslation: '', correctTranslation: 'Tôi lo lắng không mua được vé, nhưng Yamamoto nói vé rất dễ mua.' },
+            { word: '估计', pinyin: 'gūjì', sentence: '这个剧场不大，我估计坐不下一千人。', sentencePinyin: 'Zhège jùchǎng bù dà, wǒ gūjì zuò bùxià yīqiān rén.', userTranslation: '', correctTranslation: 'Nhà hát này không lớn, tôi ước chừng không ngồi đủ một nghìn người.' },
+            { word: '开演', pinyin: 'kāiyǎn', sentence: '离开演还有十多分钟，人差不多都坐满了。', sentencePinyin: 'Lí kāiyǎn hái yǒu shí duō fēnzhōng, rén chàbùduō dōu zuò mǎnle.', userTranslation: '', correctTranslation: 'Còn hơn mười phút nữa là bắt đầu biểu diễn, mọi người gần như đã ngồi kín chỗ.' },
+            { word: '赶', pinyin: 'gǎn', sentence: '车夫不停地赶着马，马车跑得飞快。', sentencePinyin: 'Chēfū bù tíng de gǎnzhe mǎ, mǎchē pǎo dé fēikuài.', userTranslation: '', correctTranslation: 'Người phu xe không ngừng thúc ngựa, xe ngựa chạy nhanh như bay.' },
+            { word: '挑', pinyin: 'tiāo', sentence: '路上走过来一位老人，挑着水。', sentencePinyin: 'Lùshàng zǒu guòlái yī wèi lǎorén, tiāozhe shuǐ.', userTranslation: '', correctTranslation: 'Trên đường có một ông lão đi tới, đang gánh nước.' },
+            { word: '继续', pinyin: 'jìxù', sentence: '他让赶车的继续赶着车一直往北跑去。', sentencePinyin: 'Tā ràng gǎnchē de jìxù gǎnzhe chē yīzhí wǎng běi pǎo qù.', userTranslation: '', correctTranslation: 'Anh ta bảo người phu xe tiếp tục đánh xe chạy thẳng về phía bắc.' },
+            { word: '有趣', pinyin: 'yǒuqù', sentence: '用脸谱来表现人物的性格，十分有趣。', sentencePinyin: 'Yòng liǎnpǔ lái biǎoxiàn rénwù de xìnggé, shífēn yǒuqù.', userTranslation: '', correctTranslation: 'Dùng mặt nạ để thể hiện tính cách nhân vật, vô cùng thú vị.' },
+            { word: '精彩', pinyin: 'jīngcǎi', sentence: '我觉得京剧的武打动作也很精彩。', sentencePinyin: 'Wǒ juédé jīngjù de wǔdǎ dòngzuò yě hěn jīngcǎi.', userTranslation: '', correctTranslation: 'Tôi cảm thấy các pha võ thuật trong Kinh kịch cũng rất đặc sắc.' },
+            { word: '满', pinyin: 'mǎn', sentence: '离开演还有十多分钟，人差不多都坐满了。', sentencePinyin: 'Lí kāiyǎn hái yǒu shí duō fēnzhōng, rén chàbùduō dōu zuò mǎnle.', userTranslation: '', correctTranslation: 'Còn hơn mười phút nữa là bắt đầu biểu diễn, mọi người gần như đã ngồi kín chỗ.' },
+            { word: '十分', pinyin: 'shífēn', sentence: '我觉得京剧的武打动作十分精彩。', sentencePinyin: 'Wǒ juédé jīngjù de wǔdǎ dòngzuò shífēn jīngcǎi.', userTranslation: '', correctTranslation: 'Tôi thấy các pha võ thuật trong Kinh kịch vô cùng đặc sắc.' },
+            { word: '偷偷', pinyin: 'tōutōu', sentence: '仙女偷偷来到人间，跟一个小伙子结了婚。', sentencePinyin: 'Xiānnǚ tōutōu láidào rénjiān, gēn yīgè xiǎohuǒzi jiéle hūn.', userTranslation: '', correctTranslation: 'Nàng tiên đã lén xuống trần gian, kết hôn với một chàng trai.' },
+            { word: '排', pinyin: 'pái', sentence: '我希望能买到前十排的票，可是都卖完了。', sentencePinyin: 'Wǒ xīwàng néng mǎi dào qián shí pái de piào, kěshì dōu mài wánle.', userTranslation: '', correctTranslation: 'Tôi hy vọng có thể mua được vé ở mười hàng đầu, nhưng đều đã bán hết rồi.' },
+            { word: '的话', pinyin: 'dehuà', sentence: '要是有时间的话，咱们一起去看一次，好吗？', sentencePinyin: 'Yàoshi yǒu shíjiān dehuà, zánmen yīqǐ qù kàn yīcì, hǎo ma?', userTranslation: '', correctTranslation: 'Nếu có thời gian, chúng ta cùng nhau đi xem một lần, được không?' },
+            { word: '南辕北辙', pinyin: 'nán yuán běi zhé', sentence: '他要去南边的楚国，却往北走，真是南辕北辙。', sentencePinyin: 'Tā yào qù nánbiān de chǔ guó, què wǎng běi zǒu, zhēnshi nán yuán běi zhé.', userTranslation: '', correctTranslation: 'Anh ta muốn đến nước Sở ở phía Nam nhưng lại đi về phía Bắc, thật đúng là nghĩ một đằng làm một nẻo.' }
+        ];
+
+
+        let currentIndex = 0;
+
+        const wordEl = document.getElementById('word');
+        const pinyinEl = document.getElementById('pinyin');
+        const sentenceEl = document.getElementById('sentence');
+        const sentencePinyinEl = document.getElementById('sentence-pinyin');
+        const translationInputEl = document.getElementById('translation-input');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const savePdfBtn = document.getElementById('save-pdf-btn');
+        const progressTextEl = document.getElementById('progress-text');
+        const progressBarInnerEl = document.getElementById('progress-bar-inner');
+        const resultsEl = document.getElementById('results');
+        
+        // NEW: DOM references for new elements
+        const showTranslationBtn = document.getElementById('show-translation-btn');
+        const correctTranslationEl = document.getElementById('correct-translation');
+
+        function saveCurrentTranslation() {
+            if (vocabulary[currentIndex]) {
+                vocabulary[currentIndex].userTranslation = translationInputEl.value;
+            }
+        }
+
+        function renderCard(index) {
+            const card = vocabulary[index];
+            wordEl.textContent = card.word;
+            pinyinEl.textContent = card.pinyin;
+            sentenceEl.textContent = card.sentence;
+            sentencePinyinEl.textContent = card.sentencePinyin;
+            translationInputEl.value = card.userTranslation;
+
+            // NEW: Update correct translation content and hide it
+            correctTranslationEl.innerHTML = `<b>Đáp án tham khảo:</b> ${card.correctTranslation}`;
+            correctTranslationEl.style.display = 'none';
+
+            updateProgress();
+            updateNavButtons();
+        }
+        
+        function updateProgress() {
+            const total = vocabulary.length;
+            progressTextEl.textContent = `Từ ${currentIndex + 1}/${total}`;
+            const percent = ((currentIndex + 1) / total) * 100;
+            progressBarInnerEl.style.width = `${percent}%`;
+        }
+        
+        function updateNavButtons(){
+             prevBtn.disabled = currentIndex === 0;
+             nextBtn.textContent = (currentIndex === vocabulary.length - 1) ? 'Hoàn Thành' : 'Từ Tiếp Theo';
+        }
+
+        function handleNext() {
+            saveCurrentTranslation();
+            if (currentIndex < vocabulary.length - 1) {
+                currentIndex++;
+                renderCard(currentIndex);
+            } else {
+                alert('Chúc mừng bạn đã hoàn thành bài học!');
+                nextBtn.style.display = 'none';
+                prevBtn.style.display = 'none';
+                savePdfBtn.style.display = 'block';
+            }
+        }
+
+        function handlePrev() {
+            saveCurrentTranslation();
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard(currentIndex);
+            }
+        }
+
+        // NEW: Function to show the correct translation
+        function showTranslation() {
+            correctTranslationEl.style.display = 'block';
+        }
+
+        function generatePDF() {
+            resultsEl.innerHTML = '';
+            const title = document.createElement('h1');
+            title.textContent = 'Kết Quả Luyện Dịch - Bài 15';
+            title.style.textAlign = 'center';
+            resultsEl.appendChild(title);
+            
+            vocabulary.forEach(card => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+
+                const wordTitle = document.createElement('h3');
+                wordTitle.innerHTML = `${card.word} <span style="font-weight:normal; color: #555;">(${card.pinyin})</span>`;
+                
+                const sentencePara = document.createElement('p');
+                sentencePara.innerHTML = `<b>Câu ví dụ:</b> ${card.sentence}`;
+                
+                const translationPara = document.createElement('p');
+                translationPara.innerHTML = `<b>Bài dịch của bạn:</b> ${card.userTranslation || '<em>Chưa có bản dịch</em>'}`;
+                
+                // NEW: Also add the correct answer to the PDF
+                const correctAnsPara = document.createElement('p');
+                correctAnsPara.innerHTML = `<b>Đáp án đúng:</b> ${card.correctTranslation}`;
+
+                item.appendChild(wordTitle);
+                item.appendChild(sentencePara);
+                item.appendChild(translationPara);
+                item.appendChild(correctAnsPara); // Add correct answer to PDF
+                resultsEl.appendChild(item);
+            });
+            
+            window.print();
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', handleNext);
+        prevBtn.addEventListener('click', handlePrev);
+        savePdfBtn.addEventListener('click', generatePDF);
+        translationInputEl.addEventListener('input', saveCurrentTranslation);
+        showTranslationBtn.addEventListener('click', showTranslation); // NEW: Add event listener
+
+        // Initial render
+        renderCard(currentIndex);
+    </script>
+
+</body>
+</html>

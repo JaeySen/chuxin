@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoạt Động Đóng Vai: Đi Đổi Tiền (Chọn Nhân Vật)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f8fb; 
+        }
+        .container {
+            max-width: 900px;
+            margin: 1rem auto; /* Reduced top margin */
+            padding: 1rem;
+        }
+        .card-base { /* Base style for all cards */
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem; /* Consistent bottom margin */
+            padding: 1.75rem; 
+        }
+        .main-title {
+            font-size: 2rem; /* Slightly smaller */
+            font-weight: 700;
+            color: #2c5282; 
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 1.4rem; /* Slightly smaller */
+            font-weight: 600;
+            color: #3182ce; 
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #bee3f8; 
+            display: flex;
+            align-items: center;
+        }
+        .section-title i {
+            margin-right: 0.75rem;
+        }
+        .character-card { /* Specific to role cards when displayed */
+            background-color: #f7fafc; 
+            border: 1px solid #e2e8f0; 
+        }
+        .character-name {
+            font-size: 1.2rem; 
+            font-weight: 600;
+            color: #2b6cb0; 
+            margin-bottom: 0.75rem;
+        }
+        .character-name i {
+            margin-right: 0.5rem;
+        }
+        .task-description, .script-item {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+        .script-item .speaker {
+            font-weight: 600;
+            color: #dd6b20; 
+        }
+        .script-item .speaker.clerk {
+             color: #38a169; 
+        }
+        .chinese-text {
+            font-style: italic;
+            color: #2d3748; 
+            font-size: 1.1em;
+        }
+        .pinyin-text {
+            font-size: 0.95em;
+            color: #718096; 
+            display: none; 
+        }
+        .pinyin-text.visible {
+            display: block; 
+            margin-left: 1em; 
+        }
+        .action-button { /* Common style for main action buttons */
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            margin-top: 0.5rem; /* Adjusted margin */
+            margin-bottom: 0.5rem; 
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem; /* Slightly smaller font for action buttons */
+        }
+        .toggle-pinyin-btn { background-color: #ecc94b; color: #2d3748;}
+        .toggle-pinyin-btn:hover { background-color: #d69e2e; }
+        .change-scenario-btn { background-color: #4299e1; color: white; margin-left: 0.5rem; }
+        .change-scenario-btn:hover { background-color: #2b6cb0; }
+        .back-to-role-select-btn { background-color: #718096; color: white; margin-bottom: 1rem; }
+        .back-to-role-select-btn:hover { background-color: #4a5568; }
+        
+        .note {
+            background-color: #ebf8ff; 
+            border-left: 4px solid #3182ce; 
+            padding: 1rem;
+            margin-top: 1rem;
+            font-style: italic;
+            color: #2c5282;
+        }
+        .current-scenario-display {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: #2c5282;
+            background-color: #ebf8ff;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        /* Character Selection View */
+        #character-selection-view {
+            text-align: center;
+        }
+        #character-selection-view .section-title {
+            justify-content: center;
+            border-bottom: none;
+            font-size: 1.6rem;
+        }
+        .role-button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .role-select-btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .role-select-btn.customer-btn { background-color: #3b82f6; color: white; }
+        .role-select-btn.customer-btn:hover { background-color: #2563eb; transform: translateY(-1px); }
+        .role-select-btn.clerk-btn { background-color: #38a169; color: white; }
+        .role-select-btn.clerk-btn:hover { background-color: #2f855a; transform: translateY(-1px); }
+
+    </style>
+</head>
+<body class="p-4">
+    <div class="container">
+        <h1 class="main-title"><i class="fas fa-comments-dollar"></i> Hoạt Động Đóng Vai: Đi Đổi Tiền</h1>
+        
+        <div id="character-selection-view" class="card-base">
+            <h2 class="section-title"><i class="fas fa-user-friends"></i> Chọn Vai Của Bạn</h2>
+            <div class="role-button-container">
+                <button id="select-customer-btn" class="role-select-btn customer-btn">
+                    <i class="fas fa-user-tie"></i> Tôi là Khách Hàng (麦克)
+                </button>
+                <button id="select-clerk-btn" class="role-select-btn clerk-btn">
+                    <i class="fas fa-user-cog"></i> Tôi là Nhân Viên Ngân Hàng (营业员)
+                </button>
+            </div>
+        </div>
+
+        <div id="role-play-content" class="hidden">
+            <button id="back-to-role-select" class="action-button back-to-role-select-btn">
+                <i class="fas fa-arrow-left"></i> Quay lại chọn vai
+            </button>
+
+            <div class="card-base">
+                <h2 class="section-title"><i class="fas fa-bullseye"></i> Mục tiêu</h2>
+                <ul class="list-disc pl-5 text-gray-700 mb-4 text-sm">
+                    <li>Thực hành các mẫu câu cơ bản khi đi đổi tiền với các loại tiền tệ và số tiền khác nhau.</li>
+                    <li>Làm quen với từ vựng về tiền tệ và cách đọc số lớn hơn.</li>
+                    <li>Tăng cường sự tự tin khi nói tiếng Trung.</li>
+                </ul>
+
+                <h2 class="section-title"><i class="fas fa-info-circle"></i> Hướng dẫn chung</h2>
+                <p class="text-gray-700 mb-2 text-sm">1. Giáo viên hoặc học sinh có thể nhấn nút "Đổi Tình Huống" để chọn một kịch bản đổi tiền mới.</p>
+                <p class="text-gray-700 mb-2 text-sm">2. Đọc kỹ "Nhiệm vụ" và "Kịch bản gợi ý" cho vai của bạn trong tình huống hiện tại.</p>
+                <p class="text-gray-700 mb-4 text-sm">3. Cùng bạn diễn thực hành đoạn hội thoại. Cố gắng nói to, rõ ràng và tự nhiên nhé!</p>
+                
+                <button id="toggle-all-pinyin" class="action-button toggle-pinyin-btn">
+                    <i class="fas fa-eye"></i> Hiện Pinyin
+                </button>
+                <button id="change-scenario" class="action-button change-scenario-btn">
+                    <i class="fas fa-random"></i> Đổi Tình Huống
+                </button>
+                <div id="current-scenario-info" class="current-scenario-display mt-2">Đang tải tình huống...</div>
+            </div>
+
+            <div id="role-specific-content" class="card-base">
+                <h2 class="section-title"><i class="fas fa-user-check"></i> Vai Trò Của Bạn</h2>
+                <div id="customer-role-card" class="character-card hidden">
+                    <h3 class="character-name"><i class="fas fa-user-tie"></i> KHÁCH HÀNG (顾客 - Gùkè)</h3>
+                    <p class="task-description text-gray-700"><strong>Tên bạn:</strong> <span class="chinese-text">麦克</span> <span class="pinyin-text">(Màikè)</span></p>
+                    <div id="customer-task">
+                        <p class="task-description text-gray-700"><strong>Nhiệm vụ:</strong> Bạn đến ngân hàng để đổi tiền. Bạn muốn đổi <strong id="customer-amount-currency" class="text-blue-600">...</strong> sang Nhân dân tệ (<span class="chinese-text">人民币</span> <span class="pinyin-text">(Rénmínbì)</span>).</p>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mt-4 mb-2">Kịch bản gợi ý cho bạn:</h4>
+                    <div id="customer-script"></div>
+                </div>
+
+                <div id="clerk-role-card" class="character-card hidden">
+                    <h3 class="character-name"><i class="fas fa-user-cog"></i> NHÂN VIÊN NGÂN HÀNG (营业员 - Yíngyèyuán)</h3>
+                     <div id="clerk-task">
+                        <p class="task-description text-gray-700"><strong>Nhiệm vụ:</strong> Bạn là nhân viên ngân hàng. Một khách hàng tên là <span class="chinese-text">麦克</span> <span class="pinyin-text">(Màikè)</span> đến đổi tiền. Hãy giúp anh ấy đổi <strong id="clerk-amount-currency" class="text-blue-600">...</strong> sang <strong id="clerk-rmb-amount" class="text-green-600">...</strong> Nhân dân tệ.</p>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mt-4 mb-2">Kịch bản gợi ý cho bạn:</h4>
+                    <div id="clerk-script"></div>
+                </div>
+                 <div class="note">
+                    <p><i class="fas fa-lightbulb mr-2"></i><strong>Mẹo nhỏ:</strong> Hãy lắng nghe bạn diễn và trả lời tự nhiên dựa trên gợi ý nhé!</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center mt-8 py-4 border-t border-gray-300">
+            <p class="text-gray-600 text-sm">Chúc các em học tốt và có một buổi luyện tập vui vẻ! 🎉</p>
+        </footer>
+    </div>
+
+    <script>
+        const scenarios = [
+            { id: 1, customerCurrency: "美元", customerCurrencyPinyin: "Měiyuán", customerAmount: 200, customerAmountChinese: "二百美元", customerAmountPinyin: "èrbǎi Měiyuán", rmbAmount: 1380, rmbAmountChinese: "一千三百八十块", rmbAmountPinyin: "yìqiān sānbǎi bāshí kuài" },
+            { id: 2, customerCurrency: "欧元", customerCurrencyPinyin: "Ōuyuán", customerAmount: 300, customerAmountChinese: "三百欧元", customerAmountPinyin: "sānbǎi Ōuyuán", rmbAmount: 2250, rmbAmountChinese: "两千二百五十块", rmbAmountPinyin: "liǎngqiān èrbǎi wǔshí kuài" },
+            { id: 3, customerCurrency: "日元", customerCurrencyPinyin: "Rìyuán", customerAmount: 50000, customerAmountChinese: "五万日元", customerAmountPinyin: "wǔwàn Rìyuán", rmbAmount: 2500, rmbAmountChinese: "两千五百块", rmbAmountPinyin: "liǎngqiān wǔbǎi kuài" },
+            { id: 4, customerCurrency: "越南盾", customerCurrencyPinyin: "Yuènándùn", customerAmount: 7000000, customerAmountChinese: "七百万越南盾", customerAmountPinyin: "qībǎi wàn Yuènándùn", rmbAmount: 2100, rmbAmountChinese: "两千一百块", rmbAmountPinyin: "liǎngqiān yībǎi kuài" },
+            { id: 5, customerCurrency: "港币", customerCurrencyPinyin: "Gǎngbì", customerAmount: 1000, customerAmountChinese: "一千港币", customerAmountPinyin: "yìqiān Gǎngbì", rmbAmount: 880, rmbAmountChinese: "八百八十块", rmbAmountPinyin: "bābǎi bāshí kuài" }
+        ];
+        let currentScenarioIndex = 0;
+        let selectedUserRole = null; // 'customer' or 'clerk'
+
+        const characterSelectionViewEl = document.getElementById('character-selection-view');
+        const rolePlayContentEl = document.getElementById('role-play-content');
+        const customerRoleCardEl = document.getElementById('customer-role-card');
+        const clerkRoleCardEl = document.getElementById('clerk-role-card');
+        
+        const toggleAllPinyinBtn = document.getElementById('toggle-all-pinyin');
+        const changeScenarioBtn = document.getElementById('change-scenario');
+        const currentScenarioInfoEl = document.getElementById('current-scenario-info');
+        
+        const customerTaskAmountCurrencyEl = document.getElementById('customer-amount-currency');
+        const customerScriptEl = document.getElementById('customer-script');
+        
+        const clerkTaskAmountCurrencyEl = document.getElementById('clerk-amount-currency');
+        const clerkTaskRmbAmountEl = document.getElementById('clerk-rmb-amount');
+        const clerkScriptEl = document.getElementById('clerk-script');
+
+        const selectCustomerBtn = document.getElementById('select-customer-btn');
+        const selectClerkBtn = document.getElementById('select-clerk-btn');
+        const backToRoleSelectBtn = document.getElementById('back-to-role-select');
+
+
+        function formatScriptItem(speaker, speakerPinyin, chinese, pinyin, translation) {
+            let speakerClass = speaker.includes("麦克") ? "" : "clerk";
+            return `
+                <div class="script-item">
+                    <span class="speaker ${speakerClass}">${speaker} ${speakerPinyin ? '('+speakerPinyin+')' : ''}:</span>
+                    <span class="chinese-text">${chinese}</span>
+                    <span class="pinyin-text">(${pinyin})</span>
+                    <p class="text-xs text-gray-500 italic">(${translation})</p>
+                </div>
+            `;
+        }
+
+        function updateRoleSpecificContentVisibility() {
+            if (selectedUserRole === 'customer') {
+                customerRoleCardEl.classList.remove('hidden');
+                clerkRoleCardEl.classList.add('hidden');
+            } else if (selectedUserRole === 'clerk') {
+                clerkRoleCardEl.classList.remove('hidden');
+                customerRoleCardEl.classList.add('hidden');
+            } else { // No role selected, or back to selection
+                customerRoleCardEl.classList.add('hidden');
+                clerkRoleCardEl.classList.add('hidden');
+            }
+        }
+
+        function loadScenario(index) {
+            const scenario = scenarios[index];
+            currentScenarioIndex = index;
+
+            currentScenarioInfoEl.innerHTML = `Tình huống ${scenario.id}: Đổi <strong class="text-blue-600">${scenario.customerAmountChinese}</strong> <span class="pinyin-text">(${scenario.customerAmountPinyin})</span> sang Nhân dân tệ.`;
+
+            customerTaskAmountCurrencyEl.innerHTML = `<span class="chinese-text">${scenario.customerAmountChinese}</span> <span class="pinyin-text">(${scenario.customerAmountPinyin})</span>`;
+            customerScriptEl.innerHTML = `
+                ${formatScriptItem("麦克", "Màikè", "小姐，你好！", "Xiǎojiě, nǐ hǎo!", "Chào cô!")}
+                ${formatScriptItem("麦克", "Màikè", "我换钱。", "Wǒ huànqián.", "Tôi đổi tiền.")}
+                ${formatScriptItem("麦克", "Màikè", `我换人民币。我要换${scenario.customerCurrency}。`, `Wǒ huàn Rénmínbì. Wǒ yào huàn ${scenario.customerCurrencyPinyin}.`, `Tôi đổi Nhân dân tệ. Tôi muốn đổi ${scenario.customerCurrency}.`)}
+                ${formatScriptItem("麦克", "Màikè", scenario.customerAmountChinese + "。", scenario.customerAmountPinyin + ".", `${scenario.customerAmount} ${scenario.customerCurrency}.`)}
+                ${formatScriptItem("麦克", "Màikè", "谢谢！", "Xièxie!", "Cảm ơn!")}
+            `;
+
+            clerkTaskAmountCurrencyEl.innerHTML = `<span class="chinese-text">${scenario.customerAmountChinese}</span> <span class="pinyin-text">(${scenario.customerAmountPinyin})</span>`;
+            clerkTaskRmbAmountEl.innerHTML = `<span class="chinese-text">${scenario.rmbAmountChinese}</span> <span class="pinyin-text">(${scenario.rmbAmountPinyin})</span>`;
+            clerkScriptEl.innerHTML = `
+                ${formatScriptItem("营业员", "Yíngyèyuán", "你好！", "Nǐ hǎo!", "Chào anh!")}
+                ${formatScriptItem("营业员", "Yíngyèyuán", "您换什么钱？", "Nín huàn shénme qián?", "Ngài đổi tiền gì ạ?")}
+                ${formatScriptItem("营业员", "Yíngyèyuán", "换多少？", "Huàn duōshao?", "Đổi bao nhiêu ạ?")}
+                ${formatScriptItem("营业员", "Yíngyèyuán", "请等一会儿。", "Qǐng děng yīhuìr.", "Xin đợi một lát.")}
+                ${formatScriptItem("营业员", "Yíngyèyuán", `先生，给您钱，${scenario.rmbAmountChinese}人民币。请数数。`, `Xiānsheng, gěi nín qián, ${scenario.rmbAmountPinyin} Rénmínbì. Qǐng shǔshu.`, `Thưa ông, gửi ông tiền, ${scenario.rmbAmount} Nhân dân tệ. Xin mời ông đếm lại.`)}
+                ${formatScriptItem("营业员", "Yíngyèyuán", "不客气！", "Bú kèqi!", "Không có chi!")}
+            `;
+            
+            updatePinyinVisibility();
+        }
+        
+        function updatePinyinVisibility() {
+            const allPinyinTexts = document.querySelectorAll('#role-play-content .pinyin-text'); // Target only pinyin in role play view
+            const isPinyinGlobalVisible = toggleAllPinyinBtn.innerHTML.includes('Ẩn');
+            allPinyinTexts.forEach(pinyin => {
+                if (isPinyinGlobalVisible) {
+                    pinyin.classList.add('visible');
+                } else {
+                    pinyin.classList.remove('visible');
+                }
+            });
+        }
+
+
+        toggleAllPinyinBtn.addEventListener('click', () => {
+            const isCurrentlyVisible = toggleAllPinyinBtn.innerHTML.includes('Ẩn');
+            if (isCurrentlyVisible) {
+                toggleAllPinyinBtn.innerHTML = '<i class="fas fa-eye"></i> Hiện Pinyin';
+            } else {
+                toggleAllPinyinBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Ẩn Pinyin';
+            }
+            updatePinyinVisibility();
+        });
+
+        changeScenarioBtn.addEventListener('click', () => {
+            currentScenarioIndex = (currentScenarioIndex + 1) % scenarios.length;
+            loadScenario(currentScenarioIndex);
+        });
+        
+        selectCustomerBtn.addEventListener('click', () => {
+            selectedUserRole = 'customer';
+            characterSelectionViewEl.classList.add('hidden');
+            rolePlayContentEl.classList.remove('hidden');
+            updateRoleSpecificContentVisibility();
+            loadScenario(currentScenarioIndex); // Load current scenario for the selected role
+        });
+
+        selectClerkBtn.addEventListener('click', () => {
+            selectedUserRole = 'clerk';
+            characterSelectionViewEl.classList.add('hidden');
+            rolePlayContentEl.classList.remove('hidden');
+            updateRoleSpecificContentVisibility();
+            loadScenario(currentScenarioIndex); // Load current scenario for the selected role
+        });
+
+        backToRoleSelectBtn.addEventListener('click', () => {
+            rolePlayContentEl.classList.add('hidden');
+            characterSelectionViewEl.classList.remove('hidden');
+            selectedUserRole = null;
+            // Hide both role cards when going back
+            customerRoleCardEl.classList.add('hidden');
+            clerkRoleCardEl.classList.add('hidden');
+        });
+
+        // Initial load
+        loadScenario(0); // Pre-load data for scenario 0, but cards are hidden until role selection
+        // Show character selection view by default
+        characterSelectionViewEl.classList.remove('hidden');
+        rolePlayContentEl.classList.add('hidden');
+
+    </script>
+</body>
+</html>

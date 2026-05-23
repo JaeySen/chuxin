@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Tiếng Trung</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Thêm font chữ hỗ trợ tiếng Trung và tiếng Việt */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        }
+        
+        /* Kiểu cho nút chế độ đang hoạt động */
+        .mode-btn.active {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white;
+            border-color: #2563eb;
+        }
+
+        /* Kiểu cho các nút trắc nghiệm */
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .option-btn:hover {
+            background-color: #eff6ff; /* bg-blue-50 */
+            border-color: #3b82f6; /* border-blue-500 */
+        }
+        
+        /* Kiểu cho câu trả lời đúng/sai */
+        .option-btn.correct {
+            background-color: #dcfce7; /* bg-green-100 */
+            border-color: #22c55e; /* border-green-500 */
+            color: #166534; /* text-green-800 */
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background-color: #fee2e2; /* bg-red-100 */
+            border-color: #ef4444; /* border-red-500 */
+            color: #991b1b; /* text-red-800 */
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">
+            Ôn tập Tiếng Trung
+        </h1>
+
+        <!-- Bộ chọn chế độ -->
+        <div class="grid grid-cols-3 gap-1 mb-6 border border-gray-200 rounded-lg p-1">
+            <button id="mode1Btn" class="mode-btn w-full p-2 rounded-md font-semibold transition-all duration-200 text-sm md:text-base">
+                1. Bài cũ (Hình)
+            </button>
+            <button id="mode2Btn" class="mode-btn w-full p-2 rounded-md font-semibold transition-all duration-200 text-sm md:text-base">
+                2. Bài cũ (Chữ)
+            </button>
+            <button id="mode3Btn" class="mode-btn w-full p-2 rounded-md font-semibold transition-all duration-200 text-sm md:text-base">
+                3. Bài mới (Chữ)
+            </button>
+        </div>
+
+        <!-- Vùng nội dung Quiz -->
+        <div id="quiz-container">
+
+            <!-- Chế độ 1: Hình ảnh -> Chữ -->
+            <div id="mode1Container" class="hidden">
+                <div class="aspect-w-16 aspect-h-9 mb-4">
+                    <img id="quizImage" src="" alt="Hình ảnh từ vựng" 
+                         class="w-full h-64 object-contain rounded-lg bg-gray-50 border border-gray-200"
+                         onerror="this.src='https://placehold.co/600x400/e2e8f0/94a3b8?text=Không+tải+được+ảnh';">
+                </div>
+                
+                <input type_key="text" id="quizInput" 
+                       placeholder="Nhập chữ Hán hoặc pinyin (không dấu)"
+                       class="w-full p-3 border border-gray-300 rounded-lg text-lg text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                
+                <button id="checkBtn1" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg mt-4 hover:bg-blue-600 transition-colors duration-200 active:scale-[0.98]">
+                    Kiểm tra
+                </button>
+            </div>
+
+            <!-- Chế độ 2 & 3: Chữ -> Trắc nghiệm -->
+            <div id="modeMCQContainer" class="hidden">
+                <div class="w-full bg-gray-50 rounded-lg p-8 mb-4 flex items-center justify-center border border-gray-200" style="min-height: 150px;">
+                    <h2 id="quizHanzi" class="text-6xl md:text-7xl font-bold text-gray-900" lang="zh-CN"></h2>
+                </div>
+
+                <!-- Gợi ý (chỉ cho mode 3) -->
+                <div class="flex justify-between items-center mb-2 min-h-[30px]">
+                    <p id="hintText" class="text-blue-600 font-semibold"></p>
+                    <button id="hintBtn" class="hidden text-sm text-blue-500 hover:text-blue-700 font-medium">
+                        Cần gợi ý?
+                    </button>
+                </div>
+
+
+                <!-- Lựa chọn Tiếng Việt -->
+                <div class="mb-6">
+                    <h3 class="font-semibold text-gray-700 mb-2">Nghĩa Tiếng Việt:</h3>
+                    <div id="vietOptions" class="grid grid-cols-2 gap-3">
+                        <!-- Các nút lựa chọn sẽ được chèn vào đây -->
+                    </div>
+                </div>
+
+                <!-- Lựa chọn Pinyin -->
+                <div>
+                    <h3 class="font-semibold text-gray-700 mb-2">Pinyin:</h3>
+                    <div id="pinyinOptions" class="grid grid-cols-2 gap-3">
+                        <!-- Các nút lựa chọn sẽ được chèn vào đây -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Vùng Phản hồi -->
+        <div id="feedbackContainer" class="mt-4 text-center min-h-[50px]">
+            <p id="feedbackText" class="text-lg font-semibold"></p>
+        </div>
+
+        <!-- Vùng Hoàn thành -->
+        <div id="completionContainer" class="hidden text-center p-8">
+            <h2 class="text-2xl font-bold text-green-600 mb-4">Hoàn thành!</h2>
+            <p class="text-gray-700 mb-6">Bạn đã ôn tập hết tất cả các từ vựng trong bài này.</p>
+            <button id="restartBtn" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200 active:scale-[0.98]">
+                Làm lại từ đầu
+            </button>
+        </div>
+
+        <!-- Nút Tiếp theo -->
+        <button id="nextBtn" class="w-full bg-gray-700 text-white font-bold py-3 px-4 rounded-lg mt-2 hover:bg-gray-800 transition-colors duration-200 active:scale-[0.98] hidden">
+            Tiếp theo
+        </button>
+
+    </div>
+
+    <script>
+        // BỘ TỪ VỰNG CŨ
+        const vocabularySet1 = [
+            { hanzi: '钥匙', pinyin: 'yàoshi', pinyinNoTone: 'yaoshi', viet: 'Chìa khóa', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Standard-lock-key.jpg/1200px-Standard-lock-key.jpg' },
+            { hanzi: '托盘', pinyin: 'tuōpán', pinyinNoTone: 'tuopan', viet: 'Khay bưng', img: 'https://img14.360buyimg.com/pop/jfs/t1/245521/26/6989/53563/660e4c3cFf66e3b5a/5220af5dee8013e0.jpg' },
+            { hanzi: '碗', pinyin: 'wǎn', pinyinNoTone: 'wan', viet: 'Bát / Chén', img: 'https://img.muji.net/img/item/4550344341360_1260.jpg' },
+            { hanzi: '筷子', pinyin: 'kuàizi', pinyinNoTone: 'kuaizi', viet: 'Đũa', img: 'https://upload.wikimedia.org/wikipedia/commons/4/49/Chopsticks_on_a_dish.jpg' },
+            { hanzi: '勺子', pinyin: 'sháozi', pinyinNoTone: 'shaozi', viet: 'Thìa / Muỗng', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Loeffel_03.JPG/250px-Loeffel_03.JPG' },
+            { hanzi: '叉子', pinyin: 'chāzi', pinyinNoTone: 'chazi', viet: 'Nĩa', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Stainless_Steel_Fork.jpg/250px-Stainless_Steel_Fork.jpg' },
+            { hanzi: '杯子', pinyin: 'bēizi', pinyinNoTone: 'beizi', viet: 'Cốc / Ly', img: 'https://www.ikea.com.tw/dairyfarm/tw/images/110/0711066_PE727941_S5.jpg' },
+            { hanzi: '吸管', pinyin: 'xīguǎn', pinyinNoTone: 'xiguan', viet: 'Ống hút', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Trinkhalm.jpg/250px-Trinkhalm.jpg' },
+            { hanzi: '锅', pinyin: 'guō', pinyinNoTone: 'guo', viet: 'Nồi', img: 'https://upload.wikimedia.org/wikipedia/commons/5/57/Non-stick_20cm_saucepan.JPG' },
+            { hanzi: '炒锅', pinyin: 'chǎoguō', pinyinNoTone: 'chaoguo', viet: 'Chảo xào', img: 'https://static.airchina.com.cn/upload/t/IKkHck7O4fwwch5QHBcS2tFywqw=/670x670/img/store/1684/1723180018346.jpg' },
+            { hanzi: '砧板', pinyin: 'zhēnbǎn', pinyinNoTone: 'zhenban', viet: 'Thớt', img: 'https://pcm.trplus.com.tw/1000x1000/sys-master/productImages/h4a/h04/12275553828894/000000000014177187-gallery-01-20240806115023303.jpg' },
+            { hanzi: '汤勺', pinyin: 'tāngsháo', pinyinNoTone: 'tangshao', viet: 'Muỗng canh', img: 'https://greenpan.gr/sites/gplive.l005.attiks.com/files/KU000005-002.jpg' },
+            { hanzi: '冰箱', pinyin: 'bīngxiāng', pinyinNoTone: 'bingxiang', viet: 'Tủ lạnh', img: 'https://i1.momoshop.com.tw/1762177161/goodsimg/0006/736/978/6736978_OR.jpg' },
+            { hanzi: '微波炉', pinyin: 'wēibōlú', pinyinNoTone: 'weibolu', viet: 'Lò vi sóng', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Consumer_Reports_-_Kenmore_microwave_oven.tif/lossy-page1-1200px-Consumer_Reports_-_Kenmore_microwave_oven.tif.jpg' },
+            { hanzi: '垃圾桶', pinyin: 'lājītǒng', pinyinNoTone: 'lajitong', viet: 'Thùng rác', img: 'https://www.2525.com.tw/TW/ImgShowroom/EGB-1000.jpg' }
+        ];
+
+        // BỘ TỪ VỰNG MỚI (14/11)
+        const vocabularySet2 = [
+            { hanzi: '吃', pinyin: 'chī', pinyinNoTone: 'chi', viet: 'Ăn' },
+            { hanzi: '喝', pinyin: 'hē', pinyinNoTone: 'he', viet: 'Uống' },
+            { hanzi: '果汁', pinyin: 'guǒzhī', pinyinNoTone: 'guozhi', viet: 'Nước ép' },
+            { hanzi: '睡觉', pinyin: 'shuìjiào', pinyinNoTone: 'shuijiao', viet: 'Ngủ' },
+            { hanzi: '休息', pinyin: 'xiūxi', pinyinNoTone: 'xiuxi', viet: 'Nghỉ ngơi' },
+            { hanzi: '散步', pinyin: 'sànbù', pinyinNoTone: 'sanbu', viet: 'Đi dạo' },
+            { hanzi: '工作', pinyin: 'gōngzuò', pinyinNoTone: 'gongzuo', viet: 'Làm việc' },
+            { hanzi: '上班', pinyin: 'shàngbān', pinyinNoTone: 'shangban', viet: 'Đi làm' },
+            { hanzi: '照顾', pinyin: 'zhàogù', pinyinNoTone: 'zhaogu', viet: 'Chăm sóc' },
+            { hanzi: '唱歌', pinyin: 'chànggē', pinyinNoTone: 'changge', viet: 'Ca hát' },
+            { hanzi: '想', pinyin: 'xiǎng', pinyinNoTone: 'xiang', viet: 'Muốn / Nhớ / Nghĩ' },
+            { hanzi: '做饭', pinyin: 'zuòfàn', pinyinNoTone: 'zuofan', viet: 'Nấu cơm' },
+            { hanzi: '每天', pinyin: 'měitiān', pinyinNoTone: 'meitian', viet: 'Mỗi ngày' },
+            { hanzi: '上厕所', pinyin: 'shàngcèsuǒ', pinyinNoTone: 'shangcesuo', viet: 'Đi vệ sinh (1)' },
+            { hanzi: '去卫生间', pinyin: 'qùwèishēngjiān', pinyinNoTone: 'quweishengjian', viet: 'Đi vệ sinh (2)' },
+            { hanzi: '马桶', pinyin: 'mǎtǒng', pinyinNoTone: 'matong', viet: 'Bồn cầu' },
+            { hanzi: '说话', pinyin: 'shuōhuà', pinyinNoTone: 'shuohua', viet: 'Nói chuyện' },
+            // Cập nhật từ nhạy cảm
+            { hanzi: '做爱', pinyin: 'zuò\'ài', pinyinNoTone: 'zuoai', viet: 'Làm tình' },
+            { hanzi: '口交', pinyin: 'kǒujiāo', pinyinNoTone: 'koujiao', viet: 'Giao cấu bằng miệng' },
+            { hanzi: '鸡巴', pinyin: 'jībā', pinyinNoTone: 'jiba', viet: 'Dương vật (thô tục)' },
+            { hanzi: '阳物', pinyin: 'yángwù', pinyinNoTone: 'yangwu', viet: 'Dương vật' },
+            { hanzi: '吹箫', pinyin: 'chuīxiāo', pinyinNoTone: 'chuixiao', viet: 'Thổi kèn (tiếng lóng)' },
+            { hanzi: '操', pinyin: 'cào', pinyinNoTone: 'cao', viet: 'Đ* (từ chửi thề)' },
+            { hanzi: '跟我', pinyin: 'gēn wǒ', pinyinNoTone: 'genwo', viet: 'Với tôi' },
+            { hanzi: '射', pinyin: 'shè', pinyinNoTone: 'she', viet: 'Bắn / Xuất tinh' }
+        ];
+
+        // Lấy các phần tử DOM
+        const mode1Btn = document.getElementById('mode1Btn');
+        const mode2Btn = document.getElementById('mode2Btn');
+        const mode3Btn = document.getElementById('mode3Btn');
+        const mode1Container = document.getElementById('mode1Container');
+        const modeMCQContainer = document.getElementById('modeMCQContainer');
+        
+        const quizImage = document.getElementById('quizImage');
+        const quizInput = document.getElementById('quizInput');
+        const checkBtn1 = document.getElementById('checkBtn1');
+        
+        const quizHanzi = document.getElementById('quizHanzi');
+        const vietOptions = document.getElementById('vietOptions');
+        const pinyinOptions = document.getElementById('pinyinOptions');
+        const hintBtn = document.getElementById('hintBtn');
+        const hintText = document.getElementById('hintText');
+        
+        const feedbackText = document.getElementById('feedbackText');
+        const nextBtn = document.getElementById('nextBtn');
+        const completionContainer = document.getElementById('completionContainer');
+        const restartBtn = document.getElementById('restartBtn');
+        const quizContainer = document.getElementById('quiz-container');
+
+        // Trạng thái của ứng dụng
+        let currentMode = 'mode1';
+        let currentWord = {};
+        let currentVocabulary = vocabularySet1;
+        let usedIndices = new Set(); // Để tránh lặp lại từ
+        
+        // Trạng thái cho Chế độ 2
+        let stateMode2 = {
+            correctViet: '',
+            correctPinyin: '',
+            answeredViet: false,
+            answeredPinyin: false,
+            vietButtons: [],
+            pinyinButtons: []
+        };
+
+        // --- Hàm Tiện ích ---
+
+        // Xáo trộn mảng
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Lấy từ vựng ngẫu nhiên, tránh lặp lại
+        function getRandomWord() {
+            if (usedIndices.size === currentVocabulary.length) {
+                return null; // Báo hiệu đã hoàn thành
+            }
+            let index;
+            do {
+                index = Math.floor(Math.random() * currentVocabulary.length);
+            } while (usedIndices.has(index));
+            
+            usedIndices.add(index);
+            return currentVocabulary[index];
+        }
+
+        // Đặt phản hồi
+        function setFeedback(message, isCorrect) {
+            feedbackText.textContent = message;
+            if (isCorrect) {
+                feedbackText.className = 'text-lg font-semibold text-green-600';
+            } else {
+                feedbackText.className = 'text-lg font-semibold text-red-600';
+            }
+        }
+
+        // Đặt lại phản hồi
+        function resetFeedback() {
+            feedbackText.textContent = '';
+        }
+
+        // --- Logic Chuyển chế độ ---
+
+        function switchMode(mode) {
+            currentMode = mode;
+            resetFeedback();
+            nextBtn.classList.add('hidden');
+            quizContainer.classList.remove('hidden'); // Hiển thị vùng quiz
+            completionContainer.classList.add('hidden'); // Ẩn vùng hoàn thành
+            usedIndices.clear(); // Xóa lịch sử câu đã hỏi
+
+            // Cập nhật trạng thái nút
+            mode1Btn.classList.remove('active');
+            mode2Btn.classList.remove('active');
+            mode3Btn.classList.remove('active');
+
+            if (mode === 'mode1') {
+                currentVocabulary = vocabularySet1;
+                mode1Btn.classList.add('active');
+                mode1Container.classList.remove('hidden');
+                modeMCQContainer.classList.add('hidden');
+                checkBtn1.classList.remove('hidden');
+            } else if (mode === 'mode2') {
+                currentVocabulary = vocabularySet1;
+                mode2Btn.classList.add('active');
+                mode1Container.classList.add('hidden');
+                modeMCQContainer.classList.remove('hidden');
+                checkBtn1.classList.add('hidden');
+                hintBtn.classList.add('hidden'); // Ẩn gợi ý
+                hintText.classList.add('hidden');
+            } else if (mode === 'mode3') {
+                currentVocabulary = vocabularySet2;
+                mode3Btn.classList.add('active');
+                mode1Container.classList.add('hidden');
+                modeMCQContainer.classList.remove('hidden');
+                checkBtn1.classList.add('hidden');
+                hintBtn.classList.remove('hidden'); // Hiển thị gợi ý
+                hintText.classList.remove('hidden');
+                hintText.textContent = ''; // Xóa gợi ý cũ
+            }
+            loadNextQuestion();
+        }
+
+        // --- Logic Tải câu hỏi ---
+
+        function loadNextQuestion() {
+            currentWord = getRandomWord();
+
+            // Kiểm tra nếu đã hoàn thành
+            if (currentWord === null) {
+                if (currentMode === 'mode1') {
+                    // Mode 1 tự động lặp lại
+                    usedIndices.clear();
+                    currentWord = getRandomWord();
+                } else {
+                    // Mode 2 & 3 hiển thị màn hình hoàn thành
+                    showCompletionScreen();
+                    return;
+                }
+            }
+            
+            resetFeedback();
+            nextBtn.classList.add('hidden');
+            hintText.textContent = '';
+            hintBtn.disabled = false;
+
+            if (currentMode === 'mode1') {
+                loadMode1();
+            } else {
+                loadModeMCQ(); // Dùng cho cả mode 2 và 3
+            }
+        }
+
+        // Hiển thị màn hình hoàn thành
+        function showCompletionScreen() {
+            quizContainer.classList.add('hidden'); // Ẩn toàn bộ quiz
+            completionContainer.classList.remove('hidden'); // Hiển thị thông báo
+        }
+
+        // --- Chế độ 1: Hình ảnh -> Chữ ---
+
+        function loadMode1() {
+            quizImage.src = currentWord.img;
+            quizInput.value = '';
+            quizInput.disabled = false;
+            checkBtn1.disabled = false;
+        }
+
+        function checkMode1() {
+            const userAnswer = quizInput.value.trim().toLowerCase();
+            const correctHanzi = currentWord.hanzi;
+            const correctPinyin = currentWord.pinyinNoTone;
+
+            if (userAnswer === correctHanzi || userAnswer === correctPinyin) {
+                setFeedback('Chính xác!', true);
+                nextBtn.classList.remove('hidden');
+                quizInput.disabled = true;
+                checkBtn1.disabled = true;
+            } else {
+                setFeedback(`Sai rồi! Đáp án: ${correctHanzi} (${currentWord.pinyin})`, false);
+            }
+        }
+
+        // --- Chế độ 2 & 3: Chữ -> Trắc nghiệm ---
+
+        function loadModeMCQ() {
+            quizHanzi.textContent = currentWord.hanzi;
+            
+            // Đặt lại trạng thái
+            stateMode2.correctViet = currentWord.viet;
+            stateMode2.correctPinyin = currentWord.pinyin;
+            stateMode2.answeredViet = false;
+            stateMode2.answeredPinyin = false;
+            
+            // Dọn dẹp các nút cũ
+            vietOptions.innerHTML = '';
+            pinyinOptions.innerHTML = '';
+            stateMode2.vietButtons = [];
+            stateMode2.pinyinButtons = [];
+
+            // Lấy các đáp án sai
+            let distractors = [];
+            while (distractors.length < 3) {
+                const randomWord = currentVocabulary[Math.floor(Math.random() * currentVocabulary.length)];
+                if (randomWord.hanzi !== currentWord.hanzi && !distractors.some(d => d.hanzi === randomWord.hanzi)) {
+                    distractors.push(randomWord);
+                }
+            }
+
+            // Tạo và xáo trộn các lựa chọn
+            const vietChoices = shuffleArray([currentWord.viet, ...distractors.map(d => d.viet)]);
+            const pinyinChoices = shuffleArray([currentWord.pinyin, ...distractors.map(d => d.pinyin)]);
+
+            // Tạo các nút lựa chọn
+            vietChoices.forEach(choice => {
+                const btn = createOptionButton(choice, 'viet');
+                stateMode2.vietButtons.push(btn);
+                vietOptions.appendChild(btn);
+            });
+
+            pinyinChoices.forEach(choice => {
+                const btn = createOptionButton(choice, 'pinyin');
+                stateMode2.pinyinButtons.push(btn);
+                pinyinOptions.appendChild(btn);
+            });
+        }
+
+        // Tạo nút trắc nghiệm
+        function createOptionButton(text, type) {
+            const button = document.createElement('button');
+            button.textContent = text;
+            button.className = 'option-btn w-full p-3 border border-gray-300 rounded-lg text-gray-700 font-medium text-left';
+            button.dataset.type = type;
+            button.dataset.value = text;
+            
+            button.addEventListener('click', () => handleOptionClick(button));
+            return button;
+        }
+
+        // Xử lý khi nhấn nút trắc nghiệm
+        function handleOptionClick(clickedButton) {
+            const type = clickedButton.dataset.type;
+            const value = clickedButton.dataset.value;
+
+            if ((type === 'viet' && stateMode2.answeredViet) || (type === 'pinyin' && stateMode2.answeredPinyin)) {
+                return; // Đã trả lời phần này rồi
+            }
+
+            let isCorrect = false;
+            let correctValue = '';
+            let buttonList = [];
+
+            if (type === 'viet') {
+                isCorrect = (value === stateMode2.correctViet);
+                correctValue = stateMode2.correctViet;
+                buttonList = stateMode2.vietButtons;
+                stateMode2.answeredViet = true;
+            } else { // type === 'pinyin'
+                isCorrect = (value === stateMode2.correctPinyin);
+                correctValue = stateMode2.correctPinyin;
+                buttonList = stateMode2.pinyinButtons;
+                stateMode2.answeredPinyin = true;
+            }
+
+            // Đánh dấu các nút
+            buttonList.forEach(btn => {
+                if (btn.dataset.value === correctValue) {
+                    btn.classList.add('correct');
+                } else if (btn === clickedButton) {
+                    btn.classList.add('incorrect');
+                }
+                btn.disabled = true; // Vô hiệu hóa các nút sau khi chọn
+            });
+
+            // Kiểm tra xem đã trả lời cả hai chưa
+            if (stateMode2.answeredViet && stateMode2.answeredPinyin) {
+                // Có thể thêm phản hồi tổng kết ở đây nếu muốn
+                setFeedback('Hoàn thành!', true);
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        // --- Khởi tạo ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gắn sự kiện cho các nút
+            mode1Btn.addEventListener('click', () => switchMode('mode1'));
+            mode2Btn.addEventListener('click', () => switchMode('mode2'));
+            mode3Btn.addEventListener('click', () => switchMode('mode3'));
+            checkBtn1.addEventListener('click', checkMode1);
+            nextBtn.addEventListener('click', loadNextQuestion);
+            restartBtn.addEventListener('click', () => switchMode(currentMode)); // Khởi động lại chế độ hiện tại
+
+            // Gợi ý
+            hintBtn.addEventListener('click', () => {
+                hintText.textContent = `Nghĩa: ${currentWord.viet}`;
+                hintBtn.disabled = true;
+            });
+
+            // Thêm sự kiện nhấn Enter cho input
+            quizInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !checkBtn1.disabled) {
+                    checkMode1();
+                }
+            });
+
+            // Bắt đầu với Chế độ 1
+            switchMode('mode1');
+        });
+
+    </script>
+</body>
+</html>

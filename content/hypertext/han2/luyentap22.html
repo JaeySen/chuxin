@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Tiếng Trung: Nhật Ký Của Mary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chinese-paragraph {
+            font-size: 1.2rem;
+            line-height: 2.2;
+            text-align: justify;
+        }
+        .pinyin-paragraph, .vietnamese-paragraph {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #4A5568;
+            background-color: #F7FAFC;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+        .draggable {
+            cursor: move;
+            user-select: none;
+        }
+        .drop-zone {
+            min-height: 50px;
+            border: 2px dashed #CBD5E0;
+            transition: background-color 0.2s;
+        }
+        .drop-zone.drag-over {
+            background-color: #E2E8F0;
+        }
+        .correct-answer {
+            border: 2px solid #48BB78 !important;
+        }
+        .incorrect-answer {
+            border: 2px solid #F56565 !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-red-700">Bài Tập Tiếng Trung</h1>
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-700 mt-2">玛丽的日记 - Nhật Ký Của Mary</h2>
+        </header>
+
+        <main>
+            <!-- Phần I: Bài Đọc -->
+            <section id="reading" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-bold mb-4 border-b pb-2 text-red-600">I. Bài Đọc (阅读课文)</h3>
+                <div class="flex space-x-4 mb-4">
+                    <button id="toggle-pinyin" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Hiện Pinyin</button>
+                    <button id="toggle-vietnamese" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">Hiện Nghĩa</button>
+                </div>
+                <div id="reading-content">
+                    <p id="chinese-paragraph" class="chinese-paragraph"></p>
+                    <p id="pinyin-paragraph" class="pinyin-paragraph hidden"></p>
+                    <p id="vietnamese-paragraph" class="vietnamese-paragraph hidden"></p>
+                </div>
+            </section>
+
+            <!-- Phần II: Từ Vựng Mới -->
+            <section id="vocabulary" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-bold mb-4 border-b pb-2 text-red-600">II. Từ Vựng Mới (生词)</h3>
+                 <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th class="p-3">Từ vựng</th>
+                                <th class="p-3">Pinyin</th>
+                                <th class="p-3">Nghĩa Tiếng Việt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vocab-table">
+                           <!-- Dữ liệu từ vựng sẽ được chèn vào đây bằng JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Phần III: Câu Hỏi Đọc Hiểu -->
+            <section id="questions" class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h3 class="text-2xl font-bold mb-4 border-b pb-2 text-red-600">III. Câu Hỏi Đọc Hiểu (问题)</h3>
+                <div id="questions-list" class="space-y-6">
+                    <!-- Dữ liệu câu hỏi sẽ được chèn vào đây bằng JavaScript -->
+                </div>
+                <button id="check-answers-btn" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg">Kiểm Tra Đáp Án</button>
+            </section>
+
+            <!-- Phần IV: Bài Tập Tương Tác -->
+            <section id="exercises" class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-2xl font-bold mb-4 border-b pb-2 text-red-600">IV. Bài Tập Tương Tác</h3>
+                
+                <!-- Bài 1: Nối từ -->
+                <div class="mb-8">
+                    <h4 class="text-xl font-semibold mb-3">Bài 1: Nối tên với sở thích</h4>
+                    <p class="mb-4">Kéo sở thích ở cột phải và thả vào đúng người ở cột trái.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Cột nhân vật (Drop Zones) -->
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <span class="font-semibold w-28">1. 玛丽 (我)</span>
+                                <div id="drop-d" class="drop-zone w-full p-2 rounded-lg ml-2" data-answer="hobby-d"></div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="font-semibold w-28">2. 麦克</span>
+                                <div id="drop-a" class="drop-zone w-full p-2 rounded-lg ml-2" data-answer="hobby-a"></div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="font-semibold w-28">3. 罗兰</span>
+                                <div id="drop-b" class="drop-zone w-full p-2 rounded-lg ml-2" data-answer="hobby-b"></div>
+                            </div>
+                             <div class="flex items-center">
+                                <span class="font-semibold w-28">4. 田中</span>
+                                <div id="drop-c" class="drop-zone w-full p-2 rounded-lg ml-2" data-answer="hobby-c"></div>
+                            </div>
+                        </div>
+                        <!-- Cột sở thích (Draggable Items) -->
+                        <div id="hobby-pool" class="space-y-2">
+                            <div id="hobby-a" draggable="true" class="draggable bg-blue-100 p-3 rounded-lg border border-blue-300">A. 玩儿电脑游戏</div>
+                            <div id="hobby-b" draggable="true" class="draggable bg-green-100 p-3 rounded-lg border border-green-300">B. 听音乐</div>
+                            <div id="hobby-c" draggable="true" class="draggable bg-yellow-100 p-3 rounded-lg border border-yellow-300">C. 书法</div>
+                            <div id="hobby-d" draggable="true" class="draggable bg-purple-100 p-3 rounded-lg border border-purple-300">D. 看京剧</div>
+                        </div>
+                    </div>
+                    <button id="check-drag-drop" class="mt-4 bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg">Kiểm Tra</button>
+                </div>
+
+                <!-- Bài 2: Điền từ -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-3">Bài 2: Điền từ vào chỗ trống</h4>
+                    <p class="mb-4">Điền từ thích hợp: <code class="bg-gray-200 p-1 rounded">惊讶</code>, <code class="bg-gray-200 p-1 rounded">愉快</code>, <code class="bg-gray-200 p-1 rounded">感兴趣</code>, <code class="bg-gray-200 p-1 rounded">打算</code>, <code class="bg-gray-200 p-1 rounded">演出</code></p>
+                    <div id="fill-in-blanks-container" class="space-y-3">
+                        <p>1. 他来中国以前就对书法很 <input type="text" data-answer="感兴趣" class="fill-blank-input border-b-2 border-gray-300 focus:border-blue-500 outline-none px-1"></p>
+                        <p>2. 我 <input type="text" data-answer="打算" class="fill-blank-input border-b-2 border-gray-300 focus:border-blue-500 outline-none px-1"> 学唱京剧，想请一个老师教我。</p>
+                        <p>3. 听了这个消息，大家都很 <input type="text" data-answer="惊讶" class="fill-blank-input border-b-2 border-gray-300 focus:border-blue-500 outline-none px-1"></p>
+                        <p>4. 我希望以后能参加 <input type="text" data-answer="演出" class="fill-blank-input border-b-2 border-gray-300 focus:border-blue-500 outline-none px-1"></p>
+                        <p>5. 跟朋友聊天，他感到心情很 <input type="text" data-answer="愉快" class="fill-blank-input border-b-2 border-gray-300 focus:border-blue-500 outline-none px-1"></p>
+                    </div>
+                    <button id="check-fill-blanks" class="mt-4 bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg">Kiểm Tra</button>
+                </div>
+
+            </section>
+        </main>
+
+        <footer class="text-center mt-8 text-gray-500">
+            <p>&copy; 2024 - Công cụ hỗ trợ học Tiếng Trung</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Dữ liệu cho trang web ---
+            const readingContent = [
+                { chinese: '今天上课的时候，老师让我们谈谈自己的爱好。', pinyin: 'Jīntiān shàngkè de shíhòu, lǎoshī ràng wǒmen tán tán zìjǐ de àihào.', vietnamese: 'Hôm nay trong giờ học, cô giáo bảo chúng tôi nói về sở thích của mình.' },
+                { chinese: '老师让我先说。', pinyin: 'Lǎoshī ràng wǒ xiān shuō.', vietnamese: 'Cô giáo bảo tôi nói trước.' },
+                { chinese: '我说我非常喜欢看京剧。', pinyin: 'Wǒ shuō wǒ fēicháng xǐhuān kàn jīngjù.', vietnamese: 'Tôi nói tôi rất thích xem Kinh kịch.' },
+                { chinese: '老师感到很惊讶。', pinyin: 'Lǎoshī gǎndào hěn jīngyà.', vietnamese: 'Cô giáo cảm thấy rất ngạc nhiên.' },
+                { chinese: '她问：“你喜欢看京剧？”', pinyin: 'Tā wèn: “Nǐ xǐhuān kàn jīngjù?”', vietnamese: 'Cô ấy hỏi: "Em thích xem Kinh kịch à?"' },
+                { chinese: '我说我非常喜欢。', pinyin: 'Wǒ shuō wǒ fēicháng xǐhuān.', vietnamese: 'Tôi nói tôi rất thích.' },
+                { chinese: '我知道，在中国，有不少年轻人不喜欢看京剧。', pinyin: 'Wǒ zhīdào, zài zhōngguó, yǒu bù shǎo niánqīng rén bù xǐhuān kàn jīngjù.', vietnamese: 'Tôi biết, ở Trung Quốc, có không ít người trẻ không thích xem Kinh kịch.' },
+                { chinese: '我这个“老外”这么喜欢看京剧，老师当然感到很惊讶。', pinyin: 'Wǒ zhège “lǎowài” zhème xǐhuān kàn jīngjù, lǎoshī dāngrán gǎndào hěn jīngyà.', vietnamese: 'Một "người nước ngoài" như tôi lại thích xem Kinh kịch như vậy, cô giáo đương nhiên cảm thấy rất ngạc nhiên.' },
+                { chinese: '我们班 的 同学 都 有自己 的 爱好。', pinyin: 'Wǒmen bān de tóngxué dōu yǒu zìjǐ de àihào.', vietnamese: 'Các bạn học trong lớp chúng tôi đều có sở thích của riêng mình.' },
+                { chinese: '麦克说他喜欢玩 儿 电脑游戏。', pinyin: 'Màikè shuō tā xǐhuān wánr diànnǎo yóuxì.', vietnamese: 'Mike nói cậu ấy thích chơi game máy tính.' },
+                { chinese: '罗兰喜欢听音 乐 。', pinyin: 'Luólán xǐhuān tīng yīnyuè.', vietnamese: 'Roland thích nghe nhạc.' },
+                { chinese: '她说下课以后听听音 乐 ，跟朋友聊聊天，感到心情很愉快。', pinyin: 'Tā shuō xiàkè yǐhòu tīng tīng yīnyuè, gēn péngyǒu liáotiān, gǎndào xīnqíng hěn yúkuài.', vietnamese: 'Cô ấy nói sau khi tan học nghe nhạc, trò chuyện cùng bạn bè, cảm thấy tâm trạng rất vui vẻ.' },
+                { chinese: '田中同学说，他来中国以前就对书法很感兴趣。', pinyin: 'Tiánzhōng tóngxué shuō, tā lái zhōngguó yǐqián jiù duì shūfǎ hěn gǎn xìngqù.', vietnamese: 'Bạn Tanaka nói, trước khi đến Trung Quốc cậu ấy đã rất có hứng thú với thư pháp.' },
+                { chinese: '他现在正跟一个老师学习书法。', pinyin: 'Tā xiànzài zhèng gēn yīgè lǎoshī xuéxí shūfǎ.', vietnamese: 'Bây giờ cậu ấy đang học thư pháp với một giáo viên.' },
+                { chinese: '我也打算学唱京剧，想请一个老师教我。', pinyin: 'Wǒ yě dǎsuàn xué chàng jīngjù, xiǎng qǐng yīgè lǎoshī jiào wǒ.', vietnamese: 'Tôi cũng dự định học hát Kinh kịch, muốn mời một giáo viên dạy tôi.' },
+                { chinese: '我希望以后能参加演出。', pinyin: 'Wǒ xīwàng yǐhòu néng cānjiā yǎnchū.', vietnamese: 'Tôi hy vọng sau này có thể tham gia biểu diễn.' }
+            ];
+
+            const vocabulary = [
+                { word: '爱好', pinyin: 'àihào', meaning: 'sở thích' },
+                { word: '京剧', pinyin: 'jīngjù', meaning: 'Kinh kịch' },
+                { word: '惊讶', pinyin: 'jīngyà', meaning: 'ngạc nhiên, kinh ngạc' },
+                { word: '当然', pinyin: 'dāngrán', meaning: 'đương nhiên' },
+                { word: '电脑游戏', pinyin: 'diànnǎo yóuxì', meaning: 'trò chơi máy tính, game' },
+                { word: '音乐', pinyin: 'yīnyuè', meaning: 'âm nhạc' },
+                { word: '心情', pinyin: 'xīnqíng', meaning: 'tâm trạng' },
+                { word: '愉快', pinyin: 'yúkuài', meaning: 'vui vẻ, vui sướng' },
+                { word: '书法', pinyin: 'shūfǎ', meaning: 'thư pháp' },
+                { word: '感兴趣', pinyin: 'gǎn xìngqù', meaning: 'có hứng thú, quan tâm' },
+                { word: '打算', pinyin: 'dǎsuàn', meaning: 'dự định' },
+                { word: '希望', pinyin: 'xīwàng', meaning: 'hy vọng' },
+                { word: '参加', pinyin: 'cānjiā', meaning: 'tham gia' },
+                { word: '演出', pinyin: 'yǎnchū', meaning: 'biểu diễn' }
+            ];
+
+            const questions = [
+                { q: '1. 课文中的“我”有什么爱好？', a: '“我”非常喜欢看京剧。' },
+                { q: '2. 老师为什么感到惊讶？', a: '因为在中国，有不少年轻人不喜欢看京剧，而“我”这个“老外”却这么喜欢看京剧，所以老师感到很惊讶。' },
+                { q: '3. 课文中提到了哪些同学的爱好？', a: '课文中提到了麦克喜欢玩儿电脑游戏，罗兰喜欢听音乐，田中同学对书法很感兴趣。' },
+                { q: '4. 罗兰喜欢听音乐的原因是什么？', a: '因为下课以后听听音乐，跟朋友聊聊天，会感到心情很愉快。' },
+                { q: '5. 田中同学为什么学习书法？', a: '因为他来中国以前就对书法很感兴趣。' },
+                { q: '6. “我”有什么打算？', a: '“我”打算学唱京剧，并希望以后能参加演出。' },
+                { q: '7. 你有什么爱好？请简单描述一下。', a: 'Đây là câu hỏi mở, học viên tự trả lời về sở thích của bản thân.' }
+            ];
+
+            // --- Chèn dữ liệu vào HTML ---
+
+            // Phần I: Bài Đọc
+            const chineseParagraph = document.getElementById('chinese-paragraph');
+            const pinyinParagraph = document.getElementById('pinyin-paragraph');
+            const vietnameseParagraph = document.getElementById('vietnamese-paragraph');
+            
+            chineseParagraph.textContent = readingContent.map(item => item.chinese).join(' ');
+            pinyinParagraph.textContent = readingContent.map(item => item.pinyin).join(' ');
+            vietnameseParagraph.textContent = readingContent.map(item => item.vietnamese).join(' ');
+
+            // Phần II: Từ vựng
+            const vocabTableBody = document.querySelector('#vocab-table');
+            vocabulary.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-3 font-semibold">${item.word}</td>
+                    <td class="p-3">${item.pinyin}</td>
+                    <td class="p-3">${item.meaning}</td>
+                `;
+                vocabTableBody.appendChild(row);
+            });
+
+            // Phần III: Câu hỏi
+            const questionsList = document.querySelector('#questions-list');
+            questions.forEach(item => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <p class="font-semibold mb-2">${item.q}</p>
+                    <textarea class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-400" rows="3" placeholder="Nhập câu trả lời của bạn..."></textarea>
+                    <div class="suggested-answer hidden mt-2 p-3 bg-green-100 text-green-800 rounded-md">
+                        <strong>Đáp án gợi ý:</strong> ${item.a}
+                    </div>
+                `;
+                questionsList.appendChild(div);
+            });
+
+            // --- Logic cho các nút và tương tác ---
+
+            // Nút bật/tắt Pinyin và Nghĩa
+            const togglePinyinBtn = document.getElementById('toggle-pinyin');
+            const toggleVietnameseBtn = document.getElementById('toggle-vietnamese');
+
+            togglePinyinBtn.addEventListener('click', () => {
+                pinyinParagraph.classList.toggle('hidden');
+                togglePinyinBtn.textContent = pinyinParagraph.classList.contains('hidden') ? 'Hiện Pinyin' : 'Ẩn Pinyin';
+            });
+
+            toggleVietnameseBtn.addEventListener('click', () => {
+                vietnameseParagraph.classList.toggle('hidden');
+                toggleVietnameseBtn.textContent = vietnameseParagraph.classList.contains('hidden') ? 'Hiện Nghĩa' : 'Ẩn Nghĩa';
+            });
+
+            // Nút kiểm tra đáp án câu hỏi
+            const checkAnswersBtn = document.getElementById('check-answers-btn');
+            checkAnswersBtn.addEventListener('click', () => {
+                const allSuggestedAnswers = document.querySelectorAll('.suggested-answer');
+                allSuggestedAnswers.forEach(answer => {
+                    answer.classList.remove('hidden');
+                });
+            });
+
+            // Logic cho bài tập Kéo và Thả
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const checkDragDropBtn = document.getElementById('check-drag-drop');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.id);
+                    setTimeout(() => { e.target.classList.add('hidden'); }, 0);
+                });
+                draggable.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('hidden');
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggableElement = document.getElementById(id);
+                    if (zone.children.length > 0) {
+                        document.getElementById('hobby-pool').appendChild(zone.firstElementChild);
+                    }
+                    zone.appendChild(draggableElement);
+                });
+            });
+
+            checkDragDropBtn.addEventListener('click', () => {
+                dropZones.forEach(zone => {
+                    zone.classList.remove('correct-answer', 'incorrect-answer');
+                    if (zone.children.length > 0) {
+                        const droppedId = zone.children[0].id;
+                        if (droppedId === zone.dataset.answer) {
+                            zone.classList.add('correct-answer');
+                        } else {
+                            zone.classList.add('incorrect-answer');
+                        }
+                    } else {
+                        zone.classList.add('incorrect-answer');
+                    }
+                });
+            });
+
+            // Logic cho bài tập Điền vào chỗ trống
+            const checkFillBlanksBtn = document.getElementById('check-fill-blanks');
+            const fillBlankInputs = document.querySelectorAll('.fill-blank-input');
+
+            checkFillBlanksBtn.addEventListener('click', () => {
+                fillBlankInputs.forEach(input => {
+                    const userAnswer = input.value.trim();
+                    const correctAnswer = input.dataset.answer;
+                    input.classList.remove('correct-answer', 'incorrect-answer');
+                    if (userAnswer === correctAnswer) {
+                        input.classList.add('correct-answer');
+                    } else {
+                        input.classList.add('incorrect-answer');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

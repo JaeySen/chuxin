@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Ôn Tập Tiếng Trung - Bài 18</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #eef2ff; /* Light indigo background */
+        }
+        .scene {
+            width: 100%;
+            max-width: 500px;
+            height: 400px; /* Increased height for example sentence */
+            perspective: 1000px;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .card-front {
+            background-color: white;
+        }
+        .card-back {
+            background-color: #f5f3ff; /* Light purple */
+            transform: rotateY(180deg);
+            justify-content: space-around;
+        }
+        .hanzi {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: #4338ca; /* Indigo-700 */
+        }
+        .pinyin {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.75rem;
+            color: #6d28d9; /* Purple-700 */
+            margin-top: 1rem;
+        }
+        .vietnamese {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            color: #1e293b; /* Slate-800 */
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .nav-btn {
+            background-color: #4f46e5; /* Indigo-600 */
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-btn:hover {
+            background-color: #4338ca; /* Indigo-700 */
+            transform: scale(1.05);
+        }
+        .example {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px dashed #ddd6fe; /* Purple-200 */
+            width: 100%;
+        }
+        .example-title {
+            font-weight: 600;
+            color: #5b21b6; /* Purple-800 */
+            margin-bottom: 0.75rem;
+        }
+        .example-hanzi {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 1.25rem;
+            color: #374151; /* Gray-700 */
+        }
+        .example-pinyin, .example-vietnamese {
+            font-size: 1rem;
+            color: #4b5563; /* Gray-600 */
+        }
+        .example-vietnamese {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-800">Flashcard Tiếng Trung</h1>
+        <p class="text-xl text-gray-600 mt-1">Bài 18: 我去超市买东西 (Mở rộng)</p>
+    </div>
+
+    <div class="scene mb-6">
+        <div id="flashcard" class="flashcard">
+            <div class="card-face card-front">
+                <!-- Hanzi will be injected here -->
+            </div>
+            <div class="card-face card-back">
+                <!-- Pinyin, Vietnamese meaning, and example will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-center w-full max-w-md space-x-8">
+        <button id="prev-btn" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+        <p id="progress" class="text-xl font-semibold text-gray-700"></p>
+        <button id="next-btn" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <script>
+        // --- Dữ liệu từ vựng từ Bài 18 (Mở rộng) ---
+        const vocabulary = [
+            { hanzi: "包裹", pinyin: "bāoguǒ", vietnamese: "Bưu kiện, Gói hàng", example: { hanzi: "我寄一个包裹。", pinyin: "Wǒ jì yí ge bāoguǒ.", vietnamese: "Tôi gửi một bưu kiện." } },
+            { hanzi: "顺便", pinyin: "shùnbiàn", vietnamese: "Nhân tiện", example: { hanzi: "我顺便买东西。", pinyin: "Wǒ shùnbiàn mǎi dōngxi.", vietnamese: "Tôi nhân tiện mua đồ." } },
+            { hanzi: "替", pinyin: "tì", vietnamese: "Thay, Làm hộ", example: { hanzi: "你替我买邮票吧。", pinyin: "Nǐ tì wǒ mǎi yóupiào ba.", vietnamese: "Bạn mua tem giúp tôi nhé." } },
+            { hanzi: "邮票", pinyin: "yóupiào", vietnamese: "Tem thư", example: { hanzi: "这是一张邮票。", pinyin: "Zhè shì yì zhāng yóupiào.", vietnamese: "Đây là một con tem." } },
+            { hanzi: "青年", pinyin: "qīngnián", vietnamese: "Thanh niên", example: { hanzi: "他是一个好青年。", pinyin: "Tā shì yí ge hǎo qīngnián.", vietnamese: "Anh ấy là một thanh niên tốt." } },
+            { hanzi: "报", pinyin: "bào", vietnamese: "Báo, Báo chí", example: { hanzi: "我看一下今天的报。", pinyin: "Wǒ kàn yíxià jīntiān de bào.", vietnamese: "Tôi xem qua báo hôm nay." } },
+            { hanzi: "拿", pinyin: "ná", vietnamese: "Cầm, Lấy", example: { hanzi: "请帮我拿一下。", pinyin: "Qǐng bāng wǒ ná yíxià.", vietnamese: "Làm ơn cầm giúp tôi một chút." } },
+            { hanzi: "上海", pinyin: "Shànghǎi", vietnamese: "Thượng Hải", example: { hanzi: "我朋友住在上海。", pinyin: "Wǒ péngyou zhù zài Shànghǎi.", vietnamese: "Bạn tôi sống ở Thượng Hải." } },
+            { hanzi: "旅行", pinyin: "lǚxíng", vietnamese: "Du lịch (hành trình)", example: { hanzi: "我喜欢去旅行。", pinyin: "Wǒ xǐhuān qù lǚxíng.", vietnamese: "Tôi thích đi du lịch." } },
+            { hanzi: "不用", pinyin: "búyòng", vietnamese: "Không cần", example: { hanzi: "不用谢。", pinyin: "Búyòng xiè.", vietnamese: "Không cần cảm ơn." } },
+            { hanzi: "旅游", pinyin: "lǚyóu", vietnamese: "Du lịch (tham quan)", example: { hanzi: "你去哪儿旅游？", pinyin: "Nǐ qù nǎr lǚyóu?", vietnamese: "Bạn đi đâu du lịch?" } },
+            { hanzi: "护照", pinyin: "hùzhào", vietnamese: "Hộ chiếu", example: { hanzi: "这是我的护照。", pinyin: "Zhè shì wǒ de hùzhào.", vietnamese: "Đây là hộ chiếu của tôi." } },
+            { hanzi: "签证", pinyin: "qiānzhèng", vietnamese: "Visa, Thị thực", example: { hanzi: "我需要办签证。", pinyin: "Wǒ xūyào bàn qiānzhèng.", vietnamese: "Tôi cần làm visa." } },
+            { hanzi: "代表", pinyin: "dàibiǎo", vietnamese: "Đại biểu, Đại diện", example: { hanzi: "他代表我们公司。", pinyin: "Tā dàibiǎo wǒmen gōngsī.", vietnamese: "Anh ấy đại diện cho công ty chúng tôi." } },
+            { hanzi: "电影票", pinyin: "diànyǐng piào", vietnamese: "Vé xem phim", example: { hanzi: "我买了两张电影票。", pinyin: "Wǒ mǎile liǎng zhāng diànyǐng piào.", vietnamese: "Tôi đã mua hai vé xem phim." } },
+            { hanzi: "飞机票", pinyin: "fēijī piào", vietnamese: "Vé máy bay", example: { hanzi: "他的飞机票很贵。", pinyin: "Tā de fēijī piào hěn guì.", vietnamese: "Vé máy bay của anh ấy rất đắt." } },
+            { hanzi: "按摩", pinyin: "ànmó", vietnamese: "Mát-xa", example: { hanzi: "我累了，想去按摩。", pinyin: "Wǒ lèi le, xiǎng qù ànmó.", vietnamese: "Tôi mệt rồi, muốn đi mát-xa." } },
+            { hanzi: "加拿大", pinyin: "Jiānádà", vietnamese: "Canada", example: { hanzi: "他明年要去加拿大。", pinyin: "Tā míngnián yào qù Jiānádà.", vietnamese: "Năm sau anh ấy sẽ đi Canada." } },
+            { hanzi: "印度", pinyin: "Yìndù", vietnamese: "Ấn Độ", example: { hanzi: "印度是一个美丽的国家。", pinyin: "Yìndù shì yí ge měilì de guójiā.", vietnamese: "Ấn Độ là một đất nước xinh đẹp." } },
+            { hanzi: "老挝", pinyin: "Lǎowō", vietnamese: "Lào", example: { hanzi: "老挝在泰国的旁边。", pinyin: "Lǎowō zài Tàiguó de pángbiān.", vietnamese: "Lào ở bên cạnh Thái Lan." } },
+            { hanzi: "柬埔寨", pinyin: "Jiǎnpǔzhài", vietnamese: "Campuchia", example: { hanzi: "我们去柬埔寨旅游吧。", pinyin: "Wǒmen qù Jiǎnpǔzhài lǚyóu ba.", vietnamese: "Chúng ta đi Campuchia du lịch đi." } },
+            { hanzi: "泰国", pinyin: "Tàiguó", vietnamese: "Thái Lan", example: { hanzi: "泰国菜很好吃。", pinyin: "Tàiguó cài hěn hǎo chī.", vietnamese: "Món ăn Thái Lan rất ngon." } },
+            { hanzi: "面前", pinyin: "miànqián", vietnamese: "Trước mặt", example: { hanzi: "他站在我面前。", pinyin: "Tā zhàn zài wǒ miànqián.", vietnamese: "Anh ấy đứng trước mặt tôi." } },
+            { hanzi: "外卖", pinyin: "wàimài", vietnamese: "Đồ ăn mang đi", example: { hanzi: "我想点外卖。", pinyin: "Wǒ xiǎng diǎn wàimài.", vietnamese: "Tôi muốn gọi đồ ăn mang đi." } }
+        ];
+
+        // --- Lấy các phần tử DOM ---
+        const flashcard = document.getElementById('flashcard');
+        const cardFront = document.querySelector('.card-front');
+        const cardBack = document.querySelector('.card-back');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressText = document.getElementById('progress');
+
+        let currentIndex = 0;
+
+        // --- Hàm hiển thị thẻ ---
+        function showCard(index) {
+            if (flashcard.classList.contains('is-flipped')) {
+                flashcard.classList.remove('is-flipped');
+                setTimeout(() => {
+                    updateCardContent(index);
+                }, 400); 
+            } else {
+                updateCardContent(index);
+            }
+        }
+        
+        // --- Hàm cập nhật nội dung thẻ ---
+        function updateCardContent(index) {
+            const word = vocabulary[index];
+            cardFront.innerHTML = `<p class="hanzi">${word.hanzi}</p>`;
+            cardBack.innerHTML = `
+                <div>
+                    <p class="pinyin">${word.pinyin}</p>
+                    <p class="vietnamese">${word.vietnamese}</p>
+                </div>
+                <div class="example">
+                    <p class="example-title">Ví dụ:</p>
+                    <p class="example-hanzi">${word.example.hanzi}</p>
+                    <p class="example-pinyin">${word.example.pinyin}</p>
+                    <p class="example-vietnamese">${word.example.vietnamese}</p>
+                </div>
+            `;
+            progressText.textContent = `${index + 1} / ${vocabulary.length}`;
+            currentIndex = index;
+        }
+
+        // --- Xử lý sự kiện ---
+        
+        // Lật thẻ
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('is-flipped');
+        });
+
+        // Nút tiếp theo
+        nextBtn.addEventListener('click', () => {
+            const nextIndex = (currentIndex + 1) % vocabulary.length;
+            showCard(nextIndex);
+        });
+
+        // Nút quay lại
+        prevBtn.addEventListener('click', () => {
+            const prevIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
+            showCard(prevIndex);
+        });
+        
+        // Bắt sự kiện nhấn phím mũi tên
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextBtn.click();
+            } else if (e.key === 'ArrowLeft') {
+                prevBtn.click();
+            } else if (e.key === ' ' || e.key === 'Enter') { // Lật thẻ bằng phím cách hoặc Enter
+                e.preventDefault(); // Ngăn hành vi mặc định của phím cách (cuộn trang)
+                flashcard.click();
+            }
+        });
+
+        // --- Khởi tạo ---
+        showCard(currentIndex);
+
+    </script>
+</body>
+</html>

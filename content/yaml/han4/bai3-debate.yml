@@ -1,0 +1,25 @@
+id: han4-bai3-debate
+course: han4
+order: 3
+title: "Bài 3 — Tranh luận: Học online vs học trên lớp"
+subtitle: "Đề tài tranh luận với luận điểm tham khảo"
+interactionType: debate
+estimatedMinutes: 20
+tags: [speaking, debate]
+topic: "网上学习好还是在课堂学习好？"
+topicVi: "Học online hay học trên lớp tốt hơn?"
+pro:
+  - "时间灵活，可以在家学习。 (Thời gian linh hoạt, học tại nhà)"
+  - "可以反复看视频，更容易理解。 (Có thể xem lại video nhiều lần)"
+  - "节省交通时间和费用。 (Tiết kiệm thời gian và chi phí đi lại)"
+  - "学生可以自己安排进度。 (Học sinh tự sắp xếp tiến độ)"
+con:
+  - "缺少和老师面对面的互动。 (Thiếu tương tác trực tiếp với giáo viên)"
+  - "在家容易分心。 (Ở nhà dễ bị phân tâm)"
+  - "练习口语机会少。 (Ít cơ hội luyện nói)"
+  - "需要稳定的网络和设备。 (Cần internet và thiết bị ổn định)"
+discussionQuestions:
+  - "你更喜欢哪种方式？为什么？"
+  - "网上学习对哪些课程更合适？"
+  - "如果在家学习，你怎么保持专注？"
+  - "你认为未来的学习会怎么变化？"

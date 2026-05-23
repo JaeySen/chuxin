@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Tiếng Trung Vui Nhộn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff;
+        }
+        .nunito {
+            font-family: 'Nunito', sans-serif;
+        }
+        .card {
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05), 0 6px 6px rgba(0,0,0,0.07);
+        }
+        .btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .option-btn, .input-field {
+            border: 2px solid #e5e7eb;
+        }
+        .feedback-correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+        }
+        .feedback-incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        .btn:disabled, .input-field:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        #summary-screen .wrong-answer-card {
+            background-color: #fff1f2;
+            border-left: 4px solid #f43f5e;
+        }
+        .badge {
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+            50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="w-full max-w-3xl mx-auto">
+        <!-- Màn hình bắt đầu -->
+        <div id="start-screen" class="card text-center p-8 md:p-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-600 nunito">Ôn Tập Tiếng Trung 🐼</h1>
+            <p class="mt-4 text-lg text-gray-600">Sẵn sàng cho một thử thách toàn diện chưa? Cùng làm trắc nghiệm, điền từ và viết văn để nhận huy hiệu đáng yêu nhé! ✨</p>
+            <div class="text-5xl mt-6">🎉📝🚀</div>
+            <button id="start-btn" class="btn mt-8 w-full md:w-auto bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-10 rounded-full text-xl">
+                Bắt đầu ngay!
+            </button>
+        </div>
+
+        <!-- Màn hình câu hỏi trắc nghiệm/điền từ -->
+        <div id="quiz-screen" class="hidden">
+            <div class="card p-6 md:p-8">
+                <!-- Header -->
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <div class="text-lg font-semibold text-gray-700">
+                        Câu hỏi <span id="question-number" class="font-bold text-sky-600">1</span> / <span id="total-questions">10</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2 bg-yellow-100 text-yellow-800 font-bold px-4 py-2 rounded-full"><span>⭐</span> <span id="score">0</span></div>
+                        <div class="flex items-center gap-2 bg-blue-100 text-blue-800 font-bold px-4 py-2 rounded-full"><span>⏱️</span> <span id="timer">00:00</span></div>
+                    </div>
+                </div>
+                <!-- Nội dung câu hỏi -->
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h2 id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 text-center"></h2>
+                </div>
+                <!-- Khu vực trả lời -->
+                <div id="answer-area" class="mt-6"></div>
+                <div id="feedback-area" class="mt-4 text-center font-semibold hidden"></div>
+                <!-- Điều hướng -->
+                <div class="mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <button id="hint-btn" class="btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-full flex items-center gap-2"><span>💡</span> Gợi ý</button>
+                    <button id="next-btn" class="btn w-full md:w-auto bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-10 rounded-full text-lg hidden">Câu tiếp theo</button>
+                </div>
+                <div id="hint-box" class="mt-4 p-4 bg-amber-100 text-amber-800 rounded-lg text-center hidden"><p id="hint-text"></p></div>
+            </div>
+        </div>
+
+        <!-- Màn hình tổng kết trắc nghiệm -->
+        <div id="summary-screen" class="hidden">
+             <div class="card text-center p-8 md:p-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-green-600 nunito">Hoàn thành trắc nghiệm! 🥳</h1>
+                <p class="mt-3 text-lg text-gray-600">Bạn đã làm rất tốt phần đầu! Cùng xem kết quả và chuẩn bị cho phần viết nhé.</p>
+                <div id="badge-container" class="my-6"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-lg my-8">
+                    <div class="bg-blue-100 p-4 rounded-xl"><div class="font-bold text-blue-800">Tổng thời gian</div><div id="summary-time" class="text-2xl font-extrabold text-blue-600"></div></div>
+                    <div class="bg-green-100 p-4 rounded-xl"><div class="font-bold text-green-800">Số câu đúng</div><div id="summary-correct" class="text-2xl font-extrabold text-green-600"></div></div>
+                    <div class="bg-red-100 p-4 rounded-xl"><div class="font-bold text-red-800">Số câu sai</div><div id="summary-incorrect" class="text-2xl font-extrabold text-red-600"></div></div>
+                </div>
+                <div id="wrong-answers-container" class="mt-6 text-left"></div>
+                <div class="flex flex-col md:flex-row gap-4 justify-center mt-8">
+                    <button id="restart-quiz-btn" class="btn w-full md:w-auto bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-xl">Làm lại trắc nghiệm</button>
+                    <button id="writing-section-btn" class="btn w-full md:w-auto bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-full text-xl">Tiếp tục phần Viết ✍️</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Màn hình Viết -->
+        <div id="writing-screen" class="hidden">
+            <div class="card p-6 md:p-8">
+                <h1 class="text-3xl font-bold text-sky-600 nunito text-center">Phần Tự Luận</h1>
+                <p class="text-center text-gray-600 mt-2">Hãy thể hiện khả năng viết của bạn nhé. Sau khi hoàn thành, hãy lưu bài làm lại.</p>
+                <div id="writing-tasks-container" class="mt-6 space-y-8">
+                    <!-- Các bài tập viết sẽ được thêm vào đây -->
+                </div>
+                <div class="mt-8 text-center">
+                    <button id="save-pdf-btn" class="btn w-full md:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-10 rounded-full text-xl">
+                        Lưu bài làm (PDF)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Dữ liệu ---
+        const quizData = [
+            {
+                type: 'I',
+                questionType: 'input',
+                question: "Viết phiên âm và Hán tự cho 'du học sinh':",
+                answer: ["留学生", "liúxuéshēng", "留学生liúxuéshēng", "留学生 (liúxuéshēng)"],
+                hint: "Từ này có nghĩa là 'học sinh ở lại học'."
+            },
+            {
+                type: 'I',
+                questionType: 'input',
+                question: "Viết phiên âm và Hán tự cho 'phòng học':",
+                answer: ["教室", "jiàoshì", "教室jiàoshì", "教室 (jiàoshì)"],
+                hint: "Từ này có nghĩa là 'phòng để dạy học'."
+            },
+            {
+                type: 'III',
+                questionType: 'mcq',
+                question: "Biến đổi câu sau thành câu nghi vấn: '玛丽的汉语班有八个外国同学。'",
+                options: ["玛丽的汉语班有多少个外国同学？", "玛丽的汉语班有什么外国同学？", "谁的汉语班有八个外国同学？", "玛丽的汉语班有外国同学吗？"],
+                answer: "玛丽的汉语班有多少个外国同学？",
+                hint: "Sử dụng '多少' để hỏi về số lượng lớn hơn 10."
+            },
+            {
+                type: 'III',
+                questionType: 'mcq',
+                question: "Biến đổi câu sau thành câu nghi vấn: '张老师在文郎大学教汉语。'",
+                options: ["张老师在哪儿教汉语？", "张老师教什么？", "谁在文郎大学教汉语？", "Cả 3 câu trên đều đúng"],
+                answer: "Cả 3 câu trên đều đúng",
+                hint: "Có thể hỏi về 'ai', 'ở đâu', hoặc 'cái gì' từ câu gốc."
+            },
+            {
+                type: 'IV',
+                questionType: 'input',
+                question: "Viết lại câu sau cho đúng: '明天有五位新学生来我们班也学习汉语。'",
+                answer: ["明天有五位新学生也来我们班学习汉语。"],
+                hint: "Trạng từ '也' thường đứng ngay trước động từ."
+            },
+            {
+                type: 'IV',
+                questionType: 'input',
+                question: "Sửa lại phần gạch chân cho đúng: '我介绍一下，这位是玛丽的男朋友，他是<underline>国外人</underline>。'",
+                answer: ["外国人"],
+                hint: "'Người nước ngoài' trong tiếng Trung nói như thế nào nhỉ?"
+            }
+        ];
+
+        const writingData = [
+            {
+                title: "II. Đặt câu với các từ sau:",
+                prompts: ["支", "教", "旧", "认识", "身体", "来", "介绍", "玩儿"]
+            },
+            {
+                title: "V. Viết một đoạn văn",
+                prompts: ["Giới thiệu về tình hình bản thân, bạn bè, gia đình, sở thích của mình. Sử dụng các từ sau: 住在，学校，喜欢，觉得，容易，多，少"]
+            }
+        ];
+
+        // --- DOM Elements ---
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const summaryScreen = document.getElementById('summary-screen');
+        const writingScreen = document.getElementById('writing-screen');
+        
+        const startBtn = document.getElementById('start-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const restartQuizBtn = document.getElementById('restart-quiz-btn');
+        const writingSectionBtn = document.getElementById('writing-section-btn');
+        const savePdfBtn = document.getElementById('save-pdf-btn');
+
+        const questionNumberEl = document.getElementById('question-number');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const questionTextEl = document.getElementById('question-text');
+        const answerArea = document.getElementById('answer-area');
+        const feedbackArea = document.getElementById('feedback-area');
+        const hintBox = document.getElementById('hint-box');
+        const hintTextEl = document.getElementById('hint-text');
+
+        // --- Game State ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval;
+        let secondsElapsed = 0;
+        let wrongAnswers = [];
+
+        // --- Functions ---
+        function startTimer() {
+            secondsElapsed = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const seconds = (secondsElapsed % 60).toString().padStart(2, '0');
+            timerEl.textContent = `${minutes}:${seconds}`;
+        }
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            writingScreen.classList.add('hidden');
+            summaryScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            currentQuestionIndex = 0;
+            score = 0;
+            wrongAnswers = [];
+            scoreEl.textContent = score;
+            totalQuestionsEl.textContent = quizData.length;
+            
+            startTimer();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            // Reset UI
+            nextBtn.classList.add('hidden');
+            hintBox.classList.add('hidden');
+            feedbackArea.classList.add('hidden');
+            answerArea.innerHTML = '';
+
+            const questionData = quizData[currentQuestionIndex];
+            questionNumberEl.textContent = currentQuestionIndex + 1;
+            questionTextEl.innerHTML = questionData.question.replace('<underline>', '<span class="underline decoration-wavy decoration-red-500">');
+            hintTextEl.textContent = questionData.hint;
+
+            if (questionData.questionType === 'mcq') {
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+                questionData.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.className = 'option-btn btn w-full p-4 rounded-lg text-lg text-left font-semibold';
+                    button.onclick = () => selectMCQAnswer(button, option, questionData.answer);
+                    optionsGrid.appendChild(button);
+                });
+                answerArea.appendChild(optionsGrid);
+            } else if (questionData.questionType === 'input') {
+                const inputContainer = document.createElement('div');
+                inputContainer.className = 'flex flex-col sm:flex-row gap-4 items-center';
+                const inputField = document.createElement('input');
+                inputField.type = 'text';
+                inputField.id = 'text-answer-input';
+                inputField.className = 'input-field w-full p-4 rounded-lg text-lg font-semibold';
+                inputField.placeholder = 'Nhập câu trả lời của bạn...';
+                
+                const checkBtn = document.createElement('button');
+                checkBtn.textContent = 'Kiểm tra';
+                checkBtn.className = 'btn bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-full text-lg w-full sm:w-auto';
+                checkBtn.onclick = () => checkInputAction(inputField, checkBtn, questionData.answer);
+                
+                inputContainer.appendChild(inputField);
+                inputContainer.appendChild(checkBtn);
+                answerArea.appendChild(inputContainer);
+                inputField.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        checkBtn.click();
+                    }
+                });
+            }
+        }
+
+        function selectMCQAnswer(button, selectedOption, correctAnswer) {
+            const isCorrect = selectedOption === correctAnswer;
+            processAnswer(isCorrect, selectedOption, correctAnswer);
+            
+            const parent = button.parentElement;
+            Array.from(parent.children).forEach(btn => {
+                if (btn.textContent === correctAnswer) {
+                    btn.classList.add('feedback-correct');
+                }
+                btn.disabled = true;
+            });
+        }
+
+        function checkInputAction(inputField, checkBtn, correctAnswers) {
+            const userAnswer = inputField.value.trim().replace(/[\s()]/g, ''); // Normalize user answer
+            const isCorrect = correctAnswers.some(ans => {
+                const normalizedCorrectAns = ans.trim().replace(/[\s()]/g, ''); // Normalize correct answer
+                return userAnswer.toLowerCase() === normalizedCorrectAns.toLowerCase();
+            });
+            
+            processAnswer(isCorrect, inputField.value, correctAnswers[0]);
+            inputField.disabled = true;
+            checkBtn.disabled = true;
+        }
+
+        function processAnswer(isCorrect, userAnswer, correctAnswer) {
+            feedbackArea.classList.remove('hidden');
+            if (isCorrect) {
+                score += 10;
+                scoreEl.textContent = score;
+                feedbackArea.textContent = 'Chính xác! 🎉';
+                feedbackArea.className = 'mt-4 text-center font-semibold p-3 rounded-lg feedback-correct';
+            } else {
+                feedbackArea.innerHTML = `Chưa đúng rồi! Đáp án đúng là: <strong class="block mt-1">${correctAnswer}</strong>`;
+                feedbackArea.className = 'mt-4 text-center font-semibold p-3 rounded-lg feedback-incorrect';
+                wrongAnswers.push({
+                    question: quizData[currentQuestionIndex].question,
+                    yourAnswer: userAnswer,
+                    correctAnswer: correctAnswer
+                });
+            }
+            nextBtn.classList.remove('hidden');
+        }
+        
+        function showNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                showQuestion();
+            } else {
+                showSummary();
+            }
+        }
+
+        function showHint() {
+            hintBox.classList.toggle('hidden');
+        }
+
+        function showSummary() {
+            stopTimer();
+            quizScreen.classList.add('hidden');
+            summaryScreen.classList.remove('hidden');
+
+            const correctCount = (score / 10);
+            const incorrectCount = wrongAnswers.length;
+
+            document.getElementById('summary-time').textContent = timerEl.textContent;
+            document.getElementById('summary-correct').textContent = `${correctCount} / ${quizData.length}`;
+            document.getElementById('summary-incorrect').textContent = `${incorrectCount} / ${quizData.length}`;
+            
+            const badgeContainer = document.getElementById('badge-container');
+            const percentage = (correctCount / quizData.length) * 100;
+            if (percentage >= 90) badgeContainer.innerHTML = `<div class="text-6xl badge">🥇</div><p class="text-xl font-bold text-amber-500 mt-2">Huy hiệu Vàng!</p>`;
+            else if (percentage >= 60) badgeContainer.innerHTML = `<div class="text-6xl badge">🥈</div><p class="text-xl font-bold text-slate-500 mt-2">Huy hiệu Bạc!</p>`;
+            else badgeContainer.innerHTML = `<div class="text-6xl badge">🥉</div><p class="text-xl font-bold text-orange-700 mt-2">Huy hiệu Đồng!</p>`;
+
+            const wrongAnswersContainer = document.getElementById('wrong-answers-container');
+            wrongAnswersContainer.innerHTML = wrongAnswers.length > 0 ? '<h3 class="text-xl font-bold text-gray-800 mb-4">Cùng xem lại các câu sai nhé:</h3>' : '';
+            if (wrongAnswers.length === 0) {
+                wrongAnswersContainer.innerHTML += '<p class="text-green-600 font-semibold">Tuyệt vời! Bạn không sai câu nào cả! 🎉</p>';
+            } else {
+                wrongAnswers.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'wrong-answer-card p-4 rounded-lg mb-3';
+                    card.innerHTML = `<p class="font-semibold text-gray-700">${item.question}</p><p class="text-sm mt-2"><b>Bạn trả lời:</b> <span class="text-red-600">${item.yourAnswer}</span></p><p class="text-sm"><b>Đáp án đúng:</b> <span class="text-green-600">${item.correctAnswer}</span></p>`;
+                    wrongAnswersContainer.appendChild(card);
+                });
+            }
+        }
+        
+        function showWritingScreen() {
+            summaryScreen.classList.add('hidden');
+            writingScreen.classList.remove('hidden');
+            const container = document.getElementById('writing-tasks-container');
+            container.innerHTML = '';
+
+            writingData.forEach((task, taskIndex) => {
+                const taskDiv = document.createElement('div');
+                taskDiv.innerHTML = `<h2 class="text-xl font-bold text-gray-800">${task.title}</h2>`;
+                
+                task.prompts.forEach((prompt, promptIndex) => {
+                    const promptDiv = document.createElement('div');
+                    promptDiv.className = 'mt-4';
+                    
+                    if (task.title.includes("Đặt câu")) {
+                        promptDiv.innerHTML = `<label for="writing-${taskIndex}-${promptIndex}" class="font-semibold text-gray-700">${promptIndex + 1}) ${prompt}:</label>
+                                           <input type="text" id="writing-${taskIndex}-${promptIndex}" class="input-field w-full p-3 rounded-lg mt-1" />`;
+                    } else {
+                        promptDiv.innerHTML = `<label for="writing-${taskIndex}-${promptIndex}" class="font-semibold text-gray-700">${prompt}</label>
+                                           <textarea id="writing-${taskIndex}-${promptIndex}" rows="8" class="input-field w-full p-3 rounded-lg mt-1"></textarea>`;
+                    }
+                    taskDiv.appendChild(promptDiv);
+                });
+                container.appendChild(taskDiv);
+            });
+        }
+
+        function saveWorkAsPDF() {
+            let content = `
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Bài làm của học viên</title>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; line-height: 1.6; padding: 2rem; }
+                        h1 { font-size: 1.5rem; border-bottom: 2px solid #333; padding-bottom: 0.5rem; }
+                        h2 { font-size: 1.2rem; margin-top: 2rem; }
+                        .task { margin-bottom: 1.5rem; }
+                        .prompt { font-weight: bold; }
+                        .answer { margin-left: 1rem; margin-top: 0.5rem; white-space: pre-wrap; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Bài làm Tiếng Trung</h1>
+                    <p><strong>Thời gian hoàn thành trắc nghiệm:</strong> ${timerEl.textContent}</p>
+                    <p><strong>Điểm trắc nghiệm:</strong> ${score} / ${quizData.length * 10}</p>
+            `;
+
+            writingData.forEach((task, taskIndex) => {
+                content += `<div class="task"><h2>${task.title}</h2>`;
+                task.prompts.forEach((prompt, promptIndex) => {
+                    const element = document.getElementById(`writing-${taskIndex}-${promptIndex}`);
+                    if (element) {
+                        content += `<div class="prompt">${task.title.includes("Đặt câu") ? `${promptIndex + 1}) ${prompt}:` : prompt}</div>`;
+                        content += `<div class="answer">${element.value || '(Chưa trả lời)'}</div>`;
+                    }
+                });
+                content += `</div>`;
+            });
+
+            content += `
+                    <script>
+                        window.onload = function() {
+                            document.body.insertAdjacentHTML('afterbegin', '<p style="background: #ffc; padding: 1rem; border: 1px solid #e0a800; border-radius: 5px;">Mẹo: Sử dụng chức năng <b>In</b> của trình duyệt (phím tắt <b>Ctrl+P</b> hoặc <b>Cmd+P</b>) và chọn '<b>Lưu dưới dạng PDF</b>' để tải bài làm về máy.</p>');
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `;
+
+            const newWindow = window.open();
+            newWindow.document.open();
+            newWindow.document.write(content);
+            newWindow.document.close();
+        }
+
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', showNextQuestion);
+        hintBtn.addEventListener('click', showHint);
+        restartQuizBtn.addEventListener('click', startQuiz);
+        writingSectionBtn.addEventListener('click', showWritingScreen);
+        savePdfBtn.addEventListener('click', saveWorkAsPDF);
+    </script>
+</body>
+</html>

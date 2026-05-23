@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Nói Giờ Tiếng Trung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+        }
+        .clock-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .clock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .answer {
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            min-height: 80px;
+        }
+        .pinyin {
+            color: #64748b;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-800">练习说中文时间</h1>
+            <p class="text-lg text-slate-600 mt-2">Luyện nói giờ bằng tiếng Trung</p>
+        </header>
+
+        <div class="text-center mb-8">
+            <button id="randomizeButton" class="btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg">
+                Tạo giờ mới (刷新时间)
+            </button>
+        </div>
+
+        <div id="clocks-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            <!-- Clock cards will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const clocksContainer = document.getElementById('clocks-container');
+        const randomizeButton = document.getElementById('randomizeButton');
+        const numClocks = 8;
+        let clockStates = [];
+
+        // --- Chinese Time Conversion Logic ---
+        function convertTimeToChinese(hour, minute) {
+            const numHanzi = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+            const numPinyin = ["", "yī", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ", "shí"];
+            
+            let h = hour % 12;
+            if (h === 0) h = 12;
+
+            let hanzi = '';
+            let pinyin = '';
+            let alternatives = [];
+
+            // Helper to get number string
+            const getNumStr = (n, useLiang) => {
+                if (useLiang && n === 2) return { hanzi: "两", pinyin: "liǎng" };
+                if (n <= 10) return { hanzi: numHanzi[n], pinyin: numPinyin[n] };
+                if (n < 20) return { hanzi: "十" + numHanzi[n % 10], pinyin: "shí " + numPinyin[n % 10] };
+                const tens = Math.floor(n / 10);
+                const ones = n % 10;
+                return {
+                    hanzi: numHanzi[tens] + "十" + (ones > 0 ? numHanzi[ones] : ""),
+                    pinyin: numPinyin[tens] + " shí " + (ones > 0 ? numPinyin[ones] : "")
+                };
+            };
+
+            const hourStr = getNumStr(h, true);
+            
+            if (minute === 0) {
+                hanzi = `${hourStr.hanzi}点整`;
+                pinyin = `${hourStr.pinyin} diǎn zhěng`;
+            } else if (minute === 30) {
+                hanzi = `${hourStr.hanzi}点半`;
+                pinyin = `${hourStr.pinyin} diǎn bàn`;
+                alternatives.push({ hanzi: `${hourStr.hanzi}点三十分`, pinyin: `${hourStr.pinyin} diǎn sān shí fēn`});
+            } else if (minute === 15) {
+                hanzi = `${hourStr.hanzi}点一刻`;
+                pinyin = `${hourStr.pinyin} diǎn yī kè`;
+                alternatives.push({ hanzi: `${hourStr.hanzi}点十五分`, pinyin: `${hourStr.pinyin} diǎn shí wǔ fēn`});
+            } else if (minute === 45) {
+                hanzi = `${hourStr.hanzi}点三刻`;
+                pinyin = `${hourStr.pinyin} diǎn sān kè`;
+                alternatives.push({ hanzi: `${hourStr.hanzi}点四十五分`, pinyin: `${hourStr.pinyin} diǎn sì shí wǔ fēn`});
+                const nextHour = (h % 12) + 1;
+                const nextHourStr = getNumStr(nextHour, true);
+                alternatives.push({ hanzi: `差一刻${nextHourStr.hanzi}点`, pinyin: `chà yī kè ${nextHourStr.pinyin} diǎn`});
+
+            } else {
+                 const minuteStr = getNumStr(minute, false);
+                 hanzi = `${hourStr.hanzi}点${minuteStr.hanzi}分`;
+                 pinyin = `${hourStr.pinyin} diǎn ${minuteStr.pinyin} fēn`;
+                 
+                 // Add "chà" (差) alternative for times > 30 mins
+                 if (minute > 40) {
+                    const minutesToNextHour = 60 - minute;
+                    const nextHour = (h % 12) + 1;
+                    const nextHourStr = getNumStr(nextHour, true);
+                    const diffStr = getNumStr(minutesToNextHour, false);
+                    alternatives.push({
+                        hanzi: `差${diffStr.hanzi}分${nextHourStr.hanzi}点`,
+                        pinyin: `chà ${diffStr.pinyin} fēn ${nextHourStr.pinyin} diǎn`
+                    });
+                 }
+            }
+
+            return { main: { hanzi, pinyin }, alternatives };
+        }
+
+
+        // --- Canvas Clock Drawing Logic ---
+        function drawClock(canvas, date) {
+            const ctx = canvas.getContext('2d');
+            const radius = canvas.height / 2;
+            ctx.translate(radius, radius);
+            const scaledRadius = radius * 0.90;
+
+            drawFace(ctx, scaledRadius);
+            drawNumbers(ctx, scaledRadius);
+            drawTime(ctx, scaledRadius, date);
+
+            ctx.translate(-radius, -radius); // Reset translation
+        }
+
+        function drawFace(ctx, radius) {
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+
+            const grad = ctx.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
+            grad.addColorStop(0, '#333');
+            grad.addColorStop(0.5, 'white');
+            grad.addColorStop(1, '#333');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = radius * 0.1;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.05, 0, 2 * Math.PI);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+        }
+
+        function drawNumbers(ctx, radius) {
+            ctx.font = radius * 0.15 + "px 'Inter'";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            ctx.fillStyle = '#333';
+            for (let num = 1; num < 13; num++) {
+                const ang = num * Math.PI / 6;
+                ctx.rotate(ang);
+                ctx.translate(0, -radius * 0.85);
+                ctx.rotate(-ang);
+                ctx.fillText(num.toString(), 0, 0);
+                ctx.rotate(ang);
+                ctx.translate(0, radius * 0.85);
+                ctx.rotate(-ang);
+            }
+        }
+
+        function drawTime(ctx, radius, now) {
+            let hour = now.getHours();
+            let minute = now.getMinutes();
+            let second = now.getSeconds();
+            
+            // Hour hand
+            hour = hour % 12;
+            hour = (hour * Math.PI / 6) + (minute * Math.PI / (6 * 60)) + (second * Math.PI / (360 * 60));
+            drawHand(ctx, hour, radius * 0.5, radius * 0.07);
+            
+            // Minute hand
+            minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+            drawHand(ctx, minute, radius * 0.8, radius * 0.07);
+            
+            // Second hand
+            second = (second * Math.PI / 30);
+            drawHand(ctx, second, radius * 0.9, radius * 0.02, 'red');
+        }
+
+        function drawHand(ctx, pos, length, width, color = '#333') {
+            ctx.beginPath();
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = color;
+            ctx.moveTo(0, 0);
+            ctx.rotate(pos);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+            ctx.rotate(-pos);
+        }
+
+        // --- Main Application Logic ---
+        function generateRandomTime() {
+            // Generate time in 5-minute intervals for clearer practice
+            const hour = Math.floor(Math.random() * 24);
+            const minuteIntervals = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+            const minute = minuteIntervals[Math.floor(Math.random() * minuteIntervals.length)];
+            const date = new Date();
+            date.setHours(hour, minute, 0, 0);
+            return date;
+        }
+
+        function createClockUI(index, date) {
+            const timeData = convertTimeToChinese(date.getHours(), date.getMinutes());
+            
+            const card = document.createElement('div');
+            card.className = 'clock-card p-4 flex flex-col items-center gap-4';
+            
+            card.innerHTML = `
+                <canvas id="clock-${index}" width="200" height="200"></canvas>
+                <div class="w-full text-center">
+                    <button data-index="${index}" class="btn toggle-answer-btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md w-full">
+                        Hiện đáp án (显示答案)
+                    </button>
+                    <div id="answer-${index}" class="answer p-3 mt-3 text-left hidden">
+                        <p class="font-bold text-lg text-slate-800">${timeData.main.hanzi}</p>
+                        <p class="pinyin text-md">${timeData.main.pinyin}</p>
+                        ${timeData.alternatives.map(alt => `
+                            <div class="mt-2 pt-2 border-t border-slate-200">
+                                <p class="font-semibold text-slate-700">${alt.hanzi}</p>
+                                <p class="pinyin text-sm">${alt.pinyin}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            clocksContainer.appendChild(card);
+            
+            const canvas = document.getElementById(`clock-${index}`);
+            drawClock(canvas, date);
+        }
+        
+        function setupClocks() {
+            clocksContainer.innerHTML = '';
+            clockStates = [];
+            for (let i = 0; i < numClocks; i++) {
+                const date = generateRandomTime();
+                clockStates.push({ date });
+                createClockUI(i, date);
+            }
+        }
+        
+        // --- Event Listeners ---
+        randomizeButton.addEventListener('click', setupClocks);
+
+        clocksContainer.addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('toggle-answer-btn')) {
+                const index = e.target.dataset.index;
+                const answerDiv = document.getElementById(`answer-${index}`);
+                answerDiv.classList.toggle('hidden');
+                e.target.textContent = answerDiv.classList.contains('hidden') ? 'Hiện đáp án (显示答案)' : 'Ẩn đáp án (隐藏答案)';
+            }
+        });
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', setupClocks);
+    </script>
+</body>
+</html>

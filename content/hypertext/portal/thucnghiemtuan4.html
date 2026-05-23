@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài học: 高考 (Kỳ thi Đại học)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .lesson-section {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .hanzi {
+            font-family: "KaiTi", "SimKai", serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #1e293b;
+            line-height: 2;
+        }
+        .pinyin {
+            color: #64748b;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .translation {
+            color: #475569;
+            font-style: italic;
+        }
+        .toggle-button {
+            cursor: pointer;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        .toggle-button:hover {
+            background-color: #2563eb;
+        }
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .flashcard {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .card-back {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 1rem;
+        }
+        .summary-container {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .summary-header {
+            background-color: #f1f5f9;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .summary-content {
+            padding: 1.5rem;
+        }
+        .highlight {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .auxiliary-text {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: none;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px dashed #cbd5e1;
+        }
+        .answer {
+            display: none;
+            background-color: #eef2ff;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800">课文二：高考</h1>
+        <p class="text-xl text-slate-600 mt-2">Gāokǎo - Kỳ thi Tuyển sinh Đại học (Cao khảo)</p>
+    </header>
+
+    <main>
+        <!-- Phần 1: Từ vựng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">I. Từ vựng trọng tâm (生词)</h2>
+            <div class="flashcard-container">
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">高考</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>gāokǎo</b> (n.)</p><p class="translation">Kỳ thi đại học (Cao khảo)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">举行</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>jǔxíng</b> (v.)</p><p class="translation">Cử hành, tổ chức</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">决定</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>juédìng</b> (v./n.)</p><p class="translation">Quyết định</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">整个</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>zhěnggè</b> (adj.)</p><p class="translation">Toàn bộ, cả (thảy)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">固然</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>gùrán</b> (conj.)</p><p class="translation">Cố nhiên, dẫu rằng, tuy là</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">负面</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>fùmiàn</b> (adj.)</p><p class="translation">Mặt trái, tiêu cực (phụ diện)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">死记硬背</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>sǐjì yìngbèi</b> (idiom)</p><p class="translation">Học vẹt, học máy móc (tử ký ngạnh bối)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">缺乏</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>quēfá</b> (v.)</p><p class="translation">Thiếu, khuyết</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">体现</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>tǐxiàn</b> (v.)</p><p class="translation">Thể hiện</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">公平</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>gōngpíng</b> (adj.)</p><p class="translation">Công bằng</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">走后门</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>zǒu hòumén</b> (v.)</p><p class="translation">Đi cửa sau (chạy chọt)</p></div>
+                </div>
+                 <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">专业</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>zhuānyè</b> (n.)</p><p class="translation">Chuyên ngành</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 2: Tóm tắt nội dung bài khóa -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">II. Tóm tắt nội dung bài khóa (内容梗概)</h2>
+            <p class="mb-4 text-gray-600">Đoạn văn dưới đây tóm tắt về kỳ thi Cao khảo (Đại học) tại Trung Quốc:</p>
+            
+            <div class="summary-container">
+                <div class="summary-header">中文段落 (Đoạn văn tiếng Trung)</div>
+                <div class="summary-content">
+                    <p class="hanzi text-justify">
+                        <span class="highlight">高考</span>是中国每年六月<span class="highlight">举行</span>的大学入学考试。这次考试<span class="highlight">决定</span>了学生能上哪所大学和学什么<span class="highlight">专业</span>，所以对<span class="highlight">整个</span>教育有很大的影响。学生们为了高考，要<span class="highlight">准备</span>整整12年。高考<span class="highlight">固然</span>有<span class="highlight">负面</span>影响，比如学生只会<span class="highlight">死记硬背</span>，<span class="highlight">缺乏</span>分析能力的训练。但是，高考<span class="highlight">体现</span>了<span class="highlight">公平</span>竞争的原则。在这里，不靠关系，不<span class="highlight">走后门</span>，成绩好坏决定一切。
+                    </p>
+                    
+                    <button class="text-blue-600 font-semibold mt-4 hover:underline flex items-center" onclick="toggleAuxiliary(this)">
+                        <span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa
+                    </button>
+
+                    <div class="auxiliary-text">
+                        <p class="mb-4"><strong>Pinyin:</strong><br>
+                        <b>Gāokǎo</b> shì Zhōngguó měinián liùyuè <b>jǔxíng</b> de dàxué rùxué kǎoshì. Zhècì kǎoshì <b>juédìng</b> le xuéshēng néng shàng nǎ suǒ dàxué hé xué shénme <b>zhuānyè</b>, suǒyǐ duì <b>zhěnggè</b> jiàoyù yǒu hěn dà de yǐngxiǎng. Xuéshēngmen wèile gāokǎo, yào <b>zhǔnbèi</b> zhěngzhěng 12 nián. Gāokǎo <b>gùrán</b> yǒu <b>fùmiàn</b> yǐngxiǎng, bǐrú xuéshēng zhǐ huì <b>sǐjì yìngbèi</b>, <b>quēfá</b> fēnxī nénglì de xùnliàn. Dànshì, gāokǎo <b>tǐxiàn</b> le <b>gōngpíng</b> jìngzhēng de yuánzé. Zài zhèlǐ, bù kào guānxì, bù <b>zǒu hòumén</b>, chéngjì hǎohuài juédìng yīqiè.</p>
+                        
+                        <p><strong>Dịch nghĩa:</strong><br>
+                        <b>Cao khảo</b> là kỳ thi tuyển sinh đại học được <b>tổ chức</b> vào tháng 6 hàng năm tại Trung Quốc. Kỳ thi này <b>quyết định</b> việc học sinh có thể vào trường đại học nào và học <b>chuyên ngành</b> gì, vì vậy nó có ảnh hưởng rất lớn đến <b>toàn bộ</b> nền giáo dục. Học sinh vì kỳ thi này mà phải <b>chuẩn bị</b> tròn 12 năm. Cao khảo <b>cố nhiên (tuy rằng)</b> có ảnh hưởng <b>tiêu cực</b>, ví dụ như học sinh chỉ biết <b>học vẹt</b>, <b>thiếu</b> sự rèn luyện năng lực phân tích. Tuy nhiên, Cao khảo <b>thể hiện</b> nguyên tắc cạnh tranh <b>công bằng</b>. Ở đây, không dựa vào quan hệ, không <b>đi cửa sau</b>, thành tích tốt xấu quyết định tất cả.</p>
+                    </div>
+                </div>
+            </div>
+
+             <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="font-bold text-blue-800 mb-2">🤔 Câu hỏi thảo luận:</h3>
+                <p>Bạn nghĩ rằng "thành tích quyết định tất cả" (成绩决定一切) có phải là cách tốt nhất để đánh giá năng lực của một người không?</p>
+            </div>
+        </section>
+
+        <!-- Phần 3: Ngữ pháp trọng điểm -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">III. Ngữ pháp trọng điểm (语法)</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">1. 固然…… (Gùrán...)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Cố nhiên, tuy nhiên, dẫu rằng... (Thường đi với 可是/但是 để biểu thị sự chuyển ngoặt: thừa nhận sự thật ở vế trước, nhưng nhấn mạnh ý ở vế sau).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 这样做<b>固然</b>好，但是太花时间了。</p>
+                    <p class="text-gray-600">(Làm như vậy dẫu rằng tốt, nhưng tốn thời gian quá.)</p>
+                    <p><b>Trong bài:</b> 高考<b>固然</b>有负面影响……但是……</p>
+                    <p class="text-gray-600">(Cao khảo tuy có ảnh hưởng tiêu cực... nhưng...)</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">2. 缺乏 (Quēfá)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Thiếu, khuyết (thường dùng cho những thứ trừu tượng như kinh nghiệm, dũng khí, năng lực...).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 那个年轻人<b>缺乏</b>经验。</p>
+                    <p class="text-gray-600">(Người thanh niên đó thiếu kinh nghiệm.)</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">3. 死记硬背 (Sǐjì yìngbèi)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Học vẹt, ghi nhớ một cách máy móc mà không hiểu bản chất.</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 学习不能光靠<b>死记硬背</b>，要理解。</p>
+                    <p class="text-gray-600">(Học tập không thể chỉ dựa vào học vẹt, mà phải hiểu.)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 4: Bài tập vận dụng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">IV. Bài tập vận dụng (练习)</h2>
+            
+            <div class="space-y-4">
+                <p class="font-semibold">Điền từ thích hợp vào chỗ trống:</p>
+                <div class="bg-gray-100 p-4 rounded-lg mb-4 text-center font-mono">
+                    固然  |  缺乏  |  举行  |  体现  |  决定
+                </div>
+                
+                <div>
+                    <p>1. 只要努力，你就能________自己的命运。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans1')">Xem đáp án</button>
+                    <div id="ans1" class="answer"><b>决定</b> (juédìng) - Quyết định</div>
+                </div>
+
+                <div>
+                    <p>2. 会议将在明天上午________。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans2')">Xem đáp án</button>
+                    <div id="ans2" class="answer"><b>举行</b> (jǔxíng) - Tổ chức</div>
+                </div>
+
+                <div>
+                    <p>3. 这种方法________很快，但是容易出错。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans3')">Xem đáp án</button>
+                    <div id="ans3" class="answer"><b>固然</b> (gùrán) - Tuy là</div>
+                </div>
+                
+                 <div>
+                    <p>4. 刚毕业的学生往往________工作经验。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans4')">Xem đáp án</button>
+                    <div id="ans4" class="answer"><b>缺乏</b> (quēfá) - Thiếu</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function toggleCard(btn) {
+            const cardBack = btn.nextElementSibling;
+            if (cardBack.style.display === 'none' || cardBack.style.display === '') {
+                cardBack.style.display = 'block';
+                btn.textContent = 'Ẩn nghĩa';
+            } else {
+                cardBack.style.display = 'none';
+                btn.textContent = 'Xem nghĩa';
+            }
+        }
+
+        function toggleAnswer(id) {
+            const ans = document.getElementById(id);
+            if (ans.style.display === 'none' || ans.style.display === '') {
+                ans.style.display = 'block';
+            } else {
+                ans.style.display = 'none';
+            }
+        }
+
+        function toggleAuxiliary(btn) {
+            const auxText = btn.nextElementSibling;
+            if (auxText.style.display === 'none' || auxText.style.display === '') {
+                auxText.style.display = 'block';
+                btn.innerHTML = '<span class="mr-1">🙈</span> Ẩn Pinyin & Dịch nghĩa';
+            } else {
+                auxText.style.display = 'none';
+                btn.innerHTML = '<span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa';
+            }
+        }
+    </script>
+</body>
+</html>

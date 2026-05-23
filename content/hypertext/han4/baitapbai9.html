@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 16: 山这么高,你爬得上去吗?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .flashcard-container {
+            perspective: 1000px;
+        }
+        .flashcard {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            width: 100%;
+            height: 100%;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+        .section-title {
+            background: linear-gradient(to right, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .feedback {
+            transition: opacity 0.3s;
+        }
+        details > summary {
+            cursor: pointer;
+        }
+        #flashcard-player {
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-700">Bài 16: Núi cao thế này, bạn có leo lên được không?</h1>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#vocabulary" class="text-gray-600 hover:text-emerald-500 transition">Từ Vựng</a>
+                <a href="#grammar" class="text-gray-600 hover:text-emerald-500 transition">Ngữ Pháp</a>
+                <a href="#exercises" class="text-gray-600 hover:text-emerald-500 transition">Bài Tập</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#vocabulary" class="block py-2 text-gray-600 hover:text-emerald-500">Từ Vựng</a>
+            <a href="#grammar" class="block py-2 text-gray-600 hover:text-emerald-500">Ngữ Pháp</a>
+            <a href="#exercises" class="block py-2 text-gray-600 hover:text-emerald-500">Bài Tập</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Vocabulary Section -->
+        <section id="vocabulary" class="mb-16 text-center">
+            <h2 class="text-4xl font-bold text-center mb-6 section-title">Từ Vựng (生词)</h2>
+            <p class="text-gray-600 mb-8">Nhấn nút bên dưới để bắt đầu học từ vựng với flashcard.</p>
+            <button id="start-vocab-btn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-lg transition shadow-md text-lg">
+                Bắt đầu học từ vựng
+            </button>
+        </section>
+
+        <!-- Grammar Section -->
+        <section id="grammar" class="mb-16">
+            <h2 class="text-4xl font-bold text-center mb-10 section-title">Ngữ Pháp (语法)</h2>
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg space-y-8">
+                <h3 class="text-2xl font-bold text-emerald-600">Bổ Ngữ Khả Năng (可能补语) - Phần 2</h3>
+                
+                <details class="bg-gray-100 p-4 rounded-lg">
+                    <summary class="font-semibold text-lg text-gray-700">1. Động từ + 得/不 + 动</summary>
+                    <div class="mt-4 space-y-3 text-gray-600">
+                        <p>Biểu thị động tác có thể khiến người hoặc vật di chuyển vị trí được hay không.</p>
+                        <p class="border-l-4 border-emerald-400 pl-4 italic"><strong>Ví dụ:</strong></p>
+                        <p>A: 你一个人<strong class="text-emerald-500">搬得动</strong>吗？(Một mình bạn chuyển nổi không?)</p>
+                        <p>B: 这张桌子不重，我<strong class="text-emerald-500">搬得动</strong>。(Cái bàn này không nặng, tôi chuyển nổi.)</p>
+                        <p>我看你累得都喘不上气来了，还<strong class="text-emerald-500">爬得动</strong>吗？(Tôi thấy bạn mệt đến thở không ra hơi rồi, còn leo nổi không?)</p>
+                    </div>
+                </details>
+
+                <details class="bg-gray-100 p-4 rounded-lg">
+                    <summary class="font-semibold text-lg text-gray-700">2. Động từ + 得/不 + 好</summary>
+                    <div class="mt-4 space-y-3 text-gray-600">
+                        <p>Biểu thị động tác có thể đạt tới mức độ hoàn thiện, khiến người nói hài lòng hay không.</p>
+                        <p class="border-l-4 border-emerald-400 pl-4 italic"><strong>Ví dụ:</strong></p>
+                        <p>我担心自己<strong class="text-emerald-500">演不好</strong>。(Tôi lo mình diễn không tốt.)</p>
+                        <p>要有自信，相信自己能<strong class="text-emerald-500">演好</strong>。(Phải tự tin, tin rằng mình có thể diễn tốt.)</p>
+                    </div>
+                </details>
+
+                <details class="bg-gray-100 p-4 rounded-lg">
+                    <summary class="font-semibold text-lg text-gray-700">3. Động từ + 得/不 + 住</summary>
+                    <div class="mt-4 space-y-3 text-gray-600">
+                        <p>Biểu thị động tác có thể làm cho sự vật cố định hoặc lưu lại ở một nơi nào đó hay không.</p>
+                        <p class="border-l-4 border-emerald-400 pl-4 italic"><strong>Ví dụ:</strong></p>
+                        <p>你一天<strong class="text-emerald-500">记得住</strong>这么多生词吗？(Một ngày bạn nhớ nổi nhiều từ mới vậy không?)</p>
+                        <p>我总<strong class="text-red-500">记不住</strong>台词。(Tôi cứ không nhớ được lời thoại.)</p>
+                    </div>
+                </details>
+
+                <div class="border-t pt-6">
+                    <h4 class="text-xl font-bold text-blue-600 mb-4">Phân biệt Bổ ngữ Khả năng và Bổ ngữ Trạng thái</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-blue-100">
+                                    <th class="p-3 border">Tiêu chí</th>
+                                    <th class="p-3 border">Bổ ngữ Khả năng (可能补语)</th>
+                                    <th class="p-3 border">Bổ ngữ Trạng thái (状态补语)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3 border font-semibold">Ý nghĩa</td>
+                                    <td class="p-3 border">Diễn tả khả năng thực hiện hành động.</td>
+                                    <td class="p-3 border">Đánh giá kết quả của hành động đã xảy ra.</td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <td class="p-3 border font-semibold">Phủ định</td>
+                                    <td class="p-3 border">V + <strong class="text-red-500">不</strong> + Bổ ngữ (演不好)</td>
+                                    <td class="p-3 border">V + 得 + <strong class="text-red-500">不</strong> + Tính từ (演得不好)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3 border font-semibold">Câu hỏi chính phản</td>
+                                    <td class="p-3 border">V + 得 + BN + V + 不 + BN? (演得好演不好?)</td>
+                                    <td class="p-3 border">V + 得 + TT + 不 + TT? (演得好不好?)</td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <td class="p-3 border font-semibold">Tân ngữ</td>
+                                    <td class="p-3 border">Có thể mang tân ngữ trực tiếp. (我演不好这个节目)</td>
+                                    <td class="p-3 border">Không thể mang tân ngữ. Phải đưa tân ngữ lên trước. (这个节目他演得不好)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercises Section -->
+        <section id="exercises">
+            <h2 class="text-4xl font-bold text-center mb-10 section-title">Bài Tập (练习)</h2>
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg space-y-10">
+                <div class="exercise-group">
+                    <h3 class="text-xl font-bold text-gray-700 mb-4">Bài 1: Chọn từ điền vào chỗ trống</h3>
+                    <div class="mb-4 p-4 bg-emerald-50 rounded-lg">
+                        <p class="font-semibold">Các từ để chọn:</p>
+                        <p class="text-emerald-700">加油, 动, 积极, 相信, 怕, 演, 纠正, 背</p>
+                    </div>
+                    <div id="exercise1-questions" class="space-y-4"></div>
+                </div>
+                 <div class="exercise-group">
+                    <h3 class="text-xl font-bold text-gray-700 mb-4">Bài 2: Chọn cụm từ đúng điền vào chỗ trống</h3>
+                     <div id="exercise2-questions" class="space-y-4"></div>
+                </div>
+                <div class="exercise-group">
+                    <h3 class="text-xl font-bold text-gray-700 mb-4">Bài 3: Sửa câu sai</h3>
+                    <div id="exercise3-questions" class="space-y-4"></div>
+                </div>
+                <div class="text-center mt-8">
+                    <button id="check-answers-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-lg transition shadow-md">Kiểm Tra Đáp Án</button>
+                    <button id="reset-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition shadow-md ml-4">Làm Lại</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>Trang web được tạo bởi Gemini để hỗ trợ việc học tiếng Trung.</p>
+        </div>
+    </footer>
+
+    <!-- Flashcard Player Modal -->
+    <div id="flashcard-player" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 invisible opacity-0">
+        <div class="w-11/12 h-3/4 md:w-1/2 md:h-1/2 lg:w-1/3 lg:h-2/3 flex flex-col items-center justify-center">
+            <!-- The card itself -->
+            <div class="flashcard-container w-full h-full mb-4">
+                <div id="flashcard-single" class="flashcard relative rounded-xl shadow-lg cursor-pointer">
+                    <div id="flashcard-front" class="flashcard-face bg-white rounded-xl flex flex-col justify-center items-center p-4 border-4 border-emerald-300">
+                        <!-- Front content here -->
+                    </div>
+                    <div id="flashcard-back" class="flashcard-face flashcard-back bg-emerald-600 text-white rounded-xl flex flex-col justify-center items-center p-6 text-center">
+                        <!-- Back content here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex items-center justify-between w-full text-white">
+                <button id="prev-card-btn" class="py-2 px-4 bg-gray-700 rounded-lg hover:bg-gray-600">&lt; Trước</button>
+                <p id="card-progress" class="font-semibold"></p>
+                <button id="next-card-btn" class="py-2 px-4 bg-gray-700 rounded-lg hover:bg-gray-600">Tiếp &gt;</button>
+            </div>
+        </div>
+        <button id="close-flashcard-btn" class="absolute top-4 right-6 text-white text-4xl font-bold hover:text-gray-300">&times;</button>
+    </div>
+
+
+    <script>
+        // --- Data ---
+        const vocabulary = [
+            { hanzi: '爬', pinyin: 'pá', meaning: 'leo, trèo', example: '山这么高,你爬得上去吗?' },
+            { hanzi: '缆车', pinyin: 'lǎnchē', meaning: 'cáp treo', example: '坐缆车上去还是爬上去?' },
+            { hanzi: '危险', pinyin: 'wēixiǎn', meaning: 'nguy hiểm', example: '别从那儿上，太危险了。' },
+            { hanzi: '安全', pinyin: 'ānquán', meaning: 'an toàn', example: '要注意安全。' },
+            { hanzi: '累', pinyin: 'lèi', meaning: 'mệt', example: '我看你累得都喘不上气来了。' },
+            { hanzi: '喘气', pinyin: 'chuǎn qì', meaning: 'thở dốc', example: '我看你累得都喘不上气来了。' },
+            { hanzi: '汗', pinyin: 'hàn', meaning: 'mồ hôi', example: '刚爬一会儿就出了一身汗。' },
+            { hanzi: '坚持', pinyin: 'jiānchí', meaning: 'kiên trì', example: '要坚持到底，坚持就是胜利。' },
+            { hanzi: '胜利', pinyin: 'shènglì', meaning: 'thắng lợi', example: '坚持就是胜利。' },
+            { hanzi: '节目', pinyin: 'jiémù', meaning: 'tiết mục', example: '你表演什么节目？' },
+            { hanzi: '表演', pinyin: 'biǎoyǎn', meaning: 'biểu diễn', example: '谁跟你一起表演？' },
+            { hanzi: '台词', pinyin: 'táicí', meaning: 'lời thoại', example: '可是我总记不住台词。' },
+            { hanzi: '相声', pinyin: 'xiàngsheng', meaning: 'tấu hài', example: '我和麦克说个相声。' },
+            { hanzi: '排练', pinyin: 'páiliàn', meaning: 'diễn tập, tập luyện', example: '我们也正在排练呢。' },
+            { hanzi: '发音', pinyin: 'fāyīn', meaning: 'phát âm', example: '有的音我发不准。' },
+            { hanzi: '纠正', pinyin: 'jiūzhèng', meaning: 'sửa, uốn nắn', example: '我请田芳一句一句地给我纠正。' },
+            { hanzi: '自信', pinyin: 'zìxìn', meaning: 'tự tin', example: '要有自信，相信自己能演好。' },
+            { hanzi: '相信', pinyin: 'xiāngxìn', meaning: 'tin tưởng', example: '相信自己能演好。' },
+            { hanzi: '成功', pinyin: 'chénggōng', meaning: 'thành công', example: '争取演出成功。' },
+            { hanzi: '恐怕', pinyin: 'kǒngpà', meaning: 'e rằng, sợ rằng', example: '恐怕唱不好。' },
+            { hanzi: '礼堂', pinyin: 'lǐtáng', meaning: 'hội trường', example: '联欢会在楼下小礼堂举行。' },
+            { hanzi: '联欢会', pinyin: 'liánhuānhuì', meaning: 'buổi liên hoan', example: '参加联欢会的节目准备得怎么样了？' },
+            { hanzi: '出汗', pinyin: 'chū hàn', meaning: 'toát mồ hôi', example: '刚爬一会儿就出了一身汗。' },
+            { hanzi: '坐得下', pinyin: 'zuò de xià', meaning: 'ngồi vừa', example: '坐得下二百多人吗？' },
+            { hanzi: '演不好', pinyin: 'yǎn bù hǎo', meaning: 'diễn không tốt', example: '我担心自己演不好。' },
+            { hanzi: '记得住', pinyin: 'jì de zhù', meaning: 'nhớ được', example: '你一天记得住这么多生词吗？' },
+            { hanzi: '加油', pinyin: 'jiā yóu', meaning: 'cố lên', example: '王老师，加油啊！' }
+        ];
+
+        const exercises = {
+            ex1: [
+                { q: '我累得一点儿也走不......了。', a: '动' },
+                { q: '我不......他说的话。', a: '相信' },
+                { q: '在比赛时不停地喊“......! ......!”的那些人叫什么？', a: '加油' },
+                { q: '上课的时候要......回答老师的问题。', a: '积极' },
+                { q: '星期六晚上，我们班开了一个联欢会, 我在会上......了一个节目。', a: '演' },
+                { q: '老师常常要求我们把课文背下来，可是，我不喜欢......课文。', a: '背' },
+                { q: '她常......我的发音错误。', a: '纠正' },
+                { q: '不少同学的问题是......说错，学习外语一定不要......说错。', a: '怕' }
+            ],
+            ex2: [
+                { q: '一天我......那么多生词。', a: '记不住' },
+                { q: '他没去过那儿，肯定......。', a: '找不到' },
+                { q: '我们一年......五千个词。', a: '学不了' },
+                { q: '这辆车人太多，......了，我们再等一辆吧。', a: '上不去' },
+                { q: '你这台电视机太旧了，可能......了，换一台新的吧。', a: '修不好' },
+                { q: '他感冒了，明天的运动会可能......。', a: '参加不了' },
+                { q: '我们休息休息吧，我......。', a: '走不动了' }
+            ],
+            ex3: [
+                { q: '门太小了，这个沙发搬得不进去。', a: '门太小了，这个沙发搬不进去。' },
+                { q: '今天我们见面得了吗？', a: '今天我们见得了面吗？' },
+                { q: '这个书架我们两个抱不动。', a: '这个书架我们两个搬不动。' },
+                { q: '你要的菜太多了，我们肯定吃得不了。', a: '你要的菜太多了，我们肯定吃不了。' },
+                { q: '天太黑了，我什么都不看见。', a: '天太黑了，我什么都看不见。' },
+                { q: '这个包放得不下这么多书。', a: '这个包放不下这么多书。' }
+            ]
+        };
+        
+        // --- State ---
+        let currentCardIndex = 0;
+
+        // --- DOM Elements ---
+        const checkAnswersBtn = document.getElementById('check-answers-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const startVocabBtn = document.getElementById('start-vocab-btn');
+        const flashcardPlayer = document.getElementById('flashcard-player');
+        const closeFlashcardBtn = document.getElementById('close-flashcard-btn');
+        const flashcardSingle = document.getElementById('flashcard-single');
+        const flashcardFront = document.getElementById('flashcard-front');
+        const flashcardBack = document.getElementById('flashcard-back');
+        const prevCardBtn = document.getElementById('prev-card-btn');
+        const nextCardBtn = document.getElementById('next-card-btn');
+        const cardProgress = document.getElementById('card-progress');
+
+        // --- Functions ---
+        
+        function setupExercises() {
+            const ex1Container = document.getElementById('exercise1-questions');
+            exercises.ex1.forEach((item, index) => {
+                const questionText = item.q.replace('......', `<input type="text" data-ex="1" data-index="${index}" class="mx-1 p-1 border-b-2 border-gray-300 focus:border-blue-500 outline-none w-24 text-center bg-gray-100 rounded-md">`);
+                ex1Container.innerHTML += `<div class="p-3 bg-gray-50 rounded-md flex items-center"><span class="mr-2 font-semibold">${index + 1}.</span><div>${questionText}</div><span id="feedback-1-${index}" class="ml-2 feedback opacity-0"></span></div>`;
+            });
+            
+            const ex2Container = document.getElementById('exercise2-questions');
+            exercises.ex2.forEach((item, index) => {
+                const questionText = item.q.replace('......', `<input type="text" data-ex="2" data-index="${index}" class="mx-1 p-1 border-b-2 border-gray-300 focus:border-blue-500 outline-none w-24 text-center bg-gray-100 rounded-md">`);
+                ex2Container.innerHTML += `<div class="p-3 bg-gray-50 rounded-md flex items-center"><span class="mr-2 font-semibold">${index + 1}.</span><div>${questionText}</div><span id="feedback-2-${index}" class="ml-2 feedback opacity-0"></span></div>`;
+            });
+
+            const ex3Container = document.getElementById('exercise3-questions');
+            exercises.ex3.forEach((item, index) => {
+                ex3Container.innerHTML += `
+                    <div class="p-3 bg-gray-50 rounded-md">
+                        <p class="text-gray-500 italic"><span class="font-semibold text-gray-800">${index + 1}.</span> ${item.q}</p>
+                        <input type="text" data-ex="3" data-index="${index}" class="mt-2 p-2 border-2 border-gray-300 focus:border-blue-500 outline-none w-full rounded-md" placeholder="Viết lại câu đúng...">
+                        <div id="feedback-3-${index}" class="mt-1 feedback opacity-0"></div>
+                    </div>
+                `;
+            });
+        }
+
+        function checkAnswers() {
+            let allCorrect = true;
+            for (let i = 1; i <= 2; i++) {
+                const inputs = document.querySelectorAll(`input[data-ex="${i}"]`);
+                inputs.forEach(input => {
+                    const index = input.dataset.index;
+                    const userAnswer = input.value.trim();
+                    const correctAnswer = exercises[`ex${i}`][index].a;
+                    const feedbackEl = document.getElementById(`feedback-${i}-${index}`);
+                    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                        feedbackEl.innerHTML = '✔';
+                        feedbackEl.className = 'ml-2 feedback opacity-100 text-emerald-500';
+                    } else {
+                        feedbackEl.innerHTML = `✘ (Đáp án: ${correctAnswer})`;
+                        feedbackEl.className = 'ml-2 feedback opacity-100 text-red-500 text-sm';
+                        allCorrect = false;
+                    }
+                });
+            }
+            const ex3Inputs = document.querySelectorAll('input[data-ex="3"]');
+            ex3Inputs.forEach(input => {
+                const index = input.dataset.index;
+                const userAnswer = input.value.trim().replace(/[.,。]/g, '');
+                const correctAnswer = exercises.ex3[index].a.replace(/[.,。]/g, '');
+                const feedbackEl = document.getElementById(`feedback-3-${index}`);
+                if (userAnswer === correctAnswer) {
+                    feedbackEl.innerHTML = '<p class="text-emerald-600 font-semibold">✔ Chính xác!</p>';
+                } else {
+                    feedbackEl.innerHTML = `<p class="text-red-600">Chưa đúng. Đáp án đúng là:</p><p class="text-emerald-700 font-semibold">${exercises.ex3[index].a}</p>`;
+                    allCorrect = false;
+                }
+                feedbackEl.classList.remove('opacity-0');
+            });
+            if(allCorrect) {
+                alert('Chúc mừng! Bạn đã trả lời đúng tất cả các câu hỏi!');
+            }
+        }
+        
+        function resetExercises() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => input.value = '');
+            const feedbacks = document.querySelectorAll('.feedback');
+            feedbacks.forEach(fb => {
+                fb.innerHTML = '';
+                fb.classList.add('opacity-0');
+            });
+        }
+
+        // --- Flashcard Player Functions ---
+        function showCard(index) {
+            const word = vocabulary[index];
+            // Reset flip state
+            flashcardSingle.classList.remove('is-flipped');
+            
+            // Update content after a short delay to allow the card to flip back
+            setTimeout(() => {
+                flashcardFront.innerHTML = `<p class="text-6xl font-bold">${word.hanzi}</p>`;
+                flashcardBack.innerHTML = `
+                    <p class="text-3xl font-semibold">${word.pinyin}</p>
+                    <p class="text-2xl my-4">${word.meaning}</p>
+                    <p class="text-md italic mt-4 border-t border-emerald-400 pt-4 w-full">VD: ${word.example}</p>
+                `;
+                cardProgress.textContent = `${index + 1} / ${vocabulary.length}`;
+            }, 150);
+        }
+
+        function openFlashcardPlayer() {
+            currentCardIndex = 0;
+            showCard(currentCardIndex);
+            flashcardPlayer.classList.remove('invisible', 'opacity-0');
+        }
+
+        function closeFlashcardPlayer() {
+            flashcardPlayer.classList.add('invisible', 'opacity-0');
+        }
+        
+        function nextCard() {
+            currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
+            showCard(currentCardIndex);
+        }
+
+        function prevCard() {
+            currentCardIndex = (currentCardIndex - 1 + vocabulary.length) % vocabulary.length;
+            showCard(currentCardIndex);
+        }
+
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupExercises();
+        });
+
+        checkAnswersBtn.addEventListener('click', checkAnswers);
+        resetBtn.addEventListener('click', resetExercises);
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Flashcard Player Listeners
+        startVocabBtn.addEventListener('click', openFlashcardPlayer);
+        closeFlashcardBtn.addEventListener('click', closeFlashcardPlayer);
+        nextCardBtn.addEventListener('click', nextCard);
+        prevCardBtn.addEventListener('click', prevCard);
+        flashcardSingle.addEventListener('click', () => {
+            flashcardSingle.classList.toggle('is-flipped');
+        });
+
+    </script>
+
+</body>
+</html>

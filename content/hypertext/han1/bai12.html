@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Ôn Tập Tiếng Trung Vui Nhộn ✨</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            margin: 20px;
+            background-color: #f0f8ff; /* Alice Blue */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        #game-container {
+            background: linear-gradient(135deg, #ffffff 0%, #e6f7ff 100%); /* White to light blue gradient */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #b3e0ff;
+        }
+
+        h1, h2 {
+            color: #0056b3;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        h1 { font-size: 1.8em; }
+        h2 { font-size: 1.5em; }
+
+        #welcome-screen p, #welcome-screen ul {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+         #welcome-screen ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            display: inline-block;
+        }
+        #welcome-screen li { margin-bottom: 8px; }
+        #welcome-screen b { color: #007bff; }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px; /* More rounded */
+            cursor: pointer;
+            font-size: 1.05em;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+        button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .hint-button { /* Common style for hint buttons */
+            background-color: #ffc107; /* Yellow for hint */
+            color: #333;
+        }
+        .hint-button:hover:not(:disabled) { background-color: #e0a800; }
+
+        #restart-button { background-color: #28a745; }
+        #restart-button:hover { background-color: #218838; }
+
+        input[type="text"] {
+            padding: 12px;
+            border: 1px solid #b3cde0; /* Light blue border */
+            border-radius: 8px;
+            margin: 10px 0 15px 0; /* More margin bottom */
+            width: calc(100% - 26px);
+            font-size: 1.1em;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        input[type="text"]:focus {
+             border-color: #007bff;
+             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+             outline: none;
+        }
+
+        /* Styles for Hanzi with Pinyin using <ruby> */
+        .hanzi-ruby ruby {
+            display: inline-flex; /* Changed from inline-block for better spacing */
+            flex-direction: column;
+            align-items: center;
+            margin: 0 2px; /* Adjust spacing between characters */
+            line-height: 1.2; /* Adjust line height for ruby */
+            font-size: 1.5em; /* Larger Hanzi */
+            font-weight: 500;
+        }
+        .hanzi-ruby rt { /* Pinyin style */
+            font-size: 0.55em; /* Pinyin smaller relative to Hanzi */
+            color: #555;
+            font-weight: 400;
+            line-height: 1;
+            user-select: none; /* Prevent selecting pinyin easily */
+        }
+         /* Hide ruby parentheses for browsers that don't support ruby */
+        .hanzi-ruby rp { display: none; }
+
+        #scrambled-sentence {
+            background-color: #e9f5ff; /* Lighter blue background */
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Noto Sans SC', sans-serif; /* Good font for Chinese */
+            margin-bottom: 15px;
+            min-height: 50px; /* Ensure space even if empty */
+            border: 1px dashed #a0d0ff;
+        }
+
+        #meaning-display {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #0069d9;
+            background-color: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+
+        p.feedback { /* Common class for feedback */
+            margin-top: 15px;
+            font-weight: bold;
+            white-space: pre-wrap;
+            min-height: 20px; /* Prevent layout shift */
+            padding: 10px;
+            border-radius: 5px;
+        }
+        p.feedback.correct { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb;}
+        p.feedback.incorrect { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb;}
+        p.feedback.info { color: #004085; background-color: #cce5ff; border: 1px solid #b8daff;}
+
+
+        p#attempts-left {
+            color: #e67e22; /* Orange warning */
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+
+        .hint-display { /* Common class for hint displays */
+            margin-top: 15px;
+            color: #555;
+            background-color: #fffbe6; /* Light yellow */
+            padding: 12px;
+            border-radius: 5px;
+            font-style: italic;
+            white-space: pre-wrap;
+            text-align: left;
+            border: 1px solid #ffeeba;
+            min-height: 20px;
+        }
+
+        .hidden { display: none; }
+
+        /* Timer */
+        #timer-container {
+            position: fixed; /* Keep timer visible */
+            top: 15px;
+            right: 20px;
+            background-color: rgba(0, 123, 255, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        /* Summary Table & Incorrect List */
+        #summary-area { text-align: left; }
+        #summary-area h2 { text-align: center; }
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #cde;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+        tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+        tbody tr:nth-child(even) { background-color: #e9ecef; }
+
+        #incorrect-list { margin-top: 20px; }
+        #incorrect-list h3 { color: #dc3545; margin-bottom: 10px; text-align: center; }
+        #incorrect-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        #incorrect-list li {
+            background-color: #fff0f1; /* Light pink */
+            border: 1px solid #ffdbe0;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+        }
+        #incorrect-list li strong { color: #721c24; }
+        #summary-total-time {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #0056b3;
+        }
+
+    </style>
+    </head>
+<body>
+
+    <div id="game-container">
+        <h1>Trò Chơi Tiếng Trung Vui Nhộn ✨💖</h1>
+
+        <div id="timer-container" class="hidden">⏱️ <span id="timer">00:00</span></div>
+
+        <div id="welcome-screen">
+            <p>Chào mừng bạn iu đến với thử thách tiếng Trung nho nhỏ!</p>
+            <p>Game có 2 phần nè:</p>
+            <ul>
+                <li><b>Phần 1:</b> Xem nghĩa đoán chữ Hán (có gợi ý Pinyin nha 😉)</li>
+                <li><b>Phần 2:</b> Xếp chữ Hán lộn xộn thành câu đúng (có gợi ý nghĩa nè 😎)</li>
+            </ul>
+             <p>Sẵn sàng chinh phục chưa nào? Let's gooo! 🔥</p>
+            <button id="start-button">Bắt Đầu Thui!</button>
+        </div>
+
+        <div id="part1-area" class="hidden">
+            <h2>Phần 1: Đoán Chữ Hán 🤔</h2>
+            <p id="vocab-counter"></p>
+            <p><b>Nghĩa là gì nè?</b></p>
+            <p id="meaning-display"></p>
+            <label for="hanzi-input">Gõ chữ Hán tương ứng vào đây nha:</label>
+            <input type="text" id="hanzi-input" autocomplete="off">
+            <button id="submit-part1">Kiểm Tra</button>
+            <button id="hint-button-part1" class="hint-button">Gợi ý Pinyin</button>
+            <p id="feedback-part1" class="feedback"></p>
+            <p id="hint-display-part1" class="hint-display hidden"></p>
+            <p id="attempts-left"></p>
+        </div>
+
+        <div id="part2-area" class="hidden">
+            <h2>Phần 2: Xếp Câu Thuii 💪</h2>
+            <p id="sentence-counter"></p>
+            <p><b>Sắp xếp các cụm từ này nè:</b></p>
+            <div id="scrambled-sentence" class="hanzi-ruby"></div> <label for="sentence-input">Viết câu đúng vào đây nè:</label>
+            <input type="text" id="sentence-input" autocomplete="off">
+            <button id="submit-part2">Kiểm Tra</button>
+            <button id="hint-button-part2" class="hint-button">Gợi ý Nghĩa</button>
+            <p id="feedback-part2" class="feedback"></p> <p id="hint-display-part2" class="hint-display hidden"></p>
+        </div>
+
+        <div id="summary-area" class="hidden">
+            <h2>📊 Kết Quả Của Bạn Đâyyy 🎉</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phần chơi</th>
+                        <th>Số lượng</th>
+                        <th>Số câu/từ đúng ✅</th>
+                        <th>Số câu/từ sai ❌</th>
+                        <th>Gợi ý đã dùng 🤔</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Phần 1: Từ vựng</td>
+                        <td id="summary-p1-total"></td>
+                        <td id="summary-p1-correct"></td>
+                        <td id="summary-p1-incorrect"></td>
+                        <td id="summary-p1-hints"></td>
+                    </tr>
+                    <tr>
+                        <td>Phần 2: Sắp xếp câu</td>
+                        <td id="summary-p2-total"></td>
+                        <td id="summary-p2-correct"></td>
+                        <td id="summary-p2-incorrect"></td>
+                        <td id="summary-p2-hints"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="incorrect-list">
+                 </div>
+
+             <p id="summary-total-time">Tổng thời gian làm bài: ⏱️ <span id="total-time-value"></span></p>
+
+            <button id="restart-button">Chơi Lại Từ Đầu! 🚀</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ** NEW DATA V3 ** ---
+            const vocabData = [
+                { hanzi: '语言', pinyin: 'yǔ yán', meaning: 'ngôn ngữ' },
+                { hanzi: '大学', pinyin: 'dà xué', meaning: 'đại học' },
+                { hanzi: '读', pinyin: 'dú', meaning: 'đọc' },
+                { hanzi: '觉得', pinyin: 'jué de', meaning: 'cảm thấy' },
+                { hanzi: '怎么样', pinyin: 'zěn me yàng', meaning: 'thế nào' },
+                { hanzi: '语法', pinyin: 'yǔ fǎ', meaning: 'ngữ pháp' }, // Corrected pinyin
+                { hanzi: '听', pinyin: 'tīng', meaning: 'nghe' },
+                { hanzi: '说', pinyin: 'shuō', meaning: 'nói' },
+                { hanzi: '写', pinyin: 'xiě', meaning: 'viết' },
+                { hanzi: '和', pinyin: 'hé', meaning: 'và' },
+                { hanzi: '容易', pinyin: 'róng yì', meaning: 'dễ dàng' },
+                { hanzi: '但是', pinyin: 'dàn shì', meaning: 'nhưng' },
+                { hanzi: '给', pinyin: 'gěi', meaning: 'cho' },
+                { hanzi: '新', pinyin: 'xīn', meaning: 'mới' },
+                { hanzi: '旧', pinyin: 'jiù', meaning: 'cũ' },
+                { hanzi: '同学', pinyin: 'tóng xué', meaning: 'bạn học' },
+                { hanzi: '同屋', pinyin: 'tóng wū', meaning: 'bạn cùng phòng' },
+                { hanzi: '班', pinyin: 'bān', meaning: 'lớp' },
+                { hanzi: '比较', pinyin: 'bǐ jiào', meaning: 'tương đối' }
+            ];
+
+            const sentenceData = [
+                { correct: '你会说什么语言？', pinyin: 'Nǐ huì shuō shén me yǔ yán?', scrambled: '什么 / 语言 / 会说 / 你', translation: 'Bạn có thể nói tiếng gì?' },
+                { correct: '你在哪个大学学习？', pinyin: 'Nǐ zài nǎ ge dà xué xué xí?', scrambled: '哪个 / 大学 / 在学习 / 你', translation: 'Bạn học ở trường đại học nào?' },
+                { correct: '我在胡志明市师范大学学习。', pinyin: 'Wǒ zài Hú zhì míng shì Shī fàn dà xué xué xí.', scrambled: '胡志明市师范大学 / 在学习 / 我', translation: 'Tôi học tại Đại học Sư phạm TP. Hồ Chí Minh.' },
+                { correct: '我在清华大学读书。', pinyin: 'Wǒ zài Qīng huá dà xué dú shū.', scrambled: '清华大学 / 在读书 / 我', translation: 'Tôi học tại Đại học Thanh Hoa.' }, // Corrected pinyin/translation
+                { correct: '汉语语法难吗？', pinyin: 'Hàn yǔ yǔ fǎ nán ma?', scrambled: '语法 / 难吗 / 汉语', translation: 'Ngữ pháp tiếng Trung có khó không?' },
+                { correct: '你和她都是我的朋友。', pinyin: 'Nǐ hé tā dōu shì wǒ de péng you.', scrambled: '你 / 她 / 朋友 / 都是 / 我 / 和', translation: 'Bạn và cô ấy đều là bạn tôi.' }, // Used 她 for clarity
+                { correct: '学汉语很容易。', pinyin: 'Xué Hàn yǔ hěn róng yì.', scrambled: '很 / 容易 / 学 / 汉语', translation: 'Học tiếng Trung rất dễ.' },
+                { correct: '他对我很好，但是我不爱他。', pinyin: 'Tā duì wǒ hěn hǎo, dàn shì wǒ bù ài tā.', scrambled: '很好 / 对我 / 他，但是 / 不爱 / 我 / 他', translation: 'Anh ấy đối xử tôi rất tốt, nhưng tôi không yêu anh ấy.' }, // Adjusted translation/scrambled
+                { correct: '中文很有意思，但是也很难。', pinyin: 'Zhōng wén hěn yǒu yì si, dàn shì yě hěn nán.', scrambled: '很有意思 / 中文，但是 / 也很难', translation: 'Tiếng Trung rất thú vị, nhưng cũng rất khó.' },
+                { correct: '今天下大雨，但是我们还去学校。', pinyin: 'Jīn tiān xià dà yǔ, dàn shì wǒ men hái qù xué xiào.', scrambled: '今天 / 下大雨，但是 / 我们 / 还去 / 学校', translation: 'Hôm nay mưa lớn, nhưng chúng tôi vẫn đi học.' }, // Adjusted scrambled
+                { correct: '我想去银行取钱，但是工作很忙。', pinyin: 'Wǒ xiǎng qù yín háng qǔ qián, dàn shì gōng zuò hěn máng.', scrambled: '想去 / 银行 / 取钱 / 我，但是 / 工作 / 很忙', translation: 'Tôi muốn đi ngân hàng rút tiền, nhưng công việc rất bận.' }, // Adjusted scrambled
+                { correct: '我想找我的同学。', pinyin: 'Wǒ xiǎng zhǎo wǒ de tóng xué.', scrambled: '同学 / 想找 / 我的', translation: 'Tôi muốn tìm bạn học của tôi.' },
+                { correct: '你的同屋怎么样？', pinyin: 'Nǐ de tóng wū zěn me yàng?', scrambled: '同屋 / 怎么样 / 你的', translation: 'Bạn cùng phòng của bạn thế nào?' },
+                { correct: '你的班有多少同学？', pinyin: 'Nǐ de bān yǒu duō shao tóng xué?', scrambled: '班 / 有多少同学 / 你的', translation: 'Lớp bạn có bao nhiêu bạn học?' },
+                { correct: '汉语比较难。', pinyin: 'Hàn yǔ bǐ jiào nán.', scrambled: '比较难 / 汉语', translation: 'Tiếng Trung khá khó.' },
+                { correct: '你在哪儿学习汉语？', pinyin: 'Nǐ zài nǎr xué xí Hàn yǔ?', scrambled: '哪儿 / 在 / 学习 / 汉语 / 你', translation: 'Bạn học tiếng Trung ở đâu?' },
+                { correct: '他在哪儿学习汉语？', pinyin: 'Tā zài nǎr xué xí Hàn yǔ?', scrambled: '哪儿 / 在 / 学习 / 汉语 / 他', translation: 'Anh ấy học tiếng Trung ở đâu?' }, // Used 他 for clarity
+                { correct: '他们的老师怎么样？', pinyin: 'Tā men de lǎo shī zěn me yàng?', scrambled: '老师 / 怎么样 / 他们的', translation: 'Giáo viên của họ thế nào?' }, // Corrected translation
+                { correct: '他们觉得学习汉语难吗？', pinyin: 'Tā men jué de xué xí Hàn yǔ nán ma?', scrambled: '学习 / 汉语 / 难吗 / 觉得 / 他们', translation: 'Họ cảm thấy học tiếng Trung có khó không?' }, // Corrected translation/scrambled
+                { correct: '你们的老师是谁？', pinyin: 'Nǐ men de lǎo shī shì shéi?', scrambled: '老师 / 是谁 / 你们的', translation: 'Giáo viên của các bạn là ai?' },
+                { correct: '新同学在哪个班学习？', pinyin: 'Xīn tóng xué zài nǎ ge bān xué xí?', scrambled: '哪个班 / 在学习 / 新同学', translation: 'Bạn học mới học ở lớp nào?' },
+                { correct: '他的老师是谁？', pinyin: 'Tā de lǎo shī shì shéi?', scrambled: '老师 / 是谁 / 他的', translation: 'Giáo viên của anh ấy là ai?' }, // Used 他 for clarity
+            ];
+            // --- ** END NEW DATA V3 ** ---
+
+
+            // --- DOM Elements ---
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const startButton = document.getElementById('start-button');
+            const restartButton = document.getElementById('restart-button');
+            const timerContainer = document.getElementById('timer-container');
+            const timerDisplay = document.getElementById('timer');
+
+            const part1Area = document.getElementById('part1-area');
+            const vocabCounter = document.getElementById('vocab-counter');
+            const meaningDisplay = document.getElementById('meaning-display'); // Changed from image
+            const hanziInput = document.getElementById('hanzi-input');
+            const submitPart1 = document.getElementById('submit-part1');
+            const hintButtonPart1 = document.getElementById('hint-button-part1');
+            const feedbackPart1 = document.getElementById('feedback-part1');
+            const hintDisplayPart1 = document.getElementById('hint-display-part1');
+            const attemptsLeftDisplay = document.getElementById('attempts-left');
+
+            const part2Area = document.getElementById('part2-area');
+            const sentenceCounter = document.getElementById('sentence-counter');
+            const scrambledSentenceDisplay = document.getElementById('scrambled-sentence'); // Renamed for clarity
+            const sentenceInput = document.getElementById('sentence-input');
+            const submitPart2 = document.getElementById('submit-part2');
+            const hintButtonPart2 = document.getElementById('hint-button-part2');
+            const feedbackPart2 = document.getElementById('feedback-part2');
+            const hintDisplayPart2 = document.getElementById('hint-display-part2');
+
+            const summaryArea = document.getElementById('summary-area');
+            const summaryP1Total = document.getElementById('summary-p1-total');
+            const summaryP1Correct = document.getElementById('summary-p1-correct');
+            const summaryP1Incorrect = document.getElementById('summary-p1-incorrect');
+            const summaryP1Hints = document.getElementById('summary-p1-hints');
+            const summaryP2Total = document.getElementById('summary-p2-total');
+            const summaryP2Correct = document.getElementById('summary-p2-correct');
+            const summaryP2Incorrect = document.getElementById('summary-p2-incorrect');
+            const summaryP2Hints = document.getElementById('summary-p2-hints');
+            const incorrectListDiv = document.getElementById('incorrect-list');
+            const totalTimeValue = document.getElementById('total-time-value');
+
+
+            // --- Game State ---
+            let currentPart = 0; // 0: Welcome, 1: Vocab, 2: Sentence, 3: Summary
+            let currentWordIndex = 0;
+            let currentSentenceIndex = 0;
+            let attemptsLeft = 3;
+            let scorePart1 = 0;
+            let scorePart2 = 0;
+            let hintsUsedPart1 = 0;
+            let hintsUsedPart2 = 0;
+            let shuffledVocab = [];
+            let shuffledSentences = [];
+            let incorrectAnswers = []; // Store details of incorrect answers
+            let timerInterval;
+            let startTime;
+
+
+            // --- Utility Functions ---
+            function shuffleArray(array) {
+                let currentIndex = array.length, randomIndex;
+                while (currentIndex !== 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                }
+                return array;
+            }
+
+            function hideAllSections() {
+                welcomeScreen.classList.add('hidden');
+                part1Area.classList.add('hidden');
+                part2Area.classList.add('hidden');
+                summaryArea.classList.add('hidden');
+                timerContainer.classList.add('hidden'); // Hide timer initially
+            }
+
+             function updateFeedback(element, message, type) {
+                element.innerHTML = message.replace(/\n/g, '<br>');
+                // Keep existing feedback class + add new type for styling
+                element.className = 'feedback ' + type; // 'correct', 'incorrect', 'info'
+            }
+
+            // Function to create <ruby> structure for Hanzi with Pinyin
+            function createRubyHTML(hanzi, pinyin) {
+                // Basic split by space for pinyin - might need refinement for complex cases
+                const pinyinSyllables = pinyin.trim().split(/\s+/);
+                let hanziChars = hanzi.replace(/\s+/g, ''); // Remove spaces from Hanzi if any
+                let html = '';
+                let pinyinIndex = 0;
+
+                // Attempt to match Hanzi characters to Pinyin syllables
+                // This is a simplified approach; complex words might not align perfectly.
+                for (let i = 0; i < hanziChars.length; i++) {
+                    const char = hanziChars[i];
+                    // Skip punctuation commonly found in sentences
+                    if ("，。？！；：、,.?!;:'\"".includes(char)) {
+                        html += `<span class="punctuation">${char}</span>`; // Style punctuation separately if needed
+                    } else {
+                         // Use the next available pinyin syllable, handle potential mismatch
+                        const syllable = pinyinSyllables[pinyinIndex] || ''; // Default to empty if pinyin runs out
+                        html += `<ruby>${char}<rp>(</rp><rt>${syllable}</rt><rp>)</rp></ruby>`;
+                        pinyinIndex++; // Move to the next syllable
+                    }
+                }
+                 // Add any remaining punctuation or non-ruby text if needed
+                 // This part needs more robust logic if sentences contain non-Hanzi text mixed in.
+
+                return html;
+            }
+
+
+            // --- Timer Functions ---
+            function startTimer() {
+                startTime = Date.now();
+                timerContainer.classList.remove('hidden');
+                timerInterval = setInterval(() => {
+                    const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                    const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, '0');
+                    const seconds = String(elapsedTime % 60).padStart(2, '0');
+                    timerDisplay.textContent = `${minutes}:${seconds}`;
+                }, 1000);
+            }
+
+            function stopTimer() {
+                clearInterval(timerInterval);
+                 const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                 const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, '0');
+                 const seconds = String(elapsedTime % 60).padStart(2, '0');
+                 return `${minutes}:${seconds}`; // Return formatted final time
+            }
+
+            // --- Game Logic Functions ---
+
+            function startGame() {
+                // Reset state
+                currentPart = 1;
+                currentWordIndex = 0;
+                currentSentenceIndex = 0;
+                scorePart1 = 0;
+                scorePart2 = 0;
+                hintsUsedPart1 = 0;
+                hintsUsedPart2 = 0;
+                incorrectAnswers = []; // Clear previous incorrect answers
+
+                // Shuffle data
+                shuffledVocab = shuffleArray([...vocabData]);
+                shuffledSentences = shuffleArray([...sentenceData]);
+
+                hideAllSections();
+                part1Area.classList.remove('hidden');
+                startTimer(); // Start the timer
+                loadVocabQuestion();
+            }
+
+            // --- Part 1: Vocabulary (Meaning -> Hanzi) ---
+            function loadVocabQuestion() {
+                if (currentWordIndex >= shuffledVocab.length) {
+                    startPart2();
+                    return;
+                }
+
+                const currentWord = shuffledVocab[currentWordIndex];
+                vocabCounter.textContent = `Từ ${currentWordIndex + 1} / ${shuffledVocab.length}`;
+                meaningDisplay.textContent = currentWord.meaning; // Show meaning
+                hanziInput.value = '';
+                feedbackPart1.textContent = '';
+                feedbackPart1.className = 'feedback'; // Reset feedback style
+                hintDisplayPart1.textContent = ''; // Clear hint
+                hintDisplayPart1.classList.add('hidden'); // Hide hint
+                attemptsLeft = 3;
+                attemptsLeftDisplay.textContent = `Số lần đoán còn lại: ${attemptsLeft} ❤️`;
+                hanziInput.disabled = false;
+                submitPart1.disabled = false;
+                hintButtonPart1.disabled = false; // Enable hint button
+                hanziInput.focus();
+            }
+
+             function checkVocabAnswer() {
+                const userAnswer = hanziInput.value.trim();
+                const currentWord = shuffledVocab[currentWordIndex];
+                const correctAnswer = currentWord.hanzi;
+
+                if (!userAnswer) return;
+
+                if (userAnswer === correctAnswer) {
+                    updateFeedback(feedbackPart1, 'Chuẩn luôn! Bạn giỏi quá 👍💯', 'correct');
+                    if (!hanziInput.disabled) { scorePart1++; } // Score only once
+                    finalizePart1Question(true); // Mark as correct
+                } else {
+                    attemptsLeft--;
+                    attemptsLeftDisplay.textContent = `Số lần đoán còn lại: ${attemptsLeft} ${attemptsLeft > 0 ? '❤️' : '💔'}`;
+                    if (attemptsLeft > 0) {
+                        updateFeedback(feedbackPart1, 'Ui, sai mất rùi, thử lại nha! 🤔', 'incorrect');
+                        hanziInput.select();
+                    } else {
+                        updateFeedback(feedbackPart1, `Huhu, hết lượt rùi! 😭 Đáp án là: <span class="hanzi-ruby">${createRubyHTML(correctAnswer, currentWord.pinyin)}</span>`, 'info');
+                         // Record incorrect answer
+                        incorrectAnswers.push({
+                            type: 'Từ vựng',
+                            question: currentWord.meaning,
+                            correctAnswer: `${currentWord.hanzi} (${currentWord.pinyin})`
+                         });
+                        finalizePart1Question(false); // Mark as incorrect
+                    }
+                }
+            }
+
+             function showHintPart1() {
+                if (currentWordIndex < shuffledVocab.length) {
+                    const currentWord = shuffledVocab[currentWordIndex];
+                    hintDisplayPart1.textContent = `Gợi ý Pinyin nè: ${currentWord.pinyin}`;
+                    hintDisplayPart1.classList.remove('hidden');
+                    if (!hintButtonPart1.disabled) { hintsUsedPart1++; } // Count hint only once
+                    hintButtonPart1.disabled = true;
+                }
+            }
+
+            function finalizePart1Question(isCorrect) {
+                 hanziInput.disabled = true;
+                 submitPart1.disabled = true;
+                 hintButtonPart1.disabled = true;
+                 setTimeout(() => {
+                    currentWordIndex++;
+                    loadVocabQuestion();
+                }, isCorrect ? 1500 : 2500); // Longer delay if incorrect to read answer
+            }
+
+
+            // --- Part 2: Sentence Scramble ---
+            function startPart2() {
+                currentPart = 2;
+                hideAllSections();
+                part2Area.classList.remove('hidden');
+                loadSentenceQuestion();
+            }
+
+            function loadSentenceQuestion() {
+                if (currentSentenceIndex >= shuffledSentences.length) {
+                    showSummary();
+                    return;
+                }
+                const currentSentence = shuffledSentences[currentSentenceIndex];
+                sentenceCounter.textContent = `Câu ${currentSentenceIndex + 1} / ${shuffledSentences.length}`;
+
+                // Display scrambled sentence WITH ruby pinyin
+                // Need to reconstruct pinyin for scrambled parts - this is HARD.
+                // **Simplification:** Show scrambled parts WITHOUT pinyin for now.
+                scrambledSentenceDisplay.innerHTML = currentSentence.scrambled.replace(/\//g, ' / '); // Just show text
+                // ** If pinyin mapping for scrambled parts is needed, it requires complex logic **
+
+                sentenceInput.value = '';
+                feedbackPart2.textContent = '';
+                feedbackPart2.className = 'feedback';
+                hintDisplayPart2.textContent = '';
+                hintDisplayPart2.classList.add('hidden');
+                hintButtonPart2.disabled = false;
+                sentenceInput.disabled = false;
+                submitPart2.disabled = false;
+                sentenceInput.focus();
+            }
+
+            function checkSentenceAnswer() {
+                const normalize = (str) => str.trim().replace(/[？。！，,\s]/g, ''); // Remove punctuation and spaces
+                const userAnswer = normalize(sentenceInput.value);
+                const currentSentence = shuffledSentences[currentSentenceIndex];
+                const correctAnswer = normalize(currentSentence.correct);
+
+
+                if (!userAnswer) return;
+
+                if (userAnswer === correctAnswer) {
+                     const rubyCorrect = createRubyHTML(currentSentence.correct, currentSentence.pinyin);
+                     updateFeedback(feedbackPart2, `Xuất sắc! Câu đúng là:\n<span class="hanzi-ruby">${rubyCorrect}</span>\n<i>(Nghĩa: ${currentSentence.translation})</i>`, 'correct');
+                     if (!sentenceInput.disabled) { scorePart2++; } // Score once
+                     finalizePart2Question(true);
+                } else {
+                    updateFeedback(feedbackPart2, 'Opps, chưa đúng rùi bạn ơi. Kiểm tra lại hoặc dùng gợi ý nha! 🤔', 'incorrect');
+                     sentenceInput.select();
+                     // Don't record incorrect immediately, only if they move on without correcting maybe?
+                     // Or record every wrong attempt? Let's record only if they finish the game without getting it right.
+                     // For now, we'll record it in the summary based on score difference.
+                }
+            }
+
+            function showHintPart2() {
+                if (currentSentenceIndex < shuffledSentences.length) {
+                    const currentSentence = shuffledSentences[currentSentenceIndex];
+                    hintDisplayPart2.textContent = `Gợi ý nghĩa: ${currentSentence.translation}`;
+                    hintDisplayPart2.classList.remove('hidden');
+                    if (!hintButtonPart2.disabled) { hintsUsedPart2++; } // Count hint once
+                    hintButtonPart2.disabled = true;
+                 }
+            }
+
+             function finalizePart2Question(isCorrect){
+                sentenceInput.disabled = true;
+                submitPart2.disabled = true;
+                hintButtonPart2.disabled = true;
+
+                // If incorrect when finalizing (e.g., skipping), record it
+                if (!isCorrect) {
+                     const currentSentence = shuffledSentences[currentSentenceIndex];
+                     incorrectAnswers.push({
+                         type: 'Câu',
+                         question: currentSentence.scrambled,
+                         correctAnswer: `${currentSentence.correct} (${currentSentence.pinyin}) - ${currentSentence.translation}`
+                     });
+                }
+
+                setTimeout(() => {
+                    currentSentenceIndex++;
+                    loadSentenceQuestion();
+                }, isCorrect ? 2500 : 1500); // Delay longer if correct to read feedback
+             }
+
+
+            // --- Summary ---
+            function showSummary() {
+                currentPart = 3;
+                const finalTime = stopTimer(); // Stop timer and get final time
+                hideAllSections();
+                summaryArea.classList.remove('hidden');
+
+                const totalVocab = shuffledVocab.length;
+                const incorrectVocab = totalVocab - scorePart1;
+                const totalSentences = shuffledSentences.length;
+                const incorrectSentences = totalSentences - scorePart2;
+
+                summaryP1Total.textContent = totalVocab;
+                summaryP1Correct.textContent = scorePart1;
+                summaryP1Incorrect.textContent = incorrectVocab;
+                summaryP1Hints.textContent = hintsUsedPart1;
+
+                summaryP2Total.textContent = totalSentences;
+                summaryP2Correct.textContent = scorePart2;
+                summaryP2Incorrect.textContent = incorrectSentences;
+                summaryP2Hints.textContent = hintsUsedPart2;
+
+                totalTimeValue.textContent = finalTime;
+
+                // Populate incorrect answers list
+                incorrectListDiv.innerHTML = ''; // Clear previous list
+                if (incorrectAnswers.length > 0) {
+                    let listHTML = '<h3>Những chỗ cần xem lại nè 👀:</h3><ul>';
+                    incorrectAnswers.forEach(item => {
+                        listHTML += `<li><strong>${item.type}:</strong> ${item.question}<br>➡️ Đáp án đúng: ${item.correctAnswer}</li>`;
+                    });
+                    listHTML += '</ul>';
+                    incorrectListDiv.innerHTML = listHTML;
+                } else {
+                     incorrectListDiv.innerHTML = '<p style="text-align:center; color: green; font-weight: bold;">Wow! Bạn đã trả lời đúng hết! Xuất sắc! 🥳🎉</p>';
+                }
+            }
+
+
+            // --- Event Listeners ---
+            startButton.addEventListener('click', startGame);
+            restartButton.addEventListener('click', startGame);
+
+            // Part 1 Listeners
+            submitPart1.addEventListener('click', checkVocabAnswer);
+            hintButtonPart1.addEventListener('click', showHintPart1);
+            hanziInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !submitPart1.disabled) {
+                    e.preventDefault();
+                    checkVocabAnswer();
+                }
+            });
+
+            // Part 2 Listeners
+            submitPart2.addEventListener('click', checkSentenceAnswer);
+            hintButtonPart2.addEventListener('click', showHintPart2);
+            sentenceInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !submitPart2.disabled) {
+                    e.preventDefault();
+                    checkSentenceAnswer();
+                }
+            });
+
+        });
+    </script>
+    </body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài học: 望子成龙 (Mong con hóa rồng)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .lesson-section {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .hanzi {
+            font-family: "KaiTi", "SimKai", serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #1e293b;
+            line-height: 2;
+        }
+        .pinyin {
+            color: #64748b;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .translation {
+            color: #475569;
+            font-style: italic;
+        }
+        .toggle-button {
+            cursor: pointer;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        .toggle-button:hover {
+            background-color: #2563eb;
+        }
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .flashcard {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .card-back {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 1rem;
+        }
+        .summary-container {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .summary-header {
+            background-color: #f1f5f9;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .summary-content {
+            padding: 1.5rem;
+        }
+        .highlight {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .auxiliary-text {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: none;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px dashed #cbd5e1;
+        }
+        .answer {
+            display: none;
+            background-color: #eef2ff;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800">课文一：望子成龙</h1>
+        <p class="text-xl text-slate-600 mt-2">Wàng zǐ chéng lóng - Mong con hóa rồng</p>
+    </header>
+
+    <main>
+        <!-- Phần 1: Từ vựng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">I. Từ vựng trọng tâm (生词)</h2>
+            <div class="flashcard-container">
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">期望</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>qīwàng</b> (n./v.)</p><p class="translation">Kỳ vọng, mong chờ</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">特长</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>tècháng</b> (n.)</p><p class="translation">Sở trường, đặc điểm nổi bật</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">培养</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>péiyǎng</b> (v.)</p><p class="translation">Bồi dưỡng, nuôi dạy</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">开办</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>kāibàn</b> (v.)</p><p class="translation">Mở, tổ chức (lớp học, công ty)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">书法</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>shūfǎ</b> (n.)</p><p class="translation">Thư pháp</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">绘画</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>huìhuà</b> (n.)</p><p class="translation">Hội họa, vẽ tranh</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">起跑线</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>qǐpǎoxiàn</b> (n.)</p><p class="translation">Vạch xuất phát</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">钢琴</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>gāngqín</b> (n.)</p><p class="translation">Đàn Piano</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">落</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>là</b> (v.)</p><p class="translation">Rớt lại, tụt hậu (phía sau)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">支付</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>zhīfù</b> (v.)</p><p class="translation">Chi trả, thanh toán</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 2: Tóm tắt nội dung bài khóa -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">II. Tóm tắt nội dung bài khóa (内容梗概)</h2>
+            <p class="mb-4 text-gray-600">Đoạn văn dưới đây tóm tắt thực trạng giáo dục và kỳ vọng của cha mẹ Trung Quốc:</p>
+            
+            <div class="summary-container">
+                <div class="summary-header">中文段落 (Đoạn văn tiếng Trung)</div>
+                <div class="summary-content">
+                    <p class="hanzi text-justify">
+                        在中国，父母对子女有很高的要求和<span class="highlight">期望</span>，希望他们“<span class="highlight">望子成龙</span>”。很多父母从小就<span class="highlight">培养</span>孩子的<span class="highlight">特长</span>，给他们报名各种学习班。比如6岁的佳佳，虽然不想去，但父母还是给她报了英语、<span class="highlight">书法</span>、舞蹈和<span class="highlight">绘画</span>。妈妈担心孩子输在<span class="highlight">起跑线</span>上，不能<span class="highlight">落</span>在别人后面。另一个孩子安蓓，除了学数学，还要学<span class="highlight">钢琴</span>。虽然学费很贵，但父母觉得<span class="highlight">不管</span>花得起花不起，这钱<span class="highlight">都</span>要花，一切为了孩子。
+                    </p>
+                    
+                    <button class="text-blue-600 font-semibold mt-4 hover:underline flex items-center" onclick="toggleAuxiliary(this)">
+                        <span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa
+                    </button>
+
+                    <div class="auxiliary-text">
+                        <p class="mb-4"><strong>Pinyin:</strong><br>
+                        Zài Zhōngguó, fùmǔ duì zǐnǚ yǒu hěn gāo de yāoqiú hé <b>qīwàng</b>, xīwàng tāmen “<b>wàng zǐ chéng lóng</b>”. Hěnduō fùmǔ cóngxiǎo jiù <b>péiyǎng</b> háizi de <b>tècháng</b>, gěi tāmen bàomíng gè zhǒng xuéxíbān. Bǐrú 6 suì de Jiājiā, suīrán bùxiǎng qù, dàn fùmǔ háishì gěi tā bào le Yīngyǔ, <b>shūfǎ</b>, wǔdǎo hé <b>huìhuà</b>. Māma dānxīn háizi shū zài <b>qǐpǎoxiàn</b> shàng, bùnéng <b>là</b> zài biérén hòumian. Lìng yīgè háizi Ānbèi, chúle xué shùxué, háiyào xué <b>gāngqín</b>. Suīrán xuéfèi hěn guì, dàn fùmǔ juéde <b>bùguǎn</b> huā de qǐ huā bù qǐ, zhè qián <b>dōu</b> yào huā, yīqiè wèile háizi.</p>
+                        
+                        <p><strong>Dịch nghĩa:</strong><br>
+                        Ở Trung Quốc, cha mẹ có yêu cầu và <b>kỳ vọng</b> rất cao đối với con cái, hy vọng chúng "<b>hóa rồng</b>" (thành tài). Rất nhiều cha mẹ từ nhỏ đã <b>bồi dưỡng</b> <b>sở trường</b> cho trẻ, đăng ký cho chúng đủ loại lớp học thêm. Ví dụ như Giai Giai 6 tuổi, tuy không muốn đi, nhưng bố mẹ vẫn đăng ký cho bé học tiếng Anh, <b>thư pháp</b>, múa và <b>hội họa</b>. Mẹ lo lắng con sẽ thua ngay tại <b>vạch xuất phát</b>, không thể <b>tụt hậu</b> so với người khác. Một đứa trẻ khác là An Bội, ngoài học toán còn phải học <b>đàn piano</b>. Mặc dù học phí rất đắt, nhưng bố mẹ cảm thấy <b>cho dù</b> có trả nổi hay không <b>thì</b> số tiền này vẫn phải chi, tất cả là vì con cái.</p>
+                    </div>
+                </div>
+            </div>
+
+             <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="font-bold text-blue-800 mb-2">🤔 Câu hỏi thảo luận:</h3>
+                <p>Bạn có đồng ý với quan điểm "Không thể để con thua ngay tại vạch xuất phát" (不能让孩子输在起跑线上) không? Tại sao?</p>
+            </div>
+        </section>
+
+        <!-- Phần 3: Ngữ pháp trọng điểm -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">III. Ngữ pháp trọng điểm (语法)</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">1. 望子成龙 (Wàng zǐ chéng lóng)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Hy vọng con trai trở thành rồng. Nghĩa bóng: Cha mẹ kỳ vọng con cái thành đạt, trở thành người tài giỏi xuất chúng.</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 天下的父母都<b>望子成龙</b>。</p>
+                    <p class="text-gray-600">(Cha mẹ trong thiên hạ đều mong con cái hóa rồng.)</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">2. 不管……都…… (Bùguǎn... dōu...)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Cho dù/Bất kể... (điều kiện gì xảy ra) ... thì đều/vẫn (kết quả không đổi).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> <b>不管</b>学费多贵，这钱<b>都</b>要花。</p>
+                    <p class="text-gray-600">(Cho dù học phí đắt thế nào, số tiền này đều phải chi.)</p>
+                </div>
+            </div>
+
+             <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">3. 至于…… (Zhìyú...)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Còn về... / Nhắc đến... (Dùng để chuyển sang một chủ đề khác hoặc khía cạnh khác có liên quan).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> <b>至于</b>能不能支付得起，她说以后再说。</p>
+                    <p class="text-gray-600">(Còn về việc có chi trả nổi hay không, cô ấy nói để sau hãy tính.)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 4: Bài tập vận dụng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">IV. Bài tập vận dụng (练习)</h2>
+            
+            <div class="space-y-4">
+                <p class="font-semibold">Điền từ thích hợp vào chỗ trống:</p>
+                <div class="bg-gray-100 p-4 rounded-lg mb-4 text-center font-mono">
+                    特长  |  培养  |  期望  |  起跑线  |  不管
+                </div>
+                
+                <div>
+                    <p>1. 父母对我有很高的________。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans1')">Xem đáp án</button>
+                    <div id="ans1" class="answer"><b>期望</b> (qīwàng)</div>
+                </div>
+
+                <div>
+                    <p>2. 现在的家长都从小________孩子的兴趣爱好。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans2')">Xem đáp án</button>
+                    <div id="ans2" class="answer"><b>培养</b> (péiyǎng)</div>
+                </div>
+
+                <div>
+                    <p>3. 他的________是弹钢琴。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans3')">Xem đáp án</button>
+                    <div id="ans3" class="answer"><b>特长</b> (tècháng)</div>
+                </div>
+                
+                 <div>
+                    <p>4. ________遇到什么困难，我们都要坚持下去。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans4')">Xem đáp án</button>
+                    <div id="ans4" class="answer"><b>不管</b> (bùguǎn)</div>
+                </div>
+
+                <div>
+                    <p>5. 不能让孩子输在________上。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans5')">Xem đáp án</button>
+                    <div id="ans5" class="answer"><b>起跑线</b> (qǐpǎoxiàn)</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function toggleCard(btn) {
+            const cardBack = btn.nextElementSibling;
+            if (cardBack.style.display === 'none' || cardBack.style.display === '') {
+                cardBack.style.display = 'block';
+                btn.textContent = 'Ẩn nghĩa';
+            } else {
+                cardBack.style.display = 'none';
+                btn.textContent = 'Xem nghĩa';
+            }
+        }
+
+        function toggleAnswer(id) {
+            const ans = document.getElementById(id);
+            if (ans.style.display === 'none' || ans.style.display === '') {
+                ans.style.display = 'block';
+            } else {
+                ans.style.display = 'none';
+            }
+        }
+
+        function toggleAuxiliary(btn) {
+            const auxText = btn.nextElementSibling;
+            if (auxText.style.display === 'none' || auxText.style.display === '') {
+                auxText.style.display = 'block';
+                btn.innerHTML = '<span class="mr-1">🙈</span> Ẩn Pinyin & Dịch nghĩa';
+            } else {
+                auxText.style.display = 'none';
+                btn.innerHTML = '<span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa';
+            }
+        }
+    </script>
+</body>
+</html>

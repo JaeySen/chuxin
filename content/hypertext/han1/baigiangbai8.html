@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 8: Táo bao nhiêu tiền một cân? - Giáo án Hán ngữ 1 (Full)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #fff1f2; }
+        .cn-text { font-family: 'Noto Sans SC', sans-serif; }
+        
+        /* Hiệu ứng lật thẻ từ vựng */
+        .perspective-1000 { perspective: 1000px; }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .flip-card-front { background-color: white; border: 2px solid #fce7f3; }
+        .flip-card-back { background-color: #fbcfe8; transform: rotateY(180deg); border: 2px solid #db2777; }
+
+        /* Ẩn/Hiện Pinyin */
+        .pinyin-blur {
+            filter: blur(5px);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+            background-color: #fce7f3; /* Nền nhẹ để che */
+            border-radius: 4px;
+            padding: 0 4px;
+        }
+        .pinyin-blur:hover, .pinyin-revealed {
+            filter: blur(0);
+            opacity: 1;
+            background-color: transparent;
+        }
+        
+        .reveal-hint {
+            font-size: 0.65rem;
+            color: #db2777;
+            margin-top: 2px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        .pinyin-revealed + .reveal-hint {
+            display: none;
+        }
+
+
+        /* Thanh cuộn */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #db2777; border-radius: 4px; }
+        
+        .highlight { color: #be185d; font-weight: bold; background-color: #fce7f3; padding: 0 4px; rounded: 4px; }
+        .grammar-box { border-left: 4px solid #db2777; background-color: white; padding: 1rem; margin-bottom: 1rem; border-radius: 0 0.5rem 0.5rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-rose-600 text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <h1 class="text-xl font-bold"><i class="fas fa-store mr-2"></i>Hán ngữ 1 - Bài 8</h1>
+            <div class="hidden md:flex space-x-4 text-sm font-medium">
+                <a href="#warmup" class="hover:text-rose-200 transition">Khởi động</a>
+                <a href="#vocab" class="hover:text-rose-200 transition">Từ vựng (Ẩn Pinyin)</a>
+                <a href="#grammar" class="hover:text-rose-200 transition">Ngữ pháp</a>
+                <a href="#reading" class="hover:text-rose-200 transition">Đọc hiểu</a>
+                <a href="#practice" class="hover:text-rose-200 transition">Thực hành</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white py-10 text-center border-b border-rose-200">
+        <div class="container mx-auto px-4">
+            <h2 class="text-5xl font-bold text-rose-700 mb-4 cn-text">苹果一斤多少钱?</h2>
+            <h3 class="text-2xl text-slate-600 mb-4">Píngguǒ yì jīn duōshao qián?</h3>
+            <p class="text-slate-500 italic max-w-2xl mx-auto">Chủ đề: Mua sắm hoa quả & Mặc cả giá tiền</p>
+        </div>
+    </header>
+
+    <!-- PHẦN 1: KHỞI ĐỘNG (WARM-UP) -->
+    <section id="warmup" class="py-12 container mx-auto px-4">
+        <div class="flex items-center mb-6">
+            <div class="bg-rose-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">1</div>
+            <h2 class="text-2xl font-bold text-rose-800">Khởi động & Tư duy (Brainstorming)</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+                <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2070&auto=format&fit=crop" alt="Asian Fruit Market" class="rounded-xl shadow-lg w-full h-64 object-cover">
+                <p class="text-center text-sm text-gray-500 mt-2">Chợ hoa quả đa dạng tại Trung Quốc</p>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500 cursor-pointer hover:bg-blue-50 transition" onclick="alert('Gợi ý: Siêu thị (Chāoshì) thường niêm yết giá cố định. Chợ (Càishìchǎng) hoặc sạp hàng ven đường là nơi dễ mặc cả nhất!')">
+                    <h4 class="font-bold text-blue-700 mb-1"><i class="fas fa-comment-dollar mr-2"></i>Câu hỏi 1:</h4>
+                    <p>Theo bạn, ở đâu thì chúng ta được phép <strong>mặc cả (trả giá)</strong>? Ở siêu thị có được không?</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow border-l-4 border-green-500 cursor-pointer hover:bg-green-50 transition" onclick="alert('Lưu ý: 1 cân TQ (Jīn) = 0.5 kg. Nếu táo giá 4 tệ/cân, tức là 8 tệ/kg (~28k VNĐ/kg). Khá rẻ!')">
+                    <h4 class="font-bold text-green-700 mb-1"><i class="fas fa-scale-balanced mr-2"></i>Câu hỏi 2:</h4>
+                    <p>1 "Cân" (Jīn) của Trung Quốc có bằng 1kg của Việt Nam không? Nếu mua 2 Jīn táo thì là bao nhiêu kg?</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow border-l-4 border-yellow-500 cursor-pointer hover:bg-yellow-50 transition" onclick="alert('Từ vựng: Liúlián (Sầu riêng) - Wáng (Vua), Shānzhú (Măng cụt) - Hòuwáng (Nữ hoàng).')">
+                    <h4 class="font-bold text-yellow-700 mb-1"><i class="fas fa-crown mr-2"></i>Câu hỏi 3:</h4>
+                    <p>Loại quả nào được mệnh danh là "Vua trái cây" và loại nào là "Nữ hoàng trái cây"? (Gợi ý: Có trong bài)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 2: TỪ VỰNG (VOCABULARY) -->
+    <section id="vocab" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-6">
+                <div class="bg-rose-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">2</div>
+                <h2 class="text-2xl font-bold text-rose-800">Từ vựng & Văn hóa (Pinyin bị ẩn - Bấm để xem)</h2>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8 sticky top-20 z-40 bg-white py-2 shadow-sm">
+                <button onclick="filterVocab('all')" class="px-3 py-1 rounded-full bg-rose-600 text-white text-xs hover:bg-rose-700 shadow transition">Tất cả</button>
+                <button onclick="filterVocab('trade')" class="px-3 py-1 rounded-full bg-white text-rose-600 border border-rose-200 text-xs hover:bg-rose-50 shadow transition">Giao dịch</button>
+                <button onclick="filterVocab('basic_fruit')" class="px-3 py-1 rounded-full bg-white text-rose-600 border border-rose-200 text-xs hover:bg-rose-50 shadow transition">Trái cây cơ bản</button>
+                <button onclick="filterVocab('tropical')" class="px-3 py-1 rounded-full bg-white text-rose-600 border border-rose-200 text-xs hover:bg-rose-50 shadow transition">Trái cây nhiệt đới</button>
+                <button onclick="filterVocab('other_fruit')" class="px-3 py-1 rounded-full bg-white text-rose-600 border border-rose-200 text-xs hover:bg-rose-50 shadow transition">Trái cây khác</button>
+            </div>
+
+            <!-- Flashcards Container -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4" id="flashcard-container">
+                <!-- Cards will be rendered here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 3: NGỮ PHÁP (GRAMMAR) -->
+    <section id="grammar" class="py-12 container mx-auto px-4">
+        <div class="flex items-center mb-6">
+            <div class="bg-rose-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">3</div>
+            <h2 class="text-2xl font-bold text-rose-800">Ngữ pháp trọng điểm</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Asking Price -->
+            <div class="grammar-box">
+                <h3 class="text-lg font-bold text-rose-700 mb-2"><i class="fas fa-comment-dots mr-2"></i>1. Cách hỏi giá tiền</h3>
+                <ul class="list-disc list-inside space-y-3 text-slate-700">
+                    <li>
+                        <strong>Cấu trúc chuẩn:</strong><br>
+                        <span class="cn-text text-xl ml-4 text-rose-600">... 多少钱一斤？</span><br>
+                        <span class="text-sm text-gray-500 ml-4">... duōshao qián yì jīn? (... bao nhiêu tiền 1 cân?)</span>
+                    </li>
+                    <li>
+                        <strong>Khẩu ngữ (Ngắn gọn):</strong><br>
+                        <span class="cn-text text-xl ml-4 text-rose-600">... 怎么卖？</span><br>
+                        <span class="text-sm text-gray-500 ml-4">... zěnme mài? (... bán thế nào?)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Bargaining -->
+            <div class="grammar-box border-blue-500">
+                <h3 class="text-lg font-bold text-blue-700 mb-2"><i class="fas fa-hand-holding-dollar mr-2"></i>2. Cách mặc cả (Bargaining)</h3>
+                <div class="space-y-3">
+                    <div class="bg-blue-50 p-2 rounded">
+                        <p class="font-bold text-sm text-blue-800">Bước 1: Chê đắt</p>
+                        <p class="cn-text text-lg text-blue-600">太贵了！(Tài guì le!)</p>
+                    </div>
+                    <div class="bg-blue-50 p-2 rounded">
+                        <p class="font-bold text-sm text-blue-800">Bước 2: Đề nghị giảm giá</p>
+                        <p class="cn-text text-lg text-blue-600">便宜点儿吧！(Piányi diǎnr ba!)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Units -->
+            <div class="grammar-box border-yellow-500">
+                <h3 class="text-lg font-bold text-yellow-700 mb-2"><i class="fas fa-balance-scale mr-2"></i>3. Đơn vị đo lường & Tiền tệ</h3>
+                <ul class="grid grid-cols-2 gap-2 text-sm">
+                    <li class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                        <span class="cn-text text-lg font-bold text-yellow-800">块 (Kuài)</span><br>Đồng (Tệ)
+                    </li>
+                    <li class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                        <span class="cn-text text-lg font-bold text-yellow-800">毛 (Máo)</span><br>Hào (1/10 Tệ)
+                    </li>
+                    <li class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                        <span class="cn-text text-lg font-bold text-yellow-800">斤 (Jīn)</span><br>0.5 kg (Cân TQ)
+                    </li>
+                    <li class="bg-yellow-50 p-2 rounded border border-yellow-200">
+                        <span class="cn-text text-lg font-bold text-yellow-800">公斤 (Gōngjīn)</span><br>1 kg (Cân tây)
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Adverb Hai -->
+            <div class="grammar-box border-green-500">
+                <h3 class="text-lg font-bold text-green-700 mb-2"><i class="fas fa-plus-circle mr-2"></i>4. Trạng từ "还" (Hái)</h3>
+                <p class="text-sm mb-2">Dùng để hỏi hoặc yêu cầu thêm cái gì đó.</p>
+                <p class="cn-text text-xl text-green-600 text-center bg-green-50 p-2 rounded">还要别的吗？</p>
+                <p class="text-center text-sm text-gray-500">Hái yào biéde ma? (Còn muốn cái khác không?)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 4: ĐỌC HIỂU (READING) -->
+    <section id="reading" class="py-12 bg-white border-t border-rose-100">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-6">
+                <div class="bg-rose-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">4</div>
+                <h2 class="text-2xl font-bold text-rose-800">Đọc hiểu: Đi siêu thị ngày Chủ nhật</h2>
+            </div>
+
+            <div class="bg-rose-50 p-6 rounded-xl shadow-inner mb-8 relative">
+                <!-- Pinyin Toggle -->
+                <div class="absolute top-4 right-4">
+                    <label class="flex items-center cursor-pointer select-none">
+                        <span class="mr-2 text-sm font-medium text-rose-700">Hiện Pinyin</span>
+                        <input type="checkbox" id="toggle-pinyin" class="sr-only" onchange="togglePinyin()">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full relative transition-colors duration-200 ease-in-out toggle-bg">
+                            <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition transform duration-200 ease-in-out"></div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="prose max-w-none">
+                    <p class="text-xl leading-loose mb-4 text-slate-800">
+                        <span class="cn-text">今天是星期天，我去超市买水果。</span>
+                        <span class="pinyin hidden block text-sm text-rose-600 mb-2">Jīntiān shì Xīngqītiān, wǒ qù chāoshì mǎi shuǐguǒ.</span>
+                        
+                        <span class="cn-text">超市里的水果很多。有<span class="highlight">苹果</span>、<span class="highlight">香蕉</span>、<span class="highlight">葡萄</span>，还有<span class="highlight">榴莲</span>和<span class="highlight">山竹</span>。</span>
+                        <span class="pinyin hidden block text-sm text-rose-600 mb-2">Chāoshì lǐ de shuǐguǒ hěn duō. Yǒu píngguǒ, xiāngjiāo, pútáo, hái yǒu liúlián hé shānzhú.</span>
+
+                        <span class="cn-text">苹果三块钱一斤，香蕉两块五。我觉得苹果很<span class="highlight">便宜</span>，但是榴莲<span class="highlight">太贵了</span>，五十块一斤！</span>
+                        <span class="pinyin hidden block text-sm text-rose-600 mb-2">Píngguǒ sān kuài qián yì jīn, xiāngjiāo liǎng kuài wǔ. Wǒ juéde píngguǒ hěn piányi, dànshì liúlián tài guì le, wǔshí kuài yì jīn!</span>
+
+                        <span class="cn-text">我买了五斤苹果和两斤香蕉。我还要了一瓶啤酒。</span>
+                        <span class="pinyin hidden block text-sm text-rose-600 mb-2">Wǒ mǎi le wǔ jīn píngguǒ hé liǎng jīn xiāngjiāo. Wǒ hái yào le yì píng píjiǔ.</span>
+
+                        <span class="cn-text">一共二十五块钱。我给售货员五十块，她找我二十五块。</span>
+                        <span class="pinyin hidden block text-sm text-rose-600 mb-2">Yígòng èrshí wǔ kuài qián. Wǒ gěi shòuhuòyuán wǔshí kuài, tā zhǎo wǒ èrshí wǔ kuài.</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Comprehension Quiz -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-rose-700 mb-2">1. Tính toán (Calculation)</h4>
+                    <p class="text-sm mb-3">Nhân vật chính mua hết bao nhiêu tiền hoa quả?</p>
+                    <div class="space-y-2 text-sm">
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">A. 25 tệ</button>
+                        <button onclick="checkQuiz(this, true)" class="w-full text-left p-2 border rounded hover:bg-gray-50">B. 20 tệ (5x3 + 2x2.5)</button>
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">C. 50 tệ</button>
+                    </div>
+                </div>
+                <div class="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-rose-700 mb-2">2. Tư duy Logic</h4>
+                    <p class="text-sm mb-3">Tại sao tổng tiền là 25 tệ mà tiền hoa quả chỉ có 20 tệ?</p>
+                    <div class="space-y-2 text-sm">
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">A. Người bán tính sai</button>
+                        <button onclick="checkQuiz(this, true)" class="w-full text-left p-2 border rounded hover:bg-gray-50">B. Vì mua thêm 1 chai bia</button>
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">C. Tiền túi nilon</button>
+                    </div>
+                </div>
+                <div class="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-rose-700 mb-2">3. Suy luận (Inference)</h4>
+                    <p class="text-sm mb-3">Tại sao nhân vật thấy sầu riêng đắt?</p>
+                    <div class="space-y-2 text-sm">
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">A. Vì nó không ngon</button>
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">B. Vì chỉ có 3 tệ một cân</button>
+                        <button onclick="checkQuiz(this, true)" class="w-full text-left p-2 border rounded hover:bg-gray-50">C. Vì giá 50 tệ/cân</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 5: THỰC HÀNH (PRACTICE) -->
+    <section id="practice" class="py-12 container mx-auto px-4 bg-rose-50">
+        <div class="flex items-center mb-6">
+            <div class="bg-rose-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">5</div>
+            <h2 class="text-2xl font-bold text-rose-800">Thực hành: Vua Mặc Cả & Nhận diện món ăn</h2>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Activity 1: Bargaining Simulator -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-rose-100">
+                <h3 class="text-xl font-bold text-slate-700 mb-4 text-center">🛒 Trò chơi: Vua Mặc Cả (Bargaining King)</h3>
+                <p class="text-sm text-gray-500 mb-4 text-center">Bạn muốn mua <strong class="text-rose-600">Sầu riêng (Liúlián)</strong>. Giá gốc: <span class="line-through">80 Tệ/cân</span>. Hãy mặc cả xuống 50 Tệ!</p>
+                
+                <div id="chat-box" class="h-64 overflow-y-auto bg-gray-50 rounded p-4 mb-4 border border-gray-200">
+                    <div class="mb-2 text-left"><span class="bg-gray-200 py-1 px-3 rounded-lg inline-block text-sm">老板 (Chủ quán): Nín yào shénme? (Bạn muốn gì?)</span></div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2">
+                    <button onclick="playerChat('Wǒ yào liúlián. Zěnme mài?')" class="text-left p-2 border rounded hover:bg-rose-50 text-sm transition">A. Wǒ yào liúlián. Zěnme mài? (Tôi lấy sầu riêng. Bán thế nào?)</button>
+                    <button onclick="playerChat('Tài guì le! Piányi diǎnr ba!')" class="text-left p-2 border rounded hover:bg-rose-50 text-sm hidden transition" id="opt-bargain">B. Tài guì le! Piányi diǎnr ba! (Đắt quá! Rẻ chút đi!)</button>
+                    <button onclick="playerChat('Wǔshí kuài, xíng bu xíng?')" class="text-left p-2 border rounded hover:bg-rose-50 text-sm hidden transition" id="opt-price">C. Wǔshí kuài, xíng bu xíng? (50 tệ, được không?)</button>
+                </div>
+                <button onclick="resetChat()" class="mt-4 text-xs text-gray-400 underline w-full text-center hover:text-rose-500">Chơi lại</button>
+            </div>
+
+            <!-- Activity 2: Food Identification Quiz -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-100">
+                <h3 class="text-xl font-bold text-slate-700 mb-4 text-center">🍽️ Nhận diện món ăn</h3>
+                <div id="food-quiz-container" class="text-center">
+                    <!-- Content injected by JS -->
+                </div>
+                <div id="food-feedback" class="h-8 text-center font-bold mt-2"></div>
+                <div class="flex justify-center gap-2 mt-4">
+                    <button onclick="loadFoodQuiz(0)" class="w-3 h-3 rounded-full bg-gray-300 quiz-dot"></button>
+                    <button onclick="loadFoodQuiz(1)" class="w-3 h-3 rounded-full bg-gray-300 quiz-dot"></button>
+                    <button onclick="loadFoodQuiz(2)" class="w-3 h-3 rounded-full bg-gray-300 quiz-dot"></button>
+                    <button onclick="loadFoodQuiz(3)" class="w-3 h-3 rounded-full bg-gray-300 quiz-dot"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER: HOMEWORK -->
+    <footer class="bg-slate-800 text-white py-10 mt-12">
+        <div class="container mx-auto px-4">
+            <h3 class="text-xl font-bold text-rose-400 mb-4 text-center"><i class="fas fa-pen-fancy mr-2"></i>Bài tập về nhà (Homework)</h3>
+            <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto text-sm">
+                <div class="bg-slate-700 p-4 rounded-lg border border-slate-600">
+                    <h4 class="font-bold text-white mb-2 text-lg">1. Sáng tạo</h4>
+                    <p class="text-slate-300">Thiết kế một "Thực đơn trái cây" cho cửa hàng của bạn, bao gồm tên 5 loại quả (bằng chữ Hán) và giá tiền.</p>
+                </div>
+                <div class="bg-slate-700 p-4 rounded-lg border border-slate-600">
+                    <h4 class="font-bold text-white mb-2 text-lg">2. Ghi âm</h4>
+                    <p class="text-slate-300">Đọc to đoạn văn "Đi siêu thị ngày Chủ nhật" ở Phần 4. Chú ý biến điệu của "Yī" và "Bù".</p>
+                </div>
+                <div class="bg-slate-700 p-4 rounded-lg border border-slate-600">
+                    <h4 class="font-bold text-white mb-2 text-lg">3. Nghiên cứu</h4>
+                    <p class="text-slate-300">Tìm hiểu xem 1 Tệ (Kuài) hôm nay đổi được bao nhiêu tiền Việt? Vậy 1 cân (Jīn) táo 3 tệ là đắt hay rẻ?</p>
+                </div>
+            </div>
+            <div class="text-center mt-8 text-xs text-slate-500">
+                Giáo án điện tử Hán ngữ 1 - Bài 8 | Updated with Hidden Pinyin
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* --- 1. VOCABULARY DATA (REFINED EXAMPLES) --- */
+        const vocabList = [
+            // Giao dịch
+            { h: '买', p: 'Mǎi', m: 'Mua', type: 'trade', icon: '🤝', ex: { hz: '我要去超市买水果。', py: 'Wǒ yào qù chāoshì mǎi shuǐguǒ.', mn: 'Tôi muốn đi siêu thị mua hoa quả.' } },
+            { h: '卖', p: 'Mài', m: 'Bán', type: 'trade', icon: '🏪', ex: { hz: '请问，这个苹果怎么卖？', py: 'Qǐngwèn, zhège píngguǒ zěnme mài?', mn: 'Xin hỏi, táo này bán thế nào?' } },
+            { h: '多少', p: 'Duōshao', m: 'Bao nhiêu', type: 'trade', icon: '❓', ex: { hz: '你知道这件衣服多少钱吗？', py: 'Nǐ zhīdào zhè jiàn yīfu duōshao qián ma?', mn: 'Bạn biết bộ quần áo này bao nhiêu tiền không?' } },
+            { h: '钱', p: 'Qián', m: 'Tiền', type: 'trade', icon: '💰', ex: { hz: '我没有钱，不能买东西。', py: 'Wǒ méiyǒu qián, bù néng mǎi dōngxi.', mn: 'Tôi không có tiền, không thể mua đồ.' } },
+            { h: '块', p: 'Kuài', m: 'Đồng (Tệ)', type: 'trade', icon: '💴', ex: { hz: '这本书五十块钱。', py: 'Zhè běn shū wǔshí kuài qián.', mn: 'Quyển sách này 50 tệ.' } },
+            { h: '毛', p: 'Máo', m: 'Hào', type: 'trade', icon: '🪙', ex: { hz: '还差五毛钱。', py: 'Hái chà wǔ máo qián.', mn: 'Vẫn còn thiếu 5 hào.' } },
+            { h: '斤', p: 'Jīn', m: 'Cân (0.5kg)', type: 'trade', icon: '⚖️', ex: { hz: '我想买两斤香蕉。', py: 'Wǒ xiǎng mǎi liǎng jīn xiāngjiāo.', mn: 'Tôi muốn mua 2 cân chuối.' } },
+            { h: '给', p: 'Gěi', m: 'Đưa/Cho', type: 'trade', icon: '🤲', ex: { hz: '这是你的钱，给你。', py: 'Zhè shì nǐ de qián, gěi nǐ.', mn: 'Đây là tiền của bạn, đưa bạn này.' } },
+            { h: '找', p: 'Zhǎo', m: 'Thối lại', type: 'trade', icon: '🔄', ex: { hz: '这是100块，找您20块。', py: 'Zhè shì yībǎi kuài, zhǎo nín èrshí kuài.', mn: 'Đây là 100 tệ, thối lại ngài 20 tệ.' } },
+            { h: '还', p: 'Hái', m: 'Còn/Vẫn', type: 'trade', icon: '➕', ex: { hz: '你还要买别的东西吗？', py: 'Nǐ hái yào mǎi bié de dōngxi ma?', mn: 'Bạn còn muốn mua đồ khác không?' } },
+            { h: '一共', p: 'Yígòng', m: 'Tổng cộng', type: 'trade', icon: '∑', ex: { hz: '这些水果一共多少钱？', py: 'Zhèxiē shuǐguǒ yígòng duōshao qián?', mn: 'Những loại hoa quả này tổng cộng bao nhiêu tiền?' } },
+
+            // Trái cây cơ bản
+            { h: '苹果', p: 'Píngguǒ', m: 'Táo', type: 'basic_fruit', icon: '🍎', ex: { hz: '我每天吃一个苹果。', py: 'Wǒ měitiān chī yí gè píngguǒ.', mn: 'Tôi mỗi ngày ăn một quả táo.' } },
+            { h: '香蕉', p: 'Xiāngjiāo', m: 'Chuối', type: 'basic_fruit', icon: '🍌', ex: { hz: '这种香蕉非常甜。', py: 'Zhè zhǒng xiāngjiāo fēicháng tián.', mn: 'Loại chuối này rất ngọt.' } },
+            { h: '葡萄', p: 'Pútáo', m: 'Nho', type: 'basic_fruit', icon: '🍇', ex: { hz: '现在的葡萄很便宜。', py: 'Xiànzài de pútáo hěn piányi.', mn: 'Nho bây giờ rất rẻ.' } },
+            { h: '西瓜', p: 'Xīguā', m: 'Dưa hấu', type: 'basic_fruit', icon: '🍉', ex: { hz: '夏天吃西瓜很舒服。', py: 'Xiàtiān chī xīguā hěn shūfu.', mn: 'Mùa hè ăn dưa hấu rất thoải mái.' } },
+            { h: '草莓', p: 'Cǎoméi', m: 'Dâu tây', type: 'basic_fruit', icon: '🍓', ex: { hz: '我最喜欢吃草莓。', py: 'Wǒ zuì xǐhuan chī cǎoméi.', mn: 'Tôi thích ăn dâu tây nhất.' } },
+            { h: '梨', p: 'Lí', m: 'Lê', type: 'basic_fruit', icon: '🍐', ex: { hz: '妈妈买了一些梨。', py: 'Māma mǎi le yìxiē lí.', mn: 'Mẹ đã mua một ít lê.' } },
+            { h: '桃子', p: 'Táozi', m: 'Đào', type: 'basic_fruit', icon: '🍑', ex: { hz: '这些桃子看起来很好吃。', py: 'Zhèxiē táozi kàn qǐlái hěn hǎochī.', mn: 'Những quả đào này trông rất ngon.' } },
+            { h: '橘子', p: 'Júzi', m: 'Quýt', type: 'basic_fruit', icon: '🍊', ex: { hz: '你想吃橘子吗？', py: 'Nǐ xiǎng chī júzi ma?', mn: 'Bạn có muốn ăn quýt không?' } },
+            { h: '橙子', p: 'Chéngzi', m: 'Cam', type: 'basic_fruit', icon: '🟠', ex: { hz: '我喝了一杯橙汁。', py: 'Wǒ hē le yì bēi chéngzhī.', mn: 'Tôi đã uống một ly nước cam.' } },
+            
+            // Trái cây nhiệt đới & Mở rộng
+            { h: '芒果', p: 'Mángguǒ', m: 'Xoài', type: 'tropical', icon: '🥭', ex: { hz: '我喜欢喝芒果汁。', py: 'Wǒ xǐhuan hē mángguǒ zhī.', mn: 'Tôi thích uống nước xoài.' } },
+            { h: '榴莲', p: 'Liúlián', m: 'Sầu riêng', type: 'tropical', icon: '🍈', ex: { hz: '很多人不喜欢榴莲的味道。', py: 'Hěn duō rén bù xǐhuan liúlián de wèidào.', mn: 'Rất nhiều người không thích mùi sầu riêng.' } },
+            { h: '山竹', p: 'Shānzhú', m: 'Măng cụt', type: 'tropical', icon: '🟣', ex: { hz: '山竹是水果皇后。', py: 'Shānzhú shì shuǐguǒ huánghòu.', mn: 'Măng cụt là nữ hoàng trái cây.' } },
+            { h: '菠萝', p: 'Bōluó', m: 'Dứa (Thơm)', type: 'tropical', icon: '🍍', ex: { hz: '菠萝酸酸甜甜的。', py: 'Bōluó suānsuān tiántián de.', mn: 'Dứa chua chua ngọt ngọt.' } },
+            { h: '荔枝', p: 'Lìzhī', m: 'Vải', type: 'tropical', icon: '🍒', ex: { hz: '这种荔枝很新鲜。', py: 'Zhè zhǒng lìzhī hěn xīnxiān.', mn: 'Loại vải này rất tươi.' } },
+            { h: '龙眼', p: 'Lóngyǎn', m: 'Nhãn', type: 'tropical', icon: '👀', ex: { hz: '龙眼也很甜。', py: 'Lóngyǎn yě hěn tián.', mn: 'Nhãn cũng rất ngọt.' } },
+            { h: '火龙果', p: 'Huǒlóngguǒ', m: 'Thanh long', type: 'tropical', icon: '🐲', ex: { hz: '你吃过红色的火龙果吗？', py: 'Nǐ chī guò hóngsè de huǒlóngguǒ ma?', mn: 'Bạn đã ăn thanh long ruột đỏ bao giờ chưa?' } },
+            { h: '菠萝蜜', p: 'Bōluómì', m: 'Mít', type: 'tropical', icon: '🍈', ex: { hz: '菠萝蜜很大，也很重。', py: 'Bōluómì hěn dà, yě hěn zhòng.', mn: 'Mít rất to, cũng rất nặng.' } },
+            { h: '红毛丹', p: 'Hóngmáodān', m: 'Chôm chôm', type: 'tropical', icon: '🔴', ex: { hz: '红毛丹看起来像荔枝。', py: 'Hóngmáodān kàn qǐlái xiàng lìzhī.', mn: 'Chôm chôm trông giống vải.' } },
+            
+            // Trái cây khác
+            { h: '哈密瓜', p: 'Hāmìguā', m: 'Dưa lưới', type: 'other_fruit', icon: '🍈', ex: { hz: '哈密瓜非常甜。', py: 'Hāmìguā fēicháng tián.', mn: 'Dưa lưới cực kỳ ngọt.' } },
+            { h: '牛奶果', p: 'Niúnǎiguǒ', m: 'Vú sữa', type: 'other_fruit', icon: '🍼', ex: { hz: '我从来没吃过牛奶果。', py: 'Wǒ cónglái méi chī guò niúnǎiguǒ.', mn: 'Tôi chưa bao giờ ăn vú sữa.' } },
+            { h: '樱桃', p: 'Yīngtáo', m: 'Cherry', type: 'other_fruit', icon: '🍒', ex: { hz: '樱桃很贵，但是很好吃。', py: 'Yīngtáo hěn guì, dànshì hěn hǎochī.', mn: 'Cherry rất đắt nhưng rất ngon.' } },
+            { h: '柚子', p: 'Yòuzi', m: 'Bưởi', type: 'other_fruit', icon: '🟢', ex: { hz: '中秋节我们吃柚子。', py: 'Zhōngqiū Jié wǒmen chī yòuzi.', mn: 'Trung thu chúng tôi ăn bưởi.' } },
+            { h: '木瓜', p: 'Mùguā', m: 'Đu đủ', type: 'other_fruit', icon: '🥣', ex: { hz: '木瓜对身体很好。', py: 'Mùguā duì shēntǐ hěn hǎo.', mn: 'Đu đủ rất tốt cho cơ thể.' } },
+            { h: '人心果', p: 'Rénxīnguǒ', m: 'Hồng xiêm', type: 'other_fruit', icon: '🥔', ex: { hz: '人心果很甜。', py: 'Rénxīnguǒ hěn tián.', mn: 'Hồng xiêm rất ngọt.' } },
+            { h: '大枣', p: 'Dàzǎo', m: 'Táo tàu', type: 'other_fruit', icon: '🟤', ex: { hz: '大枣可以泡茶喝。', py: 'Dàzǎo kěyǐ pào chá hē.', mn: 'Táo tàu có thể pha trà uống.' } },
+
+            // Món ăn
+            { h: '烤鸭', p: 'Kǎoyā', m: 'Vịt quay', type: 'food', icon: '🍗', ex: { hz: '北京烤鸭非常有名。', py: 'Běijīng kǎoyā fēicháng yǒumíng.', mn: 'Vịt quay Bắc Kinh rất nổi tiếng.' } },
+            { h: '火锅', p: 'Huǒguō', m: 'Lẩu', type: 'food', icon: '🥘', ex: { hz: '冬天我们喜欢吃火锅。', py: 'Dōngtiān wǒmen xǐhuan chī huǒguō.', mn: 'Mùa đông chúng tôi thích ăn lẩu.' } },
+            { h: '饺子', p: 'Jiǎozi', m: 'Sủi cảo', type: 'food', icon: '🥟', ex: { hz: '中国人过年吃饺子。', py: 'Zhōngguó rén guònián chī jiǎozi.', mn: 'Người Trung Quốc ăn sủi cảo vào dịp tết.' } },
+            { h: '面条', p: 'Miàntiáo', m: 'Mì', type: 'food', icon: '🍜', ex: { hz: '我想吃一碗牛肉面条。', py: 'Wǒ xiǎng chī yì wǎn niúròu miàntiáo.', mn: 'Tôi muốn ăn một bát mì bò.' } }
+        ];
+
+        function filterVocab(type) {
+            const container = document.getElementById('flashcard-container');
+            container.innerHTML = '';
+            vocabList.forEach(word => {
+                if (type === 'all' || word.type === type) {
+                    const card = document.createElement('div');
+                    card.className = 'flip-card h-64 cursor-pointer perspective-1000';
+                    card.innerHTML = `
+                        <div class="flip-card-inner shadow-lg rounded-xl">
+                            <div class="flip-card-front bg-white">
+                                <div class="text-5xl mb-3">${word.icon}</div>
+                                <div class="text-3xl font-bold text-rose-700 cn-text">${word.h}</div>
+                                <div class="text-md text-slate-500 font-medium mt-2">
+                                     <span class="pinyin-blur" onclick="togglePinyinCard(this)">${word.p}</span>
+                                     <div class="reveal-hint">(Bấm để xem Pinyin)</div>
+                                </div>
+                            </div>
+                            <div class="flip-card-back text-slate-800 flex flex-col justify-center relative">
+                                <div class="font-bold text-xl mb-2 text-rose-900 relative">
+                                    <span>${word.m}</span>
+                                </div>
+                                <div class="text-sm bg-white/70 p-3 rounded-lg w-11/12 mx-auto text-left">
+                                    <p class="font-bold text-rose-700 text-xs mb-1">Ví dụ:</p>
+                                    <p class="cn-text text-lg text-rose-800 leading-snug">${word.ex.hz}</p>
+                                    <p class="text-slate-600 text-xs mt-1">
+                                         <span class="pinyin-blur" onclick="togglePinyinCard(this)">${word.ex.py}</span>
+                                         <span class="reveal-hint">(Bấm)</span>
+                                    </p>
+                                    <p class="italic text-slate-500 text-xs mt-1">(${word.ex.mn})</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    // Prevent card flip when clicking on meaning/pinyin
+                    const blurSpans = card.querySelectorAll('.pinyin-blur');
+                    blurSpans.forEach(span => {
+                        span.addEventListener('click', (e) => {
+                            e.stopPropagation(); // Stop bubbling to card flip
+                        });
+                    });
+
+                    // Only flip card if clicking outside meaning spans
+                    card.addEventListener('click', function(e) {
+                        if (!e.target.classList.contains('pinyin-blur') && !e.target.classList.contains('pinyin-revealed')) {
+                            this.classList.toggle('flipped');
+                        }
+                    });
+                    
+                    container.appendChild(card);
+                }
+            });
+        }
+        
+        function togglePinyinCard(element) {
+            element.classList.add('pinyin-revealed');
+            element.classList.remove('pinyin-blur');
+        }
+
+        filterVocab('all'); // Init
+
+        /* --- 2. READING INTERACTION --- */
+        function togglePinyin() {
+            const pinyins = document.querySelectorAll('.pinyin');
+            const check = document.getElementById('toggle-pinyin');
+            const toggleBg = document.querySelector('.toggle-bg');
+            const dot = document.querySelector('.dot');
+
+            pinyins.forEach(el => el.classList.toggle('hidden'));
+            
+            if(check.checked) {
+                toggleBg.classList.replace('bg-gray-200', 'bg-rose-500');
+                dot.classList.add('translate-x-5');
+            } else {
+                toggleBg.classList.replace('bg-rose-500', 'bg-gray-200');
+                dot.classList.remove('translate-x-5');
+            }
+        }
+
+        function checkQuiz(btn, isCorrect) {
+            // Reset styles for siblings
+            const parent = btn.parentElement;
+            Array.from(parent.children).forEach(child => {
+                child.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+                child.classList.add('hover:bg-gray-50');
+            });
+
+            if(isCorrect) {
+                btn.classList.add('bg-green-100', 'border-green-500');
+                btn.classList.remove('hover:bg-gray-50');
+                btn.innerHTML += ' <span class="text-green-600 float-right">✔</span>';
+            } else {
+                btn.classList.add('bg-red-100', 'border-red-500');
+                btn.classList.remove('hover:bg-gray-50');
+                btn.innerHTML += ' <span class="text-red-600 float-right">✘</span>';
+            }
+        }
+
+        /* --- 3. BARGAINING GAME --- */
+        const chatBox = document.getElementById('chat-box');
+        let gameStep = 0;
+
+        function playerChat(msg) {
+            // Player msg
+            chatBox.innerHTML += `<div class="mb-2 text-right"><span class="bg-rose-500 text-white py-2 px-4 rounded-2xl rounded-tr-none inline-block shadow-sm text-sm">${msg}</span></div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Bot response delay
+            setTimeout(() => {
+                let botMsg = "";
+                if (msg.includes("Zěnme mài")) {
+                    botMsg = "老板: 80 kuài yì jīn. Hěn hǎochī! (80 tệ/cân. Ngon lắm!)";
+                    document.getElementById('opt-bargain').classList.remove('hidden');
+                } else if (msg.includes("Tài guì le")) {
+                    botMsg = "老板: Nà... liùshí kuài ba. (Vậy... 60 tệ đi.)";
+                    document.getElementById('opt-price').classList.remove('hidden');
+                } else if (msg.includes("Wǔshí kuài")) {
+                    botMsg = "老板: Hǎo ba, gěi nǐ! (Thôi được, bán cho bạn!) 🎉";
+                }
+                
+                chatBox.innerHTML += `<div class="mb-2 text-left"><span class="bg-gray-200 py-2 px-4 rounded-2xl rounded-tl-none inline-block text-slate-700 text-sm shadow-sm">${botMsg}</span></div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 800);
+        }
+
+        function resetChat() {
+            chatBox.innerHTML = `<div class="mb-2 text-left"><span class="bg-gray-200 py-2 px-4 rounded-2xl rounded-tl-none inline-block text-slate-700 text-sm shadow-sm">老板: Nín yào shénme? (Bạn muốn gì?)</span></div>`;
+            document.getElementById('opt-bargain').classList.add('hidden');
+            document.getElementById('opt-price').classList.add('hidden');
+        }
+
+        /* --- 4. FOOD ID QUIZ --- */
+        const foods = [
+            { img: '🦆', name: 'Kǎoyā (Vịt quay)', correct: true, items: ['Kǎoyā', 'Huǒguō', 'Shuǐjiǎo'] },
+            { img: '🍲', name: 'Huǒguō (Lẩu)', correct: true, items: ['Mántou', 'Huǒguō', 'Miàntiáo'] },
+            { img: '🍕', name: 'Pīsà (Pizza)', correct: true, items: ['Pīsà', 'Hànbǎo', 'Bāozi'] },
+            { img: '🍔', name: 'Hànbǎo (Hamburger)', correct: true, items: ['Jīdàn', 'Hànbǎo', 'Mǐfàn'] },
+        ];
+        
+        function loadFoodQuiz(idx) {
+            const container = document.getElementById('food-quiz-container');
+            const data = foods[idx];
+            
+            // Update dots
+            document.querySelectorAll('.quiz-dot').forEach((d, i) => {
+                d.classList.toggle('bg-rose-600', i === idx);
+                d.classList.toggle('bg-gray-300', i !== idx);
+            });
+
+            let html = `<div class="text-7xl mb-6 animate-bounce">${data.img}</div>
+                        <div class="grid grid-cols-3 gap-3">`;
+            
+            data.items.forEach(item => {
+                const isCorrect = item.includes(data.name.split(' ')[0]);
+                html += `<button onclick="checkFood(this, ${isCorrect})" class="border-2 border-slate-200 p-3 rounded-xl hover:bg-blue-50 hover:border-blue-300 transition text-sm font-bold text-slate-700">${item}</button>`;
+            });
+            html += `</div>`;
+            
+            container.innerHTML = html;
+            document.getElementById('food-feedback').innerText = '';
+        }
+
+        function checkFood(btn, isCorrect) {
+            const fb = document.getElementById('food-feedback');
+            if(isCorrect) {
+                btn.classList.add('bg-green-500', 'text-white', 'border-green-600');
+                btn.classList.remove('text-slate-700', 'hover:bg-blue-50');
+                fb.innerText = "Hǎochī! (Ngon!) - Đúng rồi ✅";
+                fb.className = "h-8 text-center font-bold mt-3 text-green-600 text-lg";
+            } else {
+                btn.classList.add('bg-red-500', 'text-white', 'border-red-600');
+                btn.classList.remove('text-slate-700', 'hover:bg-blue-50');
+                fb.innerText = "Bù duì! (Sai rồi) ❌";
+                fb.className = "h-8 text-center font-bold mt-3 text-red-600 text-lg";
+            }
+        }
+        
+        loadFoodQuiz(0); // Init
+
+    </script>
+</body>
+</html>

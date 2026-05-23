@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng tra cứu tiến độ</title>
+    
+    <!-- Thêm Google Font "Inter" -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- BẮT ĐẦU PHẦN CSS (Giao diện) -->
+    <style>
+        body {
+            /* Dùng font Inter đã nhập */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* Thêm dải màu nền (gradient) tinh tế */
+            background-image: linear-gradient(to top right, #f9fafb, #e9eef3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #ffffff;
+            /* Tăng padding để tạo cảm giác "sang trọng" (nhiều không gian hơn) */
+            padding: 3rem; 
+            border-radius: 12px;
+            /* Làm hiệu ứng đổ bóng mềm mại và sâu hơn */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+            text-align: center;
+            width: 90%;
+            max-width: 400px; /* Tăng nhẹ độ rộng tối đa */
+            border: 1px solid #e7e7e7; /* Thêm viền mờ */
+        }
+
+        h1 {
+            font-size: 1.85rem; /* Tăng nhẹ cỡ chữ */
+            color: #222; /* Màu đen tuyền, rõ ràng */
+            margin-bottom: 0.75rem;
+            font-weight: 700; /* Đậm hơn */
+        }
+
+        p {
+            color: #555; /* Màu xám đậm */
+            margin-bottom: 2rem; /* Thêm khoảng cách */
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 15px; /* Tăng padding */
+            margin-bottom: 1.25rem; /* Thêm khoảng cách */
+            border: 1px solid #e0e0e0; /* Viền mờ */
+            border-radius: 10px; /* Bo góc mềm hơn */
+            box-sizing: border-box; 
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            /* Thêm hiệu ứng chuyển động khi focus */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Hiệu ứng khi click vào ô mật khẩu */
+        input[type="password"]:focus {
+            border-color: #4C51BF; /* Đổi màu viền */
+            box-shadow: 0 0 0 3px rgba(76, 81, 191, 0.1); /* Thêm vầng sáng */
+            outline: none; /* Bỏ viền mặc định của trình duyệt */
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            /* Đổi màu chủ đạo sang màu tím/chàm đậm (sang trọng hơn) */
+            background-color: #4C51BF; 
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            /* Thêm hiệu ứng đổ bóng cho nút */
+            box-shadow: 0 4px 15px rgba(76, 81, 191, 0.2);
+            /* Thêm hiệu ứng chuyển động */
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        button:hover {
+            background-color: #4347A5; /* Màu đậm hơn khi hover */
+            /* Hiệu ứng nhấc nút lên */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 81, 191, 0.25);
+        }
+        
+        button:active {
+            /* Hiệu ứng nhấn nút xuống */
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(76, 81, 191, 0.2);
+        }
+
+        /* Các lớp ẩn/hiện */
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: #d93025;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            margin-bottom: 0;
+        }
+
+        #resultContainer a {
+            display: block;
+            padding: 15px;
+            margin-top: 1rem;
+            /* Đổi màu xanh lá (vẫn là xanh nhưng tone khác) */
+            background-color: #22a55b;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(34, 165, 91, 0.2);
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        #resultContainer a:hover {
+            background-color: #1e8e4c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 165, 91, 0.25);
+        }
+    </style>
+    <!-- KẾT THÚC PHẦN CSS -->
+</head>
+<body>
+
+    <!-- BẮT ĐẦU PHẦN HTML (Cấu trúc) -->
+    <div class="login-container">
+        <h1>Tra cứu tiến độ</h1>
+        <p>Vui lòng nhập mật khẩu bài kiểm tra của bạn:</p>
+
+        <input type="password" id="passwordInput" placeholder="Nhập mật khẩu...">
+        <button id="submitButton">Truy cập</button>
+
+        <!-- Nơi hiển thị lỗi -->
+        <p id="errorMessage" class="error hidden">Mật khẩu không đúng. Vui lòng thử lại!</p>
+
+        <!-- Nơi hiển thị link sau khi nhập đúng -->
+        <div id="resultContainer" class="hidden">
+            <p id="successMessage" style="color: green; margin-bottom: 1rem;">Đăng nhập thành công!</p>
+            <a href="#" id="classLink" target="_blank" rel="noopener noreferrer">
+                NHẤN VÀO ĐÂY ĐỂ TRUY CẬP VÀO BÀI KIỂM TRA
+            </a>
+        </div>
+    </div>
+    <!-- KẾT THÚC PHẦN HTML -->
+
+    <!-- BẮT ĐẦU PHẦN JAVASCRIPT (Xử lý logic) -->
+    <script>
+        // Chờ cho toàn bộ trang web được tải xong
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // ----- PHẦN QUAN TRỌNG BẠN CẦN CHỈNH SỬA -----
+            // Đây là "cơ sở dữ liệu" mật khẩu của bạn.
+            // Bạn hãy chỉnh sửa danh sách này.
+            // Bên trái là "mật khẩu", bên phải là "đường link Google Site bí mật".
+            const classLinks = {
+                "gkhan1": "https://unknown.github.io/han1/giuakyhan1",
+                "cuoikyhan1": "https://unknown.github.io/han1/cuoikyhan1",
+                "cuoikihan1A": "https://unknown.github.io/han1/cuoikyhan1phu",
+                "ontapcuoikihan2": "https://unknown.github.io/han2/ontapcuoikihan2",
+              "cuoikihan2": "https://unknown.github.io/han2/cuoikihan2"
+                // Thêm các lớp khác ở đây, ví dụ:
+                // "matkhau_lop_moi": "https://link_google_site_moi"
+            };
+            // ----- KẾT THÚC PHẦN CHỈNH SỬA -----
+
+
+            // Lấy các phần tử từ file HTML
+            const passwordInput = document.getElementById("passwordInput");
+            const submitButton = document.getElementById("submitButton");
+            const errorMessage = document.getElementById("errorMessage");
+            const resultContainer = document.getElementById("resultContainer");
+            const classLink = document.getElementById("classLink");
+
+            // Gán hành động "click" cho nút bấm
+            submitButton.addEventListener("click", checkPassword);
+
+            // Cho phép nhấn Enter để kiểm tra
+            passwordInput.addEventListener("keyup", function(event) {
+                // Xóa lỗi cũ khi người dùng gõ lại
+                errorMessage.classList.add("hidden"); 
+
+                if (event.key === "Enter") {
+                    checkPassword();
+                }
+            });
+
+            // Hàm chính để kiểm tra mật khẩu
+            function checkPassword() {
+                const password = passwordInput.value; // Lấy mật khẩu người dùng gõ
+                const link = classLinks[password];    // Tìm link tương ứng trong CSDL
+
+                if (link) {
+                    // Nếu TÌM THẤY (mật khẩu đúng)
+                    classLink.href = link; // Gán đúng đường link cho cái nút
+                    resultContainer.classList.remove("hidden"); // Hiển thị nút
+                    errorMessage.classList.add("hidden"); // Ẩn thông báo lỗi
+                    passwordInput.value = ""; // Xóa mật khẩu đã nhập
+                } else {
+                    // Nếu KHÔNG TÌM THẤY (mật khẩu sai)
+                    errorMessage.classList.remove("hidden"); // Hiển thị thông báo lỗi
+                    resultContainer.classList.add("hidden"); // Ẩn nút đi
+                }
+            }
+        });
+    </script>
+    <!-- KẾT THÚC PHẦN JAVASCRIPT -->
+
+</body>
+</html>
+

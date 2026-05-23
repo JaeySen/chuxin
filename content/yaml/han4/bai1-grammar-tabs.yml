@@ -1,0 +1,45 @@
+id: han4-bai1-grammar-tabs
+course: han4
+order: 1
+title: "Bài 1 — Ngữ pháp «把» (bǎ)"
+subtitle: "Câu chữ 把 — lý thuyết, từ vựng, bài tập"
+interactionType: grammar-tabs
+estimatedMinutes: 20
+tags: [grammar, sentence-pattern]
+theory:
+  - point: "Cấu trúc câu chữ 把"
+    explanation: |
+      Chủ ngữ + 把 + tân ngữ + động từ + thành phần khác.
+      Dùng để nhấn mạnh việc xử lí một đối tượng cụ thể.
+    examples:
+      - { hanzi: "我把书放在桌子上。", pinyin: "wǒ bǎ shū fàng zài zhuō zi shàng.", vi: "Tôi đặt sách lên bàn." }
+      - { hanzi: "他把饭吃完了。", pinyin: "tā bǎ fàn chī wán le.", vi: "Anh ấy đã ăn hết cơm." }
+  - point: "Lưu ý"
+    explanation: |
+      Tân ngữ sau 把 phải là đối tượng xác định (đã biết).
+      Sau động từ thường có thành phần bổ sung: 了, 完, 在 + nơi chốn, 给 + người nhận…
+    examples:
+      - { hanzi: "请你把门关上。", pinyin: "qǐng nǐ bǎ mén guān shàng.", vi: "Làm ơn đóng cửa lại." }
+vocab:
+  - { hanzi: "把", pinyin: "bǎ", vi: "(giới từ — cầm/đem)" }
+  - { hanzi: "放", pinyin: "fàng", vi: "đặt, để" }
+  - { hanzi: "关", pinyin: "guān", vi: "đóng" }
+  - { hanzi: "完", pinyin: "wán", vi: "xong, hết" }
+exercises:
+  mcq:
+    - prompt: "Câu nào dùng đúng chữ 把?"
+      options:
+        - "我把吃完了饭。"
+        - "我把饭吃完了。"
+        - "我饭把吃完了。"
+        - "饭我把吃完了。"
+      correctIndex: 1
+      explanation: "Đúng cấu trúc: chủ ngữ + 把 + tân ngữ + động từ + 完了."
+    - prompt: "«请你把门 ___» — chọn từ hoàn thành câu."
+      options: ["开始", "关上", "结束", "进来"]
+      correctIndex: 1
+  fillBlank:
+    - prompt: "我 ___ 书放在桌子上。"
+      blanks:
+        - answer: "把"
+      hint: "Giới từ"

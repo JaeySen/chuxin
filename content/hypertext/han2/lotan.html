@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học tiếng Trung: Bài đọc "Lỗ Tấn"</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh font chữ để hỗ trợ tiếng Trung và tiếng Việt tốt hơn */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        body {
+            font-family: 'Noto Sans', 'Noto Sans SC', sans-serif;
+            background-color: #f3f4f6; /* Màu nền xám nhạt */
+        }
+
+        /* ----- Cài đặt cho phần Bật/Tắt Pinyin & Nghĩa ----- */
+
+        /* Ẩn Pinyin và Nghĩa tiếng Việt theo mặc định */
+        .pinyin, .vietnamese {
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Khi body có class 'show-pinyin', hiển thị pinyin */
+        body.show-pinyin .pinyin {
+            display: block;
+        }
+
+        /* Khi body có class 'show-viet', hiển thị nghĩa tiếng Việt */
+        body.show-viet .vietnamese {
+            display: block;
+        }
+
+        /* Định dạng cho cụm từ */
+        .phrase {
+            display: inline-block;
+            text-align: center;
+            margin: 0 4px 12px 4px;
+            padding: 8px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .phrase:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .chinese {
+            font-size: 1.8rem; /* 28px */
+            font-weight: 500;
+            color: #1e3a8a; /* Màu xanh đậm (chủ đề học thuật) */
+            line-height: 1.3;
+        }
+
+        .pinyin {
+            font-size: 0.9rem; /* 14px */
+            color: #555;
+        }
+
+        .vietnamese {
+            font-size: 0.9rem; /* 14px */
+            color: #059669; /* Màu xanh lá */
+            font-style: italic;
+        }
+        
+        /* ----- Cài đặt cho Bài tập ----- */
+        .quiz-option.correct {
+            background-color: #dcfce7; /* Green 100 */
+            border-color: #22c55e; /* Green 500 */
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2; /* Red 100 */
+            border-color: #ef4444; /* Red 500 */
+        }
+
+        /* Thêm style cho input điền vào chỗ trống */
+        select.correct, input[type="text"].correct, input[type="text"].correct-translation {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+        }
+         select.incorrect, input[type="text"].incorrect, input[type="text"].incorrect-translation {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        
+        .matching-select.correct {
+            border-color: #22c55e;
+            background-color: #dcfce7;
+        }
+        .matching-select.incorrect {
+            border-color: #ef4444;
+            background-color: #fee2e2;
+        }
+
+        /* Chú thích từ vựng */
+        .vocab-note {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Style cho phần đáp án tham khảo */
+        .reference-answers {
+            background-color: #f8fafc; /* gray-50 */
+            border: 1px dashed #94a3b8; /* gray-400 */
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .reference-answers h4 {
+            font-weight: 700;
+            color: #1e3a8a; /* blue-900 */
+            margin-bottom: 0.5rem;
+        }
+
+        /* Style cho bài tập dịch */
+        .translation-item .vietnamese-prompt {
+            color: #059669; /* Green 600 */
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+        .translation-item .chinese-prompt {
+            color: #1e3a8a; /* Blue 900 */
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="container max-w-5xl mx-auto p-4 sm:p-8">
+        
+        <!-- TIÊU ĐỀ -->
+        <header class="text-center mb-8">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD-G6s7KtSKHiAE2ROndHNpWxz5rwV523zbcHRfmpptsTEbXODolaW0IxUdZHldJbTUag9kYuTAg2WRvGKaCsTdN5J8XvxAmrM_Gf32g&s=10" 
+                 alt="Chân dung Lỗ Tấn"
+                 class="w-full max-w-sm mx-auto rounded-lg shadow-lg mb-4"
+                 onerror="this.onerror=null;this.src='https://placehold.co/400x400/334155/ffffff?text=鲁迅';">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-900">Bài đọc: 鲁迅 (Lỗ Tấn)</h1>
+            <p class="text-lg text-gray-600 mt-2">Học tiếng Trung qua bài đọc về nhà văn Lỗ Tấn</p>
+        </header>
+
+        <!-- NỘI DUNG CHÍNH (hiển thị tất cả) -->
+        <main>
+            <!-- =================================== -->
+            <!-- PHẦN 1: BÀI ĐỌC -->
+            <!-- =================================== -->
+            <section id="bai-doc" class="mb-12">
+                
+                <!-- NÚT BẬT/TẮT -->
+                <div class="flex justify-center items-center flex-wrap gap-4 bg-white p-4 rounded-lg shadow-md mb-8 sticky top-4 z-10">
+                    <button id="togglePinyin" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                        Bật Pinyin
+                    </button>
+                    <button id="toggleViet" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                        Bật Nghĩa
+                    </button>
+                </div>
+
+                <!-- NỘI DUNG BÀI ĐỌC -->
+                <article class="bg-white p-6 sm:p-10 rounded-lg shadow-lg">
+                    
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6 text-center">鲁迅</h2>
+
+                    <!-- Đoạn 1 -->
+                    <p class="mb-6 text-justify leading-relaxed">
+                        <span class="phrase">
+                            <span class="chinese">鲁迅</span>
+                            <span class="pinyin">Lǔ Xùn</span>
+                            <span class="vietnamese">Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">是</span>
+                            <span class="pinyin">shì</span>
+                            <span class="vietnamese">là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">中国</span>
+                            <span class="pinyin">Zhōngguó</span>
+                            <span class="vietnamese">Trung Quốc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">现代</span>
+                            <span class="pinyin">xiàndài</span>
+                            <span class="vietnamese">hiện đại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">伟大的</span>
+                            <span class="pinyin">wěidà de</span>
+                            <span class="vietnamese">vĩ đại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">文学家</span>
+                            <span class="pinyin">wénxuéjiā</span>
+                            <span class="vietnamese">nhà văn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">思想家</span>
+                            <span class="pinyin">sīxiǎngjiā</span>
+                            <span class="vietnamese">nhà tư tưởng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">和</span>
+                            <span class="pinyin">hé</span>
+                            <span class="vietnamese">và</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">教育家</span>
+                            <span class="pinyin">jiàoyùjiā</span>
+                            <span class="vietnamese">nhà giáo dục</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                    </p>
+
+                    <!-- Đoạn 2 -->
+                    <p class="mb-6 text-justify leading-relaxed">
+                        <span class="phrase">
+                            <span class="chinese">鲁迅</span>
+                            <span class="pinyin">Lǔ Xùn</span>
+                            <span class="vietnamese">Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">（1881-1936）</span>
+                            <span class="pinyin"></span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">原名</span>
+                            <span class="pinyin">yuánmíng</span>
+                            <span class="vietnamese">tên thật</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">叫</span>
+                            <span class="pinyin">jiào</span>
+                            <span class="vietnamese">là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">周树人</span>
+                            <span class="pinyin">Zhōu Shùrén</span>
+                            <span class="vietnamese">Chu Thụ Nhân</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">浙江绍兴人</span>
+                            <span class="pinyin">Zhèjiāng Shàoxīng rén</span>
+                            <span class="vietnamese">người Thiệu Hưng, Chiết Giang</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">鲁迅</span>
+                            <span class="pinyin">Lǔ Xùn</span>
+                            <span class="vietnamese">Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">年轻时</span>
+                            <span class="pinyin">niánqīng shí</span>
+                            <span class="vietnamese">lúc trẻ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">非常</span>
+                            <span class="pinyin">fēicháng</span>
+                            <span class="vietnamese">vô cùng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">喜欢</span>
+                            <span class="pinyin">xǐhuan</span>
+                            <span class="vietnamese">thích</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">读书</span>
+                            <span class="pinyin">dúshū</span>
+                            <span class="vietnamese">đọc sách</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">他对</span>
+                            <span class="pinyin">tā duì</span>
+                            <span class="vietnamese">ông ấy đối với</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">中国文学</span>
+                            <span class="pinyin">Zhōngguó wénxué</span>
+                            <span class="vietnamese">văn học Trung Quốc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">和</span>
+                            <span class="pinyin">hé</span>
+                            <span class="vietnamese">và</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">历史</span>
+                            <span class="pinyin">lìshǐ</span>
+                            <span class="vietnamese">lịch sử</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">都</span>
+                            <span class="pinyin">dōu</span>
+                            <span class="vietnamese">đều</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">有</span>
+                            <span class="pinyin">yǒu</span>
+                            <span class="vietnamese">có</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">比较</span>
+                            <span class="pinyin">bǐjiào</span>
+                            <span class="vietnamese">khá là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">深</span>
+                            <span class="pinyin">shēn</span>
+                            <span class="vietnamese">sâu</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了解</span>
+                            <span class="pinyin">liǎojiě</span>
+                            <span class="vietnamese">hiểu biết</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">1902年</span>
+                            <span class="pinyin">1902 nián</span>
+                            <span class="vietnamese">Năm 1902</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">鲁迅</span>
+                            <span class="pinyin">Lǔ Xùn</span>
+                            <span class="vietnamese">Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">去</span>
+                            <span class="pinyin">qù</span>
+                            <span class="vietnamese">đi</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">日本</span>
+                            <span class="pinyin">Rìběn</span>
+                            <span class="vietnamese">Nhật Bản</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">留学</span>
+                            <span class="pinyin">liúxué</span>
+                            <span class="vietnamese">du học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">他</span>
+                            <span class="pinyin">tā</span>
+                            <span class="vietnamese">ông</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">先</span>
+                            <span class="pinyin">xiān</span>
+                            <span class="vietnamese">trước tiên</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">学习</span>
+                            <span class="pinyin">xuéxí</span>
+                            <span class="vietnamese">học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">医学</span>
+                            <span class="pinyin">yīxué</span>
+                            <span class="vietnamese">y học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">后来</span>
+                            <span class="pinyin">hòulái</span>
+                            <span class="vietnamese">sau đó</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">改学</span>
+                            <span class="pinyin">gǎixué</span>
+                            <span class="vietnamese">đổi sang học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">文学</span>
+                            <span class="pinyin">wénxué</span>
+                            <span class="vietnamese">văn học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">并且</span>
+                            <span class="pinyin">bìngqiě</span>
+                            <span class="vietnamese">đồng thời</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">开始</span>
+                            <span class="pinyin">kāishǐ</span>
+                            <span class="vietnamese">bắt đầu</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">文学</span>
+                            <span class="pinyin">wénxué</span>
+                            <span class="vietnamese">văn học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">创作</span>
+                            <span class="pinyin">chuàngzuò</span>
+                            <span class="vietnamese">sáng tác</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">1908年</span>
+                            <span class="pinyin">1908 nián</span>
+                            <span class="vietnamese">Năm 1908</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">回国</span>
+                            <span class="pinyin">huíguó</span>
+                            <span class="vietnamese">về nước</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">后</span>
+                            <span class="pinyin">hòu</span>
+                            <span class="vietnamese">sau khi</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">鲁迅先生</span>
+                            <span class="pinyin">Lǔ Xùn xiānsheng</span>
+                            <span class="vietnamese">Ngài Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">先后</span>
+                            <span class="pinyin">xiānhòu</span>
+                            <span class="vietnamese">lần lượt</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">在</span>
+                            <span class="pinyin">zài</span>
+                            <span class="vietnamese">ở</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">浙江杭州</span>
+                            <span class="pinyin">Zhèjiāng Hángzhōu</span>
+                            <span class="vietnamese">Hàng Châu, Chiết Giang</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">绍兴</span>
+                            <span class="pinyin">Shàoxīng</span>
+                            <span class="vietnamese">Thiệu Hưng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">教书</span>
+                            <span class="pinyin">jiāoshū</span>
+                            <span class="vietnamese">dạy học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">后来</span>
+                            <span class="pinyin">Hòulái</span>
+                            <span class="vietnamese">Về sau</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">他又</span>
+                            <span class="pinyin">tā yòu</span>
+                            <span class="vietnamese">ông lại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">在北京大学</span>
+                            <span class="pinyin">Běijīng Dàxué</span>
+                            <span class="vietnamese">ĐH Bắc Kinh</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">北京师范大学</span>
+                            <span class="pinyin">Běijīng Shīfàn Dàxué</span>
+                            <span class="vietnamese">ĐH Sư phạm Bắc Kinh</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">广州中山大学</span>
+                            <span class="pinyin">Guǎngzhōu Zhōngshān Dàxué</span>
+                            <span class="vietnamese">ĐH Trung Sơn, Quảng Châu</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">等</span>
+                            <span class="pinyin">děng</span>
+                            <span class="vietnamese">v.v.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">学校</span>
+                            <span class="pinyin">xuéxiào</span>
+                            <span class="vietnamese">trường học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">工作</span>
+                            <span class="pinyin">gōngzuò</span>
+                            <span class="vietnamese">làm việc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                    </p>
+
+                    <!-- Đoạn 3 -->
+                    <p class="mb-6 text-justify leading-relaxed">
+                        <span class="phrase">
+                            <span class="chinese">1918年</span>
+                            <span class="pinyin">1918 nián</span>
+                            <span class="vietnamese">Năm 1918</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，他</span>
+                            <span class="pinyin">, tā</span>
+                            <span class="vietnamese">, ông</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">第一次</span>
+                            <span class="pinyin">dì yī cì</span>
+                            <span class="vietnamese">lần đầu tiên</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">用</span>
+                            <span class="pinyin">yòng</span>
+                            <span class="vietnamese">dùng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">“鲁迅”</span>
+                            <span class="pinyin">"Lǔ Xùn"</span>
+                            <span class="vietnamese">"Lỗ Tấn"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">做</span>
+                            <span class="pinyin">zuò</span>
+                            <span class="vietnamese">làm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">笔名</span>
+                            <span class="pinyin">bǐmíng</span>
+                            <span class="vietnamese">bút danh</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">发表</span>
+                            <span class="pinyin">fābiǎo</span>
+                            <span class="vietnamese">công bố</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了</span>
+                            <span class="pinyin">le</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">著名的</span>
+                            <span class="pinyin">zhùmíng de</span>
+                            <span class="vietnamese">nổi tiếng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">小说</span>
+                            <span class="pinyin">xiǎoshuō</span>
+                            <span class="vietnamese">tiểu thuyết</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《狂人日记》</span>
+                            <span class="pinyin">"Kuángrén Rìjì"</span>
+                            <span class="vietnamese">"Nhật ký người điên"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">这部</span>
+                            <span class="pinyin">zhè bù</span>
+                            <span class="vietnamese">bộ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">小说</span>
+                            <span class="pinyin">xiǎoshuō</span>
+                            <span class="vietnamese">tiểu thuyết</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">是</span>
+                            <span class="pinyin">shì</span>
+                            <span class="vietnamese">là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">中国</span>
+                            <span class="pinyin">Zhōngguó</span>
+                            <span class="vietnamese">Trung Quốc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">现代文学史</span>
+                            <span class="pinyin">xiàndài wénxué shǐ</span>
+                            <span class="vietnamese">lịch sử văn học hiện đại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">上</span>
+                            <span class="pinyin">shàng</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">第一篇</span>
+                            <span class="pinyin">dì yī piān</span>
+                            <span class="vietnamese">bài/thiên đầu tiên</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">白话小说</span>
+                            <span class="pinyin">báihuà xiǎoshuō</span>
+                            <span class="vietnamese">tiểu thuyết bạch thoại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <!-- Hình ảnh bìa sách -->
+                        <img src="https://easyreadfs.nosdn.127.net/8gKmlcBPkEXomynPtuV7lQ==/8796093024896569634" alt="Bìa sách Nhật ký người điên" class="mx-auto my-4 rounded-lg shadow-md max-w-xs"
+                         onerror="this.onerror=null;this.src='https://placehold.co/300x450/f3f4f6/334155?text=狂人日记&font=notosanssc';">
+                        <span class="phrase">
+                            <span class="chinese">在这</span>
+                            <span class="pinyin">Zài zhè</span>
+                            <span class="vietnamese">Sau đó</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">以后的</span>
+                            <span class="pinyin">yǐhòu de</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">十多年</span>
+                            <span class="pinyin">shí duō nián</span>
+                            <span class="vietnamese">hơn mười năm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">中</span>
+                            <span class="pinyin">zhōng</span>
+                            <span class="vietnamese">trong</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">鲁迅</span>
+                            <span class="pinyin">Lǔ Xùn</span>
+                            <span class="vietnamese">Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">又</span>
+                            <span class="pinyin">yòu</span>
+                            <span class="vietnamese">lại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">创作</span>
+                            <span class="pinyin">chuàngzuò</span>
+                            <span class="vietnamese">sáng tác</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了</span>
+                            <span class="pinyin">le</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《阿Q正传》</span>
+                            <span class="pinyin">"Ā Q Zhèngzhuàn"</span>
+                            <span class="vietnamese">"AQ chính truyện"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《祝福》</span>
+                            <span class="pinyin">"Zhùfú"</span>
+                            <span class="vietnamese">"Chúc phúc"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">等</span>
+                            <span class="pinyin">děng</span>
+                            <span class="vietnamese">v.v.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">二十几篇</span>
+                            <span class="pinyin">èrshí jǐ piān</span>
+                            <span class="vietnamese">hơn 20 thiên</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">白话小说</span>
+                            <span class="pinyin">báihuà xiǎoshuō</span>
+                            <span class="vietnamese">tiểu thuyết bạch thoại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">1927年</span>
+                            <span class="pinyin">1927 nián</span>
+                            <span class="vietnamese">Năm 1927</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，他</span>
+                            <span class="pinyin">, tā</span>
+                            <span class="vietnamese">, ông</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">到了</span>
+                            <span class="pinyin">dàole</span>
+                            <span class="vietnamese">đã đến</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">上海</span>
+                            <span class="pinyin">Shànghǎi</span>
+                            <span class="vietnamese">Thượng Hải</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">在</span>
+                            <span class="pinyin">Zài</span>
+                            <span class="vietnamese">Trong</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">上海</span>
+                            <span class="pinyin">Shànghǎi</span>
+                            <span class="vietnamese">Thượng Hải</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">期间</span>
+                            <span class="pinyin">qījiān</span>
+                            <span class="vietnamese">thời gian</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">鲁迅先生</span>
+                            <span class="pinyin">Lǔ Xùn xiānsheng</span>
+                            <span class="vietnamese">Ngài Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">写</span>
+                            <span class="pinyin">xiěle</span>
+                            <span class="vietnamese">đã viết</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了</span>
+                            <span class="pinyin"></span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">很多</span>
+                            <span class="pinyin">hěn duō</span>
+                            <span class="vietnamese">rất nhiều</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">文章</span>
+                            <span class="pinyin">wénzhāng</span>
+                            <span class="vietnamese">bài viết</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，并</span>
+                            <span class="pinyin">, bìng</span>
+                            <span class="vietnamese">, và</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">翻译</span>
+                            <span class="pinyin">fānyì</span>
+                            <span class="vietnamese">dịch</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了</span>
+                            <span class="pinyin">le</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">不少</span>
+                            <span class="pinyin">bù shǎo</span>
+                            <span class="vietnamese">không ít</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">外国</span>
+                            <span class="pinyin">wàiguó</span>
+                            <span class="vietnamese">nước ngoài</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">文学</span>
+                            <span class="pinyin">wénxué</span>
+                            <span class="vietnamese">văn học</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">作品</span>
+                            <span class="pinyin">zuòpǐn</span>
+                            <span class="vietnamese">tác phẩm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                    </p>
+                    
+                    <!-- Đoạn 4 -->
+                    <p class="mb-6 text-justify leading-relaxed">
+                        <span class="phrase">
+                            <span class="chinese">鲁迅</span>
+                            <span class="pinyin">Lǔ Xùn</span>
+                            <span class="vietnamese">Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">是</span>
+                            <span class="pinyin">shì</span>
+                            <span class="vietnamese">là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">中国</span>
+                            <span class="pinyin">Zhōngguó</span>
+                            <span class="vietnamese">Trung Quốc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">现代文学</span>
+                            <span class="pinyin">xiàndài wénxué</span>
+                            <span class="vietnamese">văn học hiện đại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">奠基人</span>
+                            <span class="pinyin">diànjīrén</span>
+                            <span class="vietnamese">người đặt nền móng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，是</span>
+                            <span class="pinyin">, shì</span>
+                            <span class="vietnamese">, là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">世界上</span>
+                            <span class="pinyin">shìjiè shang</span>
+                            <span class="vietnamese">trên thế giới</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">最</span>
+                            <span class="pinyin">zuì</span>
+                            <span class="vietnamese">nhất</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">有</span>
+                            <span class="pinyin">yǒu</span>
+                            <span class="vietnamese">có</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">成就</span>
+                            <span class="pinyin">chéngjiù</span>
+                            <span class="vietnamese">thành tựu</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">作家</span>
+                            <span class="pinyin">zuòjiā</span>
+                            <span class="vietnamese">nhà văn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">之一</span>
+                            <span class="pinyin">zhī yī</span>
+                            <span class="vietnamese">một trong những</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">现在</span>
+                            <span class="pinyin">xiànzài</span>
+                            <span class="vietnamese">hiện nay</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">已经</span>
+                            <span class="pinyin">yǐjīng</span>
+                            <span class="vietnamese">đã</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">出版</span>
+                            <span class="pinyin">chūbǎn</span>
+                            <span class="vietnamese">xuất bản</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《鲁迅全集》</span>
+                            <span class="pinyin">"Lǔ Xùn Quánjí"</span>
+                            <span class="vietnamese">"Lỗ Tấn toàn tập"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">共有</span>
+                            <span class="pinyin">gòngyǒu</span>
+                            <span class="vietnamese">tổng cộng có</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">二十卷</span>
+                            <span class="pinyin">èrshí juàn</span>
+                            <span class="vietnamese">20 quyển</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">包括</span>
+                            <span class="pinyin">bāokuò</span>
+                            <span class="vietnamese">bao gồm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了</span>
+                            <span class="pinyin">le</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">鲁迅</span>
+                            <span class="pinyin">Lǔ Xùn</span>
+                            <span class="vietnamese">Lỗ Tấn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">全部</span>
+                            <span class="pinyin">quánbù</span>
+                            <span class="vietnamese">toàn bộ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">作品</span>
+                            <span class="pinyin">zuòpǐn</span>
+                            <span class="vietnamese">tác phẩm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">其中</span>
+                            <span class="pinyin">qízhōng</span>
+                            <span class="vietnamese">trong đó</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">不少</span>
+                            <span class="pinyin">bù shǎo</span>
+                            <span class="vietnamese">không ít</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">作品</span>
+                            <span class="pinyin">zuòpǐn</span>
+                            <span class="vietnamese">tác phẩm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">已经</span>
+                            <span class="pinyin">yǐjīng</span>
+                            <span class="vietnamese">đã</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">翻译</span>
+                            <span class="pinyin">fānyì</span>
+                            <span class="vietnamese">dịch</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">成了</span>
+                            <span class="pinyin">chéngle</span>
+                            <span class="vietnamese">thành</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">几十种</span>
+                            <span class="pinyin">jǐ shí zhǒng</span>
+                            <span class="vietnamese">mấy chục loại</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">文字</span>
+                            <span class="pinyin">wénzì</span>
+                            <span class="vietnamese">ngôn ngữ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">还有</span>
+                            <span class="pinyin">háiyǒu</span>
+                            <span class="vietnamese">vẫn còn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">一些</span>
+                            <span class="pinyin">yìxiē</span>
+                            <span class="vietnamese">một số</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">作品</span>
+                            <span class="pinyin">zuòpǐn</span>
+                            <span class="vietnamese">tác phẩm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">拍成</span>
+                            <span class="pinyin">pāichéng</span>
+                            <span class="vietnamese">dựng thành</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了</span>
+                            <span class="pinyin">le</span>
+                            <span class="vietnamese"></span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">电影</span>
+                            <span class="pinyin">diànyǐng</span>
+                            <span class="vietnamese">phim điện ảnh</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">电视剧</span>
+                            <span class="pinyin">diànshìjù</span>
+                            <span class="vietnamese">phim truyền hình</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，如</span>
+                            <span class="pinyin">, rú</span>
+                            <span class="vietnamese">, như</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《阿Q正传》</span>
+                            <span class="pinyin">"Ā Q Zhèngzhuàn"</span>
+                            <span class="vietnamese">"AQ chính truyện"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《祝福》</span>
+                            <span class="pinyin">"Zhùfú"</span>
+                            <span class="vietnamese">"Chúc phúc"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《药》</span>
+                            <span class="pinyin">"Yào"</span>
+                            <span class="vietnamese">"Thuốc"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">等</span>
+                            <span class="pinyin">děng</span>
+                            <span class="vietnamese">v.v.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                    </p>
+                    
+                </article>
+            </section>
+
+            <!-- =================================== -->
+            <!-- PHẦN 2: BÀI LUYỆN TẬP -->
+            <!-- =================================== -->
+            <section id="bai-tap" class="mb-12">
+                <!-- Tiêu đề chính cho phần luyện tập -->
+                <h2 class="text-4xl md:text-5xl font-bold text-blue-900 mb-8 text-center">✏️ Bài luyện tập</h2>
+                
+                <div class="space-y-10">
+
+                    <!-- BÀI 1: ĐÚNG / SAI -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-6 border-l-4 border-blue-700 pl-4">Phần 1: Đúng hay Sai? (根据短文判断正误)</h3>
+                        <div id="quiz-true-false" class="space-y-4">
+                            <!-- Câu 1 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">1. 周树人是鲁迅原来的名字。</p>
+                                <label class="mr-4"><input type="radio" name="tf1" value="true" data-answer="true"> Đúng</label>
+                                <label><input type="radio" name="tf1" value="false"> Sai</label>
+                            </div>
+                            <!-- Câu 2 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">2. 鲁迅在日本当过医生。</p>
+                                <label class="mr-4"><input type="radio" name="tf2" value="true"> Đúng</label>
+                                <label><input type="radio" name="tf2" value="false" data-answer="true"> Sai</label>
+                            </div>
+                            <!-- Câu 3 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">3. 鲁迅在北京大学、北京师范大学等学校当过老师。</p>
+                                <label class="mr-4"><input type="radio" name="tf3" value="true" data-answer="true"> Đúng</label>
+                                <label><input type="radio" name="tf3" value="false"> Sai</label>
+                            </div>
+                             <!-- Câu 4 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">4. 《狂人日记》发表以前，中国没有白话小说。</p>
+                                <label class="mr-4"><input type="radio" name="tf4" value="true" data-answer="true"> Đúng</label>
+                                <label><input type="radio" name="tf4" value="false"> Sai</label>
+                            </div>
+                             <!-- Câu 5 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">5. 《狂人日记》发表以后，鲁迅又写了不少白话小说。</p>
+                                <label class="mr-4"><input type="radio" name="tf5" value="true" data-answer="true"> Đúng</label>
+                                <label><input type="radio" name="tf5" value="false"> Sai</label>
+                            </div>
+                             <!-- Câu 6 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">6. 鲁迅先生翻译了不少自己的作品。</p>
+                                <label class="mr-4"><input type="radio" name="tf6" value="true"> Đúng</label>
+                                <label><input type="radio" name="tf6" value="false" data-answer="true"> Sai</label>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex flex-wrap gap-4">
+                            <button id="checkTrueFalseButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                                Kiểm tra
+                            </button>
+                            <button id="showTrueFalseAnswers" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                                Hiện Đáp Án Tham Khảo
+                            </button>
+                        </div>
+                        <!-- Đáp án tham khảo (ẩn) -->
+                        <div id="answersTrueFalse" class="reference-answers hidden">
+                            <h4>Đáp Án Tham Khảo (Đúng/Sai)</h4>
+                            <ol class="list-decimal list-inside">
+                                <li><strong>Đúng.</strong> (周树人是鲁迅原来的名字。)</li>
+                                <li><strong>Sai.</strong> (Ông học y, nhưng sau đó đổi sang học văn học, không phải làm bác sĩ.)</li>
+                                <li><strong>Đúng.</strong> (后来他又在北京大学...等学校工作。)</li>
+                                <li><strong>Đúng.</strong> (这是中国现代文学史上第一篇白话小说。)</li>
+                                <li><strong>Đúng.</strong> (他又创作了《阿Q正传》、《祝福》等...)</li>
+                                <li><strong>Sai.</strong> (Ông dịch tác phẩm nước ngoài - 翻译了不少外国文学作品。)</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- BÀI 2: CHỌN TỪ ĐIỀN VÀO CHỖ TRỐNG -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-6 border-l-4 border-blue-700 pl-4">Phần 2: Chọn từ điền vào chỗ trống (选词填空)</h3>
+                        <div id="quiz-word-choice" class="space-y-6 text-lg">
+                            <!-- Câu 1 -->
+                            <p>1. 王小姐，认识你很
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="高兴">
+                                    <option value="">...</option>
+                                    <option value="兴奋">兴奋</option>
+                                    <option value="高兴">高兴</option>
+                                </select>
+                                。
+                            </p>
+                            <!-- Câu 2 -->
+                            <p>2. 电梯正在维修，咱们走
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="下去">
+                                    <option value="">...</option>
+                                    <option value="下来">下来</option>
+                                    <option value="下去">下去</option>
+                                </select>
+                                吧。
+                            </p>
+                            <!-- Câu 3 -->
+                            <p>3. 弟弟比哥哥小5岁，
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="可是">
+                                    <option value="">...</option>
+                                    <option value="可是">可是</option>
+                                    <option value="却">却</option>
+                                </select>
+                                弟弟比哥哥高5厘米。
+                            </p>
+                             <!-- Câu 4 -->
+                            <p>4. 电影《祝福》是根据鲁迅先生的同名小说
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="拍">
+                                    <option value="">...</option>
+                                    <option value="照">照</option>
+                                    <option value="拍">拍</option>
+                                </select>
+                                的。
+                            </p>
+                             <!-- Câu 5 -->
+                            <p>5. 为了安全，电梯要定期 (regular) 
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="维修">
+                                    <option value="">...</option>
+                                    <option value="修">修</option>
+                                    <option value="维修">维修</option>
+                                </select>
+                                。
+                            </p>
+                             <!-- Câu 6 -->
+                            <p>6. 他学习非常努力，
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="所以">
+                                    <option value="">...</option>
+                                    <option value="于是">于是</option>
+                                    <option value="所以">所以</option>
+                                </select>
+                                成绩这么好。
+                            </p>
+                            <!-- Câu 7 -->
+                            <p>7. 我们学校里有三个学生
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="食堂">
+                                    <option value="">...</option>
+                                    <option value="食堂">食堂</option>
+                                    <option value="饭馆">饭馆</option>
+                                </select>
+                                ，还有一家穆斯林 (Muslim)
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="饭馆">
+                                    <option value="">...</option>
+                                    <option value="食堂">食堂</option>
+                                    <option value="饭馆">饭馆</option>
+                                </select>
+                                。
+                            </p>
+                            <!-- Câu 8 -->
+                            <p>8. 钥匙别
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="插">
+                                    <option value="">...</option>
+                                    <option value="插">插</option>
+                                    <option value="拔">拔</option>
+                                </select>
+                                在门上，要记住
+                                <select class="w-28 p-1 border-b-2 border-gray-300" data-answer="拔">
+                                    <option value="">...</option>
+                                    <option value="插">插</option>
+                                    <option value="拔">拔</option>
+                                </select>
+                                下来。
+                            </p>
+                        </div>
+                        <div class="mt-6 flex flex-wrap gap-4">
+                            <button id="checkWordChoiceButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                                Kiểm tra
+                            </button>
+                             <button id="showWordChoiceAnswers" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                                Hiện Đáp Án Tham Khảo
+                            </button>
+                        </div>
+                         <!-- Đáp án tham khảo (ẩn) -->
+                        <div id="answersWordChoice" class="reference-answers hidden">
+                            <h4>Đáp Án Tham Khảo (Chọn từ)</h4>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>高兴</li>
+                                <li>下去</li>
+                                <li>可是</li>
+                                <li>拍</li>
+                                <li>维修</li>
+                                <li>所以</li>
+                                <li>食堂, 饭馆</li>
+                                <li>插, 拔</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <!-- BÀI 3: BÀI TẬP DỊCH -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-6 border-l-4 border-blue-700 pl-4">Phần 3: Bài tập dịch</h3>
+                        <div id="quiz-translation" class="space-y-6">
+                            
+                            <!-- Việt -> Trung -->
+                            <div class="translation-item">
+                                <p class="vietnamese-prompt">1. (Việt → Trung) Lỗ Tấn là nhà văn, nhà tư tưởng và nhà giáo dục vĩ đại của Trung Quốc hiện đại.</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="鲁迅是中国现代伟大的文学家、思想家和教育家。">
+                            </div>
+                            
+                            <div class="translation-item">
+                                <p class="vietnamese-prompt">2. (Việt → Trung) Tên thật của ông là Chu Thụ Nhân, là người Thiệu Hưng, Chiết Giang.</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="他原名叫周树人，浙江绍兴人。">
+                            </div>
+
+                            <div class="translation-item">
+                                <p class="vietnamese-prompt">3. (Việt → Trung) Ông trước học y, sau đó đổi sang học văn học, và bắt đầu sáng tác văn học.</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="他先学习医学，后来改学文学，并且开始文学创作。">
+                            </div>
+
+                            <div class="translation-item">
+                                <p class="vietnamese-prompt">4. (Việt → Trung) "Nhật ký người điên" là tiểu thuyết bạch thoại đầu tiên trong lịch sử văn học hiện đại Trung Quốc.</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="《狂人日记》是中国现代文学史上第一篇白话小说。">
+                            </div>
+
+                            <!-- Trung -> Việt -->
+                            <div class="translation-item">
+                                <p class="chinese-prompt">5. (Trung → Việt) 1902年鲁迅去日本留学。</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Năm 1902 Lỗ Tấn đi Nhật Bản du học.">
+                            </div>
+
+                            <div class="translation-item">
+                                <p class="chinese-prompt">6. (Trung → Việt) 1918年，他第一次用“鲁迅”做笔名，发表了著名的小说《狂人日记》。</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Năm 1918, ông lần đầu tiên dùng 'Lỗ Tấn' làm bút danh, công bố tiểu thuyết nổi tiếng 'Nhật ký người điên'.">
+                            </div>
+
+                            <div class="translation-item">
+                                <p class="chinese-prompt">7. (Trung → Việt) 鲁迅是中国现代文学的奠基人，是世界上最有成就的作家之一。</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Lỗ Tấn là người đặt nền móng cho văn học hiện đại Trung Quốc, là một trong những nhà văn có thành tựu nhất trên thế giới.">
+                            </div>
+
+                            <div class="translation-item">
+                                <p class="chinese-prompt">8. (Trung → Việt) 不少作品已经翻译成了几十种文字，还有一些作品拍成了电影、电视剧。</p>
+                                <input type="text" class="translation-input w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Không ít tác phẩm đã được dịch thành mấy chục thứ tiếng, vẫn có một số tác phẩm được dựng thành phim điện ảnh, phim truyền hình.">
+                            </div>
+                        </div>
+                        <div class="mt-6 flex flex-wrap gap-4">
+                            <button id="checkTranslationButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                                Kiểm tra
+                            </button>
+                             <button id="showTranslationAnswers" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                                Hiện Đáp Án Tham Khảo
+                            </button>
+                        </div>
+                         <!-- Đáp án tham khảo (ẩn) -->
+                        <div id="answersTranslation" class="reference-answers hidden">
+                            <h4>Đáp Án Tham Khảo (Dịch)</h4>
+                            <ol class="list-decimal list-inside space-y-2">
+                                <li>鲁迅是中国现代伟大的文学家、思想家和教育家。</li>
+                                <li>他原名叫周树人，浙江绍兴人。</li>
+                                <li>他先学习医学，后来改学文学，并且开始文学创作。</li>
+                                <li>《狂人日记》是中国现代文学史上第一篇白话小说。</li>
+                                <li>Năm 1902 Lỗ Tấn đi Nhật Bản du học.</li>
+                                <li>Năm 1918, ông lần đầu tiên dùng 'Lỗ Tấn' làm bút danh, công bố tiểu thuyết nổi tiếng 'Nhật ký người điên'.</li>
+                                <li>Lỗ Tấn là người đặt nền móng cho văn học hiện đại Trung Quốc, là một trong những nhà văn có thành tựu nhất trên thế giới.</li>
+                                <li>Không ít tác phẩm đã được dịch thành mấy chục thứ tiếng, vẫn có một số tác phẩm được dựng thành phim điện ảnh, phim truyền hình.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- =================================== -->
+            <!-- PHẦN 4: BẠN CÓ BIẾT? -->
+            <!-- =================================== -->
+            <section id="ban-co-biet">
+                <!-- Tiêu đề đã có sẵn bên trong -->
+                <div class="bg-white p-6 sm:p-10 rounded-lg shadow-lg">
+                    <h2 class="text-3xl font-bold text-blue-800 mb-6 text-center">💡 Bạn có biết? (Phần 4)</h2>
+                    <ul class="space-y-6 list-disc list-outside pl-6 text-lg text-gray-800">
+                        <li>
+                            <strong>Bỏ y học theo văn học:</strong> Câu chuyện nổi tiếng nhất về Lỗ Tấn là khi ông đang học y ở Nhật. Ông xem một đoạn phim chiếu cảnh một người Trung Quốc bị quân Nhật hành quyết vì tội làm gián điệp, trong khi những người Trung Quốc khác đứng xem với vẻ thờ ơ. Ông nhận ra rằng chữa lành "tinh thần" (精神) của người dân quan trọng hơn là chữa bệnh "thể xác" (身体).
+                        </li>
+                        <li>
+                            <strong>Ý nghĩa bút danh "Lỗ Tấn":</strong> "Lỗ" (鲁) là họ của mẹ ông. "Tấn" (迅) có nghĩa là "nhanh". Ông chọn bút danh này với mong muốn bản thân và đất nước có thể nhanh chóng tiến bộ.
+                        </li>
+                        <li>
+                            <strong>"AQ Chính Truyện" (阿Q正传):</strong> Nhân vật "AQ" (A Q) của ông đã trở thành một thuật ngữ văn hóa. "Phép thắng lợi tinh thần" (精神胜利法) hay "Chủ nghĩa AQ" (阿Q精神) dùng để chỉ những người tự lừa dối mình, biến thất bại thành chiến thắng trong tưởng tượng.
+                        </li>
+                        <li>
+                            <strong>Người đặt nền móng:</strong> Ông được coi là cha đẻ của văn học hiện đại Trung Quốc. Tác phẩm "Nhật ký người điên" (《狂人日记》) là tiểu thuyết bạch thoại (viết bằng ngôn ngữ nói hàng ngày, thay vì Hán văn cổ) đầu tiên, mở đường cho một nền văn học mới.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+        
+        <!-- FOOTER -->
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            Trang web học tập tương tác được tạo dựa trên tài liệu "鲁迅.docx".
+        </footer>
+    </div>
+
+    <script>
+        // Chạy toàn bộ mã JavaScript sau khi trang HTML đã được tải và phân tích xong.
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // ===================================
+            // B. SCRIPT: GÁN EVENT LISTENERS (Phần Toggle)
+            // ===================================
+            const togglePinyinButton = document.getElementById('togglePinyin');
+            if (togglePinyinButton) {
+                togglePinyinButton.addEventListener('click', function() {
+                    document.body.classList.toggle('show-pinyin');
+                    // Cập nhật văn bản nút
+                    this.textContent = document.body.classList.contains('show-pinyin') ? 'Tắt Pinyin' : 'Bật Pinyin';
+                });
+            }
+
+            const toggleVietButton = document.getElementById('toggleViet');
+            if (toggleVietButton) {
+                toggleVietButton.addEventListener('click', function() {
+                    document.body.classList.toggle('show-viet');
+                    // Cập nhật văn bản nút
+                    this.textContent = document.body.classList.contains('show-viet') ? 'Tắt Nghĩa' : 'Bật Nghĩa';
+                });
+            }
+            
+            // ===================================
+            // C. SCRIPT: KIỂM TRA BÀI TẬP
+            // ===================================
+
+            // Phần 1: Đúng / Sai
+            function checkTrueFalse() {
+                const questions = document.querySelectorAll('#quiz-true-false .quiz-option');
+                questions.forEach(question => {
+                    const radios = question.querySelectorAll('input[type="radio"]');
+                    question.classList.remove('correct', 'incorrect');
+                    
+                    let isAnswered = false;
+                    let isCorrect = false;
+
+                    radios.forEach(radio => {
+                        if (radio.checked) {
+                            isAnswered = true;
+                            if (radio.dataset.answer === 'true') {
+                                isCorrect = true;
+                            }
+                        }
+                    });
+
+                    if (isAnswered) {
+                        if (isCorrect) {
+                            question.classList.add('correct');
+                        } else {
+                            question.classList.add('incorrect');
+                        }
+                    }
+                });
+            }
+
+            // Phần 2: Chọn từ
+            function checkWordChoice() {
+                const selects = document.querySelectorAll('#quiz-word-choice select');
+                selects.forEach(select => {
+                    const answer = select.dataset.answer;
+                    select.classList.remove('correct', 'incorrect');
+                    if (select.value === answer) {
+                        select.classList.add('correct');
+                    } else if (select.value !== "") {
+                        select.classList.add('incorrect');
+                    }
+                });
+            }
+
+            // Phần 3: Bài tập dịch
+            function checkTranslation() {
+                const inputs = document.querySelectorAll('#quiz-translation input.translation-input');
+                inputs.forEach(input => {
+                    // Lấy đáp án và câu trả lời, loại bỏ dấu câu và chuyển sang chữ thường
+                    const answer = input.dataset.answer
+                                        .toLowerCase()
+                                        .trim()
+                                        .replace(/[.,。]/g, ''); // Loại bỏ dấu chấm, phẩy
+                    
+                    const value = input.value
+                                       .toLowerCase()
+                                       .trim()
+                                       .replace(/[.,。]/g, ''); // Loại bỏ dấu chấm, phẩy
+
+                    input.classList.remove('correct-translation', 'incorrect-translation');
+
+                    if (value === "") {
+                        return; // Không đánh dấu ô trống
+                    }
+                    
+                    // Kiểm tra sự trùng khớp
+                    if (value === answer) {
+                        input.classList.add('correct-translation');
+                    } else {
+                        input.classList.add('incorrect-translation');
+                    }
+                });
+            }
+            
+            // ===================================
+            // D. SCRIPT: HIỆN ĐÁP ÁN THAM KHẢO (CHỈ 1 HÀM)
+            // ===================================
+
+            function showAnswers(id) {
+                const answerDiv = document.getElementById(id);
+                if (answerDiv) {
+                    answerDiv.classList.toggle('hidden');
+                }
+            }
+            
+            // ===================================
+            // E. GÁN TẤT CẢ CÁC NÚT
+            // ===================================
+            
+            // --- Nút kiểm tra ---
+            const checkTrueFalseBtn = document.getElementById('checkTrueFalseButton');
+            if (checkTrueFalseBtn) checkTrueFalseBtn.addEventListener('click', checkTrueFalse);
+
+            const checkWordChoiceBtn = document.getElementById('checkWordChoiceButton');
+            if (checkWordChoiceBtn) checkWordChoiceBtn.addEventListener('click', checkWordChoice);
+
+            const checkTranslationBtn = document.getElementById('checkTranslationButton');
+            if (checkTranslationBtn) checkTranslationBtn.addEventListener('click', checkTranslation);
+            
+            // --- Nút hiện đáp án ---
+            const showTrueFalseBtn = document.getElementById('showTrueFalseAnswers');
+            if (showTrueFalseBtn) showTrueFalseBtn.addEventListener('click', function() {
+                showAnswers('answersTrueFalse');
+            });
+
+            const showWordChoiceBtn = document.getElementById('showWordChoiceAnswers');
+            if (showWordChoiceBtn) showWordChoiceBtn.addEventListener('click', function() {
+                showAnswers('answersWordChoice');
+            });
+
+            const showTranslationBtn = document.getElementById('showTranslationAnswers');
+            if (showTranslationBtn) showTranslationBtn.addEventListener('click', function() {
+                showAnswers('answersTranslation');
+            });
+
+
+        }); // Kết thúc DOMContentLoaded
+
+    </script>
+</body>
+</html>

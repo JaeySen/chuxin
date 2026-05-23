@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài học: 吃饭与面子 (Ăn uống và Thể diện)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .lesson-section {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .hanzi {
+            font-family: "KaiTi", "SimKai", serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #1e293b;
+            line-height: 2;
+        }
+        .pinyin {
+            color: #64748b;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .translation {
+            color: #475569;
+            font-style: italic;
+        }
+        .toggle-button {
+            cursor: pointer;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        .toggle-button:hover {
+            background-color: #2563eb;
+        }
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .flashcard {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .card-back {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 1rem;
+        }
+        .summary-container {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .summary-header {
+            background-color: #f1f5f9;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .summary-content {
+            padding: 1.5rem;
+        }
+        .highlight {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .auxiliary-text {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: none;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px dashed #cbd5e1;
+        }
+        .answer {
+            display: none;
+            background-color: #eef2ff;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800">课文一：吃饭与面子</h1>
+        <p class="text-xl text-slate-600 mt-2">Chīfàn yǔ Miànzi - Ăn uống và Thể diện</p>
+    </header>
+
+    <main>
+        <!-- Phần 1: Từ vựng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">I. Từ vựng trọng tâm (生词)</h2>
+            
+            <!-- Nhóm 1: Chủ đề ăn uống -->
+            <h3 class="text-lg font-semibold text-blue-600 mb-4 border-b pb-2">1. Chủ đề Ăn uống & Tiệc tùng</h3>
+            <div class="flashcard-container mb-8">
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">面子</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>miànzi</b> (n.)</p><p class="translation">Thể diện, mặt mũi</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">请客</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>qǐngkè</b> (v.)</p><p class="translation">Mời khách</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">点菜</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>diǎn cài</b> (v.)</p><p class="translation">Gọi món</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">剩下</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>shèngxià</b> (v.)</p><p class="translation">Còn thừa, còn lại</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">造成</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>zàochéng</b> (v.)</p><p class="translation">Gây ra (hậu quả xấu)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">浪费</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>làngfèi</b> (v./n.)</p><p class="translation">Lãng phí</p></div>
+                </div>
+            </div>
+
+            <!-- Nhóm 2: Giao tiếp & Ứng xử -->
+            <h3 class="text-lg font-semibold text-blue-600 mb-4 border-b pb-2">2. Giao tiếp & Ứng xử (Mới bổ sung)</h3>
+            <div class="flashcard-container mb-8">
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">打交道</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>dǎ jiāodào</b> (v.)</p><p class="translation">Giao thiệp, làm quen, tiếp xúc</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">拒绝</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>jùjué</b> (v.)</p><p class="translation">Từ chối, khước từ</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">找借口</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>zhǎo jièkǒu</b> (v.)</p><p class="translation">Tìm cớ, viện cớ</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">虚伪</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>xūwěi</b> (adj.)</p><p class="translation">Hư vinh, giả tạo</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">诚实</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>chéngshí</b> (adj.)</p><p class="translation">Thành thực, thật thà</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">相应</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>xiāngyìng</b> (adj.)</p><p class="translation">Tương ứng, thích hợp</p></div>
+                </div>
+                 <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">对方</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>duìfāng</b> (n.)</p><p class="translation">Đối phương, phía bên kia</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">尤其</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>yóuqí</b> (adv.)</p><p class="translation">Đặc biệt là</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">把握</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>bǎwò</b> (n./v.)</p><p class="translation">Sự nắm bắt, nắm chắc (thành công)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">体面</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>tǐmiàn</b> (adj./n.)</p><p class="translation">Thể diện, đàng hoàng, coi được</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">伤</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>shāng</b> (v.)</p><p class="translation">Làm tổn thương, hại</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">比方说</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>bǐfāng shuō</b> (v.)</p><p class="translation">Ví dụ như (khẩu ngữ)</p></div>
+                </div>
+            </div>
+            
+            <!-- Nhóm 3: Các từ chức năng -->
+            <h3 class="text-lg font-semibold text-blue-600 mb-4 border-b pb-2">3. Từ chức năng & Khác</h3>
+            <div class="flashcard-container">
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">必须</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>bìxū</b> (adv.)</p><p class="translation">Phải, nhất định phải</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">往往</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>wǎngwǎng</b> (adv.)</p><p class="translation">Thường thường (chỉ quy luật)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">显得</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>xiǎnde</b> (v.)</p><p class="translation">Tỏ ra, lộ ra vẻ</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">为了</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>wèile</b> (prep.)</p><p class="translation">Để, vì (mục đích)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">或者</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>huòzhě</b> (conj.)</p><p class="translation">Hoặc là</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">研究</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>yánjiū</b> (v./n.)</p><p class="translation">Nghiên cứu</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 2: Tóm tắt nội dung bài khóa -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">II. Tóm tắt nội dung bài khóa (内容梗概)</h2>
+            <p class="mb-4 text-gray-600">Đoạn văn dưới đây tóm tắt về thói quen ăn uống và quan niệm thể diện của người Trung Quốc:</p>
+            
+            <div class="summary-container">
+                <div class="summary-header">中文段落 (Đoạn văn tiếng Trung)</div>
+                <div class="summary-content">
+                    <p class="hanzi text-justify">
+                        中国人吃饭，很多时候是为了“<span class="highlight">面子</span>”。跟中国人<span class="highlight">打交道</span>，你会发现他们很讲究面子。朋友<span class="highlight">请客</span>时，<span class="highlight">必须</span>点很多菜，<span class="highlight">尤其</span>要有酒有肉。如果菜太少，请客的人会觉得没面子。有时候，为了不<span class="highlight">伤</span><span class="highlight">对方</span>的面子，即使心里不<span class="highlight">同意</span>，嘴上也不好直接<span class="highlight">拒绝</span>，往往会<span class="highlight">找借口</span>。这种做法虽然显得有些<span class="highlight">虚伪</span>，但也体现了中国人“爱面子”的文化。结果是，请客吃饭常常会<span class="highlight">剩下</span>很多菜，这<span class="highlight">造成</span>了很大的<span class="highlight">浪费</span>。
+                    </p>
+                    
+                    <button class="text-blue-600 font-semibold mt-4 hover:underline flex items-center" onclick="toggleAuxiliary(this)">
+                        <span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa
+                    </button>
+
+                    <div class="auxiliary-text">
+                        <p class="mb-4"><strong>Pinyin:</strong><br>
+                        Zhōngguó rén chīfàn, hěn duō shíhou shì wèile “<b>miànzi</b>”. Gēn Zhōngguó rén <b>dǎ jiāodào</b>, nǐ huì fāxiàn tāmen hěn jiǎngjiu miànzi. Péngyou <b>qǐngkè</b> shí, <b>bìxū</b> diǎn hěn duō cài, <b>yóuqí</b> yào yǒu jiǔ yǒu ròu. Rúguǒ cài tài shǎo, qǐngkè de rén huì juéde méi miànzi. Yǒushíhou, wèile bù <b>shāng</b> <b>duìfāng</b> de miànzi, jíshǐ xīnli bù <b>tóngyì</b>, zuǐ shàng yě bù hǎo zhíjiē <b>jùjué</b>, wǎngwǎng huì <b>zhǎo jièkǒu</b>. Zhè zhǒng zuòfǎ suīrán xiǎnde yǒuxiē <b>xūwěi</b>, dàn yě tǐxiàn le Zhōngguó rén “ài miànzi” de wénhuà. Jiéguǒ shì, qǐngkè chīfàn chángcháng huì <b>shèngxià</b> hěn duō cài, zhè <b>zàochéng</b> le hěn dà de <b>làngfèi</b>.</p>
+                        
+                        <p><strong>Dịch nghĩa:</strong><br>
+                        Người Trung Quốc ăn cơm, rất nhiều lúc là vì "<b>thể diện</b>". Khi <b>giao thiệp</b> với người Trung Quốc, bạn sẽ phát hiện họ rất chú trọng thể diện. Khi bạn bè <b>mời khách</b>, <b>nhất định phải</b> gọi thật nhiều món, <b>đặc biệt là</b> phải có rượu có thịt. Nếu món ăn quá ít, người mời sẽ cảm thấy mất mặt. Đôi khi, để không <b>làm tổn thương</b> thể diện của <b>đối phương</b>, dù trong lòng không <b>đồng ý</b>, ngoài miệng cũng không tiện <b>từ chối</b> thẳng thừng, mà thường sẽ <b>tìm cớ</b>. Cách làm này tuy tỏ ra có chút <b>giả tạo</b>, nhưng cũng thể hiện văn hóa "yêu thể diện" của người Trung Quốc. Kết quả là, mời cơm thường sẽ <b>còn thừa</b> lại rất nhiều thức ăn, điều này <b>gây ra</b> sự <b>lãng phí</b> rất lớn.</p>
+                    </div>
+                </div>
+            </div>
+
+             <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="font-bold text-blue-800 mb-2">🤔 Câu hỏi thảo luận:</h3>
+                <p>Bạn đã bao giờ phải "tìm cớ" (找借口) để từ chối ai đó vì sợ làm họ mất mặt chưa? Hãy chia sẻ trải nghiệm đó.</p>
+            </div>
+        </section>
+
+        <!-- Phần 3: Ngữ pháp trọng điểm -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">III. Ngữ pháp trọng điểm (语法)</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">1. 尤其 (Yóuqí)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Đặc biệt là, nhất là. Dùng để nhấn mạnh một trường hợp cụ thể trong số các trường hợp đã nêu.</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 我喜欢运动，<b>尤其</b>喜欢游泳。</p>
+                    <p class="text-gray-600">(Tôi thích thể thao, đặc biệt thích bơi lội.)</p>
+                    <p><b>Ví dụ trong bài:</b> 必须点很多菜，<b>尤其</b>要有酒有肉。</p>
+                    <p class="text-gray-600">(Phải gọi nhiều món, đặc biệt là phải có rượu có thịt.)</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">2. 造成 (Zàochéng)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Gây ra, tạo thành. Thường dùng cho các kết quả tiêu cực, không mong muốn.</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 这样做会<b>造成</b>严重后果。</p>
+                    <p class="text-gray-600">(Làm như vậy sẽ gây ra hậu quả nghiêm trọng.)</p>
+                    <p><b>Ví dụ trong bài:</b> 这<b>造成</b>了很大的浪费。</p>
+                    <p class="text-gray-600">(Điều này gây ra sự lãng phí rất lớn.)</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">3. 为了 (Wèile)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Vì, để... (Biểu thị mục đích). Có thể đứng đầu câu hoặc giữa câu.</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> <b>为了</b>学好汉语，他每天都听录音。</p>
+                    <p class="text-gray-600">(Để học tốt tiếng Trung, ngày nào anh ấy cũng nghe ghi âm.)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 4: Bài tập vận dụng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">IV. Bài tập vận dụng (练习)</h2>
+            
+            <div class="space-y-4">
+                <p class="font-semibold">Điền từ thích hợp vào chỗ trống:</p>
+                <div class="bg-gray-100 p-4 rounded-lg mb-4 text-center font-mono">
+                    面子  |  打交道  |  剩下  |  拒绝  |  尤其
+                </div>
+                
+                <div>
+                    <p>1. 这里的风景很美，________是秋天的时候。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans1')">Xem đáp án</button>
+                    <div id="ans1" class="answer"><b>尤其</b> (yóuqí) - Đặc biệt là</div>
+                </div>
+
+                <div>
+                    <p>2. 他不好意思________朋友的邀请。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans2')">Xem đáp án</button>
+                    <div id="ans2" class="answer"><b>拒绝</b> (jùjué) - Từ chối</div>
+                </div>
+
+                <div>
+                    <p>3. 我经常跟外国人________，所以英语很好。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans3')">Xem đáp án</button>
+                    <div id="ans3" class="answer"><b>打交道</b> (dǎ jiāodào) - Giao thiệp</div>
+                </div>
+                
+                 <div>
+                    <p>4. 今天的菜太多了，我们吃不完，________了很多。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans4')">Xem đáp án</button>
+                    <div id="ans4" class="answer"><b>剩下</b> (shèngxià) - Còn thừa</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function toggleCard(btn) {
+            const cardBack = btn.nextElementSibling;
+            if (cardBack.style.display === 'none' || cardBack.style.display === '') {
+                cardBack.style.display = 'block';
+                btn.textContent = 'Ẩn nghĩa';
+            } else {
+                cardBack.style.display = 'none';
+                btn.textContent = 'Xem nghĩa';
+            }
+        }
+
+        function toggleAnswer(id) {
+            const ans = document.getElementById(id);
+            if (ans.style.display === 'none' || ans.style.display === '') {
+                ans.style.display = 'block';
+            } else {
+                ans.style.display = 'none';
+            }
+        }
+
+        function toggleAuxiliary(btn) {
+            const auxText = btn.nextElementSibling;
+            if (auxText.style.display === 'none' || auxText.style.display === '') {
+                auxText.style.display = 'block';
+                btn.innerHTML = '<span class="mr-1">🙈</span> Ẩn Pinyin & Dịch nghĩa';
+            } else {
+                auxText.style.display = 'none';
+                btn.innerHTML = '<span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa';
+            }
+        }
+    </script>
+</body>
+</html>

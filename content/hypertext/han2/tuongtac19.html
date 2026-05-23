@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 19: 可以试试吗 - Role Play tương tác</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+        :root {
+            --primary-color: #a41e21;
+            --secondary-color: #2c3e50;
+            --background-color: #fdfcfb;
+            --card-bg-color: #ffffff;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --success-color: #27ae60;
+            --info-color: #2980b9;
+            --font-chinese: 'Noto Sans SC', sans-serif;
+            --font-vietnamese: 'Roboto', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-vietnamese);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2em;
+            display: flex;
+            justify-content: center;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* --- Màn hình chọn vai --- */
+        #selection-screen h1 {
+            font-family: var(--font-chinese);
+            font-size: 3em;
+            color: var(--primary-color);
+        }
+
+        #selection-screen p {
+            font-size: 1.2em;
+            color: var(--secondary-color);
+            margin-bottom: 2em;
+        }
+
+        .role-selection-container {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            flex-wrap: wrap;
+        }
+
+        .role-choice-card {
+            background: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2em;
+            width: 250px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .role-choice-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .role-choice-card h2 {
+            font-family: var(--font-chinese);
+            font-size: 2em;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .role-choice-card .pinyin {
+             font-family: var(--font-vietnamese);
+             font-size: 0.6em;
+             color: var(--secondary-color);
+        }
+        
+        .role-choice-card .description {
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        /* --- Giao diện vai diễn --- */
+        #role-play-wrapper {
+            display: none; /* Ẩn ban đầu */
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2em;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1em;
+        }
+
+        .header h1 {
+            font-family: var(--font-chinese);
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .role-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5em;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .role-card h3 {
+            font-family: var(--font-vietnamese);
+            font-weight: 500;
+            color: var(--secondary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .role-card ul { list-style: none; padding: 0; margin: 0; }
+        .role-card ul li { 
+            background-color: #f9f9f9; 
+            border-radius: 5px; 
+            padding: 12px; 
+            margin-bottom: 8px; 
+            border-left: 3px solid #ccc;
+        }
+        .role-card .chinese { font-family: var(--font-chinese); font-size: 1.1em; display: block; font-weight: 500;}
+        .role-card .pinyin { font-size: 0.9em; color: var(--info-color); display: block; margin: 2px 0; }
+        .role-card .translation { font-size: 0.9em; color: #555; font-style: italic; display: block; }
+        
+        /* --- Các ứng dụng mini --- */
+        .mini-app {
+            background-color: #f5f7fa;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            padding: 1em;
+            margin-top: 1.5em;
+        }
+        .mini-app h4 {
+            font-family: var(--font-chinese);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 1em;
+            color: var(--info-color);
+        }
+        
+        .product-list table { width: 100%; border-collapse: collapse; }
+        .product-list th, .product-list td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+        .product-list .price { font-family: 'Courier New', Courier, monospace; }
+        
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: calc(100% - 22px); padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .form-group button {
+            width: 100%; padding: 10px; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; font-weight: bold;
+        }
+        #cashier-app button { background-color: var(--info-color); }
+        #final-price { margin-top: 10px; padding: 10px; background: #e8f5e9; border: 1px solid var(--success-color); border-radius: 4px; text-align: center; font-weight: bold; font-size: 1.2em; color: var(--success-color); }
+        
+        #banking-app { border-radius: 20px; padding: 15px; background: #fff; border: 5px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        #banking-app .screen { background: linear-gradient(145deg, #f9faff, #eef2f7); padding: 15px; }
+        #banking-app h4 { color: var(--primary-color); }
+        .balance { text-align: center; margin-bottom: 15px; }
+        .balance span { display: block; font-size: 0.9em; color: #555; }
+        .balance strong { font-size: 1.8em; color: var(--primary-color); }
+        #banking-app button { background-color: var(--success-color); font-size: 1.1em; }
+        #transfer-status { margin-top: 10px; text-align: center; font-weight: bold; }
+        
+        .back-button { display: inline-block; margin-bottom: 2em; padding: 8px 15px; background-color: var(--secondary-color); color: white; border-radius: 5px; text-decoration: none; cursor: pointer; }
+        
+        .secret-info { margin-top: 1.5em; background-color: #fff8e1; border: 1px dashed #ffd54f; padding: 1em; border-radius: 8px; }
+        .secret-info .content { display: none; margin-top: 10px; }
+        .secret-info button { background: #ffc107; color: #333; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="selection-screen">
+            <h1>角色选择 <span class="pinyin">juésè xuǎnzé</span></h1>
+            <p>Hãy chọn vai của bạn để bắt đầu cuộc hội thoại mua sắm!</p>
+            <div class="role-selection-container">
+                <div class="role-choice-card" onclick="selectRole('salesperson')">
+                    <h2>售货员</h2>
+                    <p class="pinyin">shòuhuòyuán</p>
+                    <p class="description">Giới thiệu sản phẩm, tư vấn và thuyết phục khách hàng mua đồ.</p>
+                </div>
+                <div class="role-choice-card" onclick="selectRole('customerA')">
+                    <h2>顾客 A</h2>
+                    <p class="pinyin">gùkè A</p>
+                    <p class="description">Bạn là người đi mua sắm. Hãy hỏi thông tin, thử đồ và trả giá.</p>
+                </div>
+                <div class="role-choice-card" onclick="selectRole('customerB')">
+                    <h2>顾客 B</h2>
+                    <p class="pinyin">gùkè B (朋友)</p>
+                    <p class="description">Bạn đi cùng bạn mình, hãy đưa ra lời khuyên và giúp bạn ấy.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="role-play-wrapper">
+            <a class="back-button" onclick="goBackToSelection()">&#8592; Quay lại chọn vai</a>
+            
+            <div id="salesperson-card" style="display: none;">
+                <div class="header"><h1>售货员 <span class="pinyin">shòuhuòyuán</span></h1></div>
+                <div class="role-card">
+                    <div class="mini-app" id="cashier-app">
+                        <h4><span class="chinese">收银台</span> (Quầy thu ngân)</h4>
+                        <div class="product-list">
+                            <h3><span class="chinese">商品列表</span> (Sản phẩm)</h3>
+                            <table>
+                                <tr><th><span class="chinese">商品</span></th><th><span class="chinese">价格</span></th></tr>
+                                <tr><td><span class="chinese">羽绒服</span></td><td class="price">580 元</td></tr>
+                                <tr><td><span class="chinese">外套</span></td><td class="price">450 元</td></tr>
+                                <tr><td><span class="chinese">裤子</span></td><td class="price">280 元</td></tr>
+                                <tr><td><span class="chinese">鞋子</span></td><td class="price">320 元</td></tr>
+                                <tr><td><span class="chinese">帽子</span></td><td class="price">90 元</td></tr>
+                            </table>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="original-price"><span class="chinese">原价</span> (Giá gốc)</label>
+                            <input type="number" id="original-price" placeholder="Ví dụ: 580">
+                        </div>
+                        <div class="form-group">
+                            <label for="discount"><span class="chinese">打折</span> (Chiết khấu)</label>
+                            <input type="number" id="discount" placeholder="Nhập 8.5 cho giảm giá 15%">
+                        </div>
+                        <div class="form-group"><button onclick="calculatePrice()"><span class="chinese">计算价格</span> (Tính tiền)</button></div>
+                        <div id="final-price"></div>
+                    </div>
+                    <h3><span class="chinese">任务</span> (Nhiệm vụ)</h3>
+                    <p>Chào mừng khách hàng, giới thiệu các sản phẩm mới. Giúp khách hàng tìm được bộ quần áo ưng ý (đúng kích cỡ, màu sắc) và bán được hàng với giá tốt nhất.</p>
+                    <div class="secret-info">
+                        <button onclick="toggleSecret(this)">Xem thông tin bí mật</button>
+                        [cite_start]<div class="content"><p><strong>Mục tiêu:</strong> Bạn có thể giảm giá (打折) tối đa là 20% (打八折 - dǎ bā zhé)[cite: 213, 214]. Nếu khách hàng không mua, hãy thử giới thiệu sản phẩm khác.</p></div>
+                    </div>
+                    <h3><span class="chinese">有用句式</span> (Mẫu câu hữu ích)</h3>
+                    <ul>
+                        [cite_start]<li><span class="chinese">欢迎光临！</span><span class="pinyin">huānyíng guānglín!</span><span class="translation">(Hoan nghênh quý khách!) [cite: 221]</span></li>
+                        <li><span class="chinese">您想买点儿什么？</span><span class="pinyin">nín xiǎng mǎi diǎnr shénme?</span><span class="translation">(Quý khách muốn mua gì ạ?)</span></li>
+                        <li><span class="chinese">这件羽绒服又好看又暖和。</span><span class="pinyin">zhè jiàn yǔróngfú yòu hǎokàn yòu nuǎnhuo.</span><span class="translation">(Áo lông vũ này vừa đẹp vừa ấm.)</span></li>
+                        [cite_start]<li><span class="chinese">当然可以，试衣间在那边。</span><span class="pinyin">dāngrán kěyǐ, shìyījiān zài nàbiān.</span><span class="translation">(Tất nhiên là được ạ, phòng thử đồ ở bên kia.) [cite: 17, 122, 123]</span></li>
+                        [cite_start]<li><span class="chinese">这件很适合您。</span><span class="pinyin">zhè jiàn hěn shìhé nín.</span><span class="translation">(Bộ này rất hợp với chị.) [cite: 191]</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="customerA-card" style="display: none;">
+                <div class="header"><h1>顾客A <span class="pinyin">gùkè A</span></h1></div>
+                <div class="role-card">
+                    <div class="mini-app" id="banking-app">
+                        <div class="screen">
+                            <h4><span class="chinese">手机银行</span> (Mobile Banking)</h4>
+                            <div class="balance"><span><span class="chinese">余额</span> (Số dư)</span><strong><span id="balance-amount">450.00</span> 元</strong></div>
+                            <div class="form-group"><label for="recipient"><span class="chinese">收款人</span> (Người nhận)</label><input type="text" value="服装店 (Cửa hàng quần áo)" readonly></div>
+                            <div class="form-group"><label for="transfer-amount"><span class="chinese">转账金额</span> (Số tiền)</label><input type="number" id="transfer-amount" placeholder="Nhập số tiền cần thanh toán"></div>
+                            <div class="form-group"><button onclick="transferMoney()"><span class="chinese">确认转账</span> (Xác nhận)</button></div>
+                            <div id="transfer-status"></div>
+                        </div>
+                    </div>
+                    <h3><span class="chinese">任务</span> (Nhiệm vụ)</h3>
+                    [cite_start]<p>Bạn muốn mua một chiếc áo khoác (外套) hoặc áo lông vũ (羽绒服) mới[cite: 57, 60]. Hãy hỏi người bán về kiểu dáng, màu sắc, kích cỡ. [cite_start]Nhớ thử đồ và trả giá nhé. [cite: 35, 206]</p>
+                    <div class="secret-info">
+                        <button onclick="toggleSecret(this)">Xem thông tin bí mật</button>
+                        <div class="content"><p><strong>Ngân sách:</strong> Bạn có 450 tệ. Bạn rất thích một chiếc áo khoác nhưng chỉ mua nếu giá dưới 450 tệ.</p></div>
+                    </div>
+                    <h3><span class="chinese">有用句式</span> (Mẫu câu hữu ích)</h3>
+                    <ul>
+                        <li><span class="chinese">小姐，我想看看羽绒服。</span><span class="pinyin">xiǎojiě, wǒ xiǎng kànkan yǔróngfú.</span><span class="translation">(Cô ơi, tôi muốn xem áo lông vũ.)</span></li>
+                        [cite_start]<li><span class="chinese">这件有点儿肥，有没有瘦一点儿的？</span><span class="pinyin">zhè jiàn yǒudiǎnr féi, yǒu méiyǒu shòu yìdiǎnr de?</span><span class="translation">(Chiếc này hơi rộng, có chiếc nào ôm hơn không?) [cite: 21, 168]</span></li>
+                        [cite_start]<li><span class="chinese">我可以试试吗？</span><span class="pinyin">wǒ kěyǐ shìshì ma?</span><span class="translation">(Tôi có thể thử được không?) [cite: 2, 35]</span></li>
+                        <li><span class="chinese">这件多少钱？</span><span class="pinyin">zhè jiàn duōshǎo qián?</span><span class="translation">(Chiếc này bao nhiêu tiền?)</span></li>
+                        [cite_start]<li><span class="chinese">太贵了，便宜一点儿吧。</span><span class="pinyin">tài guì le, piányi yìdiǎnr ba.</span><span class="translation">(Đắt quá, rẻ hơn chút đi.) [cite: 299]</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="customerB-card" style="display: none;">
+                <div class="header"><h1>顾客B (朋友) <span class="pinyin">gùkè B (péngyou)</span></h1></div>
+                <div class="role-card">
+                    <h3><span class="chinese">任务</span> (Nhiệm vụ)</h3>
+                    <p>Bạn đi mua sắm cùng bạn của mình (Khách hàng A). Hãy đưa ra lời khuyên cho họ về kiểu dáng, màu sắc, và giúp họ trả giá để mua được món đồ ưng ý.</p>
+                    <div class="secret-info">
+                        <button onclick="toggleSecret(this)">Xem thông tin bí mật</button>
+                        [cite_start]<div class="content"><p><strong>Lời khuyên:</strong> Bạn nghĩ rằng màu tối (深色) sẽ hợp với bạn mình hơn và giúp bạn ấy trông gầy hơn (瘦). [cite: 31, 174]</p></div>
+                    </div>
+                    <h3><span class="chinese">有用句式</span> (Mẫu câu hữu ích)</h3>
+                    <ul>
+                        [cite_start]<li><span class="chinese">我觉得这件很适合你。</span><span class="pinyin">wǒ juéde zhè jiàn hěn shìhé nǐ.</span><span class="translation">(Tớ thấy cái này hợp với cậu đấy.) [cite: 191]</span></li>
+                        [cite_start]<li><span class="chinese">这个颜色太深了/太浅了。</span><span class="pinyin">zhège yánsè tài shēn le / tài qiǎn le.</span><span class="translation">(Màu này tối quá/sáng quá.) [cite: 126]</span></li>
+                        [cite_start]<li><span class="chinese">你穿这件又好看又合适。</span><span class="pinyin">nǐ chuān zhè jiàn yòu hǎokàn yòu héshì.</span><span class="translation">(Cậu mặc cái này vừa đẹp vừa hợp.) [cite: 19, 29]</span></li>
+                        [cite_start]<li><span class="chinese">不大不小，正合适。</span><span class="pinyin">bú dà bù xiǎo, zhèng héshì.</span><span class="translation">(Không to không nhỏ, vừa vặn luôn.) [cite: 203]</span></li>
+                        <li><span class="chinese">喜欢就买吧！</span><span class="pinyin">xǐhuān jiù mǎi ba!</span><span class="translation">(Thích thì mua đi!)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const selectionScreen = document.getElementById('selection-screen');
+        const rolePlayWrapper = document.getElementById('role-play-wrapper');
+        const roleCards = {
+            salesperson: document.getElementById('salesperson-card'),
+            customerA: document.getElementById('customerA-card'),
+            customerB: document.getElementById('customerB-card')
+        };
+        let currentBalance = 450.00;
+
+        function selectRole(role) {
+            selectionScreen.style.display = 'none';
+            rolePlayWrapper.style.display = 'block';
+            
+            for (const key in roleCards) {
+                roleCards[key].style.display = 'none';
+            }
+            roleCards[role].style.display = 'block';
+        }
+        
+        function goBackToSelection() {
+            rolePlayWrapper.style.display = 'none';
+            selectionScreen.style.display = 'block';
+        }
+
+        function calculatePrice() {
+            const originalPrice = parseFloat(document.getElementById('original-price').value);
+            const discount = parseFloat(document.getElementById('discount').value);
+            const finalPriceDiv = document.getElementById('final-price');
+
+            if (isNaN(originalPrice) || isNaN(discount)) {
+                finalPriceDiv.innerHTML = `<span class="chinese">请输入有效的数字</span>`;
+                finalPriceDiv.style.color = 'red'; return;
+            }
+            if (discount <= 0 || discount > 10) {
+                 finalPriceDiv.innerHTML = `<span class="chinese">折扣应在0到10之间</span>`;
+                 finalPriceDiv.style.color = 'red'; return;
+            }
+            const finalPrice = originalPrice * (discount / 10);
+            finalPriceDiv.innerHTML = `<span class="chinese">最终价格:</span> ${finalPrice.toFixed(2)} 元`;
+            finalPriceDiv.style.color = 'var(--success-color)';
+        }
+
+        function transferMoney() {
+            const amountToTransfer = parseFloat(document.getElementById('transfer-amount').value);
+            const statusDiv = document.getElementById('transfer-status');
+            const balanceSpan = document.getElementById('balance-amount');
+
+            if (isNaN(amountToTransfer) || amountToTransfer <= 0) {
+                statusDiv.textContent = '请输入有效金额';
+                statusDiv.style.color = 'red'; return;
+            }
+
+            if (amountToTransfer > currentBalance) {
+                statusDiv.innerHTML = `<span class="chinese">余额不足！</span> (Số dư không đủ!)`;
+                statusDiv.style.color = 'red';
+            } else {
+                currentBalance -= amountToTransfer;
+                balanceSpan.textContent = currentBalance.toFixed(2);
+                statusDiv.innerHTML = `<span class="chinese">转账成功！</span> (Giao dịch thành công!)`;
+                statusDiv.style.color = 'var(--success-color)';
+            }
+        }
+        
+        function toggleSecret(button) {
+            const content = button.nextElementSibling;
+            const isHidden = content.style.display === 'none' || content.style.display === '';
+            content.style.display = isHidden ? 'block' : 'none';
+            button.textContent = isHidden ? 'Ẩn thông tin bí mật' : 'Xem thông tin bí mật';
+        }
+    </script>
+</body>
+</html>

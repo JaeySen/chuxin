@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Đếm Số Tiếng Trung 🔢</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Light blue background */
+        }
+        .exercise-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+        }
+        .btn {
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #3b82f6; /* Blue-500 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb; /* Blue-600 */
+        }
+        .btn-secondary {
+            background-color: #6b7280; /* Gray-500 */
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563; /* Gray-600 */
+        }
+        .btn-hint {
+            background-color: #f59e0b; /* Amber-500 */
+            color: white;
+        }
+        .btn-hint:hover {
+            background-color: #d97706; /* Amber-600 */
+        }
+        .input-hanzi {
+            border: 1px solid #d1d5db; /* Gray-300 */
+            border-radius: 8px;
+            padding: 10px;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+        .feedback-correct {
+            color: #16a34a; /* Green-600 */
+            font-weight: 600;
+        }
+        .feedback-incorrect {
+            color: #dc2626; /* Red-600 */
+            font-weight: 600;
+        }
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; /* 10% from the top and centered */
+            padding: 25px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: scale(0.9);}
+            to {opacity: 1; transform: scale(1);}
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-8">
+    <div class="container mx-auto max-w-4xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">🔢 Chinh Phục Các Con Số Tiếng Trung! 挑战数字！</h1>
+            <p class="text-lg text-gray-600">Chào các bạn nhỏ! 👋 Hãy cùng thử thách khả năng đếm số bằng chữ Hán nhé. Điền đáp án và xem mình giỏi đến đâu nào! 🚀</p>
+        </header>
+
+        <div id="exercise-container" class="space-y-10">
+            </div>
+
+        <div class="mt-12 text-center">
+            <button id="finish-exercise-btn" class="btn btn-primary text-xl py-3 px-8">🎉 Hoàn Thành & Xem Kết Quả 🎉</button>
+        </div>
+
+        <div id="summary-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h2 class="text-3xl font-bold text-center text-blue-600 mb-6">🎉 Kết Quả Bài Làm 🎉</h2>
+                <div id="summary-content" class="space-y-3 text-lg">
+                    <p>⏳ <strong class="text-gray-700">Tổng thời gian làm bài:</strong> <span id="total-time" class="font-semibold"></span></p>
+                    <p>🎯 <strong class="text-gray-700">Tổng số câu hỏi:</strong> <span id="total-questions-summary" class="font-semibold"></span></p>
+                    <p>✅ <strong class="text-gray-700">Số câu đúng:</strong> <span id="correct-answers-summary" class="font-semibold text-green-600"></span></p>
+                    <p>❌ <strong class="text-gray-700">Số câu sai:</strong> <span id="incorrect-answers-summary" class="font-semibold text-red-600"></span></p>
+                    
+                    <div class="text-center my-6">
+                        <div id="badge-icon-summary" class="badge-icon"></div>
+                        <p id="badge-name-summary" class="text-2xl font-semibold text-amber-500"></p>
+                    </div>
+
+                    <div id="incorrect-questions-list" class="mt-4">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-700">Xem lại các câu sai nè:</h3>
+                        </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <button onclick="closeModal()" class="btn btn-secondary py-2 px-6">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            // Section 1: Numbers up to 10,000
+            { id: 's1q1', section: '基础数字 (Đến 10,000)', number: '10', answer: '十', pinyin: 'shí' },
+            { id: 's1q2', section: '基础数字 (Đến 10,000)', number: '15', answer: '十五', pinyin: 'shí wǔ' },
+            { id: 's1q3', section: '基础数字 (Đến 10,000)', number: '19', answer: '十九', pinyin: 'shí jiǔ' },
+            { id: 's1q4', section: '基础数字 (Đến 10,000)', number: '22', answer: '二十二', pinyin: 'èr shí èr' },
+            { id: 's1q5', section: '基础数字 (Đến 10,000)', number: '44', answer: '四十四', pinyin: 'sì shí sì' },
+            { id: 's1q6', section: '基础数字 (Đến 10,000)', number: '58', answer: '五十八', pinyin: 'wǔ shí bā' },
+            { id: 's1q7', section: '基础数字 (Đến 10,000)', number: '97', answer: '九十七', pinyin: 'jiǔ shí qī' },
+            { id: 's1q8', section: '基础数字 (Đến 10,000)', number: '100', answer: '一百', pinyin: 'yī bǎi' },
+            { id: 's1q9', section: '基础数字 (Đến 10,000)', number: '105', answer: '一百零五', pinyin: 'yī bǎi líng wǔ' },
+            { id: 's1q10', section: '基础数字 (Đến 10,000)', number: '238', answer: '二百三十八', pinyin: 'èr bǎi sān shí bā' },
+            { id: 's1q11', section: '基础数字 (Đến 10,000)', number: '498', answer: '四百九十八', pinyin: 'sì bǎi jiǔ shí bā' },
+            { id: 's1q12', section: '基础数字 (Đến 10,000)', number: '999', answer: '九百九十九', pinyin: 'jiǔ bǎi jiǔ shí jiǔ' },
+            { id: 's1q13', section: '基础数字 (Đến 10,000)', number: '1076', answer: '一千零七十六', pinyin: 'yī qiān líng qī shí liù' },
+            { id: 's1q14', section: '基础数字 (Đến 10,000)', number: '2856', answer: '二千八百五十六', pinyin: 'èr qiān bā bǎi wǔ shí liù' },
+            { id: 's1q15', section: '基础数字 (Đến 10,000)', number: '2988', answer: '二千九百八十八', pinyin: 'èr qiān jiǔ bǎi bā shí bā' },
+            { id: 's1q16', section: '基础数字 (Đến 10,000)', number: '3644', answer: '三千六百四十四', pinyin: 'sān qiān liù bǎi sì shí sì' },
+            { id: 's1q17', section: '基础数字 (Đến 10,000)', number: '8976', answer: '八千九百七十六', pinyin: 'bā qiān jiǔ bǎi qī shí liù' },
+            { id: 's1q18', section: '基础数字 (Đến 10,000)', number: '9827', answer: '九千八百二十七', pinyin: 'jiǔ qiān bā bǎi èr shí qī' },
+            { id: 's1q19', section: '基础数字 (Đến 10,000)', number: '9876', answer: '九千八百七十六', pinyin: 'jiǔ qiān bā bǎi qī shí liù' },
+
+            { id: 's2q1', section: '万位数字 (Chục Nghìn)', number: '10000', answer: '一万', pinyin: 'yī wàn' },
+            { id: 's2q2', section: '万位数字 (Chục Nghìn)', number: '15049', answer: '一万五千零四十九', pinyin: 'yī wàn wǔ qiān líng sì shí jiǔ' },
+            { id: 's2q3', section: '万位数字 (Chục Nghìn)', number: '23475', answer: '二万三千四百七十五', pinyin: 'èr wàn sān qiān sì bǎi qī shí wǔ' },
+            { id: 's2q4', section: '万位数字 (Chục Nghìn)', number: '87654', answer: '八万七千六百五十四', pinyin: 'bā wàn qī qiān liù bǎi wǔ shí sì' },
+            { id: 's2q5', section: '万位数字 (Chục Nghìn)', number: '99887', answer: '九万九千八百八十七', pinyin: 'jiǔ wàn jiǔ qiān bā bǎi bā shí qī' },
+
+            { id: 's3q1', section: '十万位数字 (Trăm Nghìn)', number: '100000', answer: '十万', pinyin: 'shí wàn' },
+            { id: 's3q2', section: '十万位数字 (Trăm Nghìn)', number: '120985', answer: '十二万零九百八十五', pinyin: 'shí èr wàn líng jiǔ bǎi bā shí wǔ' },
+            { id: 's3q3', section: '十万位数字 (Trăm Nghìn)', number: '215124', answer: '二十一万五千一百二十四', pinyin: 'èr shí yī wàn wǔ qiān yī bǎi èr shí sì' },
+            { id: 's3q4', section: '十万位数字 (Trăm Nghìn)', number: '295486', answer: '二十九万五千四百八十六', pinyin: 'èr shí jiǔ wàn wǔ qiān sì bǎi bā shí liù' },
+            { id: 's3q5', section: '十万位数字 (Trăm Nghìn)', number: '754652', answer: '七十五万四千六百五十二', pinyin: 'qī shí wǔ wàn sì qiān liù bǎi wǔ shí èr' },
+            { id: 's3q6', section: '十万位数字 (Trăm Nghìn)', number: '987547', answer: '九十八万七千五百四十七', pinyin: 'jiǔ shí bā wàn qī qiān wǔ bǎi sì shí qī' },
+
+            { id: 's4q1', section: '百万位数字 (Triệu)', number: '1000000', answer: '一百万', pinyin: 'yī bǎi wàn' },
+            { id: 's4q2', section: '百万位数字 (Triệu)', number: '1347865', answer: '一百三十四万七千八百六十五', pinyin: 'yī bǎi sān shí sì wàn qī qiān bā bǎi liù shí wǔ' },
+            { id: 's4q3', section: '百万位数字 (Triệu)', number: '2542753', answer: '二百五十四万二千七百五十三', pinyin: 'èr bǎi wǔ shí sì wàn èr qiān qī bǎi wǔ shí sān' },
+            { id: 's4q4', section: '百万位数字 (Triệu)', number: '3125853', answer: '三百一十二万五千八百五十三', pinyin: 'sān bǎi yī shí èr wàn wǔ qiān bā bǎi wǔ shí sān' },
+            { id: 's4q5', section: '百万位数字 (Triệu)', number: '6235789', answer: '六百二十三万五千七百八十九', pinyin: 'liù bǎi èr shí sān wàn wǔ qiān qī bǎi bā shí jiǔ' },
+            { id: 's4q6', section: '百万位数字 (Triệu)', number: '9321264', answer: '九百三十二万一千二百六十四', pinyin: 'jiǔ bǎi sān shí èr wàn yī qiān èr bǎi liù shí sì' },
+
+            { id: 's5q1', section: '千万位数字 (Chục Triệu)', number: '10000000', answer: '一千万', pinyin: 'yī qiān wàn' },
+            { id: 's5q2', section: '千万位数字 (Chục Triệu)', number: '15205202', answer: '一千五百二十万五千二百零二', pinyin: 'yī qiān wǔ bǎi èr shí wàn wǔ qiān èr bǎi líng èr' },
+            { id: 's5q3', section: '千万位数字 (Chục Triệu)', number: '17232796', answer: '一千七百二十三万二千七百九十六', pinyin: 'yī qiān qī bǎi èr shí sān wàn èr qiān qī bǎi jiǔ shí liù' },
+            { id: 's5q4', section: '千万位数字 (Chục Triệu)', number: '18265321', answer: '一千八百二十六万五千三百二十一', pinyin: 'yī qiān bā bǎi èr shí liù wàn wǔ qiān sān bǎi èr shí yī' },
+            { id: 's5q5', section: '千万位数字 (Chục Triệu)', number: '87169264', answer: '八千七百一十六万九千二百六十四', pinyin: 'bā qiān qī bǎi yī shí liù wàn jiǔ qiān èr bǎi liù shí sì' },
+            { id: 's5q6', section: '千万位数字 (Chục Triệu)', number: '91125386', answer: '九千一百一十二万五千三百八十六', pinyin: 'jiǔ qiān yī bǎi yī shí èr wàn wǔ qiān sān bǎi bā shí liù' }
+        ];
+
+        const exerciseContainer = document.getElementById('exercise-container');
+        const userAnswers = new Map(); // To store user's answers and status {isCorrect: boolean, userAnswer: string}
+        let startTime;
+        let timerInterval;
+
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 1000); // Update timer every second
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+        
+        function updateTimer() {
+            // This function can be used to display a live timer if needed.
+            // For now, we just calculate total time at the end.
+        }
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes} phút ${seconds} giây`;
+        }
+
+        function loadExercises() {
+            startTimer();
+            const groupedExercises = exercises.reduce((acc, ex) => {
+                if (!acc[ex.section]) {
+                    acc[ex.section] = [];
+                }
+                acc[ex.section].push(ex);
+                return acc;
+            }, {});
+
+            for (const sectionTitle in groupedExercises) {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.innerHTML = `<h2 class="text-2xl font-semibold text-sky-700 mb-4">${sectionTitle} 🌟</h2>`;
+                
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+
+                groupedExercises[sectionTitle].forEach((ex, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'exercise-card p-5';
+                    card.innerHTML = `
+                        <p class="text-lg font-medium mb-1">Câu ${index + 1}:</p>
+                        <p class="text-2xl font-bold text-indigo-600 mb-3">Số: ${ex.number.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
+                        <input type="text" id="input-${ex.id}" class="input-hanzi mb-3" placeholder="✏️ Nhập chữ Hán...">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <button onclick="showHint('${ex.id}')" class="btn btn-hint text-sm">💡 Gợi ý</button>
+                            <button onclick="checkAnswer('${ex.id}')" class="btn btn-secondary text-sm">✔️ Kiểm tra</button>
+                        </div>
+                        <p id="feedback-${ex.id}" class="text-sm min-h-[20px]"></p>
+                        <p id="pinyin-${ex.id}" class="text-sm text-gray-500 min-h-[20px]"></p>
+                    `;
+                    gridDiv.appendChild(card);
+                });
+                sectionDiv.appendChild(gridDiv);
+                exerciseContainer.appendChild(sectionDiv);
+            }
+        }
+
+        window.showHint = (exerciseId) => {
+            const exercise = exercises.find(ex => ex.id === exerciseId);
+            const feedbackEl = document.getElementById(`feedback-${exerciseId}`);
+            if (exercise) {
+                feedbackEl.textContent = `Gợi ý: Đáp án bắt đầu bằng chữ "${exercise.answer[0]}" 😉`;
+                feedbackEl.className = 'text-sm text-amber-600';
+            }
+        }
+
+        window.checkAnswer = (exerciseId) => {
+            const exercise = exercises.find(ex => ex.id === exerciseId);
+            const inputEl = document.getElementById(`input-${exerciseId}`);
+            const feedbackEl = document.getElementById(`feedback-${exerciseId}`);
+            const pinyinEl = document.getElementById(`pinyin-${exerciseId}`);
+            const userAnswer = inputEl.value.trim();
+
+            if (!exercise || !inputEl || !feedbackEl) return;
+
+            if (userAnswer === "") {
+                feedbackEl.textContent = "🤔 Bạn chưa nhập câu trả lời!";
+                feedbackEl.className = 'text-sm text-yellow-500';
+                pinyinEl.textContent = '';
+                return;
+            }
+            
+            // Normalize answers: remove spaces, convert to a consistent form if needed (e.g. for 两/二)
+            // For this example, direct comparison is used. More complex normalization might be needed.
+            // For example, accepting both 二百三十八 and 两百三十八 for 238.
+            // For simplicity, we'll stick to the defined answer.
+            const isCorrect = userAnswer === exercise.answer;
+
+            userAnswers.set(exercise.id, { 
+                isCorrect: isCorrect, 
+                userAnswer: userAnswer,
+                correctAnswer: exercise.answer,
+                number: exercise.number,
+                pinyin: exercise.pinyin
+            });
+
+            if (isCorrect) {
+                feedbackEl.textContent = "🎉 Chính xác! Giỏi quá!";
+                feedbackEl.className = 'feedback-correct text-sm';
+                pinyinEl.textContent = `Pinyin: ${exercise.pinyin}`;
+                inputEl.disabled = true; // Disable input after correct answer
+                inputEl.classList.add('bg-green-50', 'border-green-300');
+                // Disable buttons for this question
+                const hintButton = inputEl.parentElement.querySelector('.btn-hint');
+                const checkButton = inputEl.parentElement.querySelector('.btn-secondary');
+                if(hintButton) hintButton.disabled = true;
+                if(checkButton) checkButton.disabled = true;
+
+            } else {
+                feedbackEl.textContent = `😕 Chưa đúng rồi. Thử lại xem! Gợi ý: ${exercise.answer[0]}...`;
+                feedbackEl.className = 'feedback-incorrect text-sm';
+                pinyinEl.textContent = '';
+                inputEl.classList.add('border-red-300');
+            }
+        }
+        
+        document.getElementById('finish-exercise-btn').addEventListener('click', showSummary);
+
+        function showSummary() {
+            stopTimer();
+            const totalTime = new Date() - startTime;
+            let correctCount = 0;
+            const incorrectQuestions = [];
+
+            exercises.forEach(ex => {
+                const userAnswerData = userAnswers.get(ex.id);
+                if (userAnswerData && userAnswerData.isCorrect) {
+                    correctCount++;
+                } else if (userAnswerData && !userAnswerData.isCorrect) {
+                    incorrectQuestions.push({
+                        number: ex.number,
+                        userAnswer: userAnswerData.userAnswer,
+                        correctAnswer: ex.answer,
+                        pinyin: ex.pinyin
+                    });
+                } else { // Question not attempted or only hint viewed
+                     incorrectQuestions.push({
+                        number: ex.number,
+                        userAnswer: "Chưa trả lời",
+                        correctAnswer: ex.answer,
+                        pinyin: ex.pinyin
+                    });
+                }
+            });
+            
+            const totalQuestions = exercises.length;
+            const incorrectCount = totalQuestions - correctCount; // All non-correct answers are considered incorrect for summary
+            const scorePercentage = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+
+            document.getElementById('total-time').textContent = formatTime(totalTime);
+            document.getElementById('total-questions-summary').textContent = totalQuestions;
+            document.getElementById('correct-answers-summary').textContent = `${correctCount} (${scorePercentage.toFixed(1)}%)`;
+            document.getElementById('incorrect-answers-summary').textContent = incorrectCount;
+
+            const incorrectListEl = document.getElementById('incorrect-questions-list');
+            incorrectListEl.innerHTML = '<h3 class="text-xl font-semibold mb-2 text-gray-700">Xem lại các câu sai hoặc chưa trả lời nè:</h3>';
+            if (incorrectQuestions.length > 0) {
+                const ul = document.createElement('ul');
+                ul.className = 'list-disc pl-5 space-y-1 text-sm';
+                incorrectQuestions.forEach(q => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Số ${q.number.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}:</strong> Bạn viết: <span class="text-red-500">${q.userAnswer}</span>. Đáp án đúng: <strong class="text-green-500">${q.correctAnswer}</strong> (<em>${q.pinyin}</em>)`;
+                    ul.appendChild(li);
+                });
+                incorrectListEl.appendChild(ul);
+            } else {
+                incorrectListEl.innerHTML += '<p class="text-green-600">🎉 Yay! Bạn đã trả lời đúng hết tất cả các câu! Siêu quá!</p>';
+            }
+
+            // Badge logic
+            const badgeIconEl = document.getElementById('badge-icon-summary');
+            const badgeNameEl = document.getElementById('badge-name-summary');
+            if (scorePercentage >= 90) {
+                badgeIconEl.textContent = '🏆';
+                badgeNameEl.textContent = 'Bậc Thầy Chữ Số!';
+            } else if (scorePercentage >= 60) {
+                badgeIconEl.textContent = '🌟';
+                badgeNameEl.textContent = 'Chuyên Gia Đếm Số!';
+            } else if (scorePercentage >= 30) {
+                badgeIconEl.textContent = '👍';
+                badgeNameEl.textContent = 'Tiến Bộ Rồi!';
+            } else {
+                badgeIconEl.textContent = '🐣';
+                badgeNameEl.textContent = 'Người Mới Tập Đếm';
+            }
+            
+            document.getElementById('summary-modal').style.display = 'block';
+        }
+
+        window.closeModal = () => {
+            document.getElementById('summary-modal').style.display = 'none';
+        }
+
+        // Close modal if user clicks outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('summary-modal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Load exercises when the page loads
+        window.onload = loadExercises;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Tiếng Trung: 慢度假 (Kỳ nghỉ chậm)</title>
+    <!-- Import phông chữ dễ thương từ Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #FF9AA2;
+            --soft-orange: #FFB7B2;
+            --mint-green: #B5EAD7;
+            --sky-blue: #C7CEEA;
+            --lemon-yellow: #FFF5BA;
+            --text-dark: #6d5c63;
+            --bg-color: #FFF9F5;
+            --card-shadow: 0 8px 20px rgba(255, 154, 162, 0.2);
+        }
+
+        body {
+            font-family: 'Quicksand', 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            /* Họa tiết chấm bi nền dễ thương */
+            background-image: radial-gradient(var(--soft-orange) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Header Style */
+        header {
+            text-align: center;
+            background: #fff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 40px;
+            border: 3px solid var(--primary-pink);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: var(--primary-pink);
+            font-size: 2.8em;
+            margin: 0;
+            text-shadow: 2px 2px 0px var(--lemon-yellow);
+        }
+
+        h2 {
+            color: var(--text-dark);
+            font-size: 1.2em;
+            margin-top: 10px;
+            background: var(--mint-green);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        .mascot {
+            font-size: 3em;
+            display: block;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        /* Section Generic Style */
+        section {
+            background: #fff;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 2px dashed var(--sky-blue);
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-icon {
+            font-size: 1.8em;
+            margin-right: 10px;
+            background: var(--lemon-yellow);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        h3 {
+            color: var(--text-dark);
+            font-size: 1.6em;
+            margin: 0;
+        }
+
+        /* Vocabulary Cards */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .vocab-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            border: 2px solid #f0f0f0;
+            position: relative;
+        }
+
+        .vocab-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary-pink);
+            box-shadow: 0 10px 20px rgba(255, 154, 162, 0.3);
+        }
+
+        /* Màu sắc ngẫu nhiên cho border card */
+        .vocab-card:nth-child(3n+1) { border-bottom: 5px solid var(--primary-pink); }
+        .vocab-card:nth-child(3n+2) { border-bottom: 5px solid var(--mint-green); }
+        .vocab-card:nth-child(3n+3) { border-bottom: 5px solid var(--sky-blue); }
+
+        .word {
+            font-size: 1.8em;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .pinyin {
+            color: #999;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .meaning {
+            background: var(--lemon-yellow);
+            color: #d68910;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+        }
+
+        .example {
+            font-size: 0.95em;
+            color: #666;
+            text-align: left;
+            background: #fafafa;
+            padding: 10px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+
+        /* Summary Styling */
+        .summary-box {
+            background: #F0F4F8;
+            padding: 20px;
+            border-radius: 20px;
+            border-left: 6px solid var(--sky-blue);
+        }
+        
+        .chinese-summary-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            background: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed var(--soft-orange);
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .highlight-word {
+            color: #E07A5F;
+            font-weight: bold;
+            background: #FFF5BA;
+            padding: 2px 5px;
+            border-radius: 5px;
+            margin: 0 2px;
+        }
+
+        .highlight {
+            color: #E07A5F;
+            font-weight: bold;
+            background: rgba(255, 154, 162, 0.2);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        /* Grammar Styling */
+        .grammar-item {
+            background: #fff;
+            border: 2px solid var(--mint-green);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .grammar-structure {
+            font-size: 1.3em;
+            color: #2E8B57;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .grammar-tag {
+            background: var(--mint-green);
+            color: #1a5c3a;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        /* Quiz Styling */
+        .quiz-container {
+            background: #fff;
+        }
+        
+        .quiz-question {
+            background: #FFF5F5;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ffe3e3;
+        }
+
+        .question-text {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .options label {
+            display: block;
+            background: white;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            border-color: var(--sky-blue);
+            background: #f8faff;
+        }
+
+        .options input { margin-right: 10px; accent-color: var(--primary-pink); }
+
+        #submit-btn {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(255, 154, 162, 0.4);
+            transition: transform 0.2s;
+        }
+
+        #submit-btn:hover {
+            transform: translateY(-3px);
+            background: #ff858f;
+        }
+
+        /* Result Popup */
+        #result-area {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .result-perfect {
+            background-color: var(--mint-green);
+            color: #1a5c3a;
+            border: 2px solid #a3cfbb;
+        }
+        
+        .result-good {
+            background-color: var(--lemon-yellow);
+            color: #947600;
+            border: 2px solid #ffeeba;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="mascot">🐼✈️</div>
+        <h1>慢度假 (Màn dùjià)</h1>
+        <h2>✨ Học vui - Nhớ lâu ✨</h2>
+    </header>
+
+    <!-- 1. Vocabulary Section -->
+    <section id="vocabulary">
+        <div class="section-header">
+            <div class="section-icon">🌱</div>
+            <h3>Từ mới (生词)</h3>
+        </div>
+        
+        <div class="vocab-grid">
+            <!-- Word 1 -->
+            <div class="vocab-card">
+                <div class="word">国务院</div>
+                <div class="pinyin">Guówùyuàn</div>
+                <div class="meaning">Quốc vụ viện</div>
+                <div class="example">
+                    🇨🇳 国务院发布了通知。<br>
+                    🇻🇳 Quốc vụ viện đã ra thông báo.
+                </div>
+            </div>
+            <!-- Word 2 -->
+            <div class="vocab-card">
+                <div class="word">堵塞</div>
+                <div class="pinyin">dǔsè</div>
+                <div class="meaning">Tắc nghẽn 🚗</div>
+                <div class="example">
+                    🇨🇳 交通严重堵塞。<br>
+                    🇻🇳 Giao thông tắc nghẽn nghiêm trọng.
+                </div>
+            </div>
+            <!-- Word 3 -->
+            <div class="vocab-card">
+                <div class="word">舒缓</div>
+                <div class="pinyin">shūhuǎn</div>
+                <div class="meaning">Thư thái 💆‍♀️</div>
+                <div class="example">
+                    🇨🇳 听舒缓的音乐。<br>
+                    🇻🇳 Nghe nhạc nhẹ nhàng thư giãn.
+                </div>
+            </div>
+             <!-- Word 4 -->
+             <div class="vocab-card">
+                <div class="word">赋予</div>
+                <div class="pinyin">fùyǔ</div>
+                <div class="meaning">Trao cho / Gán cho</div>
+                <div class="example">
+                    🇨🇳 这被赋予了新意义。<br>
+                    🇻🇳 Điều này được gán cho ý nghĩa mới.
+                </div>
+            </div>
+             <!-- Word 5 -->
+             <div class="vocab-card">
+                <div class="word">品质</div>
+                <div class="pinyin">pǐnzhì</div>
+                <div class="meaning">Chất lượng ⭐</div>
+                <div class="example">
+                    🇨🇳 追求高品质生活。<br>
+                    🇻🇳 Theo đuổi cuộc sống chất lượng cao.
+                </div>
+            </div>
+             <!-- Word 6 -->
+             <div class="vocab-card">
+                <div class="word">多元化</div>
+                <div class="pinyin">duōyuánhuà</div>
+                <div class="meaning">Đa dạng hóa 🌈</div>
+                <div class="example">
+                    🇨🇳 需求越来越多元化。<br>
+                    🇻🇳 Nhu cầu ngày càng đa dạng hóa.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Summary Section -->
+    <section id="summary">
+        <div class="section-header">
+            <div class="section-icon">📖</div>
+            <h3>Tóm tắt bài học (摘要)</h3>
+        </div>
+        <div class="summary-box">
+            <!-- Phần tóm tắt tiếng Trung mới thêm vào -->
+             <div class="chinese-summary-text">
+                <p><strong>🇨🇳 Bài khóa rút gọn (课文缩写):</strong></p>
+                <p>
+                    1999年，<span class="highlight-word">国务院</span>实行了新的休假制度，形成了“黄金周”。虽然这给旅游<span class="highlight-word">部门</span>带来了丰厚收入，但也造成了交通<span class="highlight-word">堵塞</span>，让人身心疲惫。
+                </p>
+                <p>
+                    现在，“慢度假”被<span class="highlight-word">赋予</span>了新的内涵，人们不再<span class="highlight-word">图</span>热闹，而是追求<span class="highlight-word">舒缓</span>和高<span class="highlight-word">品质</span>的体验。这说明人们的度假方式更加<span class="highlight-word">多元化</span>，消费也更趋于<span class="highlight-word">理智</span>。
+                </p>
+            </div>
+            
+            <hr style="border: 0; border-top: 2px dashed #C7CEEA; margin: 20px 0;">
+
+            <p>🌟 <strong>Câu chuyện về Tuần lễ Vàng:</strong> Từ năm 1999, kỳ nghỉ dài 7 ngày (黄金周) giúp du lịch phát triển nhưng lại gây ra cảnh <span class="highlight">kẹt xe (堵塞)</span> và chen chúc mệt mỏi.</p>
+            <p>🍃 <strong>Xu hướng mới:</strong> Bây giờ, mọi người thích <span class="highlight">"Kỳ nghỉ chậm" (慢度假)</span> hơn. Không đi xa, không vội vàng, chỉ cần được <span class="highlight">thư giãn (舒缓)</span> thực sự.</p>
+            <p>💡 <strong>Kết luận:</strong> Cách nghỉ ngơi của mọi người đã trở nên <span class="highlight">lý trí (理智)</span> và phong phú hơn rồi!</p>
+        </div>
+    </section>
+
+    <!-- 3. Grammar Section -->
+    <section id="grammar">
+        <div class="section-header">
+            <div class="section-icon">🧩</div>
+            <h3>Ngữ pháp (语法)</h3>
+        </div>
+
+        <div class="grammar-item">
+            <span class="grammar-structure">即使……也…… <span class="grammar-tag">Cho dù... cũng...</span></span>
+            <p>👉 Dùng để chỉ sự nhượng bộ. Dù điều kiện A có xảy ra, kết quả B vẫn không đổi.</p>
+            <p style="color: #666; font-style: italic;">"即使很忙，我也要陪你看电影。" (Dù rất bận, anh cũng sẽ đi xem phim cùng em.)</p>
+        </div>
+
+        <div class="grammar-item">
+            <span class="grammar-structure">不图……只图…… <span class="grammar-tag">Không cầu... chỉ cầu...</span></span>
+            <p>👉 Nhấn mạnh vào mục đích chính, bỏ qua các yếu tố khác.</p>
+            <p style="color: #666; font-style: italic;">"我不图回报，只图心安。" (Tôi không cầu báo đáp, chỉ cầu an lòng.)</p>
+        </div>
+    </section>
+
+    <!-- 4. Practice Section -->
+    <section id="practice">
+        <div class="section-header">
+            <div class="section-icon">✍️</div>
+            <h3>Luyện tập (练习)</h3>
+        </div>
+        <form id="quiz-form">
+            <!-- Q1 -->
+            <div class="quiz-question">
+                <p class="question-text">1. Từ nào có nghĩa là "Kẹt xe, tắc nghẽn"? 🚦</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="A"> A. 舒缓 (shūhuǎn)</label>
+                    <label><input type="radio" name="q1" value="B"> B. 堵塞 (dǔsè)</label>
+                    <label><input type="radio" name="q1" value="C"> C. 部门 (bùmén)</label>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-question">
+                <p class="question-text">2. Điền từ: “人们的度假方式越来越_______。” (Ngày càng đa dạng) 🌈</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="A"> A. 多元化 (duōyuánhuà)</label>
+                    <label><input type="radio" name="q2" value="B"> B. 理智 (lǐzhì)</label>
+                    <label><input type="radio" name="q2" value="C"> C. 赋予 (fùyǔ)</label>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-question">
+                <p class="question-text">3. Cấu trúc "即使……也……" dùng để làm gì? 🤔</p>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="A"> A. Chỉ nguyên nhân - kết quả</label>
+                    <label><input type="radio" name="q3" value="B"> B. Chỉ sự nhượng bộ (Cho dù... vẫn...)</label>
+                    <label><input type="radio" name="q3" value="C"> C. Chỉ mục đích</label>
+                </div>
+            </div>
+
+            <button type="button" id="submit-btn" onclick="checkAnswers()">Nộp bài xem điểm nào! 🚀</button>
+        </form>
+
+        <div id="result-area"></div>
+    </section>
+
+    <footer>
+        Made with ❤️ for Chinese Class
+    </footer>
+</div>
+
+<script>
+    function checkAnswers() {
+        // Đáp án đúng
+        const answers = {
+            q1: 'B',
+            q2: 'A',
+            q3: 'B'
+        };
+
+        let score = 0;
+        let total = 3;
+
+        // Chấm điểm
+        let q1Val = document.querySelector('input[name="q1"]:checked');
+        if (q1Val && q1Val.value === answers.q1) score++;
+
+        let q2Val = document.querySelector('input[name="q2"]:checked');
+        if (q2Val && q2Val.value === answers.q2) score++;
+
+        let q3Val = document.querySelector('input[name="q3"]:checked');
+        if (q3Val && q3Val.value === answers.q3) score++;
+
+        // Hiển thị kết quả
+        const resultArea = document.getElementById('result-area');
+        resultArea.style.display = 'block';
+        
+        if (score === total) {
+            resultArea.className = 'result-perfect';
+            resultArea.innerHTML = `
+                <h2>🎉 Xuất sắc! 100 điểm! 🎉</h2>
+                <p>Bạn đã trả lời đúng tất cả các câu hỏi. (太棒了！)</p>
+            `;
+        } else if (score > 0) {
+            resultArea.className = 'result-good';
+            resultArea.innerHTML = `
+                <h2>😊 Làm tốt lắm!</h2>
+                <p>Bạn đúng ${score}/${total} câu. Cố gắng thêm chút nữa nhé! (加油！)</p>
+            `;
+        } else {
+            resultArea.className = 'result-good';
+            resultArea.innerHTML = `
+                <h2>🥺 Ôi không...</h2>
+                <p>Bạn chưa đúng câu nào. Hãy đọc lại bài và thử lại nhé!</p>
+            `;
+        }
+        
+        // Cuộn xuống kết quả
+        resultArea.scrollIntoView({behavior: "smooth"});
+    }
+</script>
+
+</body>
+</html>

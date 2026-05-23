@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BÀI THI CUỐI KỲ GIÁO TRÌNH HÁN 4</title></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #fdf2f4; }
+        .cute-card { background: white; border-radius: 24px; box-shadow: 0 10px 25px rgba(255, 182, 193, 0.2); border: 2px solid #ffecf0; transition: transform 0.2s; }
+        .section-header { color: #ff6b81; border-bottom: 3px dashed #ffb6c1; padding-bottom: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+        .btn-cute { background: linear-gradient(135deg, #ff8fa3 0%, #ff6b81 100%); color: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(255, 107, 129, 0.3); }
+        .btn-cute:hover { transform: scale(1.02); filter: brightness(1.1); }
+        .btn-cute:disabled { background: #d1d5db; box-shadow: none; transform: none; }
+        .input-text { border: 2px solid #ffe4e8; border-radius: 12px; padding: 10px 15px; outline: none; transition: all 0.3s; width: 100%; }
+        .input-text:focus { border-color: #ffb6c1; box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.2); }
+        .radio-group label { cursor: pointer; display: block; padding: 10px 15px; border-radius: 12px; border: 2px solid #f9fafb; margin-bottom: 8px; transition: all 0.2s; }
+        .radio-group input:checked + span { color: #ff6b81; font-weight: bold; }
+        .radio-group label:hover { background-color: #fff5f7; border-color: #ffdae0; }
+        #audio-panel { position: sticky; top: 10px; z-index: 100; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); border: 2px solid #ffb6c1; border-radius: 20px; }
+        .passage-box { background-color: #fffafa; border-left: 5px solid #ffb6c1; padding: 15px; border-radius: 10px; margin-bottom: 20px; line-height: 1.8; }
+        .modal-bg { background: rgba(255, 107, 129, 0.4); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#ff6b81] mb-2">✨ BÀI THI CUỐI KỲ GIÁO TRÌNH HÁN 4 ✨</h1>
+            <p class="text-gray-500 font-medium">Chào các em! Hãy bình tĩnh và hoàn thành tốt bài tập này nhé! 加油！</p>
+        </div>
+
+        <!-- Sticky Audio Control -->
+        <div id="audio-panel" class="p-4 mb-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="bg-pink-100 p-3 rounded-full text-2xl">🎧</div>
+                <div>
+                    <h3 class="font-bold text-[#ff6b81]">Phần Nghe (2 lần liên tục)</h3>
+                    <p id="audio-status" class="text-xs text-gray-400">Trạng thái: Chưa bắt đầu</p>
+                </div>
+            </div>
+            <button id="play-btn" class="btn-cute px-8 py-3 font-bold">Bắt đầu nghe</button>
+            <audio id="main-audio">
+                <source src="https://res.cloudinary.com/dylnm79id/video/upload/v1768384152/H41010_mp3cut.net_slctyb.mp3" type="audio/mpeg">
+                Trình duyệt của bạn không hỗ trợ audio.
+            </audio>
+        </div>
+
+        <form id="hsk-form">
+            <!-- PHẦN 1: NGHE HIỂU -->
+            <section class="cute-card p-6 md:p-10 mb-10">
+                <div class="section-header">
+                    <span class="text-3xl">👂</span>
+                    <h2 class="text-2xl font-bold uppercase">Phần 1: Nghe hiểu (20 câu)</h2>
+                </div>
+
+                <div class="mb-10">
+                    <div class="bg-pink-50 p-4 rounded-xl mb-6 text-pink-700 font-medium">
+                        📍 <strong>I. Phán đoán đúng sai:</strong> Học viên điền <b>对</b> (đúng) hoặc <b>错</b> (sai) vào ô trống.
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">1. ★ 他决定参加聚会。<input type="text" name="q1" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">2. ★ 那儿的饺子很便宜。<input type="text" name="q2" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">3. ★ 人们可以通过音乐交流感情。<input type="text" name="q3" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">4. ★ 这次旅行他玩儿得很高兴。<input type="text" name="q4" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">5. ★ 大家认识很久了。<input type="text" name="q5" class="input-text w-20 text-center" placeholder="对/错"></div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">6. ★ 他适应北方的冬天了。<input type="text" name="q6" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">7. ★ 作家的小说很受欢迎。<input type="text" name="q7" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">8. ★ 他们明天 7 点出发。<input type="text" name="q8" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">9. ★ 父母对孩子要讲信用。<input type="text" name="q9" class="input-text w-20 text-center" placeholder="对/错"></div>
+                            <div class="flex items-center gap-3">10. ★ 张师傅对人很热情。<input type="text" name="q10" class="input-text w-20 text-center" placeholder="对/错"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="bg-pink-50 p-4 rounded-xl mb-6 text-pink-700 font-medium">
+                        📍 <strong>II. Chọn đáp án đúng:</strong> Nghe câu hỏi và chọn đáp án chính xác nhất.
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 radio-group">
+                        <div><p class="font-bold mb-3">11.</p><label><input type="radio" name="q11" value="A" class="hidden"> <span>A 口渴了</span></label><label><input type="radio" name="q11" value="B" class="hidden"> <span>B 没睡醒</span></label><label><input type="radio" name="q11" value="C" class="hidden"> <span>C 觉得很热</span></label><label><input type="radio" name="q11" value="D" class="hidden"> <span>D 想关空调</span></label></div>
+                        <div><p class="font-bold mb-3">12.</p><label><input type="radio" name="q12" value="A" class="hidden"> <span>A 很旧</span></label><label><input type="radio" name="q12" value="B" class="hidden"> <span>B 很流行</span></label><label><input type="radio" name="q12" value="C" class="hidden"> <span>C 质量差</span></label><label><input type="radio" name="q12" value="D" class="hidden"> <span>D 正在打折</span></label></div>
+                        <div><p class="font-bold mb-3">13.</p><label><input type="radio" name="q13" value="A" class="hidden"> <span>A 亲戚</span></label><label><input type="radio" name="q13" value="B" class="hidden"> <span>B 同事</span></label><label><input type="radio" name="q13" value="C" class="hidden"> <span>C 房东</span></label><label><input type="radio" name="q13" value="D" class="hidden"> <span>D 观众</span></label></div>
+                        <div><p class="font-bold mb-3">14.</p><label><input type="radio" name="q14" value="A" class="hidden"> <span>A 输了比赛</span></label><label><input type="radio" name="q14" value="B" class="hidden"> <span>B 换号码了</span></label><label><input type="radio" name="q14" value="C" class="hidden"> <span>C 没带现金</span></label><label><input type="radio" name="q14" value="D" class="hidden"> <span>D 没发工资</span></label></div>
+                        <div><p class="font-bold mb-3">15.</p><label><input type="radio" name="q15" value="A" class="hidden"> <span>A 生气了</span></label><label><input type="radio" name="q15" value="B" class="hidden"> <span>B 没看清</span></label><label><input type="radio" name="q15" value="C" class="hidden"> <span>C 太激动了</span></label><label><input type="radio" name="q15" value="D" class="hidden"> <span>D 忙着送客人</span></label></div>
+                        <div><p class="font-bold mb-3">16.</p><label><input type="radio" name="q16" value="A" class="hidden"> <span>A 问路</span></label><label><input type="radio" name="q16" value="B" class="hidden"> <span>B 查词典</span></label><label><input type="radio" name="q16" value="C" class="hidden"> <span>C 买地图</span></label><label><input type="radio" name="q16" value="D" class="hidden"> <span>D 打印照片</span></label></div>
+                        <div><p class="font-bold mb-3">17.</p><label><input type="radio" name="q17" value="A" class="hidden"> <span>A 很重</span></label><label><input type="radio" name="q17" value="B" class="hidden"> <span>B 颜色深</span></label><label><input type="radio" name="q17" value="C" class="hidden"> <span>C 很难看</span></label><label><input type="radio" name="q17" value="D" class="hidden"> <span>D 太脏了</span></label></div>
+                        <div><p class="font-bold mb-3">18.</p><label><input type="radio" name="q18" value="A" class="hidden"> <span>A 邮局</span></label><label><input type="radio" name="q18" value="B" class="hidden"> <span>B 机场</span></label><label><input type="radio" name="q18" value="C" class="hidden"> <span>C 火车站</span></label><label><input type="radio" name="q18" value="D" class="hidden"> <span>D 图书馆</span></label></div>
+                        <div><p class="font-bold mb-3">19.</p><label><input type="radio" name="q19" value="A" class="hidden"> <span>A 迷路了</span></label><label><input type="radio" name="q19" value="B" class="hidden"> <span>B 要去约会</span></label><label><input type="radio" name="q19" value="C" class="hidden"> <span>C 坐地铁去</span></label><label><input type="radio" name="q19" value="D" class="hidden"> <span>D 来不及了</span></label></div>
+                        <div><p class="font-bold mb-3">20.</p><label><input type="radio" name="q20" value="A" class="hidden"> <span>A 女儿</span></label><label><input type="radio" name="q20" value="B" class="hidden"> <span>B 弟弟</span></label><label><input type="radio" name="q20" value="C" class="hidden"> <span>C 丈夫</span></label><label><input type="radio" name="q20" value="D" class="hidden"> <span>D 父亲</span></label></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PHẦN 2: ĐỌC HIỂU -->
+            <section class="cute-card p-6 md:p-10 mb-10">
+                <div class="section-header">
+                    <span class="text-3xl">📖</span>
+                    <h2 class="text-2xl font-bold uppercase">Phần 2: Đọc hiểu (30 câu)</h2>
+                </div>
+
+                <div class="mb-12">
+                    <h3 class="font-bold mb-4 text-gray-700">I. Điền từ vào chỗ trống (A 世纪, B 引起, C 辛苦, E 味道, F 份)</h3>
+                    <div class="space-y-4">
+                        <p>21. 先生，请您先在入口处填一（ <input type="text" name="q21" class="input-text w-16 inline-block text-center mx-2"> ）表格。</p>
+                        <p>22. 最近10年这个省经济增长很快，（ <input type="text" name="q22" class="input-text w-16 inline-block text-center mx-2"> ）了很多人的关注。</p>
+                        <p>23. 生活中少了幽默，就好像菜里忘了加盐，总让人感觉少了些（ <input type="text" name="q23" class="input-text w-16 inline-block text-center mx-2"> ）。</p>
+                        <p>24. 今天的演出非常精彩，大家都（ <input type="text" name="q24" class="input-text w-16 inline-block text-center mx-2"> ）了，早点儿回去休息吧。</p>
+                        <p>25. 我家门前的那条马路是 1920 年修的，到现在都快一个（ <input type="text" name="q25" class="input-text w-16 inline-block text-center mx-2"> ）了。</p>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <h3 class="font-bold mb-4 text-gray-700 italic">B. Đọc đoạn văn và chọn từ đúng (46-49)</h3>
+                    <div class="passage-box">
+                        一只小猫问它的妈妈：“妈妈，幸福在哪里？”猫妈妈回答说：“幸福就在你的尾巴上。”于是小猫就每天 <b>46</b> 着它的尾巴跑，可是总也抓不着，它生气地跑去问妈妈：“为什么我总是抓不住幸福呢？”猫妈妈笑着回答：“只要你一直不停地往前走，<b>47</b>。
+                        <br><br>
+                        每天一早醒来，感觉空气是清新的，太阳是明亮的，身体是舒服的。每天躺下的时候，感觉一天的生活总体是快乐的，希望明天早上 <b>48</b> 开眼睛的时候，还能继续保持这种愉快的 <b>49</b>。难道不幸福吗？
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 radio-group">
+                        <div>
+                            <p class="font-bold mb-2 text-pink-500">46.</p>
+                            <label><input type="radio" name="q46" value="A" class="hidden"> <span>A 追</span></label>
+                            <label><input type="radio" name="q46" value="B" class="hidden"> <span>B 举</span></label>
+                            <label><input type="radio" name="q46" value="C" class="hidden"> <span>C 摸</span></label>
+                            <label><input type="radio" name="q46" value="D" class="hidden"> <span>D 牵</span></label>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-2 text-pink-500">47.</p>
+                            <label><input type="radio" name="q47" value="A" class="hidden"> <span>A 才不会感到累</span></label>
+                            <label><input type="radio" name="q47" value="B" class="hidden"> <span>B 就会抓住很多鱼</span></label>
+                            <label><input type="radio" name="q47" value="C" class="hidden"> <span>C 就可以走得越来越远</span></label>
+                            <label><input type="radio" name="q47" value="D" class="hidden"> <span>D 幸福就会一直跟在你的后面</span></label>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-2 text-pink-500">48.</p>
+                            <label><input type="radio" name="q48" value="A" class="hidden"> <span>A 睁</span></label>
+                            <label><input type="radio" name="q48" value="B" class="hidden"> <span>B 绕</span></label>
+                            <label><input type="radio" name="q48" value="C" class="hidden"> <span>C 退</span></label>
+                            <label><input type="radio" name="q48" value="D" class="hidden"> <span>D 逃</span></label>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-2 text-pink-500">49.</p>
+                            <label><input type="radio" name="q49" value="A" class="hidden"> <span>A 情景</span></label>
+                            <label><input type="radio" name="q49" value="B" class="hidden"> <span>B 情绪</span></label>
+                            <label><input type="radio" name="q49" value="C" class="hidden"> <span>C 优势</span></label>
+                            <label><input type="radio" name="q49" value="D" class="hidden"> <span>D 事实</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <div class="passage-box">
+                        梅兰芳先生初到上海的时候，虽然唱功绝顶，但想要一下子出名也很难。当时替梅兰芳组织演出的戏班子就想在报纸上打广告，<b>53</b> 梅兰芳先生。但是怎么才能引起人们的注意呢？他们在报纸上印了三个字“梅兰芳”，然后什么都不说。
+                        第一天就开始有人议论：“<b>54</b>？”第二天，在报纸上还是不小的版面，三个大字——梅兰芳，这下子议论的人更多了。连登了几天之后，整个上海都在议论了：“您知道梅兰芳吗？”市民们出于 <b>55</b>，都在相互打听，梅兰芳的名声越来越响。
+                        连登一周之后，报纸上登出一个新的广告：“梅兰芳——京剧名旦，今晚在上海某某戏院登台献艺。欢迎观看。”这个广告一出，票 <b>56</b> 就卖光了。大家都想去看看梅兰芳唱得究竟怎么样。梅先生一场走红，知名度一下子就打开了。
+                    </div>
+                    <div class="space-y-8 radio-group">
+                        <div>
+                            <p class="font-bold mb-3 text-pink-500">53.</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                <label><input type="radio" name="q53_r" value="A" class="hidden"> <span>A 抗议</span></label>
+                                <label><input type="radio" name="q53_r" value="B" class="hidden"> <span>B 强调</span></label>
+                                <label><input type="radio" name="q53_r" value="C" class="hidden"> <span>C 宣传</span></label>
+                                <label><input type="radio" name="q53_r" value="D" class="hidden"> <span>D 传播</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-3 text-pink-500">54.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label><input type="radio" name="q54_r" value="A" class="hidden"> <span>A 演出是在哪天啊</span></label>
+                                <label><input type="radio" name="q54_r" value="B" class="hidden"> <span>B 这梅兰芳是谁啊</span></label>
+                                <label><input type="radio" name="q54_r" value="C" class="hidden"> <span>C 梅兰芳真的在上海</span></label>
+                                <label><input type="radio" name="q54_r" value="D" class="hidden"> <span>D 为什么会选择梅兰芳</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-3 text-pink-500">55.</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                <label><input type="radio" name="q55_r" value="A" class="hidden"> <span>A 好奇</span></label>
+                                <label><input type="radio" name="q55_r" value="B" class="hidden"> <span>B 想象</span></label>
+                                <label><input type="radio" name="q55_r" value="C" class="hidden"> <span>C 幻想</span></label>
+                                <label><input type="radio" name="q55_r" value="D" class="hidden"> <span>D 冒险</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-3 text-pink-500">56.</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                <label><input type="radio" name="q56_r" value="A" class="hidden"> <span>A 随时</span></label>
+                                <label><input type="radio" name="q56_r" value="B" class="hidden"> <span>B 立即</span></label>
+                                <label><input type="radio" name="q56_r" value="C" class="hidden"> <span>C 逐步</span></label>
+                                <label><input type="radio" name="q56_r" value="D" class="hidden"> <span>D 悄悄</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <h3 class="font-bold mb-4 text-[#ff6b81]">III. Chọn nội dung phù hợp nhất</h3>
+                    <div class="space-y-12 radio-group">
+                        <div>
+                            <p class="passage-box">33. 研究表明，我们大脑的左半球具有独立支配讲话、写字和数学运算的功能，在控制神经系统的活动方面，左半球起主要作用；而在认识空间、记忆乐调和理解形象信号等方面，右半球的能力明显优于左半球。这就是说，大脑两个半球的功能是很专门化的。。</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <label><input type="radio" name="q33" value="A" class="hidden"> <span>A 听音乐可以开发左脑</span></label>
+                                <label><input type="radio" name="q33" value="B" class="hidden"> <span>B 左脑发达的人数学能力强</span></label>
+                                <label><input type="radio" name="q33" value="C" class="hidden"> <span>C 神经系统主要由右半球控制</span></label>
+                                <label><input type="radio" name="q33" value="D" class="hidden"> <span>D 大脑左半球认识空间能力强</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="passage-box">34. 在制定目标以后，管理者要给员工充分的权利，提供各种必要的资源。只有给予尽可能多的支持，员工才会更有信心。因为他会感觉身后有一个强大的力量，这可以让他放心大胆地朝着目标前进。</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <label><input type="radio" name="q34" value="A" class="hidden"> <span>A 联合起来力量大</span></label>
+                                <label><input type="radio" name="q34" value="B" class="hidden"> <span>B 制定目标要符合实际</span></label>
+                                <label><input type="radio" name="q34" value="C" class="hidden"> <span>C 管理者要信任并支持员工</span></label>
+                                <label><input type="radio" name="q34" value="D" class="hidden"> <span>D 管理者要虚心接受员工的批评</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="passage-box">35. 有些家庭主妇认为干家务活儿的运动量已足够，不必专门进行体育锻炼了。其实这种观点是错误的。因为，只有达到一定强度的运动才会有益于身体，而即使是运动量很大的家务劳动也难以达到运动的强度，并不会带来运动效果。</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <label><input type="radio" name="q35" value="A" class="hidden"> <span>A 夫妻双方要分担家务</span></label>
+                                <label><input type="radio" name="q35" value="B" class="hidden"> <span>B 家务活和运动是两回事</span></label>
+                                <label><input type="radio" name="q35" value="C" class="hidden"> <span>C 各种家务劳动的强度接近</span></label>
+                                <label><input type="radio" name="q35" value="D" class="hidden"> <span>D 家庭主妇每天的运动量很小</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="passage-box">36. 喝茶也是一门学问，不同的季节要喝不同的茶。中国有句话叫“因时择茶”，也就是说按照春夏秋冬的时间顺序，来选择茶的品种。简单来说，就是“春饮花茶，夏饮绿茶，秋饮青茶，冬饮红茶”。</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <label><input type="radio" name="q36" value="A" class="hidden"> <span>A 夏天要多喝绿茶</span></label>
+                                <label><input type="radio" name="q36" value="B" class="hidden"> <span>B 喝茶可以缓解压力</span></label>
+                                <label><input type="radio" name="q36" value="C" class="hidden"> <span>C 泡茶的水温度不能太高</span></label>
+                                <label><input type="radio" name="q36" value="D" class="hidden"> <span>D D 不同季节茶的颜色不同</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="passage-box">37. 在汉语中，“宇”代表上下四方，即所有的空间，“宙”代表古往今来，即所有的时间，所以“宇宙”这个词有“所有的时间 and 空间”的意思。关于宇宙，人们现在还存在许多疑问。但随着科学的发展进步，人类对宇宙的认识也在逐步加深。</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <label><input type="radio" name="q37" value="A" class="hidden"> <span>A 宇宙是静止不动的</span></label>
+                                <label><input type="radio" name="q37" value="B" class="hidden"> <span>B 宇宙代表过去的时空</span></label>
+                                <label><input type="radio" name="q37" value="C" class="hidden"> <span>C 宇宙还在不断地扩大</span></label>
+                                <label><input type="radio" name="q37" value="D" class="hidden"> <span>D 宇宙还存在很多未解之谜</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="passage-box">38. 蚂蚁是一种十分古老的昆虫，大约出现于 1 亿年前，与远古的恐龙同处一个时代。蚂蚁不但常见而且种类繁多，世界上现在已知的蚂蚁约有 9000 种。蚂蚁在世界各地都能存活，因为它们生活在一个非常有组织的群体中，它们分工合作，建筑巢穴，以使其后代能够安全成长。</p>
+                            <div class="grid grid-cols-1 gap-2">
+                                <label><input type="radio" name="q38" value="A" class="hidden"> <span>A 蚂蚁比恐龙更古老</span></label>
+                                <label><input type="radio" name="q38" value="B" class="hidden"> <span>B 蚂蚁经常单独行动</span></label>
+                                <label><input type="radio" name="q38" value="C" class="hidden"> <span>C 蚂蚁喜欢湿热地区</span></label>
+                                <label><input type="radio" name="q38" value="D" class="hidden"> <span>D 蚂蚁的生存能力很强</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <h3 class="font-bold mb-4 text-[#ff6b81]">IV. Đọc đoạn văn dài và trả lời câu hỏi</h3>
+                    <div class="passage-box text-sm leading-relaxed mb-6">
+                        那是一个星期五的下午，马上就要下班了，大家都显得很放松，计划着怎么安排周末的时间。这时，一个陌生人走进来问小王，哪儿能找到一位助手，来帮他整理一下资料，因为他手头有些工作必须当天完成。小王问道：“请问您是？”陌生人回答说：“我们公司跟你们是一个楼层，我想找你们的一个速记员帮忙。”小王告诉他，公司的速记员都去看比赛了。如果再晚来 5 分钟，自己也走了。但他愿意留下来帮忙，因为看比赛以后还有的是机会，但是工作必须在当天完成。把工作做完时，已经很晚了。那个陌生人是一位律师，他向小王表示了谢意，并问应该付他多少钱。小王开玩笑地回答：“1000 块钱吧。”律师表示同意。小王连忙解释自己是开玩笑的，他并没想要收取任何费用。但出乎意料，那位律师竟然真的这样做了。而且 3 个月之后，在小王已经将这件事忘到九霄云外时，律师又找到小王，邀请他到自己的公司工作，薪水会比现在高得多。如果不是你的工作，而你做了，这就是机会。有人曾经研究为什么当机会来临时我们无法把握，答案是：因为机会总是装成“麻烦”的样子。
+                    </div>
+                    <div class="space-y-6 radio-group">
+                        <div>
+                            <p class="font-bold mb-3">41. 根据上文，可以知道小王：</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label><input type="radio" name="q41" value="A" class="hidden"> <span>A 是律师</span></label>
+                                <label><input type="radio" name="q41" value="B" class="hidden"> <span>B 乐于助人</span></label>
+                                <label><input type="radio" name="q41" value="C" class="hidden"> <span>C 不喜欢开玩笑</span></label>
+                                <label><input type="radio" name="q41" value="D" class="hidden"> <span>D 想得到 1000 元</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-3">42. 根据上文，下列哪项正确？</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label><input type="radio" name="q42" value="A" class="hidden"> <span>A 律师很感谢小王</span></label>
+                                <label><input type="radio" name="q42" value="B" class="hidden"> <span>B 小王是公司经理</span></label>
+                                <label><input type="radio" name="q42" value="C" class="hidden"> <span>C 律师没给小王钱</span></label>
+                                <label><input type="radio" name="q42" value="D" class="hidden"> <span>D 那天的工作很快就做完了</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-3">43. 三个月以后：</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label><input type="radio" name="q43" value="A" class="hidden"> <span>A 小王辞职了</span></label>
+                                <label><input type="radio" name="q43" value="B" class="hidden"> <span>B 小王准备换工作</span></label>
+                                <label><input type="radio" name="q43" value="C" class="hidden"> <span>C 小王的工资减少了</span></label>
+                                <label><input type="radio" name="q43" value="D" class="hidden"> <span>D 律师请小王去自己的公司工作</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-3">44. 上文主要想告诉我们什么？</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label><input type="radio" name="q44" value="A" class="hidden"> <span>A 细节决定成败</span></label>
+                                <label><input type="radio" name="q44" value="B" class="hidden"> <span>B 不要过分看重金钱</span></label>
+                                <label><input type="radio" name="q44" value="C" class="hidden"> <span>C 机会偏爱不怕麻烦的人</span></label>
+                                <label><input type="radio" name="q44" value="D" class="hidden"> <span>D 当天的工作要当天完成</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <div class="passage-box text-sm leading-relaxed mb-6">
+                        为了了解学生的想法，我请他们对我提出批评。“教授，您教得很好。”有个学生说，“但是您常在课前等那些迟到的同学。”我听了很吃惊，问他：“难道这样不对吗？”结果很多学生都叫了起来：“不对！”有个学生向我解释说：“迟到说明他不尊重别人的时间，您当然也不必尊重他。”只有尊重别人时间的人，才值得别人尊重。
+                    </div>
+                    <div class="space-y-6 radio-group">
+                        <div>
+                            <p class="font-bold mb-3">★ 学生建议教授：</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label><input type="radio" name="q46_p" value="A" class="hidden"> <span>A 少留作业</span></label>
+                                <label><input type="radio" name="q46_p" value="B" class="hidden"> <span>B 按时下课</span></label>
+                                <label><input type="radio" name="q46_p" value="C" class="hidden"> <span>C 别等迟到的人</span></label>
+                                <label><input type="radio" name="q46_p" value="D" class="hidden"> <span>D 经常表扬同学</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-3">★ 这段话告诉我们要：</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label><input type="radio" name="q47_p" value="A" class="hidden"> <span>A 诚实</span></label>
+                                <label><input type="radio" name="q47_p" value="B" class="hidden"> <span>B 互相理解</span></label>
+                                <label><input type="radio" name="q47_p" value="C" class="hidden"> <span>C 学会原谅</span></label>
+                                <label><input type="radio" name="q47_p" value="D" class="hidden"> <span>D 尊重他人时间</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PHẦN 3: VIẾT -->
+            <section class="cute-card p-6 md:p-10 mb-10">
+                <div class="section-header">
+                    <span class="text-3xl">✍️</span>
+                    <h2 class="text-2xl font-bold uppercase">Phần 3: Viết (15 câu)</h2>
+                </div>
+
+                <div class="space-y-8 mb-12">
+                    <div class="bg-blue-50 p-4 rounded-xl text-blue-700 font-medium">📍 Sắp xếp các từ thành câu hoàn chỉnh.</div>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div><p class="mb-2 font-medium">51. 吃光了 / 那盒饼干 / 被儿子</p><input type="text" name="q51" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">52. 都进行得 / 顺利 / 很 / 所有的事</p><input type="text" name="q52" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">53. 解决 / 问题 / 发脾气 / 并 / 不能</p><input type="text" name="q53" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">54. 经验 / 慢慢 / 是需要 / 积累的</p><input type="text" name="q54" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">55. 词语的用法 / 区别 / 这两个 / 有什么</p><input type="text" name="q55" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">56. 这条 / 稍微 / 裤子 / 厚 / 有点儿</p><input type="text" name="q56" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">57. 不打算 / 留学 / 我 / 暂时 / 还</p><input type="text" name="q57" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">58. 我 / 移民 / 手续 / 正在办理</p><input type="text" name="q58" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">59. 可以 / 促进 / 消化 / 饭后散步</p><input type="text" name="q59" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">60. 这家企业 / 录取了 / 小王 / 被</p><input type="text" name="q60" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">61. 老板 / 她 / 是 / 一家服装店</p><input type="text" name="q61" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">62. 把 / 放 / 文件 / 左边抽屉里</p><input type="text" name="q62" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">63. 兴趣 / 对 / 那个学生 / 猜谜语 / 产生了</p><input type="text" name="q63" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">64. 他的 / 协调能力 / 好 / 身体 / 格外</p><input type="text" name="q64" class="input-text" placeholder="Nhập câu..."></div>
+                        <div><p class="mb-2 font-medium">65. 的 / 不平衡 / 人口分布 / 该国</p><input type="text" name="q65" class="input-text" placeholder="Nhập câu..."></div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 p-6 rounded-3xl border-2 border-yellow-200">
+                    <h3 class="text-xl font-bold text-yellow-700 mb-4">📑 Đề viết văn (200 chữ)</h3>
+                    <p class="mb-4 font-medium">“有人曾经研究为什么当机会来临时我们无法把握，答案是：因为机会总是装成 ‘麻烦’ 的样子。” 请结合这一观点，写一篇 200 字左右 的议论文。</p>
+                    <textarea id="essay-area" class="w-full h-64 p-4 rounded-2xl border-2 border-yellow-100 outline-none focus:border-yellow-400" placeholder="Viết bài luận..."></textarea>
+                    <p class="mt-4 text-sm text-red-600 font-bold">📸 LƯU Ý: CHỤP MÀN HÌNH bài viết gửi giáo viên chấm điểm nhé!</p>
+                </div>
+            </section>
+
+            <div class="text-center pb-20">
+                <button type="button" onclick="calculateScore()" class="btn-cute px-12 py-4 text-xl font-bold">Nộp Bài Ngay ✨</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="modal" class="fixed inset-0 modal-bg z-[200] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl border-4 border-pink-200">
+            <h2 class="text-3xl font-bold text-pink-600 mb-2">Kết quả 🎉</h2>
+            <div class="text-6xl font-black text-gray-800 mb-6" id="final-score">0/65</div>
+            <p id="score-comment" class="text-pink-500 font-bold mb-6 italic"></p>
+            <button onclick="document.getElementById('modal').style.display='none'" class="btn-cute px-8 py-2">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('main-audio');
+        const playBtn = document.getElementById('play-btn');
+        const status = document.getElementById('audio-status');
+        let playCount = 0;
+
+        playBtn.onclick = () => {
+            if (playCount === 0) {
+                audio.play();
+                playBtn.disabled = true;
+                playCount++;
+                status.innerText = "Trạng thái: Đang phát lần 1/2...";
+            }
+        };
+
+        audio.onended = () => {
+            if (playCount === 1) {
+                status.innerText = "Nghỉ 5 giây...";
+                setTimeout(() => { audio.play(); playCount++; status.innerText = "Trạng thái: Đang phát lần 2/2..."; }, 5000);
+            } else { status.innerText = "Trạng thái: Đã nghe xong."; }
+        };
+
+        const correctAnswers = {
+            q1: '错', q2: '错', q3: '对', q4: '对', q5: '错', q6: '错', q7: '对', q8: '错', q9: '对', q10: '对',
+            q11: 'C', q12: 'D', q13: 'A', q14: 'B', q15: 'B', q16: 'A', q17: 'A', q18: 'B', q19: 'C', q20: 'A',
+            q21: 'F', q22: 'B', q23: 'E', q24: 'C', q25: 'A',
+            q31: 'C', q32: 'A', q33: 'B', q34: 'C', q35: 'B', q36: 'A', q37: 'D', q38: 'D',
+            q41: 'B', q42: 'A', q43: 'D', q44: 'C',
+            q46_p: 'C', q47_p: 'D',
+            q46: 'A', q47: 'D', q48: 'A', q49: 'B', q53_r: 'C', q54_r: 'B', q55_r: 'A', q56_r: 'B',
+            q51: '那盒饼干被儿子吃光了。', q52: '所有的事都进行得很顺利。', q53: '发脾气并不能解决问题。',
+            q54: '经验是需要慢慢积累的。', q55: '这两个词语的用法有什么区别？', q56: '这条裤子有点儿厚。',
+            q57: '我暂时还不打算留学。', q58: '我正在办理移民手续。', q59: '饭后散步可以促进消化。',
+            q60: '小王被这家企业录取了。', q61: '她是一家服装店的老板。', q62: '把文件放左边抽屉里。',
+            q63: '那个学生对猜谜语产生了兴趣。', q64: 'his 身体协调能力格外好。', q65: '该国的人口分布不平衡。'
+        };
+
+        function calculateScore() {
+            const form = new FormData(document.getElementById('hsk-form'));
+            let score = 0;
+            const total = 65;
+
+            for (let [key, correct] of Object.entries(correctAnswers)) {
+                let userVal = form.get(key) || "";
+                const clean = (s) => s.toString().trim().replace(/[。？！?.!]$/, "").replace(/\s+/g, "");
+                if (clean(userVal) === clean(correct)) score++;
+            }
+
+            document.getElementById('final-score').innerText = `${score}/${total}`;
+            document.getElementById('score-comment').innerText = score >= 50 ? "Tuyệt vời! 🌸" : "Cần cố gắng thêm! 💪";
+            document.getElementById('modal').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

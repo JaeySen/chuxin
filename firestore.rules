@@ -1,0 +1,68 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isTeacher() {
+      return isSignedIn() && request.auth.token.role == 'teacher';
+    }
+
+    match /courses/{courseId} {
+      allow read: if isSignedIn();
+      allow write: if isTeacher();
+    }
+
+    match /lessons/{lessonId} {
+      allow read: if isSignedIn();
+      allow write: if isTeacher();
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isTeacher();
+      allow create: if isOwner(uid)
+        && request.resource.data.role == 'student';
+      allow update: if isOwner(uid)
+        && request.resource.data.role == resource.data.role;
+
+      match /progress/{lessonId} {
+        allow read, write: if isOwner(uid) || isTeacher();
+      }
+
+      match /worksheets/{lessonId} {
+        allow read, write: if isOwner(uid) || isTeacher();
+      }
+
+      // Session document written by the API server (Admin SDK bypasses rules).
+      // Client needs read access to detect remote logout via onSnapshot.
+      match /sessions/{docId} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
+    }
+
+    // Bingo multiplayer games — open read/write (no auth required for students)
+    match /bingoGames/{gameId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if resource.data.status != "ended"
+        || request.resource.data.status == "ended";
+    }
+
+    // Word Search multiplayer games — open read/write (no auth required for students)
+    match /wordSearchGames/{gameId} {
+      allow read: if true;
+      allow create: if true;
+      // Updates allowed while game is not ended, or to end the game
+      allow update: if resource.data.status != 'ended'
+        || request.resource.data.status == 'ended';
+    }
+  }
+}

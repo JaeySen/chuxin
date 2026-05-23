@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Giữa kỳ Tiếng Trung - GTUD C1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .zh-text {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        /* Pinyin styling */
+        .pinyin {
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.85rem;
+            color: #6b7280; /* gray-500 */
+            font-weight: 400;
+            margin-bottom: -2px;
+            display: block;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white;
+            }
+            .print-container {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+            input, textarea {
+                border: none;
+                border-bottom: 1px solid #000;
+                background: transparent;
+                resize: none;
+            }
+            .bg-gray-50 {
+                background-color: white !important;
+            }
+            /* Ensure pinyin prints clearly */
+            .pinyin {
+                color: #555; 
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+
+    <div class="print-container max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+        
+        <!-- Header -->
+        <div class="bg-teal-700 text-white p-6 text-center relative">
+            <h1 class="text-2xl font-bold uppercase">Bài Ôn Tập Giữa Kỳ - GTUD C1</h1>
+            <p class="mt-2 text-teal-100">Hán ngữ sơ cấp - 综合一 中期考试</p>
+            <div class="absolute top-4 right-4 no-print">
+                <button onclick="resetExam()" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1 rounded text-sm">Làm lại</button>
+            </div>
+        </div>
+
+        <!-- Student Info -->
+        <div class="p-6 border-b border-gray-200 bg-teal-50">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Họ và tên (姓名):</label>
+                    <input type="text" id="studentName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 p-2 border" placeholder="Nhập họ tên...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Lớp (班级):</label>
+                    <input type="text" id="studentClass" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 p-2 border" placeholder="Nhập lớp...">
+                </div>
+            </div>
+            <div id="scoreDisplay" class="hidden mt-4 p-3 bg-yellow-100 text-yellow-800 rounded font-bold text-center border border-yellow-300">
+                <!-- Score will appear here -->
+            </div>
+        </div>
+
+        <form id="examForm" class="p-8 space-y-8">
+
+            <!-- Part A -->
+            <section>
+                <h2 class="text-xl font-bold text-teal-800 mb-4 border-b pb-2">A. 完成句子 Hoàn thành câu (10 điểm)</h2>
+                <p class="text-sm text-gray-500 mb-4 italic">Điền từ thích hợp vào chỗ trống để hoàn thành câu.</p>
+                
+                <div class="space-y-4">
+                    <!-- Q1 -->
+                    <div class="bg-gray-50 p-4 rounded">
+                        <span class="pinyin ml-1">Wǒ qù ... jì xìn.</span>
+                        <label class="block mb-2 zh-text text-lg">1. 我去 <input type="text" name="a1" class="border-b-2 border-gray-400 outline-none bg-transparent text-center w-32 text-teal-700 font-bold mx-1 px-1" autocomplete="off"> 寄信。</label>
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q2 -->
+                    <div class="bg-gray-50 p-4 rounded">
+                        <span class="pinyin ml-1">Jīntiān shì ... , yínháng bù gōngzuò.</span>
+                        <label class="block mb-2 zh-text text-lg">2. 今天是 <input type="text" name="a2" class="border-b-2 border-gray-400 outline-none bg-transparent text-center w-32 text-teal-700 font-bold mx-1 px-1" autocomplete="off"> ，银行不工作。</label>
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q3 -->
+                    <div class="bg-gray-50 p-4 rounded">
+                        <span class="pinyin ml-1">Wǒ yào qù ... qǔ qián.</span>
+                        <label class="block mb-2 zh-text text-lg">3. 我要去 <input type="text" name="a3" class="border-b-2 border-gray-400 outline-none bg-transparent text-center w-32 text-teal-700 font-bold mx-1 px-1" autocomplete="off"> 取钱。</label>
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q4 -->
+                    <div class="bg-gray-50 p-4 rounded">
+                        <span class="pinyin ml-1">Yí gè ... .</span>
+                        <label class="block mb-2 zh-text text-lg">4. 一个 <input type="text" name="a4" class="border-b-2 border-gray-400 outline-none bg-transparent text-center w-32 text-teal-700 font-bold mx-1 px-1" autocomplete="off"> 。</label>
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q5 -->
+                    <div class="bg-gray-50 p-4 rounded">
+                        <span class="pinyin ml-1">Wǒ zài zhè ge ... xuéxí.</span>
+                        <label class="block mb-2 zh-text text-lg">5. 我在这个 <input type="text" name="a5" class="border-b-2 border-gray-400 outline-none bg-transparent text-center w-32 text-teal-700 font-bold mx-1 px-1" autocomplete="off"> 学习。</label>
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Part B -->
+            <section>
+                <h2 class="text-xl font-bold text-teal-800 mb-4 border-b pb-2">B. 重组句子 Sắp xếp câu (20 điểm)</h2>
+                <p class="text-sm text-gray-500 mb-4 italic">Sắp xếp các từ cho sẵn thành câu hoàn chỉnh. (Nhập cả câu bằng tiếng Trung)</p>
+
+                <div class="space-y-6">
+                    <!-- Q1 -->
+                    <div>
+                        <span class="pinyin">Qián / yínháng / nǐ / ma / qù / qǔ</span>
+                        <p class="zh-text text-lg mb-1">1. 钱 / 银行 / 你 / 吗 / 去 / 取</p>
+                        <input type="text" name="b1" class="w-full p-2 border border-gray-300 rounded zh-text focus:border-teal-500" placeholder="Nhập câu trả lời...">
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q2 -->
+                    <div>
+                        <span class="pinyin">Wǒ / yóujú / xìn / jì</span>
+                        <p class="zh-text text-lg mb-1">2. 我 / 邮局 / 信 / 寄</p>
+                        <input type="text" name="b2" class="w-full p-2 border border-gray-300 rounded zh-text focus:border-teal-500" placeholder="Nhập câu trả lời...">
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q3 -->
+                    <div>
+                        <span class="pinyin">Wǒ / Màikè / lǎoshī / xuéxiào / shì / de</span>
+                        <p class="zh-text text-lg mb-1">3. 我 / 麦克 / 老师 / 学校 / 是 / 的</p>
+                        <input type="text" name="b3" class="w-full p-2 border border-gray-300 rounded zh-text focus:border-teal-500" placeholder="Nhập câu trả lời...">
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q4 -->
+                    <div>
+                        <span class="pinyin">Xīngqī / qù / Běijīng / wǒ / nǐ / ma / èr / qù</span>
+                        <p class="zh-text text-lg mb-1">4. 星期 / 去 / 北京 / 我 / 你 / 吗 / 二 / 去</p>
+                        <input type="text" name="b4" class="w-full p-2 border border-gray-300 rounded zh-text focus:border-teal-500" placeholder="Nhập câu trả lời...">
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                    <!-- Q5 -->
+                    <div>
+                        <span class="pinyin">Ma / gōngzuò / nín / qǐng / qǐng / jìn / hǎo / zuò / máng</span>
+                        <p class="zh-text text-lg mb-1">5. 吗 / 工作 / 您 / 请 / 请 / 进 / 好 / 坐 / 忙</p>
+                        <input type="text" name="b5" class="w-full p-2 border border-gray-300 rounded zh-text focus:border-teal-500" placeholder="Nhập câu trả lời...">
+                        <div class="feedback hidden mt-2 text-sm"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Part C -->
+            <section>
+                <h2 class="text-xl font-bold text-teal-800 mb-4 border-b pb-2">C. 造句 Đặt câu với từ cho sẵn (20 điểm)</h2>
+                <p class="text-sm text-gray-500 mb-4 italic">Phần tự luận: Giáo viên sẽ chấm điểm sau.</p>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="flex flex-col">
+                        <label class="font-bold zh-text">1. 忙 (máng):</label>
+                        <textarea name="c1" rows="2" class="mt-1 p-2 border border-gray-300 rounded w-full zh-text"></textarea>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="font-bold zh-text">2. 越南 (Yuè nán):</label>
+                        <textarea name="c2" rows="2" class="mt-1 p-2 border border-gray-300 rounded w-full zh-text"></textarea>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="font-bold zh-text">3. 汉语 (Hàn yǔ):</label>
+                        <textarea name="c3" rows="2" class="mt-1 p-2 border border-gray-300 rounded w-full zh-text"></textarea>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="font-bold zh-text">4. 星期日 (Xīng qī rì):</label>
+                        <textarea name="c4" rows="2" class="mt-1 p-2 border border-gray-300 rounded w-full zh-text"></textarea>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="font-bold zh-text">5. 钱 (qián):</label>
+                        <textarea name="c5" rows="2" class="mt-1 p-2 border border-gray-300 rounded w-full zh-text"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Part D -->
+            <section>
+                <h2 class="text-xl font-bold text-teal-800 mb-4 border-b pb-2">D. 翻译 Dịch thuật (30 điểm)</h2>
+                <p class="text-sm text-gray-500 mb-4 italic">Dịch sang tiếng Trung hoặc tiếng Việt.</p>
+
+                <div class="space-y-6">
+                    <!-- D1 -->
+                    <div>
+                        <p class="mb-2">1. Chủ nhật tuần này bạn có bận không? Bạn không bận tụi mình đi uống trà sữa, tôi bao.</p>
+                        <textarea name="d1" rows="2" class="w-full p-2 border border-gray-300 rounded zh-text" placeholder="Dịch sang tiếng Trung..."></textarea>
+                        <div class="feedback hidden mt-2 text-sm text-teal-700 bg-teal-50 p-2 rounded border border-teal-200">
+                            <strong>Gợi ý:</strong> 这周日你忙吗？你不忙的话我们去喝奶茶，我请客。<br>
+                            <span class="text-xs text-gray-500 italic">Zhè zhōu rì nǐ máng ma? Nǐ bù máng de huà wǒmen qù hē nǎichá, wǒ qǐngkè.</span>
+                        </div>
+                    </div>
+                    <!-- D2 -->
+                    <div>
+                        <p class="mb-2">2. Một tuần tôi học tiếng Trung ba ngày, thứ hai, thứ tư và thứ sáu.</p>
+                        <textarea name="d2" rows="2" class="w-full p-2 border border-gray-300 rounded zh-text" placeholder="Dịch sang tiếng Trung..."></textarea>
+                        <div class="feedback hidden mt-2 text-sm text-teal-700 bg-teal-50 p-2 rounded border border-teal-200">
+                            <strong>Gợi ý:</strong> 我一个星期学三天汉语，星期一、星期三和星期五。<br>
+                            <span class="text-xs text-gray-500 italic">Wǒ yí gè xīngqī xué sān tiān Hànyǔ, xīngqī yī, xīngqī sān hé xīngqī wǔ.</span>
+                        </div>
+                    </div>
+                    <!-- D3 -->
+                    <div>
+                        <p class="mb-2">3. Ngày mai là chủ nhật, ngân hàng không làm việc. Tôi không thể đi ngân hàng rút tiền.</p>
+                        <textarea name="d3" rows="2" class="w-full p-2 border border-gray-300 rounded zh-text" placeholder="Dịch sang tiếng Trung..."></textarea>
+                        <div class="feedback hidden mt-2 text-sm text-teal-700 bg-teal-50 p-2 rounded border border-teal-200">
+                            <strong>Gợi ý:</strong> 明天是周日，银行不工作。我不能去银行取钱。<br>
+                            <span class="text-xs text-gray-500 italic">Míngtiān shì zhōurì, yínháng bù gōngzuò. Wǒ bù néng qù yínháng qǔ qián.</span>
+                        </div>
+                    </div>
+                    <!-- D4 -->
+                    <div>
+                        <span class="pinyin">Zhōu liù hé zhōu rì wǒ zài Nǐ Hǎo xuéxiào xuéxí Hànyǔ.</span>
+                        <p class="zh-text text-lg mb-2">4. 周六和周日我在你好学校学习汉语。</p>
+                        <textarea name="d4" rows="2" class="w-full p-2 border border-gray-300 rounded" placeholder="Dịch sang tiếng Việt..."></textarea>
+                        <div class="feedback hidden mt-2 text-sm text-teal-700 bg-teal-50 p-2 rounded border border-teal-200">
+                            <strong>Gợi ý:</strong> Thứ bảy và chủ nhật tôi học tiếng Trung ở trường Ni Hao (Xin chào).
+                        </div>
+                    </div>
+                    <!-- D5 -->
+                    <div>
+                        <span class="pinyin">Xièxie nǐ qǐng wǒ hē chá, nǐ de gōngzuò máng ma?</span>
+                        <p class="zh-text text-lg mb-2">5. 谢谢你请我喝茶，你的工作忙吗？</p>
+                        <textarea name="d5" rows="2" class="w-full p-2 border border-gray-300 rounded" placeholder="Dịch sang tiếng Việt..."></textarea>
+                        <div class="feedback hidden mt-2 text-sm text-teal-700 bg-teal-50 p-2 rounded border border-teal-200">
+                            <strong>Gợi ý:</strong> Cảm ơn bạn mời tôi uống trà, công việc của bạn có bận không?
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-4 no-print pt-6 border-t">
+                <button type="button" onclick="submitExam()" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300">
+                    Nộp bài & Xem kết quả
+                </button>
+                <button type="button" id="printBtn" onclick="window.print()" class="hidden bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300">
+                    In kết quả ra PDF
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // Answer Key for Auto-grading
+        const correctAnswers = {
+            // Part A
+            'a1': ['邮局'],
+            'a2': ['星期日', '周日'],
+            'a3': ['银行'],
+            'a4': ['人', '学生', '老师', '苹果'], // Flexible but simple check
+            'a5': ['学校', '大学'],
+
+            // Part B (Strict string matching - normalized)
+            'b1': '你去银行取钱吗？',
+            'b2': '我去邮局寄信。',
+            'b3': '麦克是我们学校的老师。', // Also accept variants in logic
+            'b4': '你星期二去北京吗？',
+            'b5': '您好，请进，请坐，工作忙吗？'
+        };
+
+        // Alternate answers logic for Part B to be more forgiving
+        const alternateAnswersB = {
+            'b3': ['我是学校的麦克老师。', '我是麦克学校的老师。', '麦克是我们学校的老师'],
+            'b4': ['星期二你去北京吗？', '星期二你去北京吗'],
+            'b5': ['您好，请进，请坐，工作忙吗', '您好请进请坐工作忙吗']
+        };
+
+        function normalize(str) {
+            if (!str) return '';
+            // Remove punctuation for looser checking if desired, but here we keep it mostly
+            // but trim spaces
+            return str.trim().replace(/\s+/g, '');
+        }
+
+        function submitExam() {
+            let scoreA = 0;
+            let scoreB = 0;
+            const totalA = 10; // points
+            const totalB = 20; // points
+            
+            const form = document.getElementById('examForm');
+            const formData = new FormData(form);
+
+            // --- Check Part A ---
+            for (let i = 1; i <= 5; i++) {
+                const userAns = formData.get(`a1`.replace('1', i)).trim();
+                const inputEl = form.querySelector(`input[name="a${i}"]`);
+                const feedbackEl = inputEl.parentElement.parentElement.querySelector('.feedback');
+                
+                // Logic: Check if user answer is in allowed list
+                const allowed = correctAnswers[`a${i}`];
+                let isCorrect = false;
+                
+                // Special check for open-ended ones like "One..." (yige)
+                if (i === 4 && userAns.length > 0) isCorrect = true; 
+                else if (allowed.includes(userAns)) isCorrect = true;
+
+                if (isCorrect) {
+                    scoreA += 2; // 2 points each
+                    inputEl.classList.add('text-green-600');
+                    inputEl.classList.remove('text-teal-700');
+                } else {
+                    inputEl.classList.add('text-red-600', 'line-through');
+                    feedbackEl.innerHTML = `Đáp án đúng: <span class="text-green-600 font-bold">${allowed[0]}</span>`;
+                    feedbackEl.classList.remove('hidden');
+                }
+            }
+
+            // --- Check Part B ---
+            for (let i = 1; i <= 5; i++) {
+                const rawVal = formData.get(`b${i}`);
+                const userAns = normalize(rawVal);
+                const inputEl = form.querySelector(`input[name="b${i}"]`);
+                const feedbackEl = inputEl.parentElement.querySelector('.feedback');
+                
+                const key = `b${i}`;
+                let isCorrect = false;
+
+                // Check main answer (normalized)
+                if (userAns === normalize(correctAnswers[key])) isCorrect = true;
+                
+                // Check alternates
+                if (!isCorrect && alternateAnswersB[key]) {
+                    alternateAnswersB[key].forEach(alt => {
+                        if (userAns === normalize(alt)) isCorrect = true;
+                    });
+                }
+
+                if (isCorrect) {
+                    scoreB += 4; // 4 points each
+                    inputEl.classList.add('border-green-500', 'bg-green-50');
+                    inputEl.classList.remove('border-gray-300');
+                } else {
+                    inputEl.classList.add('border-red-500', 'bg-red-50');
+                    feedbackEl.innerHTML = `Đáp án đúng: <span class="zh-text font-bold text-green-700">${correctAnswers[key]}</span>`;
+                    feedbackEl.classList.remove('hidden');
+                }
+            }
+
+            // Show Feedback for C, D (Subjective)
+            const subjectiveFeedbacks = document.querySelectorAll('textarea ~ .feedback');
+            subjectiveFeedbacks.forEach(el => el.classList.remove('hidden'));
+
+            // Update Score Display
+            const scoreDiv = document.getElementById('scoreDisplay');
+            scoreDiv.innerHTML = `
+                Điểm trắc nghiệm (A+B): <span class="text-2xl text-red-600">${scoreA + scoreB}/30</span><br>
+                <span class="text-sm font-normal text-gray-600">Các phần C, D cần giáo viên chấm trực tiếp.</span>
+            `;
+            scoreDiv.classList.remove('hidden');
+
+            // Show Print Button
+            document.getElementById('printBtn').classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetExam() {
+            if(confirm("Bạn có chắc muốn làm lại? Mọi dữ liệu đã nhập sẽ mất.")) {
+                document.getElementById('examForm').reset();
+                document.querySelectorAll('.feedback').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('input').forEach(el => {
+                    el.classList.remove('text-green-600', 'text-red-600', 'line-through', 'border-green-500', 'bg-green-50', 'border-red-500', 'bg-red-50');
+                    if(el.name.startsWith('a')) el.classList.add('text-teal-700');
+                });
+                document.getElementById('scoreDisplay').classList.add('hidden');
+                document.getElementById('printBtn').classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

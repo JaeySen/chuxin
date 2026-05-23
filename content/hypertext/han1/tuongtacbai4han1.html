@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Nhân Vật & Kịch Bản Luyện Nói</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+        }
+        .chinese-text {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .scenario-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .scenario-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 chinese-text">你去哪儿？</h1>
+            <p class="text-md text-gray-500 mt-2">Phiếu Nhân Vật & Kịch Bản Luyện Nói</p>
+        </header>
+
+        <!-- Character Profiles -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-700 border-b-2 border-blue-500 pb-2 mb-6">I. PHIẾU NHÂN VẬT</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Character A -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-400">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 text-blue-600 rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl">A</div>
+                        <h3 class="text-xl font-semibold text-gray-800 ml-4">Nhân vật A</h3>
+                    </div>
+                    <div>
+                        <p class="mb-2"><strong class="font-medium text-gray-700">Tình huống:</strong> Bạn đang trên đường đi đâu đó (về trường, về nhà, đến công ty).</p>
+                        <p><strong class="font-medium text-gray-700">Nhiệm vụ:</strong> Tình cờ gặp bạn B. Hãy hỏi thăm và trả lời các câu hỏi của bạn B. Bạn có thể đồng ý hoặc từ chối lời mời.</p>
+                    </div>
+                </div>
+                <!-- Character B -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-teal-400">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-teal-100 text-teal-600 rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl">B</div>
+                        <h3 class="text-xl font-semibold text-gray-800 ml-4">Nhân vật B</h3>
+                    </div>
+                    <div>
+                        <p class="mb-2"><strong class="font-medium text-gray-700">Tình huống:</strong> Bạn đang trên đường đi đâu đó (Thiên An Môn, chợ, ngân hàng) và muốn rủ bạn mình đi cùng.</p>
+                        <p><strong class="font-medium text-gray-700">Nhiệm vụ:</strong> Tình cờ gặp bạn A. Hãy trả lời câu hỏi của A, nói ra nơi bạn định đến và ngỏ lời mời A đi cùng.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scenarios -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-700 border-b-2 border-teal-500 pb-2 mb-6">II. KỊCH BẢN MẪU</h2>
+            <div class="space-y-8">
+
+                <!-- Scenario 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6 scenario-card">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Kịch bản 1: Tình huống gốc (Từ chối lời mời)</h3>
+                    <div class="space-y-4">
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">今天星期几？</p>
+                                <p class="text-blue-700 text-sm">Jīntiān xīngqī jǐ?</p>
+                                <p class="text-gray-500 text-sm italic">(Hôm nay thứ mấy?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">今天星期二。</p>
+                                <p class="text-teal-700 text-sm">Jīntiān xīngqī èr.</p>
+                                <p class="text-gray-500 text-sm italic">(Hôm nay là thứ ba.)</p>
+                            </div>
+                        </div>
+                         <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">你去哪儿？</p>
+                                <p class="text-blue-700 text-sm">Nǐ qù nǎr?</p>
+                                <p class="text-gray-500 text-sm italic">(Bạn đi đâu đấy?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">我去天安门，你去不去？</p>
+                                <p class="text-teal-700 text-sm">Wǒ qù Tiān'ānmén, nǐ qù bu qù?</p>
+                                <p class="text-gray-500 text-sm italic">(Tôi đi Thiên An Môn, bạn đi không?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">不去，我回学校。</p>
+                                <p class="text-blue-700 text-sm">Bú qù, wǒ huí xuéxiào.</p>
+                                <p class="text-gray-500 text-sm italic">(Không đi, tôi về trường.)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">再见！</p>
+                                <p class="text-teal-700 text-sm">Zàijiàn!</p>
+                                <p class="text-gray-500 text-sm italic">(Tạm biệt!)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">再见！</p>
+                                <p class="text-blue-700 text-sm">Zàijiàn!</p>
+                                <p class="text-gray-500 text-sm italic">(Tạm biệt!)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6 scenario-card">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Kịch bản 2: Tình huống mở rộng (Đồng ý lời mời)</h3>
+                    <div class="space-y-4">
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">今天星期几？</p>
+                                <p class="text-blue-700 text-sm">Jīntiān xīngqī jǐ?</p>
+                                <p class="text-gray-500 text-sm italic">(Hôm nay thứ mấy?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">今天星期六。</p>
+                                <p class="text-teal-700 text-sm">Jīntiān xīngqī liù.</p>
+                                <p class="text-gray-500 text-sm italic">(Hôm nay là thứ bảy.)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">你去哪儿？</p>
+                                <p class="text-blue-700 text-sm">Nǐ qù nǎr?</p>
+                                <p class="text-gray-500 text-sm italic">(Bạn đi đâu đấy?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">我去滨城市场，要一起吗？</p>
+                                <p class="text-teal-700 text-sm">Wǒ qù Bīnchéng shìchǎng, yào yìqǐ ma?</p>
+                                <p class="text-gray-500 text-sm italic">(Tôi đi chợ Bến Thành, đi cùng không?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">好啊，我们一起去吧！</p>
+                                <p class="text-blue-700 text-sm">Hǎo a, wǒmen yìqǐ qù ba!</p>
+                                <p class="text-gray-500 text-sm italic">(Được thôi, chúng ta cùng đi!)</p>
+                            </div>
+                        </div>
+                         <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">太好了！那我们走吧。</p>
+                                <p class="text-teal-700 text-sm">Tài hǎo le! Nà wǒmen zǒu ba.</p>
+                                <p class="text-gray-500 text-sm italic">(Tuyệt quá! Vậy chúng ta đi thôi.)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6 scenario-card">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Kịch bản 3: Tình huống khác (Mỗi người một nơi)</h3>
+                    <div class="space-y-4">
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">你好！你去哪儿？</p>
+                                <p class="text-blue-700 text-sm">Nǐ hǎo! Nǐ qù nǎr?</p>
+                                <p class="text-gray-500 text-sm italic">(Chào bạn! Bạn đi đâu đấy?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">我去银行。你去不去？</p>
+                                <p class="text-teal-700 text-sm">Wǒ qù yínháng. Nǐ qù bu qù?</p>
+                                <p class="text-gray-500 text-sm italic">(Tôi ra ngân hàng. Bạn đi không?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">对不起，我不去。我要回家。</p>
+                                <p class="text-blue-700 text-sm">Duìbuqǐ, wǒ bú qù. Wǒ yào huí jiā.</p>
+                                <p class="text-gray-500 text-sm italic">(Xin lỗi, tôi không đi. Tôi phải về nhà.)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-teal-100 text-teal-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">B</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">没关系。那明天见？</p>
+                                <p class="text-teal-700 text-sm">Méi guānxi. Nà míngtiān jiàn?</p>
+                                <p class="text-gray-500 text-sm italic">(Không sao. Vậy hẹn mai gặp nhé?)</p>
+                            </div>
+                        </div>
+                        <!-- Dialogue Line -->
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 rounded-full h-8 w-8 flex-shrink-0 flex items-center justify-center font-bold mr-4">A</div>
+                            <div>
+                                <p class="font-semibold text-lg chinese-text">好，明天见！</p>
+                                <p class="text-blue-700 text-sm">Hǎo, míngtiān jiàn!</p>
+                                <p class="text-gray-500 text-sm italic">(OK, mai gặp!)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

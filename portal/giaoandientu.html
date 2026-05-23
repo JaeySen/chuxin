@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIÁO ÁN ĐIỆN TỬ HANAI LAB</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* --- CSS CƠ BẢN --- */
+        textarea {
+            field-sizing: content; 
+            min-height: 1.5rem;
+            width: 100%;
+            resize: none;
+            overflow: hidden;
+            display: block;
+            background: transparent;
+            line-height: 1.6;
+        }
+        
+        textarea:not([style*="height"]) {
+            height: auto;
+        }
+
+        /* --- GLASS UI CLASSES --- */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .glass-red {
+            background-color: rgba(254, 242, 242, 0.5);
+            border: 1px solid rgba(252, 165, 165, 0.6);
+        }
+
+        .glass-orange {
+            background-color: rgba(255, 247, 237, 0.5);
+            border: 1px solid rgba(253, 186, 116, 0.6);
+        }
+        
+        .glass-green {
+            background-color: rgba(240, 253, 244, 0.5);
+            border: 1px solid rgba(134, 239, 172, 0.6);
+        }
+
+        /* --- CSS CHO PHẦN PHẢN TƯ --- */
+        .reflection-box {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.5); 
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            white-space: pre-wrap;
+        }
+
+        /* --- LOGO & WATERMARK STYLE --- */
+        .watermark {
+            position: fixed; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%; 
+            opacity: 0.12; 
+            pointer-events: none;
+            z-index: 0; 
+            user-select: none;
+            object-fit: contain;
+        }
+
+        .top-logo {
+            display: block;
+            margin: 0 auto 1rem auto;
+            height: 80px; 
+            width: auto;
+            object-fit: contain;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            background: transparent;
+        }
+
+        /* --- MOBILE RESPONSIVE TABLE (Màn hình thường) --- */
+        .mobile-label { display: none; }
+
+        @media (max-width: 768px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tr {
+                display: block;
+                margin-bottom: 1.5rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                background-color: rgba(249, 250, 251, 0.8);
+                padding: 1rem;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            }
+            .responsive-table td {
+                display: block;
+                border: none !important;
+                padding: 0.5rem 0;
+                width: 100%;
+            }
+            .mobile-label {
+                display: block;
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #6b7280;
+                margin-bottom: 0.25rem;
+            }
+            .mobile-delete-btn {
+                width: 100%;
+                border-top: 1px dashed #e5e7eb;
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+            }
+        }
+        
+        /* --- CẤU HÌNH IN ẤN (QUAN TRỌNG - FIX TABLE) --- */
+        @media print {
+            @page { 
+                margin: 0.75cm; 
+                size: A4; 
+            }
+            
+            html, body {
+                height: auto;
+                background: transparent !important;
+                -webkit-print-color-adjust: exact; 
+                width: 100%;
+                overflow: visible;
+            }
+            
+            .no-print { display: none !important; }
+            
+            /* --- SỬA LỖI BẢNG BỊ THU NHỎ --- */
+            /* Bắt buộc bảng hiển thị dạng table chuẩn, đè lên style mobile */
+            .responsive-table {
+                display: table !important;
+                width: 100% !important;
+                table-layout: fixed !important; /* Cố định layout để không bị co dãn lung tung */
+                border-collapse: collapse !important;
+            }
+
+            .responsive-table thead {
+                display: table-header-group !important;
+            }
+
+            .responsive-table tbody {
+                display: table-row-group !important;
+            }
+
+            .responsive-table tr {
+                display: table-row !important;
+                page-break-inside: avoid;
+                border: none !important;
+                background: transparent !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+            }
+
+            .responsive-table td, .responsive-table th {
+                display: table-cell !important;
+                border: 1px solid #e5e7eb !important; /* Kẻ bảng rõ ràng khi in */
+                border-left: none !important;
+                border-right: none !important;
+                padding: 8px 4px !important;
+                vertical-align: top !important;
+                word-wrap: break-word; /* Xuống dòng nếu chữ quá dài */
+            }
+
+            /* Ẩn nhãn mobile khi in */
+            .mobile-label { display: none !important; }
+
+            /* Thiết lập độ rộng cột cứng (Hard-coded widths) cho bản in */
+            /* Cột 1: Thời gian */
+            .responsive-table th:nth-child(1), 
+            .responsive-table td:nth-child(1) { 
+                width: 8% !important; 
+                text-align: center !important;
+            }
+            /* Cột 2: Nội dung */
+            .responsive-table th:nth-child(2), 
+            .responsive-table td:nth-child(2) { 
+                width: 25% !important; 
+            }
+            /* Cột 3: HĐ GV */
+            .responsive-table th:nth-child(3), 
+            .responsive-table td:nth-child(3) { 
+                width: 25% !important; 
+            }
+            /* Cột 4: HĐ HS */
+            .responsive-table th:nth-child(4), 
+            .responsive-table td:nth-child(4) { 
+                width: 25% !important; 
+            }
+            /* Cột 5: Mục đích */
+            .responsive-table th:nth-child(5), 
+            .responsive-table td:nth-child(5) { 
+                width: 17% !important; 
+            }
+            /* Cột 6: Nút xoá (ẩn đi) */
+            .responsive-table th:nth-child(6), 
+            .responsive-table td:nth-child(6) { 
+                display: none !important;
+                width: 0 !important;
+            }
+
+            /* --- CÁC CẤU HÌNH KHÁC --- */
+            /* Trong suốt nền để hiện watermark */
+            .glass-panel, .glass-red, .glass-orange, .glass-green, .reflection-box {
+                background-color: transparent !important;
+                box-shadow: none !important;
+            }
+
+            /* Đậm viền để phân biệt */
+            .glass-red { border: 2px solid #fecaca !important; }
+            .glass-orange { border: 2px solid #fed7aa !important; }
+            .glass-green { border: 2px solid #bbf7d0 !important; }
+            .glass-panel { border-left-width: 4px !important; border-bottom: 1px solid #eee !important; }
+
+            h3, .border-l-4 { 
+                page-break-after: avoid; 
+                page-break-inside: avoid; 
+            }
+            
+            input::placeholder, textarea::placeholder { color: transparent; }
+            
+            /* Watermark Fix */
+            .watermark {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                width: 60% !important;
+                opacity: 0.15 !important;
+                display: block !important;
+                z-index: -1 !important;
+            }
+            
+            .max-w-5xl {
+                max-width: none !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans">
+
+    <!-- TOOLBAR -->
+    <div class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200 px-4 py-3 mb-6 no-print shadow-sm">
+        <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center gap-2 text-blue-700 font-bold text-lg md:text-xl truncate">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span class="truncate">GIÁO ÁN ĐIỆN TỬ HANAI LAB</span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="resetData()" class="flex items-center gap-1 sm:gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition font-medium border border-red-100 sm:border-transparent">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                    <span class="hidden sm:inline">Đặt lại</span>
+                </button>
+                <button onclick="window.print()" class="flex items-center gap-1 sm:gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full hover:shadow-lg transition font-medium transform active:scale-95 text-sm sm:text-base">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                    Xuất PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT PAPER -->
+    <div class="max-w-5xl mx-auto bg-white p-4 md:p-14 shadow-xl min-h-screen print:shadow-none print:p-0 print:max-w-none print:w-full relative">
+        
+        <!-- WATERMARK (VỊ TRÍ FIXED) -->
+        <img src="https://res.cloudinary.com/dylnm79id/image/upload/v1769343424/Kho%CC%82ng_ne%CC%82%CC%80n_ev0wrm.png" class="watermark" alt="Watermark">
+
+        <!-- CONTENT LAYER -->
+        <div class="content-layer">
+            
+            <!-- HEADER -->
+            <div class="text-center mb-10 print:mb-4 border-b-2 border-double border-gray-300 pb-8 print:pb-4 print:border-black">
+                <img src="https://res.cloudinary.com/dylnm79id/image/upload/v1769343424/Kho%CC%82ng_ne%CC%82%CC%80n_ev0wrm.png" class="top-logo" alt="Logo">
+
+                <textarea id="lessonName" oninput="updateMeta('lessonName', this.value)" class="text-3xl md:text-4xl font-extrabold text-center text-blue-900 mb-4 font-serif bg-transparent focus:outline-none print:text-black" placeholder="TÊN BÀI HỌC" rows="1"></textarea>
+                
+                <div class="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-8 text-gray-600 mt-4 print:text-black print:flex-row">
+                    <div class="flex items-center justify-between md:justify-center gap-2 glass-panel px-3 py-1 rounded print:bg-transparent print:p-0 print:border-none">
+                        <span class="font-bold text-sm uppercase tracking-wider">Giáo viên:</span>
+                        <input id="teacher" oninput="updateMeta('teacher', this.value)" class="bg-transparent border-b border-dashed border-gray-400 focus:border-blue-500 outline-none text-right md:text-center font-medium w-32 md:w-auto" placeholder="...">
+                    </div>
+                    <div class="flex items-center justify-between md:justify-center gap-2 glass-panel px-3 py-1 rounded print:bg-transparent print:p-0 print:border-none">
+                        <span class="font-bold text-sm uppercase tracking-wider">Lớp:</span>
+                        <input id="classInfo" oninput="updateMeta('classInfo', this.value)" class="bg-transparent border-b border-dashed border-gray-400 focus:border-blue-500 outline-none text-right md:text-center font-medium w-32 md:w-auto" placeholder="...">
+                    </div>
+                    <div class="flex items-center justify-between md:justify-center gap-2 glass-panel px-3 py-1 rounded print:bg-transparent print:p-0 print:border-none">
+                        <span class="font-bold text-sm uppercase tracking-wider">Ngày:</span>
+                        <input id="date" oninput="updateMeta('date', this.value)" class="bg-transparent border-b border-dashed border-gray-400 focus:border-blue-500 outline-none text-right md:text-center font-medium w-32 md:w-auto" placeholder="...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- INFO GRID (I - IV) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8 print:gap-4 print:mb-4">
+                <!-- I -->
+                <div class="border-l-4 border-indigo-400 glass-panel shadow-sm rounded-r-lg print:shadow-none print:break-inside-avoid">
+                    <div class="bg-gradient-to-r from-gray-50/50 to-white/50 px-4 py-2 border-b border-gray-100/50 rounded-tr-lg flex items-baseline gap-3 print:bg-transparent print:border-none print:px-4 print:py-0">
+                        <h3 class="font-bold text-lg text-slate-800 uppercase print:text-black">I. Loại hình lớp học</h3>
+                        <span class="text-slate-500 font-medium text-sm print:text-gray-600 font-serif">课型</span>
+                    </div>
+                    <div class="p-4 print:p-2 print:pl-4">
+                        <textarea id="courseType" oninput="updateBasic('courseType', this.value)" class="focus:outline-none" rows="1"></textarea>
+                    </div>
+                </div>
+                 <!-- II -->
+                 <div class="border-l-4 border-indigo-400 glass-panel shadow-sm rounded-r-lg print:shadow-none print:break-inside-avoid">
+                    <div class="bg-gradient-to-r from-gray-50/50 to-white/50 px-4 py-2 border-b border-gray-100/50 rounded-tr-lg flex items-baseline gap-3 print:bg-transparent print:border-none print:px-4 print:py-0">
+                        <h3 class="font-bold text-lg text-slate-800 uppercase print:text-black">II. Đối tượng</h3>
+                        <span class="text-slate-500 font-medium text-sm print:text-gray-600 font-serif">教学对象</span>
+                    </div>
+                    <div class="p-4 print:p-2 print:pl-4">
+                        <textarea id="students" oninput="updateMeta('students', this.value)" class="focus:outline-none" rows="1"></textarea>
+                    </div>
+                </div>
+                 <!-- III -->
+                 <div class="border-l-4 border-indigo-400 glass-panel shadow-sm rounded-r-lg print:shadow-none print:break-inside-avoid">
+                    <div class="bg-gradient-to-r from-gray-50/50 to-white/50 px-4 py-2 border-b border-gray-100/50 rounded-tr-lg flex items-baseline gap-3 print:bg-transparent print:border-none print:px-4 print:py-0">
+                        <h3 class="font-bold text-lg text-slate-800 uppercase print:text-black">III. Giáo trình</h3>
+                        <span class="text-slate-500 font-medium text-sm print:text-gray-600 font-serif">使用教材</span>
+                    </div>
+                    <div class="p-4 print:p-2 print:pl-4">
+                        <textarea id="textbook" oninput="updateMeta('textbook', this.value)" class="focus:outline-none" rows="1"></textarea>
+                    </div>
+                </div>
+                 <!-- IV -->
+                 <div class="border-l-4 border-indigo-400 glass-panel shadow-sm rounded-r-lg print:shadow-none print:break-inside-avoid">
+                    <div class="bg-gradient-to-r from-gray-50/50 to-white/50 px-4 py-2 border-b border-gray-100/50 rounded-tr-lg flex items-baseline gap-3 print:bg-transparent print:border-none print:px-4 print:py-0">
+                        <h3 class="font-bold text-lg text-slate-800 uppercase print:text-black">IV. Công cụ</h3>
+                        <span class="text-slate-500 font-medium text-sm print:text-gray-600 font-serif">教学工具</span>
+                    </div>
+                    <div class="p-4 print:p-2 print:pl-4">
+                        <textarea id="tools" oninput="updateBasic('tools', this.value)" class="focus:outline-none" rows="1"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DYNAMIC SECTIONS (V, VI) -->
+            <div id="content-section-container"></div>
+            <div id="objectives-section-container"></div>
+
+            <!-- KEY POINTS (VII, VIII) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 print:gap-4 print:mb-4">
+                <!-- VII -->
+                <div class="glass-red rounded-xl p-5 shadow-sm print:p-2 print:shadow-none print:break-inside-avoid">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-1 h-6 bg-red-500 rounded-full"></div>
+                        <div>
+                            <div class="font-bold text-red-800 uppercase print:text-black">VII. Trọng điểm</div>
+                            <div class="text-xs text-red-400 font-bold print:text-gray-500">教学重点</div>
+                        </div>
+                    </div>
+                    <textarea id="emphasis" oninput="updateKeyPoints('emphasis', this.value)" class="bg-transparent min-h-[60px] focus:outline-none" rows="2"></textarea>
+                </div>
+                <!-- VIII -->
+                <div class="glass-orange rounded-xl p-5 shadow-sm print:p-2 print:shadow-none print:break-inside-avoid">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-1 h-6 bg-orange-500 rounded-full"></div>
+                        <div>
+                            <div class="font-bold text-orange-800 uppercase print:text-black">VIII. Điểm khó</div>
+                            <div class="text-xs text-orange-400 font-bold print:text-gray-500">教学难点</div>
+                        </div>
+                    </div>
+                    <textarea id="difficulty" oninput="updateKeyPoints('difficulty', this.value)" class="bg-transparent min-h-[60px] focus:outline-none" rows="2"></textarea>
+                </div>
+            </div>
+
+            <!-- CREATIVE (IX) -->
+            <div id="creative-section-container"></div>
+
+            <!-- PROCESS (X) -->
+            <div class="mb-8 border-l-4 border-blue-600 glass-panel shadow-sm rounded-r-lg print:shadow-none print:mb-4 print:break-inside-avoid">
+                <div class="bg-gradient-to-r from-gray-50/50 to-white/50 px-4 py-3 border-b border-gray-100/50 rounded-tr-lg flex items-baseline gap-3 print:bg-transparent print:border-none print:px-4 print:py-0">
+                    <h3 class="font-bold text-lg text-slate-800 uppercase print:text-black">X. Tiến trình dạy học</h3>
+                    <span class="text-slate-500 font-medium text-sm print:text-gray-600 font-serif">教学过程</span>
+                </div>
+                <div class="p-4 md:p-5 print:p-2 print:pl-4">
+                    <!-- Bảng Responsive (FIXED FOR PRINT) -->
+                    <table class="w-full border-collapse text-sm responsive-table">
+                        <thead>
+                            <tr class="bg-gray-100/70 text-left print:bg-gray-200 text-gray-700">
+                                <th class="border-b-2 border-gray-300 p-3 w-16">Thời gian</th>
+                                <th class="border-b-2 border-gray-300 p-3 w-1/4">Bước / Nội dung</th>
+                                <th class="border-b-2 border-gray-300 p-3">Hoạt động Giáo Viên</th>
+                                <th class="border-b-2 border-gray-300 p-3">Hoạt động Học Sinh</th>
+                                <th class="border-b-2 border-gray-300 p-3 w-24">Mục đích</th>
+                                <th class="border-b-2 border-gray-300 p-3 w-8 no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="process-table-body" class="align-top">
+                            <!-- Rows will be injected here by JS -->
+                        </tbody>
+                    </table>
+                    
+                    <button onclick="addProcessItem()" class="mt-4 flex items-center justify-center gap-2 text-blue-600 font-bold hover:bg-blue-50/50 px-4 py-3 rounded-xl transition no-print border border-blue-200 shadow-sm mx-auto w-full md:w-auto">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                        Thêm bước tiến trình
+                    </button>
+                </div>
+            </div>
+
+            <!-- REFLECTION -->
+            <div class="mt-10 p-6 rounded-xl glass-panel border border-gray-200 print:bg-transparent print:border-none print:p-0 print:mt-6 print:break-inside-avoid">
+                <div class="flex items-baseline gap-2 mb-6 border-b border-gray-200/50 pb-3 print:border-none">
+                    <h3 class="font-bold text-2xl text-slate-800 uppercase print:text-black">Phản tư sau giảng dạy</h3>
+                    <span class="text-slate-500 font-medium text-lg print:text-gray-600">教学反思</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 print:gap-6">
+                    <!-- Card 1: Vấn đề -->
+                    <div class="glass-orange rounded-lg p-4 shadow-sm print:bg-transparent print:border-none print:shadow-none print:p-0">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="p-1.5 bg-orange-200 rounded text-orange-700"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                            <label class="font-bold text-orange-800 uppercase tracking-wide">Vấn đề tồn tại</label>
+                        </div>
+                        <textarea id="reflection-situation" oninput="updateReflection('situation', this.value); autoResize(this)" class="reflection-box focus:ring-2 focus:ring-orange-200 focus:outline-none" placeholder="Nhập các vấn đề cần lưu ý..."></textarea>
+                        <div id="reflection-situation-images-container" class="mt-3"></div>
+                    </div>
+
+                    <!-- Card 2: Giải pháp -->
+                    <div class="glass-green rounded-lg p-4 shadow-sm print:bg-transparent print:border-none print:shadow-none print:p-0">
+                         <div class="flex items-center gap-2 mb-3">
+                            <div class="p-1.5 bg-green-200 rounded text-green-700"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <label class="font-bold text-green-800 uppercase tracking-wide">Hướng cải thiện</label>
+                        </div>
+                        <textarea id="reflection-solution" oninput="updateReflection('solution', this.value); autoResize(this)" class="reflection-box focus:ring-2 focus:ring-green-200 focus:outline-none" placeholder="Nhập các giải pháp đề xuất..."></textarea>
+                        <div id="reflection-solution-images-container" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RATINGS -->
+            <div id="ratings-container" class="mt-8 pt-6 border-t border-gray-200 print:break-inside-avoid">
+                 <!-- Ratings injected via JS -->
+            </div>
+
+            <!-- FOOTER -->
+            <div class="mt-16 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center md:items-end print:mt-10 print:flex-row gap-8 md:gap-0">
+                <div class="text-sm text-gray-400 mb-4 md:mb-0 print:text-gray-600 order-2 md:order-1">
+                    Ngày soạn: <span id="footer-date"></span>
+                </div>
+                <div class="text-center px-8 order-1 md:order-2 w-full md:w-auto">
+                    <input id="footer-signature-title" oninput="updateFooter('signatureTitle', this.value)" class="block mb-16 font-bold text-lg text-center bg-transparent focus:outline-none placeholder-gray-400 print:text-black w-full" value="Giáo viên ký tên">
+                    <input id="footer-signer-name" oninput="updateFooter('signerName', this.value)" class="block font-serif italic text-xl text-center bg-transparent focus:outline-none print:text-black w-full min-w-[200px]">
+                </div>
+            </div>
+            
+        </div> <!-- End Content Layer -->
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA & STATE ---
+        const defaultData = {
+            meta: { lessonName: "第一课 你好 (Bài 1: Xin chào)", teacher: "Giáo viên A", classInfo: "Lớp HSK 1 - K23", date: new Date().toLocaleDateString('vi-VN'), textbook: "Giáo trình HSK 1", students: "Người học nữ, từ 18 tuổi trở lên" },
+            basicInfo: { courseType: "Học HSK + Giao tiếp", tools: "PPT, Padlet, Web ngữ âm" },
+            content: [
+                { id: 1, title: "1. Từ mới (生词)", content: "你、我、您、他、她、它、们、好、对不起、没关系", image: null }, // image is deprecated, kept for migration
+                { id: 2, title: "2. Ngữ pháp (语言点)", content: "-", image: null },
+                { id: 3, title: "3. Bài khóa (课文)", content: "-", image: null }
+            ],
+            objectives: [
+                { id: 1, title: "1. Mục tiêu nhận thức (认知目标)", content: "- Nắm chắc phần phiên âm cơ bản, dấu thanh và cách biến đổi dấu thanh.", image: null },
+                { id: 2, title: "2. Mục tiêu tình cảm (情感目标)", content: "- Hiểu về lịch sử chữ viết, cách hình thành chữ.", image: null }
+            ],
+            keyPoints: { emphasis: "拼音 (Phiên âm)", difficulty: "Phụ âm: j, q, x\nDấu thanh: 1, 2, 3, 4" },
+            // Added images array for creative
+            creative: [{ id: 1, title: "💡 Ý tưởng mở rộng", content: "Sử dụng Flashcard màu sắc để chơi trò chơi ghép từ.", images: [] }],
+            // Added images array for process
+            process: [
+                { id: 1, time: "5p", step: "1. Ổn định lớp", content: "Chào hỏi & Quy tắc", teacherAct: "Giáo viên và同学们 hỏi thăm, tuyên bố bắt đầu.", studentAct: "Lắng nghe, ghi nhớ.", purpose: "Thu hút sự chú ý.", images: [] },
+                { id: 2, time: "20p", step: "2. Bài mới: Phiên âm", content: "Thanh mẫu & Vận mẫu", teacherAct: "Giải thích thanh mẫu (b,p,m,f...). Đọc mẫu.", studentAct: "Lắng nghe và nhại lại.", purpose: "Nắm vững phát âm.", images: [] }
+            ],
+            // Added images arrays for reflection
+            reflection: { situation: "Các bạn nắm bài tốt nhưng phần ghép âm hơi nhanh.", situationImages: [], solution: "Dạy chậm lại, bổ sung thêm bài tập thực hành.", solutionImages: [] },
+            ratings: [{ id: 1, label: "Thái độ học sinh", stars: 4 }, { id: 2, label: "Mức độ tương tác", stars: 5 }, { id: 3, label: "Mức độ hiểu bài", stars: 4 }, { id: 4, label: "Kỷ luật lớp học", stars: 5 }],
+            footer: { signatureTitle: "Giáo viên ký tên", signerName: "Giáo viên A" }
+        };
+
+        let appData = JSON.parse(JSON.stringify(defaultData));
+
+        // --- INIT & PERSISTENCE ---
+        function init() {
+            // Check v5 (new version)
+            let saved = localStorage.getItem('lessonPlanData_v5_vanilla');
+            
+            // Fallback to v4 if v5 not found
+            if (!saved) {
+                const oldSaved = localStorage.getItem('lessonPlanData_v4_vanilla');
+                if (oldSaved) {
+                    try {
+                        const parsedOld = JSON.parse(oldSaved);
+                        // Migrate Data
+                        if(parsedOld.creative) {
+                            parsedOld.creative.forEach(item => {
+                                if(item.image && !item.images) item.images = [item.image];
+                                if(!item.images) item.images = [];
+                            });
+                        }
+                        if(parsedOld.process) {
+                            parsedOld.process.forEach(item => {
+                                if(item.image && !item.images) item.images = [item.image];
+                                if(!item.images) item.images = [];
+                            });
+                        }
+                        if(parsedOld.reflection) {
+                            if(parsedOld.reflection.situationImage && !parsedOld.reflection.situationImages) parsedOld.reflection.situationImages = [parsedOld.reflection.situationImage];
+                            if(!parsedOld.reflection.situationImages) parsedOld.reflection.situationImages = [];
+
+                            if(parsedOld.reflection.solutionImage && !parsedOld.reflection.solutionImages) parsedOld.reflection.solutionImages = [parsedOld.reflection.solutionImage];
+                            if(!parsedOld.reflection.solutionImages) parsedOld.reflection.solutionImages = [];
+                        }
+
+                        appData = { ...defaultData, ...parsedOld };
+                        saveData(); // Save as v5 immediately
+                    } catch(e) { console.error("Migration error", e); }
+                }
+            } else {
+                try {
+                    const parsed = JSON.parse(saved);
+                    appData = { ...defaultData, ...parsed }; // Merge safe
+                    
+                    // Ensure arrays exist
+                     if(appData.creative) appData.creative.forEach(i => { if(!i.images) i.images = []; });
+                     if(appData.process) appData.process.forEach(i => { if(!i.images) i.images = []; });
+                     if(!appData.reflection.situationImages) appData.reflection.situationImages = [];
+                     if(!appData.reflection.solutionImages) appData.reflection.solutionImages = [];
+
+                } catch (e) { console.error("Data corrupted", e); }
+            }
+            renderAll();
+            // Trigger resize on load
+            setTimeout(() => document.querySelectorAll('textarea').forEach(autoResize), 100);
+            window.addEventListener('resize', () => document.querySelectorAll('textarea').forEach(autoResize));
+        }
+
+        function saveData() {
+            localStorage.setItem('lessonPlanData_v5_vanilla', JSON.stringify(appData));
+        }
+
+        function resetData() {
+            if (confirm("Bạn có chắc muốn đặt lại về bài mẫu mặc định?")) {
+                appData = JSON.parse(JSON.stringify(defaultData));
+                saveData();
+                renderAll();
+            }
+        }
+
+        // --- DOM MANIPULATION & RENDER ---
+        
+        function autoResize(el) {
+            // Apply to all textareas including reflection boxes now
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight + 2) + 'px'; // +2px buffer
+        }
+
+        // 1. Static Fields Update
+        function updateMeta(field, value) { appData.meta[field] = value; saveData(); if(field==='date') document.getElementById('footer-date').innerText = value; if(field==='teacher') document.getElementById('footer-signer-name').value = value; }
+        function updateBasic(field, value) { appData.basicInfo[field] = value; saveData(); }
+        function updateKeyPoints(field, value) { appData.keyPoints[field] = value; saveData(); }
+        function updateReflection(field, value) { appData.reflection[field] = value; saveData(); }
+        function updateFooter(field, value) { appData.footer[field] = value; saveData(); }
+
+        // 2. Generic List Renderer
+        function renderSectionList(containerId, listData, sectionName, titlePlaceholder, allowImages) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+
+            const wrapper = document.createElement('div');
+            // Thay bg-white bằng glass-panel
+            wrapper.className = `mb-8 border-l-4 border-${sectionName === 'content' || sectionName === 'objectives' ? 'teal-500' : 'purple-500'} glass-panel shadow-sm rounded-r-lg print:shadow-none print:border-l-2 print:mb-6 print:break-inside-avoid`;
+            
+            let titles = { content: ["V. Nội dung giảng dạy", "教学内容"], objectives: ["VI. Mục tiêu dạy học", "教学目标"], creative: ["IX. Sáng tạo & Mở rộng", "教学创新"] };
+            wrapper.innerHTML = `
+                <div class="bg-gradient-to-r from-gray-50/50 to-white/50 px-4 py-3 border-b border-gray-100/50 rounded-tr-lg flex items-baseline gap-3 print:bg-transparent print:border-none print:px-4 print:py-0">
+                    <h3 class="font-bold text-lg text-slate-800 uppercase print:text-black">${titles[sectionName][0]}</h3>
+                    <span class="text-slate-500 font-medium text-sm print:text-gray-600 font-serif">${titles[sectionName][1]}</span>
+                </div>
+                <div class="p-4 md:p-5 print:p-2 print:pl-4 space-y-6 print:space-y-4" id="${sectionName}-list-body"></div>
+            `;
+            container.appendChild(wrapper);
+
+            const listBody = wrapper.querySelector(`#${sectionName}-list-body`);
+
+            listData.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "relative group border-b border-dashed border-gray-200 last:border-0 pb-4 last:pb-0 print:border-gray-300";
+                
+                let imageHTML = '';
+                if (allowImages) {
+                    imageHTML = renderMultiImageHTML(item.images || [], `${sectionName}-${item.id}`);
+                }
+
+                itemDiv.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-2 items-start">
+                        <div class="flex-grow min-w-0 w-full">
+                            <textarea oninput="updateListItem('${sectionName}', ${item.id}, 'title', this.value); autoResize(this)" class="font-bold text-slate-800 mb-1 w-full bg-transparent resize-none focus:outline-none" rows="1" placeholder="${titlePlaceholder}">${item.title}</textarea>
+                            <textarea oninput="updateListItem('${sectionName}', ${item.id}, 'content', this.value); autoResize(this)" class="text-gray-700 min-h-[40px] w-full bg-transparent resize-none focus:outline-none" rows="1" placeholder="Nội dung chi tiết...">${item.content}</textarea>
+                            ${imageHTML}
+                        </div>
+                        <button onclick="removeListItem('${sectionName}', ${item.id})" class="text-gray-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100 no-print p-2 self-end md:self-start">
+                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        </button>
+                    </div>
+                `;
+                itemDiv.querySelectorAll('textarea').forEach(autoResize);
+                listBody.appendChild(itemDiv);
+            });
+
+            const addBtn = document.createElement('button');
+            addBtn.className = "flex items-center gap-2 text-sm text-blue-600 font-medium hover:bg-blue-50/50 px-4 py-2 rounded-lg transition no-print border border-blue-100 shadow-sm justify-center w-full md:w-auto";
+            addBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Thêm nội dung`;
+            addBtn.onclick = () => addListItem(sectionName);
+            listBody.appendChild(addBtn);
+        }
+
+        // List Logic
+        function updateListItem(section, id, field, value) {
+            const item = appData[section].find(i => i.id === id);
+            if(item) { item[field] = value; saveData(); }
+        }
+        function addListItem(section) {
+            const newId = appData[section].length > 0 ? Math.max(...appData[section].map(i => i.id)) + 1 : 1;
+            appData[section].push({ id: newId, title: "", content: "", images: [] });
+            saveData();
+            if(section === 'content') renderSectionList('content-section-container', appData.content, 'content', 'Tên mục (VD: 1. Từ vựng)', false);
+            if(section === 'objectives') renderSectionList('objectives-section-container', appData.objectives, 'objectives', 'Tên mục tiêu', false);
+            if(section === 'creative') renderSectionList('creative-section-container', appData.creative, 'creative', 'Tên hoạt động', true);
+        }
+        function removeListItem(section, id) {
+            if(confirm("Xóa mục này?")) {
+                appData[section] = appData[section].filter(i => i.id !== id);
+                saveData();
+                if(section === 'content') renderSectionList('content-section-container', appData.content, 'content', 'Tên mục (VD: 1. Từ vựng)', false);
+                if(section === 'objectives') renderSectionList('objectives-section-container', appData.objectives, 'objectives', 'Tên mục tiêu', false);
+                if(section === 'creative') renderSectionList('creative-section-container', appData.creative, 'creative', 'Tên hoạt động', true);
+            }
+        }
+
+        // 3. Process Table Renderer
+        function renderProcess() {
+            const tbody = document.getElementById('process-table-body');
+            tbody.innerHTML = "";
+            appData.process.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "group border-b border-gray-100 hover:bg-gray-50/50 print:hover:bg-transparent print:border-gray-300";
+                
+                const imageHTML = renderMultiImageHTML(row.images || [], `process-${row.id}`);
+
+                tr.innerHTML = `
+                    <td class="p-2 border-r border-dashed border-gray-200 print:border-gray-400">
+                        <span class="mobile-label">Thời gian</span>
+                        <textarea oninput="updateProcess(${row.id}, 'time', this.value); autoResize(this)" class="text-center md:text-center text-left font-bold text-gray-600 focus:outline-none" rows="1" placeholder="5p">${row.time}</textarea>
+                    </td>
+                    <td class="p-2 border-r border-dashed border-gray-200 print:border-gray-400">
+                        <span class="mobile-label">Bước / Nội dung</span>
+                        <textarea oninput="updateProcess(${row.id}, 'step', this.value); autoResize(this)" class="font-bold text-blue-800 mb-1 print:text-black focus:outline-none" rows="1" placeholder="Tên bước">${row.step}</textarea>
+                        <textarea oninput="updateProcess(${row.id}, 'content', this.value); autoResize(this)" class="text-xs text-gray-500 print:text-gray-700 focus:outline-none" rows="1" placeholder="Nội dung chính">${row.content}</textarea>
+                        ${imageHTML}
+                    </td>
+                    <td class="p-2 border-r border-dashed border-gray-200 print:border-gray-400">
+                        <span class="mobile-label">Hoạt động Giáo Viên</span>
+                        <textarea oninput="updateProcess(${row.id}, 'teacherAct', this.value); autoResize(this)" class="focus:outline-none" rows="1" placeholder="...">${row.teacherAct}</textarea>
+                    </td>
+                    <td class="p-2 border-r border-dashed border-gray-200 print:border-gray-400">
+                        <span class="mobile-label">Hoạt động Học Sinh</span>
+                        <textarea oninput="updateProcess(${row.id}, 'studentAct', this.value); autoResize(this)" class="focus:outline-none" rows="1" placeholder="...">${row.studentAct}</textarea>
+                    </td>
+                    <td class="p-2">
+                        <span class="mobile-label">Mục đích</span>
+                        <textarea oninput="updateProcess(${row.id}, 'purpose', this.value); autoResize(this)" class="italic text-gray-500 text-xs focus:outline-none" rows="1" placeholder="...">${row.purpose}</textarea>
+                    </td>
+                    <td class="p-2 text-center no-print align-middle mobile-delete-btn">
+                        <button onclick="removeProcessItem(${row.id})" class="text-gray-300 hover:text-red-500 transition p-1 w-full md:w-auto flex justify-center">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        </button>
+                    </td>
+                `;
+                tr.querySelectorAll('textarea').forEach(autoResize);
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateProcess(id, field, value) {
+            const row = appData.process.find(r => r.id === id);
+            if(row) { row[field] = value; saveData(); }
+        }
+        function addProcessItem() {
+            const newId = appData.process.length > 0 ? Math.max(...appData.process.map(r => r.id)) + 1 : 1;
+            appData.process.push({ id: newId, time: "", step: "", content: "", teacherAct: "", studentAct: "", purpose: "", images: [] });
+            saveData();
+            renderProcess();
+        }
+        function removeProcessItem(id) {
+            if(confirm("Xóa bước này?")) {
+                appData.process = appData.process.filter(r => r.id !== id);
+                saveData();
+                renderProcess();
+            }
+        }
+
+        // 4. Ratings Renderer
+        function renderRatings() {
+            const container = document.getElementById('ratings-container');
+            container.innerHTML = `
+                <div class="flex items-baseline gap-2 mb-4">
+                    <h3 class="font-bold text-xl text-slate-700 uppercase print:text-black">Đánh giá lớp học</h3>
+                    <span class="text-slate-400 font-medium text-sm print:text-gray-500">课堂评价</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4" id="ratings-grid"></div>
+                <button onclick="addRating()" class="mt-4 flex items-center justify-center sm:justify-start gap-2 text-sm text-blue-500 hover:text-blue-700 font-medium no-print w-full sm:w-auto p-2 border border-dashed border-blue-200 rounded">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Thêm tiêu chí
+                </button>
+            `;
+            const grid = container.querySelector('#ratings-grid');
+            
+            appData.ratings.forEach(rating => {
+                const div = document.createElement('div');
+                div.className = "flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-100 pb-3 sm:pb-2 group";
+                
+                let starsHTML = '';
+                for(let i=1; i<=5; i++) {
+                    const colorClass = i <= rating.stars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300';
+                    starsHTML += `
+                        <button onclick="updateRating(${rating.id}, 'stars', ${i})" class="focus:outline-none transition-transform hover:scale-110 active:scale-90">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="${i <= rating.stars ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" class="${colorClass} transition-colors"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </button>
+                    `;
+                }
+
+                div.innerHTML = `
+                    <div class="flex-grow mb-2 sm:mb-0">
+                        <input oninput="updateRating(${rating.id}, 'label', this.value)" value="${rating.label}" class="w-full bg-transparent focus:outline-none font-medium text-gray-700 print:text-black text-lg sm:text-base" placeholder="Tiêu chí đánh giá...">
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-end gap-4">
+                        <div class="flex gap-1">${starsHTML}</div>
+                        <button onclick="removeRating(${rating.id})" class="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition no-print p-2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function updateRating(id, field, value) {
+            const rating = appData.ratings.find(r => r.id === id);
+            if(rating) { rating[field] = value; saveData(); }
+            if(field === 'stars') renderRatings();
+        }
+        function addRating() {
+            const newId = appData.ratings.length > 0 ? Math.max(...appData.ratings.map(r => r.id)) + 1 : 1;
+            appData.ratings.push({ id: newId, label: "", stars: 0 });
+            saveData();
+            renderRatings();
+        }
+        function removeRating(id) {
+            appData.ratings = appData.ratings.filter(r => r.id !== id);
+            saveData();
+            renderRatings();
+        }
+
+        // --- NEW MULTI-IMAGE HANDLING ---
+        function renderMultiImageHTML(images, keyIdPrefix) {
+            const safeImages = Array.isArray(images) ? images : [];
+            let html = '<div class="flex flex-wrap gap-2 mt-2">';
+            
+            safeImages.forEach((img, index) => {
+                html += `
+                <div class="relative group inline-block">
+                    <img src="${img}" class="h-20 md:h-24 rounded shadow-sm border border-gray-200 object-contain bg-white/80">
+                    <button onclick="removeMultiImage('${keyIdPrefix}', ${index})" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition shadow-md no-print hover:bg-red-600 z-10">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                </div>`;
+            });
+
+            html += `
+                <label class="cursor-pointer flex flex-col items-center justify-center h-20 md:h-24 w-20 md:w-24 bg-blue-50/50 hover:bg-blue-100/50 border-2 border-dashed border-blue-200 rounded transition text-blue-400 hover:text-blue-600 no-print">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    <span class="text-[10px] uppercase font-bold mt-1">Thêm ảnh</span>
+                    <input type="file" onchange="handleMultiImageUpload(this, '${keyIdPrefix}')" accept="image/*" class="hidden">
+                </label>
+            </div>`;
+            return html;
+        }
+
+        function handleMultiImageUpload(input, keyIdPrefix) {
+            const file = input.files[0];
+            if (!file) return;
+            // INCREASED LIMIT TO 10MB
+            if (file.size > 1024 * 1024 * 10) { alert("Vui lòng chọn ảnh < 10MB"); return; }
+            
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const res = reader.result;
+                const parts = keyIdPrefix.split('-');
+                
+                if(parts[0] === 'creative') {
+                    const item = appData.creative.find(i => i.id == parts[1]);
+                    if(!item.images) item.images = [];
+                    item.images.push(res);
+                    renderSectionList('creative-section-container', appData.creative, 'creative', 'Tên hoạt động', true);
+                } else if(parts[0] === 'process') {
+                    const item = appData.process.find(i => i.id == parts[1]);
+                    if(!item.images) item.images = [];
+                    item.images.push(res);
+                    renderProcess();
+                } else if(parts[0] === 'reflection') {
+                    const key = parts[1] + 'Images';
+                    if(!appData.reflection[key]) appData.reflection[key] = [];
+                    appData.reflection[key].push(res);
+                    renderReflectionImages();
+                }
+                saveData();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeMultiImage(keyIdPrefix, index) {
+            if(!confirm("Xóa ảnh này?")) return;
+            
+            const parts = keyIdPrefix.split('-');
+            if(parts[0] === 'creative') {
+                const item = appData.creative.find(i => i.id == parts[1]);
+                item.images.splice(index, 1);
+                renderSectionList('creative-section-container', appData.creative, 'creative', 'Tên hoạt động', true);
+            } else if(parts[0] === 'process') {
+                const item = appData.process.find(i => i.id == parts[1]);
+                item.images.splice(index, 1);
+                renderProcess();
+            } else if(parts[0] === 'reflection') {
+                const key = parts[1] + 'Images';
+                appData.reflection[key].splice(index, 1);
+                renderReflectionImages();
+            }
+            saveData();
+        }
+
+        function renderReflectionImages() {
+            document.getElementById('reflection-situation-images-container').innerHTML = renderMultiImageHTML(appData.reflection.situationImages, 'reflection-situation');
+            document.getElementById('reflection-solution-images-container').innerHTML = renderMultiImageHTML(appData.reflection.solutionImages, 'reflection-solution');
+        }
+
+        // --- MAIN RENDER FUNCTION ---
+        function renderAll() {
+            document.getElementById('lessonName').value = appData.meta.lessonName;
+            document.getElementById('teacher').value = appData.meta.teacher;
+            document.getElementById('classInfo').value = appData.meta.classInfo;
+            document.getElementById('date').value = appData.meta.date;
+            document.getElementById('students').value = appData.meta.students;
+            document.getElementById('textbook').value = appData.meta.textbook;
+            document.getElementById('courseType').value = appData.basicInfo.courseType;
+            document.getElementById('tools').value = appData.basicInfo.tools;
+            document.getElementById('emphasis').value = appData.keyPoints.emphasis;
+            document.getElementById('difficulty').value = appData.keyPoints.difficulty;
+            document.getElementById('reflection-situation').value = appData.reflection.situation;
+            document.getElementById('reflection-solution').value = appData.reflection.solution;
+            document.getElementById('footer-date').innerText = appData.meta.date;
+            document.getElementById('footer-signature-title').value = appData.footer.signatureTitle;
+            document.getElementById('footer-signer-name').value = appData.footer.signerName || appData.meta.teacher;
+
+            document.querySelectorAll('textarea').forEach(autoResize);
+
+            renderSectionList('content-section-container', appData.content, 'content', 'Tên mục (VD: 1. Từ vựng)', false);
+            renderSectionList('objectives-section-container', appData.objectives, 'objectives', 'Tên mục tiêu', false);
+            renderSectionList('creative-section-container', appData.creative, 'creative', 'Tên hoạt động', true);
+            renderProcess();
+            renderRatings();
+            renderReflectionImages();
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
+</html>

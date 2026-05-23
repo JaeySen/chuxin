@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Kiểm Tra Tương Tác - Hán Ngữ Cấp 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --light-gray: #ecf0f1;
+            --dark-gray: #2c3e50;
+            --text-color: #34495e;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--dark-gray);
+        }
+        h1 { border-bottom: 3px solid var(--primary-color); padding-bottom: 10px; }
+        h2 { font-size: 1.4em; border-bottom: 2px solid var(--light-gray); margin-top: 45px; padding-top: 20px; }
+        h3 { font-size: 1.2em; text-align: left; margin-top: 30px; color: var(--secondary-color); border-bottom: none;}
+
+        .header-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+        .header-info span, .header-info input { font-size: 1.1em; }
+        .header-info input { border: none; border-bottom: 2px solid #ccc; padding: 5px; transition: border-color 0.3s; }
+        .header-info input:focus { outline: none; border-color: var(--primary-color); }
+        .section { margin-bottom: 40px; }
+        .pinyin { color: #7f8c8d; font-style: italic; font-size: 0.95em; }
+        
+        /* Part I: Fill in the blank */
+        .word-reference {
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        .word-reference span {
+            margin: 0 10px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        .fill-in-blank {
+            width: 100px;
+            border: none;
+            border-bottom: 2px dashed #bdc3c7;
+            text-align: center;
+            font-size: 1em;
+            font-family: inherit;
+            margin: 0 5px;
+            padding: 4px;
+        }
+        .fill-in-blank:focus {
+            outline: none;
+            border-bottom-color: var(--primary-color);
+        }
+        .fill-in-blank.correct-input {
+            border-color: var(--success-color);
+            background-color: #e8f8ef;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        .fill-in-blank.incorrect-input {
+            border-color: var(--danger-color);
+            background-color: #fbeeed;
+            color: var(--danger-color);
+            text-decoration: line-through;
+        }
+        .correct-answer-text {
+            color: var(--success-color);
+            font-style: italic;
+            font-weight: bold;
+        }
+        
+        /* Part II & IV-A: Multiple Choice */
+        .choices .choice { margin: 10px 0 10px 20px; display: block; }
+        .choices label { margin-left: 10px; cursor: pointer; transition: color 0.3s; }
+        .choices input[type="radio"] { display: none; }
+        .choices label::before { content: ''; display: inline-block; width: 18px; height: 18px; border: 2px solid #bdc3c7; border-radius: 50%; margin-right: 10px; vertical-align: middle; transition: all 0.3s; }
+        .choices input[type="radio"]:checked + label::before { border-color: var(--primary-color); background-color: var(--primary-color); box-shadow: inset 0 0 0 3px white; }
+        .choice.correct-answer label { color: var(--success-color); font-weight: bold; }
+        .choice.wrong-answer label { color: var(--danger-color); text-decoration: line-through; }
+        .choice .feedback-icon { display: none; }
+        .choice.correct-answer .feedback-icon.correct, .choice.wrong-answer .feedback-icon.incorrect { display: inline; }
+
+        /* Part III: Translation */
+        .translation-input { width: 98%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 1em; transition: border-color 0.3s, box-shadow 0.3s; }
+        .translation-input:focus { border-color: var(--primary-color); box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); outline: none; }
+
+        /* Listening Section */
+        .master-audio-player { text-align: center; margin-bottom: 25px; }
+        audio { width: 80%; max-width: 500px; }
+
+        /* Submit Button & Result */
+        .button-container { text-align: center; margin-top: 40px; }
+        .action-btn { padding: 15px 30px; font-size: 1.2em; font-weight: bold; color: white; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        #submit-btn { background-color: var(--success-color); }
+        #submit-btn:hover { background-color: #27ae60; }
+        #submit-btn:disabled { background-color: #95a5a6; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        #result-container { text-align: center; margin-top: 30px; }
+        #progress-bar-container { width: 100%; background-color: var(--light-gray); border-radius: 10px; margin-top: 20px; }
+        #progress-bar { width: 0%; height: 20px; background-color: var(--success-color); border-radius: 10px; transition: width 1s ease-in-out; }
+        #result-text { font-size: 1.6em; font-weight: bold; margin-top: 20px; padding: 15px; border-radius: 8px; }
+        
+        /* Fireworks Animation */
+        .pyro > .before, .pyro > .after { position: absolute; width: 5px; height: 5px; border-radius: 50%; box-shadow: -120px -218.2px #00ff84, 248px -16.2px #002bff, 190px 16.8px #ff0084, -113px -208.2px #ff0000, -197px -218.2px #ffb300, -112px -12.2px #00ffb3, -211px -157.2px #ff0062, -161px -214.2px #ff0000, 197px -122.2px #ff0000, 232px -102.2px #ffb300, 116px -156.2px #00ddff, 133px -182.2px #ff00dd, -142px -114.2px #00ff00, -239px -148.2px #00ffd5, -155px -211.2px #002bff, -174px -142.2px #ff0062, -132px -196.2px #ff0000, -224px -19.2px #00ff84, -104px -179.2px #00b3ff, -229px -106.2px #ff0084, -131px -13.2px #ffb300, -212px -213.2px #00ffb3, -130px -118.2px #ff0062, -184px -182.2px #00ffb3; animation: 1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards; }
+        .pyro > .after { animation-delay: 1.25s, 1.25s, 1.25s; animation-duration: 1.25s, 1.25s, 6.25s; }
+        @keyframes bang { from { box-shadow: 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white, 0 0 white; } }
+        @keyframes gravity { to { transform: translateY(200px); opacity: 0; } }
+        @keyframes position { 0%, 19.9% { margin-top: 10%; margin-left: 40%; } 20%, 39.9% { margin-top: 40%; margin-left: 30%; } 40%, 59.9% { margin-top: 20%; margin-left: 70%; } 60%, 79.9% { margin-top: 30%; margin-left: 20%; } 80%, 99.9% { margin-top: 30%; margin-left: 80%; } }
+
+        /* Print Styles */
+        @media print {
+            body { background-color: #fff; padding: 0; margin: 0; font-family: 'Times New Roman', serif; }
+            .container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            .button-container, .word-reference, .pinyin, .pinyin-small, audio, .pyro, #result-container { display: none !important; }
+            h1, h2, h3 { border-color: #000; color: #000; text-align: left; }
+            .header-info input { border: none; }
+            .fill-in-blank { border-bottom: 1px solid #000; border-radius: 0; }
+            .fill-in-blank.correct-input, .fill-in-blank.incorrect-input { background: #eee; color: #000; text-decoration: none; }
+            .correct-answer-text { display: none; }
+            .choices label::before { display: none; }
+            .choices input[type="radio"] { display: inline-block; -webkit-appearance: radio; -moz-appearance: radio; appearance: radio; margin-right: 5px;}
+            .feedback-icon { display: none !important; }
+            .translation-input { border: 1px solid #ccc; background-color: #f9f9f9; }
+            .choice.wrong-answer label { text-decoration: none; color: var(--text-color); }
+            .choice.correct-answer label { font-weight: normal; color: var(--text-color); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container printable-area">
+    <div class="pyro" style="display:none;"><div class="before"></div><div class="after"></div></div>
+    <h1>BÀI KIỂM TRA CUỐI KHÓA CẤP 1</h1>
+    <div class="header-info">
+        <span><strong>Họ và tên:</strong> <input type="text" id="student-name" placeholder="Nhập họ tên..."></span>
+        <span><strong>Lớp:</strong> .....................</span>
+        <span id="final-score-display"><strong>Điểm:</strong> .....</span>
+    </div>
+    <p><strong>Thời gian làm bài:</strong> 90 phút</p>
+    
+    <div id="quiz-content">
+        <div class="section">
+            <h2>I. Điền từ vào chỗ trống (15 điểm)</h2>
+            <div class="word-reference">
+                <span>老师 (lǎoshī)</span>
+                <span>学习 (xuéxí)</span>
+                <span>学校 (xuéxiào)</span>
+                <span>汉语 (Hànyǔ)</span>
+                <span>食堂 (shítáng)</span>
+                <span>朋友 (péngyou)</span>
+            </div>
+            <div class="question-block" id="fill-in-blank-section">
+                <p>
+                    这是我的<input type="text" class="fill-in-blank" data-correct-hanzi="朋友" data-correct-pinyin="pengyou">，他叫大卫，也是学生。我们在<input type="text" class="fill-in-blank" data-correct-hanzi="学校" data-correct-pinyin="xuexiao">一起<input type="text" class="fill-in-blank" data-correct-hanzi="学习" data-correct-pinyin="xuexi">。我们学习<input type="text" class="fill-in-blank" data-correct-hanzi="汉语" data-correct-pinyin="hanyu">。中午我们去<input type="text" class="fill-in-blank" data-correct-hanzi="食堂" data-correct-pinyin="shitang">吃饭。我们的<input type="text" class="fill-in-blank" data-correct-hanzi="老师" data-correct-pinyin="laoshi">是王老师。
+                </p>
+                <p class="pinyin">Zhè shì wǒ de ..., tā jiào Dàwèi, yě shì xuéshēng. Wǒmen zài ... yìqǐ .... Wǒmen xuéxí .... Zhōngwǔ wǒmen qù ... chīfàn. Wǒmen de ... shì Wáng lǎoshī.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>II. Đọc đoạn văn và chọn đáp án đúng (25 điểm)</h2>
+            <div class="question-block">
+                <p style="text-align: justify;">
+                    我叫麦克，我是美国留学生。我在北京语言大学学习汉语。我的老师是王老师。我的中国朋友叫张东。他也是学生，但是他不学习汉语，他学习英语。中午，我和张东去食堂吃饭。我要一碗鸡蛋汤和两个包子。张东不喝汤，他吃米饭和饺子。他说食堂的饺子很好吃。下午，我们不去上课，我们去书店。张东要买一本英文书和一本杂志。我要买一本汉英词典。那本词典很贵，要八十五块钱，但是我没有那么多钱。我的词典是旧的，我想买一本新的。张东说，他可以给我钱，他是我的好朋友。我很高兴。
+                </p>
+                 <p class="pinyin" style="text-align: justify;">
+                Wǒ jiào Màikè, wǒ shì Měiguó liúxuéshēng. Wǒ zài Běijīng Yǔyán Dàxué xuéxí Hànyǔ. Wǒ de lǎoshī shì Wáng lǎoshī. Wǒ de Zhōngguó péngyou jiào Zhāng Dōng. Tā yě shì xuéshēng, dànshì tā bù xuéxí Hànyǔ, tā xuéxí Yīngyǔ. Zhōngwǔ, wǒ hé Zhāng Dōng qù shítáng chīfàn. Wǒ yào yì wǎn jīdàn tāng hé liǎng ge bāozi. Zhāng Dōng bù hē tāng, tā chī mǐfàn hé jiǎozi. Tā shuō shítáng de jiǎozi hěn hǎochī. Xiàwǔ, wǒmen bú qù shàngkè, wǒmen qù shūdiàn. Zhāng Dōng yào mǎi yì běn Yīngwén shū hé yì běn zázhì. Wǒ yào mǎi yì běn Hàn-Yīng cídiǎn. Nà běn cídiǎn hěn guì, yào bāshíwǔ kuài qián, dànshì wǒ méiyǒu nàme duō qián. Wǒ de cídiǎn shì jiù de, wǒ xiǎng mǎi yì běn xīn de. Zhāng Dōng shuō, tā kěyǐ gěi wǒ qián, tā shì wǒ de hǎo péngyou. Wǒ hěn gāoxìng.
+            </p>
+                <div class="choices" id="reading-comprehension">
+                    <div class="question">
+                        <p><strong>1. 麦克和张东在哪儿学习？</strong> <span class="pinyin">(Màikè hé Zhāng Dōng zài nǎr xuéxí?)</span></p>
+                        <span class="choice"><input type="radio" name="q1" value="A"><label>A. 食堂 <span class="pinyin">(shítáng)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q1" value="B"><label>B. 书店 <span class="pinyin">(shūdiàn)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q1" value="C" data-correct="true"><label>C. 北京语言大学 <span class="pinyin">(Běijīng Yǔyán Dàxué)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q1" value="D"><label>D. 美国 <span class="pinyin">(Měiguó)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                    </div>
+                    <div class="question">
+                        <p><strong>2. 中午麦克吃什么？</strong> <span class="pinyin">(Zhōngwǔ Màikè chī shénme?)</span></p>
+                        <span class="choice"><input type="radio" name="q2" value="A"><label>A. 米饭和饺子 <span class="pinyin">(mǐfàn hé jiǎozi)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q2" value="B" data-correct="true"><label>B. 鸡蛋汤和包子 <span class="pinyin">(jīdàn tāng hé bāozi)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q2" value="C"><label>C. 鸡蛋汤和米饭 <span class="pinyin">(jīdàn tāng hé mǐfàn)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q2" value="D"><label>D. 包子和饺子 <span class="pinyin">(bāozi hé jiǎozi)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                    </div>
+                    <div class="question">
+                        <p><strong>3. 那本汉英词典多少钱？</strong> <span class="pinyin">(Nà běn Hàn-Yīng cídiǎn duōshao qián?)</span></p>
+                        <span class="choice"><input type="radio" name="q3" value="A"><label>A. 五十八块 <span class="pinyin">(wǔshíbā kuài)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q3" value="B"><label>B. 八十块 <span class="pinyin">(bāshí kuài)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q3" value="C" data-correct="true"><label>C. 八十五块 <span class="pinyin">(bāshíwǔ kuài)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q3" value="D"><label>D. 九十五块 <span class="pinyin">(jiǔshíwǔ kuài)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                    </div>
+                    <div class="question">
+                        <p><strong>4. 谁想买英文书？</strong> <span class="pinyin">(Shéi xiǎng mǎi Yīngwén shū?)</span></p>
+                        <span class="choice"><input type="radio" name="q4" value="A"><label>A. 麦克 <span class="pinyin">(Màikè)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q4" value="B"><label>B. 王老师 <span class="pinyin">(Wáng lǎoshī)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q4" value="C" data-correct="true"><label>C. 张东 <span class="pinyin">(Zhāng Dōng)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q4" value="D"><label>D. 麦克和张东 <span class="pinyin">(Màikè hé Zhāng Dōng)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                    </div>
+                    <div class="question">
+                        <p><strong>5. 下面哪句是对的？</strong> <span class="pinyin">(Xiàmiàn nǎ jù shì duì de?)</span></p>
+                        <span class="choice"><input type="radio" name="q5" value="A"><label>A. 张东学习汉语。 <span class="pinyin">(Zhāng Dōng xuéxí Hànyǔ.)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q5" value="B"><label>B. 麦克觉得词典很便宜。 <span class="pinyin">(Màikè juéde cídiǎn hěn piányi.)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q5" value="C"><label>C. 下午他们去食堂。 <span class="pinyin">(Xiàwǔ tāmen qù shítáng.)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                        <span class="choice"><input type="radio" name="q5" value="D" data-correct="true"><label>D. 张东是麦克的好朋友。 <span class="pinyin">(Zhāng Dōng shì Màikè de hǎo péngyou.)</span></label><span class="feedback-icon correct">✓</span><span class="feedback-icon incorrect">✗</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>III. Viết (30 điểm)</h2>
+            <div class="question-block">
+                <p><strong>Dịch các câu sau sang tiếng Việt:</strong></p>
+                <p><strong>1.</strong> 这是王老师，他是中国人，他教我们汉语。</p>
+                <p class="pinyin">Zhè shì Wáng lǎoshī, tā shì Zhōngguó rén, tā jiāo wǒmen Hànyǔ.</p>
+                <textarea class="translation-input" rows="2" placeholder="Nhập bản dịch của bạn ở đây..."></textarea>
+            </div>
+            <div class="question-block">
+                <p><strong>2.</strong> 我要买两碗鸡蛋汤和三个馒头，一共多少钱？</p>
+                 <p class="pinyin">Wǒ yào mǎi liǎng wǎn jīdàn tāng hé sān ge mántou, yígòng duōshao qián?</p>
+                <textarea class="translation-input" rows="2" placeholder="Nhập bản dịch của bạn ở đây..."></textarea>
+            </div>
+            <div class="question-block">
+                <p><strong>3.</strong> 你的车是新的还是旧的？那辆蓝的是不是你的？</p>
+                <p class="pinyin">Nǐ de chē shì xīn de háishì jiù de? Nà liàng lán de shì bu shì nǐ de?</p>
+                <textarea class="translation-input" rows="2" placeholder="Nhập bản dịch của bạn ở đây..."></textarea>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>IV. Nghe (30 điểm)</h2>
+            <div class="master-audio-player">
+                <p><strong>Nghe đoạn hội thoại và chọn đáp án đúng cho 10 câu hỏi dưới đây:</strong></p>
+                <audio controls src="https://res.cloudinary.com/dylnm79id/video/upload/v1751622180/11__cut_437sec_hivauq.mp3"></audio>
+            </div>
+            <div class="choices" id="listening-mcq">
+                <div class="question">
+                    <p><strong>1.</strong></p>
+                    <span class="choice"><input type="radio" name="lq1" value="A"><label>A. 男的是李老师 <span class="pinyin">(Nán de shì Lǐ lǎoshī)</span></label></span>
+                    <span class="choice"><input type="radio" name="lq1" value="B"><label>B. 女的不认识李老师 <span class="pinyin">(Nǚ de bù rènshi Lǐ lǎoshī)</span></label></span>
+                    <span class="choice"><input type="radio" name="lq1" value="C"><label>C. 李老师一会儿来 <span class="pinyin">(Lǐ lǎoshī yīhuìr lái)</span></label></span>
+                    <span class="choice"><input type="radio" name="lq1" value="D"><label>D. 他们去找李老师 <span class="pinyin">(Tāmen qù zhǎo Lǐ lǎoshī)</span></label></span>
+                </div>
+                 <div class="question">
+                    <p><strong>2.</strong></p>
+                    <span class="choice"><input type="radio" name="lq2" value="A"><label>A. 两个都是日本人 <span class="pinyin">(Liǎng ge dōu shì Rìběn rén)</span></label></span>
+                    <span class="choice"><input type="radio" name="lq2" value="B"><label>B. 两个都是韩国人 <span class="pinyin">(Liǎng ge dōu shì Hánguó rén)</span></label></span>
+                    <span class="choice"><input type="radio" name="lq2" value="C"><label>C. 一个是韩国人，一个不是 <span class="pinyin">(Yīgè shì Hánguó rén, yīgè bùshì)</span></label></span>
+                    <span class="choice"><input type="radio" name="lq2" value="D"><label>D. 两个是韩国人，一个不是 <span class="pinyin">(Liǎng ge shì Hánguó rén, yīgè bùshì)</span></label></span>
+                </div>
+                <div class="question"> <p><strong>3.</strong></p> <span class="choice"><input type="radio" name="lq3" value="A"><label>A. 找护士 <span class="pinyin">(Zhǎo hùshi)</span></label></span> <span class="choice"><input type="radio" name="lq3" value="B"><label>B. 找大夫 <span class="pinyin">(Zhǎo dàfū)</span></label></span> <span class="choice"><input type="radio" name="lq3" value="C"><label>C. 找家人 <span class="pinyin">(Zhǎo jiārén)</span></label></span> <span class="choice"><input type="radio" name="lq3" value="D"><label>D. 找办公室 <span class="pinyin">(Zhǎo bàngōngshì)</span></label></span> </div>
+                <div class="question"> <p><strong>4.</strong></p> <span class="choice"><input type="radio" name="lq4" value="A"><label>A. 她不是刘小姐 <span class="pinyin">(Tā bùshì Liú xiǎojiě)</span></label></span> <span class="choice"><input type="radio" name="lq4" value="B"><label>B. 她是刘小姐 <span class="pinyin">(Tā shì Liú xiǎojiě)</span></label></span> <span class="choice"><input type="radio" name="lq4" value="C"><label>C. 这位是刘小姐 <span class="pinyin">(Zhè wèi shì Liú xiǎojiě)</span></label></span> <span class="choice"><input type="radio" name="lq4" value="D"><label>D. 刘小姐不在 <span class="pinyin">(Liú xiǎojiě bùzài)</span></label></span> </div>
+                <div class="question"> <p><strong>5.</strong></p> <span class="choice"><input type="radio" name="lq5" value="A"><label>A. 英语老师 <span class="pinyin">(Yīngyǔ lǎoshī)</span></label></span> <span class="choice"><input type="radio" name="lq5" value="B"><label>B. 法语老师 <span class="pinyin">(Fǎyǔ lǎoshī)</span></label></span> <span class="choice"><input type="radio" name="lq5" value="C"><label>C. 英语老师和法语老师 <span class="pinyin">(Yīngyǔ lǎoshī hé fǎyǔ lǎoshī)</span></label></span> <span class="choice"><input type="radio" name="lq5" value="D"><label>D. 没有人姓王 <span class="pinyin">(Méiyǒu rén xìng Wáng)</span></label></span> </div>
+                <div class="question"> <p><strong>6.</strong></p> <span class="choice"><input type="radio" name="lq6" value="A"><label>A. 玛丽的房间是207 <span class="pinyin">(Mǎlì de fángjiān shì 207)</span></label></span> <span class="choice"><input type="radio" name="lq6" value="B"><label>B. 玛丽的房间是217 <span class="pinyin">(Mǎlì de fángjiān shì 217)</span></label></span> <span class="choice"><input type="radio" name="lq6" value="C"><label>C. 第一个人说得对 <span class="pinyin">(Dì yīgè rén shuō dé duì)</span></label></span> <span class="choice"><input type="radio" name="lq6" value="D"><label>D. 玛丽不在家 <span class="pinyin">(Mǎlì bù zàijiā)</span></label></span> </div>
+                <div class="question"> <p><strong>7.</strong></p> <span class="choice"><input type="radio" name="lq7" value="A"><label>A. 他们都住11楼 <span class="pinyin">(Tāmen dōu zhù 11 lóu)</span></label></span> <span class="choice"><input type="radio" name="lq7" value="B"><label>B. 女的住11楼7门7号 <span class="pinyin">(Nǚ de zhù 11 lóu 7 mén 7 hào)</span></label></span> <span class="choice"><input type="radio" name="lq7" value="C"><label>C. 男的住11楼7门7号 <span class="pinyin">(Nán de zhù 11 lóu 7 mén 7 hào)</span></label></span> <span class="choice"><input type="radio" name="lq7" value="D"><label>D. 男的住12楼7门1号 <span class="pinyin">(Nán de zhù 12 lóu 7 mén 1 hào)</span></label></span> </div>
+                <div class="question"> <p><strong>8.</strong></p> <span class="choice"><input type="radio" name="lq8" value="A"><label>A. 星期一 <span class="pinyin">(Xīngqīyī)</span></label></span> <span class="choice"><input type="radio" name="lq8" value="B"><label>B. 星期二 <span class="pinyin">(Xīngqī'èr)</span></label></span> <span class="choice"><input type="radio" name="lq8" value="C"><label>C. 星期三 <span class="pinyin">(Xīngqīsān)</span></label></span> <span class="choice"><input type="radio" name="lq8" value="D"><label>D. 星期四 <span class="pinyin">(Xīngqīsì)</span></label></span> </div>
+                <div class="question"> <p><strong>9.</strong></p> <span class="choice"><input type="radio" name="lq9" value="A"><label>A. 3100</label></span> <span class="choice"><input type="radio" name="lq9" value="B"><label>B. 3001</label></span> <span class="choice"><input type="radio" name="lq9" value="C"><label>C. 3010</label></span> <span class="choice"><input type="radio" name="lq9" value="D"><label>D. 301</label></span> </div>
+                <div class="question"> <p><strong>10.</strong></p> <span class="choice"><input type="radio" name="lq10" value="A"><label>A. 五个人 <span class="pinyin">(Wǔ gè rén)</span></label></span> <span class="choice"><input type="radio" name="lq10" value="B"><label>B. 一个人 <span class="pinyin">(Yī gè rén)</span></label></span> <span class="choice"><input type="radio" name="lq10" value="C"><label>C. 六个人 <span class="pinyin">(Liù gè rén)</span></label></span> <span class="choice"><input type="radio" name="lq10" value="D"><label>D. 十个人 <span class="pinyin">(Shí gè rén)</span></label></span> </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button id="submit-btn" class="action-btn">Nộp bài & In</button>
+    </div>
+    <div id="result-container">
+        <div id="result-text"></div>
+        <div id="progress-bar-container" style="display: none;">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // --- Submit and Print Logic ---
+    submitBtn.addEventListener('click', checkAnswers);
+
+    function checkAnswers() {
+        if (!document.getElementById('student-name').value) {
+            alert('Vui lòng nhập họ và tên của bạn!');
+            return;
+        }
+
+        let totalScore = 0;
+        const totalPart1 = 15, totalPart2 = 25;
+        const maxScore = totalPart1 + totalPart2;
+
+        // --- Grade Part I (Fill in the blank) ---
+        let part1Score = 0;
+        const inputs1 = document.querySelectorAll('#fill-in-blank-section .fill-in-blank');
+        const pointsPerBlank1 = totalPart1 / inputs1.length;
+        inputs1.forEach(input => {
+            const answerHanzi = input.getAttribute('data-correct-hanzi');
+            const answerPinyin = input.getAttribute('data-correct-pinyin').toLowerCase();
+            const studentAnswer = input.value.trim().toLowerCase();
+
+            if (studentAnswer === answerHanzi || studentAnswer === answerPinyin) {
+                part1Score += pointsPerBlank1;
+                input.classList.add('correct-input');
+            } else {
+                input.classList.add('incorrect-input');
+                const correctAnswerSpan = document.createElement('span');
+                correctAnswerSpan.className = 'correct-answer-text';
+                correctAnswerSpan.textContent = ` (${answerHanzi})`;
+                input.parentNode.insertBefore(correctAnswerSpan, input.nextSibling);
+            }
+        });
+
+        // --- Grade Part II (Reading MCQ) ---
+        let part2Score = 0;
+        const questions2 = document.querySelectorAll('#reading-comprehension .question');
+        const pointsPerQuestion2 = totalPart2 / questions2.length;
+        questions2.forEach((q, index) => {
+            const selected = q.querySelector(`input[name="q${index+1}"]:checked`);
+            q.querySelectorAll('.choice').forEach(choice => {
+                if (choice.querySelector('input').hasAttribute('data-correct')) {
+                    choice.classList.add('correct-answer');
+                }
+            });
+            if (selected) {
+                if (selected.hasAttribute('data-correct')) {
+                    part2Score += pointsPerQuestion2;
+                } else {
+                    selected.parentElement.classList.add('wrong-answer');
+                }
+            }
+        });
+
+        // --- Final Score & Feedback ---
+        totalScore = Math.round(part1Score + part2Score);
+        const resultText = document.getElementById('result-text');
+        const finalScoreDisplay = document.getElementById('final-score-display');
+        finalScoreDisplay.innerHTML = `<strong>Điểm (Phần I & II):</strong> ${totalScore} / ${maxScore}`;
+        resultText.innerHTML = `Điểm phần tự động chấm: <strong>${totalScore} / ${maxScore}</strong><br><small>Phần Viết và Nghe sẽ được giáo viên chấm riêng.</small>`;
+        
+        const progressBarContainer = document.getElementById('progress-bar-container');
+        const progressBar = document.getElementById('progress-bar');
+        progressBarContainer.style.display = 'block';
+        setTimeout(() => { progressBar.style.width = `${(totalScore / maxScore) * 100}%`; }, 100);
+
+        if (totalScore >= maxScore * 0.8) {
+            resultText.style.color = 'var(--success-color)';
+            document.querySelector('.pyro').style.display = 'block';
+        } else {
+            resultText.style.color = 'var(--danger-color)';
+        }
+        
+        // --- Disable inputs and trigger print ---
+        disableInputs();
+        submitBtn.textContent = 'Đã nộp bài';
+        
+        // Automatically trigger print dialog
+        setTimeout(() => {
+            window.print();
+        }, 1000); // Delay to allow UI to update
+    }
+
+    function disableInputs() {
+        document.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
+        document.body.style.cursor = 'default';
+        submitBtn.disabled = true;
+    }
+});
+</script>
+
+</body>
+</html>

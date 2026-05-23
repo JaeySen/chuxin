@@ -1,0 +1,48 @@
+id: han4-bai2-role-play
+course: han4
+order: 2
+title: "Bài 2 — Đóng vai «Ở sân bay»"
+subtitle: "Bạn là hành khách. Hãy chọn câu trả lời phù hợp."
+interactionType: role-play
+estimatedMinutes: 12
+tags: [scenario, dialogue]
+startScene: s1
+scenes:
+  - id: s1
+    speaker: "Nhân viên (工作人员)"
+    line: "您好，请出示您的护照和登机牌。"
+    pinyin: "nín hǎo, qǐng chū shì nín de hù zhào hé dēng jī pái."
+    vi: "Xin chào, vui lòng đưa hộ chiếu và vé máy bay."
+    choices:
+      - text: "好的，给您。"
+        vi: "Vâng, đây ạ."
+        next: s2
+        isPreferred: true
+      - text: "我没有护照。"
+        vi: "Tôi không có hộ chiếu."
+        next: s2_bad
+  - id: s2
+    speaker: "Nhân viên (工作人员)"
+    line: "请把行李放在这里称重。"
+    pinyin: "qǐng bǎ xíng li fàng zài zhè lǐ chēng zhòng."
+    vi: "Vui lòng đặt hành lí lên đây để cân."
+    choices:
+      - text: "我的行李有两件。"
+        vi: "Hành lí của tôi có 2 kiện."
+        next: s3
+        isPreferred: true
+      - text: "我可以带液体吗？"
+        vi: "Tôi có thể mang chất lỏng không?"
+        next: s3
+  - id: s2_bad
+    speaker: "Nhân viên (工作人员)"
+    line: "对不起，没有护照不能办登机手续。"
+    pinyin: "duì bu qǐ, méi yǒu hù zhào bù néng bàn dēng jī shǒu xù."
+    vi: "Xin lỗi, không có hộ chiếu thì không thể làm thủ tục."
+    end: true
+  - id: s3
+    speaker: "Nhân viên (工作人员)"
+    line: "好了，您的座位是 21A。祝您旅途愉快！"
+    pinyin: "hǎo le, nín de zuò wèi shì 21A. zhù nín lǚ tú yú kuài!"
+    vi: "Xong rồi, ghế của bạn là 21A. Chúc chuyến bay vui vẻ!"
+    end: true

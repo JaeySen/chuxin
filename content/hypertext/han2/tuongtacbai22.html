@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoạt động giao tiếp: Kế hoạch cuối tuần</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .character-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .character-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .modal-content {
+            animation: slide-up 0.5s ease-out;
+        }
+        @keyframes slide-up {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Phần tiêu đề và hướng dẫn -->
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Hoạt động giao tiếp: Kế hoạch cuối tuần</h1>
+            <p class="text-lg text-gray-600 mt-2">Dựa theo nội dung bài 22: 我打算请老师教我京剧</p>
+            <p class="mt-4 max-w-2xl mx-auto bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-md">
+                <strong>Hướng dẫn:</strong> Các bạn hãy lập một nhóm 2-3 người. Mỗi người chọn một nhân vật bên dưới và không xem thẻ của người khác. Sau đó, hãy cùng nhau thảo luận bằng tiếng Trung để thống nhất một kế hoạch đi chơi vào cuối tuần nhé!
+            </p>
+        </header>
+
+        <!-- Phần chọn nhân vật -->
+        <div id="character-selection" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Nhân vật 1: 小明 (Tiểu Minh) -->
+            <div onclick="showRole('xiaoMing')" class="character-card cursor-pointer bg-white p-6 rounded-xl shadow-lg text-center">
+                <img src="https://placehold.co/100x100/E2E8F0/4A5568?text=XM" alt="Avatar của Tiểu Minh" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-800">小明 (Xiǎo Míng)</h2>
+                <p class="text-gray-500 mt-1">Người yêu nghệ thuật</p>
+            </div>
+
+            <!-- Nhân vật 2: 小丽 (Tiểu Lệ) -->
+            <div onclick="showRole('xiaoLi')" class="character-card cursor-pointer bg-white p-6 rounded-xl shadow-lg text-center">
+                <img src="https://placehold.co/100x100/FEE2E2/991B1B?text=XL" alt="Avatar của Tiểu Lệ" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-800">小丽 (Xiǎo Lì)</h2>
+                <p class="text-gray-500 mt-1">Người năng động</p>
+            </div>
+
+            <!-- Nhân vật 3: 小王 (Tiểu Vương) -->
+            <div onclick="showRole('xiaoWang')" class="character-card cursor-pointer bg-white p-6 rounded-xl shadow-lg text-center">
+                <img src="https://placehold.co/100x100/D1FAE5/065F46?text=XW" alt="Avatar của Tiểu Vương" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-800">小王 (Xiǎo Wáng)</h2>
+                <p class="text-gray-500 mt-1">Người thích thư giãn</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal cho các phiếu nhân vật -->
+    <div id="role-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50" onclick="closeModal()">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-full overflow-y-auto p-8" onclick="event.stopPropagation()">
+            <!-- Nội dung phiếu nhân vật sẽ được chèn vào đây bằng JavaScript -->
+            <div id="modal-body"></div>
+            <button onclick="closeModal()" class="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- Dữ liệu cho các phiếu nhân vật -->
+    <script>
+        const roles = {
+            xiaoMing: {
+                name: "小明 (Xiǎo Míng)",
+                title: "PHIẾU NHÂN VẬT",
+                situation: "Cuối tuần này, bạn và những người bạn của mình (小丽, 小王) dự định sẽ đi đâu đó cùng nhau. Các bạn cần phải thảo luận để tìm ra một hoạt động chung.",
+                task: "Nhiệm vụ của bạn là thuyết phục các bạn khác thử một hoạt động nghệ thuật mà bạn rất yêu thích. Hãy hỏi về sở thích, thời gian rảnh của họ để tìm ra kế hoạch phù hợp nhất.",
+                info: [
+                    { label: "Sở thích của bạn", value: "Bạn <span class='font-bold text-red-600'>đặc biệt có hứng thú (特别感兴趣)</span> với <span class='font-bold text-red-600'>thư pháp (书法)</span>. Gần đây bạn đang theo học một lớp thư pháp." },
+                    { label: "Kế hoạch của bạn", value: "Bạn <span class='font-bold text-red-600'>dự định (打算)</span> sẽ đi luyện thư pháp vào <span class='font-bold text-red-600'>sáng thứ Bảy (星期六上午)</span> và muốn mời các bạn đi cùng." },
+                    { label: "Thông tin bạn cần tìm hiểu", value: "Bạn bè của bạn có thích thư pháp không? Họ rảnh vào lúc nào?" }
+                ],
+                prompts: [
+                    "Hỏi về sở thích: <span class='font-mono text-blue-700'>你的爱好是什么？</span> / <span class='font-mono text-blue-700'>你对书法感兴趣吗？</span>",
+                    "Hỏi về thời gian: <span class='font-mono text-blue-700'>你周末有空吗？</span> / <span class='font-mono text-blue-700'>你星期六上午做什么？</span>",
+                    "Đưa ra lời mời: <span class='font-mono text-blue-700'>我打算去学书法，我们一起去，怎么样？</span>"
+                ]
+            },
+            xiaoLi: {
+                name: "小丽 (Xiǎo Lì)",
+                title: "PHIẾU NHÂN VẬT",
+                situation: "Cuối tuần này, bạn và những người bạn của mình (小明, 小王) dự định sẽ đi đâu đó cùng nhau. Các bạn cần phải thảo luận để tìm ra một hoạt động chung.",
+                task: "Nhiệm vụ của bạn là rủ rê các bạn khác tham gia một hoạt động thể thao ngoài trời. Hãy hỏi về sở thích, thời gian rảnh của họ để tìm ra kế hoạch phù hợp nhất.",
+                info: [
+                    { label: "Sở thích của bạn", value: "Bạn <span class='font-bold text-green-600'>rất thích (非常喜欢)</span> các môn thể thao, đặc biệt là <span class='font-bold text-green-600'>đánh tennis (打网球)</span>." },
+                    { label: "Thời gian rảnh của bạn", value: "Bạn chỉ rảnh vào <span class='font-bold text-green-600'>chiều thứ Bảy (星期六下午)</span>. Các thời gian khác bạn đều bận." },
+                    { label: "Thông tin bạn cần tìm hiểu", value: "Bạn bè của bạn có thích chơi thể thao không? Họ có rảnh vào chiều thứ Bảy không?" }
+                ],
+                prompts: [
+                    "Hỏi về sở thích: <span class='font-mono text-blue-700'>你喜欢运动吗？</span> / <span class='font-mono text-blue-700'>你喜欢不喜欢打网球？</span>",
+                    "Hỏi về thời gian: <span class='font-mono text-blue-700'>你周末忙不忙？</span> / <span class='font-mono text-blue-700'>你星期六下午有安排吗？</span>",
+                    "Đưa ra lời mời: <span class='font-mono text-blue-700'>我们去打网球吧！</span>"
+                ]
+            },
+            xiaoWang: {
+                name: "小王 (Xiǎo Wáng)",
+                title: "PHIẾU NHÂN VẬT",
+                situation: "Cuối tuần này, bạn và những người bạn của mình (小明, 小丽) dự định sẽ đi đâu đó cùng nhau. Các bạn cần phải thảo luận để tìm ra một hoạt động chung.",
+                task: "Nhiệm vụ của bạn là tìm một hoạt động thư giãn, không quá tốn sức và không tốn nhiều tiền. Hãy hỏi về sở thích, thời gian rảnh của họ để tìm ra kế hoạch phù hợp nhất.",
+                info: [
+                    { label: "Sở thích của bạn", value: "Sau một tuần làm việc, bạn chỉ muốn thư giãn. Bạn thích <span class='font-bold text-purple-600'>nghe nhạc (听音乐)</span> hoặc <span class='font-bold text-purple-600'>xem Kinh kịch (看京剧)</span>." },
+                    { label: "Thời gian của bạn", value: "Bạn khá linh hoạt, <span class='font-bold text-purple-600'>cả thứ Bảy và Chủ Nhật (星期六和星期天)</span> đều được." },
+                    { label: "Thông tin bí mật", value: "Bạn không muốn tham gia các hoạt động tốn kém. Bạn muốn tìm một hoạt động miễn phí hoặc chi phí thấp." },
+                    { label: "Thông tin bạn cần tìm hiểu", value: "Các bạn khác thích làm gì? Hoạt động họ đề xuất có tốn nhiều tiền không? Khi nào họ rảnh?" }
+                ],
+                prompts: [
+                    "Hỏi về sở thích: <span class='font-mono text-blue-700'>你的爱好是什么？</span> / <span class='font-mono text-blue-700'>你喜欢安静还是喜欢热闹？</span>",
+                    "Hỏi về chi phí: <span class='font-mono text-blue-700'>这个活动要花多少钱？</span>",
+                    "Đưa ra đề xuất: <span class='font-mono text-blue-700'>下课以后，听听音乐或者聊聊天儿，心情很愉快。我们去公园听音乐吧？</span>"
+                ]
+            }
+        };
+
+        const modal = document.getElementById('role-modal');
+        const modalBody = document.getElementById('modal-body');
+
+        function showRole(characterId) {
+            const role = roles[characterId];
+            if (!role) return;
+
+            // Tạo nội dung HTML cho phiếu nhân vật
+            let contentHTML = `
+                <div class="text-center mb-6">
+                    <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-500">${role.title}</h2>
+                    <h1 class="text-3xl font-bold text-gray-900 mt-1">${role.name}</h1>
+                </div>
+                
+                <div class="space-y-5">
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-800 border-b-2 border-gray-200 pb-2 mb-2"> Bối cảnh (情况)</h3>
+                        <p class="text-gray-600">${role.situation}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-800 border-b-2 border-gray-200 pb-2 mb-2"> Nhiệm vụ (任务)</h3>
+                        <p class="text-gray-600">${role.task}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-800 border-b-2 border-gray-200 pb-2 mb-2"> Thông tin của bạn (你的信息)</h3>
+                        <ul class="list-disc list-inside space-y-2 text-gray-600">
+                            ${role.info.map(item => `<li><strong>${item.label}:</strong> ${item.value}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-800 border-b-2 border-gray-200 pb-2 mb-2"> Mẫu câu gợi ý (句子提示)</h3>
+                        <ul class="list-none space-y-2 text-gray-600">
+                             ${role.prompts.map(prompt => `<li class="flex items-start"><svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>${prompt}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            modalBody.innerHTML = contentHTML;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            modalBody.innerHTML = ''; // Xóa nội dung để tránh hiển thị flash khi mở lại
+        }
+    </script>
+
+</body>
+</html>

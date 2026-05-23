@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Công Cụ Tạo Flashcard Tiếng Trung</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel để biên dịch JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f8fafc;
+        }
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        /* --- FIX LỖI SAFARI 3D --- */
+        /* Thay vì dùng backface-visibility thuần túy (dễ lỗi trên Safari), 
+           ta dùng phối hợp rotateY + ẩn hiện visibility thông minh */
+           
+        .card-container {
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
+
+        /* Trạng thái lật */
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Vẫn giữ để hỗ trợ các browser khác */
+            backface-visibility: hidden;
+            border-radius: 1.5rem; /* rounded-3xl */
+            overflow: hidden;
+            /* Hack fix cho Safari để bo góc không bị vỡ khi 3D */
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            transform: translateZ(0); /* Kích hoạt hardware acceleration */
+        }
+
+        .card-front {
+            background-color: white;
+            z-index: 2;
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            background-color: #2563eb; /* blue-600 */
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        /* Animation Fade In */
+        @keyframes fade-in {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+
+        // --- ICONS ---
+        const Icons = {
+            Copy: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>,
+            Edit3: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>,
+            Play: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill={props.fill || "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polygon points="6 3 20 12 6 21 6 3"/></svg>,
+            RotateCw: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>,
+            AlertCircle: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>,
+            ChevronLeft: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m15 18-6-6 6-6"/></svg>,
+            ChevronRight: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m9 18 6-6-6-6"/></svg>,
+            HelpCircle: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>,
+            X: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M18 6 6 18"/><path d="m6 6 18 18"/></svg>,
+            ImageOff: (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="1" y1="1" x2="23" y2="23"/><path d="M21 21l-9-9-9 9"/><path d="M21 5v13.59"/><path d="M19 5H5a2 2 0 0 0-2 2v10.59"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5.41 20.59"/></svg>
+        };
+
+        // --- COMPONENTS ---
+
+        // Component Logo an toàn (fallback khi lỗi ảnh)
+        const SafeLogo = ({ url, className, inverted = false }) => {
+            const [error, setError] = useState(false);
+            
+            if (error || !url) {
+                // Hiển thị text hoặc icon thay thế nếu ảnh lỗi
+                return (
+                    <div className={`flex items-center gap-2 ${className}`}>
+                        <div className={`w-8 h-8 rounded bg-blue-100 flex items-center justify-center ${inverted ? 'bg-white/20' : ''}`}>
+                            <span className={`font-bold ${inverted ? 'text-white' : 'text-blue-600'}`}>ZH</span>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <img 
+                    src={url} 
+                    alt="Logo" 
+                    className={className} 
+                    onError={() => setError(true)}
+                />
+            );
+        };
+
+        const HelpModal = ({ isOpen, onClose }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative overflow-hidden" onClick={e => e.stopPropagation()}>
+                        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors">
+                            <Icons.X size={20} className="text-slate-600" />
+                        </button>
+                        
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                                <Icons.HelpCircle size={28} />
+                            </div>
+                            <h2 className="text-2xl font-bold text-blue-900">Hướng Dẫn Sử Dụng</h2>
+                        </div>
+
+                        <div className="space-y-6 overflow-y-auto max-h-[60vh] pr-2">
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-lg mb-1">Copy lệnh tạo (Prompt)</h3>
+                                    <p className="text-slate-600">Ở màn hình chính, nhấn nút copy ở <strong>Bước 1</strong>. Đây là câu lệnh giúp AI hiểu cách tạo flashcard.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-lg mb-1">Hỏi AI (ChatGPT/Gemini)</h3>
+                                    <p className="text-slate-600">Mở ChatGPT hoặc Gemini. Dán lệnh vừa copy vào, sau đó gõ thêm các từ vựng bạn muốn dạy.</p>
+                                    <div className="mt-2 bg-slate-100 p-3 rounded-lg text-sm text-slate-600 italic">
+                                        Ví dụ: "Hãy tạo cho tôi các từ: Du lịch, Ăn uống, Nghỉ ngơi..."
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-lg mb-1">Lấy kết quả</h3>
+                                    <p className="text-slate-600">AI sẽ trả về một đoạn mã. Hãy copy toàn bộ đoạn mã đó (thường nằm trong khung màu đen có chữ Copy).</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">4</div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-lg mb-1">Tạo Flashcard</h3>
+                                    <p className="text-slate-600">Quay lại công cụ này, dán mã vào ô ở <strong>Bước 2</strong> và nhấn nút <strong>"Bắt đầu ôn tập"</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 pt-4 border-t border-slate-100 flex justify-end">
+                            <button onClick={onClose} className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors w-full sm:w-auto">
+                                Đã hiểu, cảm ơn!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FlashCard = ({ data, logo, isFlipped, onFlip }) => {
+            return (
+                <div 
+                    className="group card-container w-full h-full cursor-pointer select-none"
+                    onClick={onFlip}
+                >
+                    <div className={`card-inner ${isFlipped ? 'is-flipped' : ''}`}>
+                        
+                        {/* MẶT TRƯỚC (FRONT) */}
+                        <div className="card-face card-front shadow-[0_20px_50px_rgb(0,0,0,0.1)] border border-slate-100 flex flex-col items-center justify-center p-8">
+                            {/* Decorative Elements */}
+                            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-50 rounded-full opacity-50 blur-2xl"></div>
+                            
+                            {/* Logo */}
+                            <SafeLogo url={logo} className="absolute top-6 left-6 h-8 opacity-80 object-contain" />
+                            
+                            <div className="flex-1 flex flex-col items-center justify-center z-10 w-full">
+                                <h3 className="text-7xl sm:text-8xl md:text-9xl font-serif text-slate-800 text-center mb-4 leading-tight break-words max-w-full">
+                                    {data.hanzi}
+                                </h3>
+                                <div className="w-16 h-1 bg-blue-100 rounded-full"></div>
+                            </div>
+                            
+                            <p className="text-blue-400 text-xs mt-4 font-semibold uppercase tracking-widest flex items-center gap-1 animate-pulse">
+                                Chạm để xem đáp án
+                            </p>
+                        </div>
+
+                        {/* MẶT SAU (BACK) */}
+                        <div className="card-face card-back shadow-[0_20px_50px_rgb(37,99,235,0.2)] bg-gradient-to-br from-blue-600 to-blue-700 flex flex-col text-white p-8">
+                            {/* Background Pattern */}
+                            <div className="absolute top-0 right-0 p-32 bg-white opacity-[0.03] rounded-full transform translate-x-10 -translate-y-10"></div>
+                            
+                            {/* Logo Inverted */}
+                            <SafeLogo url={logo} className="absolute top-6 left-6 h-8 brightness-0 invert opacity-60 object-contain" inverted={true} />
+
+                            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6 z-10 w-full">
+                                {/* Hán tự & Pinyin */}
+                                <div className="transform transition-transform">
+                                    <h3 className="text-5xl sm:text-6xl md:text-7xl font-serif font-medium mb-2">{data.hanzi}</h3>
+                                    <p className="text-2xl sm:text-2xl md:text-3xl font-mono text-blue-100 opacity-90">{data.pinyin}</p>
+                                </div>
+                                
+                                <div className="w-20 h-1 bg-white/30 rounded-full"></div>
+
+                                {/* Nghĩa */}
+                                <div>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-wide">{data.meaning}</p>
+                                </div>
+
+                                {/* Ví dụ */}
+                                {data.example && (
+                                    <div className="mt-2 sm:mt-4 p-4 bg-white/10 backdrop-blur-sm rounded-xl w-full border border-white/10">
+                                        <p className="text-sm sm:text-base md:text-lg text-blue-50 italic leading-relaxed">"{data.example}"</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [mode, setMode] = useState('input');
+            const [jsonInput, setJsonInput] = useState('');
+            const [cards, setCards] = useState([]);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [error, setError] = useState(null);
+            const [isFlipped, setIsFlipped] = useState(false);
+            const [showHelp, setShowHelp] = useState(false);
+
+            // Dữ liệu mẫu
+            const sampleData = [
+                {
+                    "hanzi": "学习",
+                    "pinyin": "xué xí",
+                    "meaning": "Học tập",
+                    "example": "我们要努力学习。(Wǒmen yào nǔlì xuéxí - Chúng ta phải nỗ lực học tập.)"
+                },
+                {
+                    "hanzi": "快乐",
+                    "pinyin": "kuài lè",
+                    "meaning": "Vui vẻ",
+                    "example": "祝你生日快乐！(Zhù nǐ shēngrì kuàilè! - Chúc bạn sinh nhật vui vẻ!)"
+                },
+                {
+                    "hanzi": "老师",
+                    "pinyin": "lǎo shī",
+                    "meaning": "Giáo viên",
+                    "example": "王老师是很好的人。(Wáng lǎoshī shì hěn hǎo de rén.)"
+                }
+            ];
+
+            useEffect(() => {
+                setJsonInput(JSON.stringify(sampleData, null, 2));
+            }, []);
+
+            // URL logo
+            const logoUrl = "https://res.cloudinary.com/dylnm79id/image/upload/v1769343424/Kho%CC%82ng_ne%CC%82%CC%80n_ev0wrm.png";
+
+            const aiPrompt = `Đóng vai trợ lý giáo viên tiếng Trung. Hãy tạo danh sách JSON cho các từ vựng tôi gửi. Output bắt buộc phải là một JSON Array hợp lệ, không chứa markdown code block. Cấu trúc mỗi phần tử:
+[
+  {
+    "hanzi": "từ vựng",
+    "pinyin": "phiên âm",
+    "meaning": "nghĩa tiếng việt",
+    "example": "Mẫu câu ví dụ (kèm pinyin/dịch)"
+  }
+]
+Danh sách từ vựng là: `;
+
+            const handleCopyPrompt = () => {
+                navigator.clipboard.writeText(aiPrompt);
+                // Dùng alert đơn giản để chắc chắn giáo viên nhận biết được
+                alert("Đã sao chép! Hãy dán vào ChatGPT/Gemini.");
+            };
+
+            const generateCards = () => {
+                try {
+                    let cleanInput = jsonInput.trim();
+                    // Làm sạch input từ AI (đôi khi AI thêm markdown)
+                    if (cleanInput.startsWith('```json')) cleanInput = cleanInput.replace('```json', '');
+                    if (cleanInput.startsWith('```')) cleanInput = cleanInput.replace('```', '');
+                    if (cleanInput.endsWith('```')) cleanInput = cleanInput.slice(0, -3);
+                    
+                    const parsedData = JSON.parse(cleanInput);
+                    
+                    if (!Array.isArray(parsedData)) {
+                        throw new Error("Dữ liệu phải là một danh sách (Array).");
+                    }
+
+                    setCards(parsedData);
+                    setCurrentIndex(0);
+                    setIsFlipped(false);
+                    setError(null);
+                    setMode('study');
+                } catch (err) {
+                    setError("Lỗi: " + err.message + ". Hãy chắc chắn bạn copy đúng phần nội dung trong ngoặc vuông [...]");
+                }
+            };
+
+            const nextCard = useCallback(() => {
+                if (currentIndex < cards.length - 1) {
+                    setIsFlipped(false);
+                    setTimeout(() => setCurrentIndex(c => c + 1), 200);
+                }
+            }, [currentIndex, cards.length]);
+
+            const prevCard = useCallback(() => {
+                if (currentIndex > 0) {
+                    setIsFlipped(false);
+                    setTimeout(() => setCurrentIndex(c => c - 1), 200);
+                }
+            }, [currentIndex]);
+
+            const toggleFlip = () => setIsFlipped(!isFlipped);
+            
+            const shuffleCards = () => {
+                const shuffled = [...cards].sort(() => 0.5 - Math.random());
+                setCards(shuffled);
+                setCurrentIndex(0);
+                setIsFlipped(false);
+            };
+
+            // Phím tắt
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (mode !== 'study') return;
+                    if (e.key === 'ArrowRight') nextCard();
+                    if (e.key === 'ArrowLeft') prevCard();
+                    if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault(); 
+                        toggleFlip();
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [mode, nextCard, prevCard, isFlipped]);
+
+            return (
+                <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col">
+                    <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
+
+                    {/* Header */}
+                    <header className="bg-white shadow-sm sticky top-0 z-20 border-b border-blue-100">
+                        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                {/* Logo Wrapper cố định kích thước để tránh layout shift */}
+                                <div className="h-10 w-auto flex items-center">
+                                    <SafeLogo url={logoUrl} className="h-full w-auto object-contain" />
+                                </div>
+                                <h1 className="text-xl font-bold text-blue-900 hidden sm:block tracking-tight">
+                                    Học Tiếng Trung
+                                </h1>
+                            </div>
+                            <div className="flex items-center gap-2 sm:gap-3">
+                                <button
+                                    onClick={() => setShowHelp(true)}
+                                    className="flex items-center gap-1 sm:gap-2 px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors text-sm font-medium"
+                                    title="Hướng dẫn sử dụng"
+                                >
+                                    <Icons.HelpCircle size={20} className="text-blue-600"/>
+                                    <span className="hidden sm:inline">Hướng dẫn</span>
+                                </button>
+                                
+                                {mode === 'study' && (
+                                    <button 
+                                        onClick={() => setMode('input')}
+                                        className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full transition-colors text-sm font-medium"
+                                    >
+                                        <Icons.Edit3 size={16} />
+                                        <span className="hidden sm:inline">Nhập từ mới</span>
+                                        <span className="sm:hidden">Nhập</span>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="flex-1 max-w-5xl mx-auto px-4 py-6 w-full flex flex-col">
+                        
+                        {/* INPUT MODE */}
+                        {mode === 'input' && (
+                            <div className="animate-fade-in space-y-6 max-w-3xl mx-auto w-full">
+                                <div className="text-center mb-8">
+                                    <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-2">Tạo bài học mới</h2>
+                                    <p className="text-slate-500 text-sm sm:text-base">Chuẩn bị flashcard chỉ trong vài giây với AI</p>
+                                </div>
+                                
+                                {/* Step 1 */}
+                                <div className="bg-white border border-blue-100 rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+                                    <h2 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                                        Bước 1: Copy lệnh tạo
+                                    </h2>
+                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 relative group">
+                                        <code className="text-sm text-slate-600 block pr-10 break-words whitespace-pre-wrap font-mono">
+                                            {aiPrompt} [Dán từ vựng của bạn vào đây]
+                                        </code>
+                                        <button 
+                                            onClick={handleCopyPrompt}
+                                            className="absolute top-2 right-2 p-2 bg-white hover:bg-blue-50 text-blue-600 border border-slate-200 rounded-lg transition-colors shadow-sm"
+                                            title="Sao chép"
+                                        >
+                                            <Icons.Copy size={18} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Step 2 */}
+                                <div className="bg-white border border-blue-100 rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+                                    <h2 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                        <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                                        Bước 2: Dán kết quả từ AI
+                                    </h2>
+                                    <textarea
+                                        value={jsonInput}
+                                        onChange={(e) => setJsonInput(e.target.value)}
+                                        className="w-full h-48 p-4 font-mono text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        placeholder='Dán đoạn mã JSON vào đây...'
+                                    />
+                                    
+                                    {error && (
+                                        <div className="mt-3 p-3 bg-red-50 text-red-600 rounded-lg text-sm flex items-center gap-2 border border-red-100">
+                                            <Icons.AlertCircle size={18} />
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    <div className="mt-6 flex justify-center">
+                                        <button
+                                            onClick={generateCards}
+                                            className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold shadow-lg shadow-blue-200 transition-all active:scale-95 text-lg w-full sm:w-auto justify-center"
+                                        >
+                                            <Icons.Play size={24} fill="currentColor" />
+                                            Bắt đầu ôn tập
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* STUDY MODE */}
+                        {mode === 'study' && cards.length > 0 && (
+                            <div className="animate-fade-in flex-1 flex flex-col items-center justify-center min-h-[400px] sm:min-h-[500px]">
+                                
+                                <div className="w-full max-w-lg flex items-center justify-between mb-6 text-slate-500">
+                                    <div className="text-sm font-medium bg-white px-3 py-1 rounded-full shadow-sm border border-slate-100">
+                                        Thẻ {currentIndex + 1} / {cards.length}
+                                    </div>
+                                    <button 
+                                        onClick={shuffleCards}
+                                        className="flex items-center gap-1.5 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                                    >
+                                        <Icons.RotateCw size={14} /> Trộn thẻ
+                                    </button>
+                                </div>
+
+                                <div className="relative w-full max-w-lg aspect-[3/4] md:aspect-[4/3]">
+                                    <FlashCard 
+                                        data={cards[currentIndex]} 
+                                        logo={logoUrl} 
+                                        isFlipped={isFlipped} 
+                                        onFlip={toggleFlip}
+                                    />
+
+                                    <button 
+                                        onClick={prevCard}
+                                        disabled={currentIndex === 0}
+                                        className={`absolute top-1/2 -left-4 md:-left-16 transform -translate-y-1/2 p-3 rounded-full bg-white shadow-lg border border-slate-100 text-blue-600 transition-all hover:scale-110 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed z-10 hidden sm:block`}
+                                    >
+                                        <Icons.ChevronLeft size={32} />
+                                    </button>
+
+                                    <button 
+                                        onClick={nextCard}
+                                        disabled={currentIndex === cards.length - 1}
+                                        className={`absolute top-1/2 -right-4 md:-right-16 transform -translate-y-1/2 p-3 rounded-full bg-white shadow-lg border border-slate-100 text-blue-600 transition-all hover:scale-110 disabled:opacity-30 disabled:hover:scale-100 disabled:cursor-not-allowed z-10 hidden sm:block`}
+                                    >
+                                        <Icons.ChevronRight size={32} />
+                                    </button>
+                                    
+                                    {/* Mobile Navigation Buttons (Bottom) */}
+                                    <div className="flex sm:hidden justify-between w-full absolute -bottom-16 px-4">
+                                         <button 
+                                            onClick={(e) => { e.stopPropagation(); prevCard(); }}
+                                            disabled={currentIndex === 0}
+                                            className="p-3 bg-white rounded-full shadow border border-slate-100 text-blue-600 disabled:opacity-50"
+                                         >
+                                             <Icons.ChevronLeft size={24} />
+                                         </button>
+                                         <button 
+                                            onClick={(e) => { e.stopPropagation(); nextCard(); }}
+                                            disabled={currentIndex === cards.length - 1}
+                                            className="p-3 bg-white rounded-full shadow border border-slate-100 text-blue-600 disabled:opacity-50"
+                                         >
+                                             <Icons.ChevronRight size={24} />
+                                         </button>
+                                    </div>
+                                </div>
+
+                                <div className="mt-20 sm:mt-8 text-center text-slate-400 text-sm flex items-center justify-center gap-4">
+                                    <span className="hidden md:inline-flex items-center gap-1"><kbd className="bg-white border border-slate-200 px-2 py-0.5 rounded text-xs font-sans">Space</kbd> Lật thẻ</span>
+                                    <span className="hidden md:inline-flex items-center gap-1"><kbd className="bg-white border border-slate-200 px-2 py-0.5 rounded text-xs font-sans">←</kbd> <kbd className="bg-white border border-slate-200 px-2 py-0.5 rounded text-xs font-sans">→</kbd> Di chuyển</span>
+                                    <span className="md:hidden text-xs uppercase tracking-wider opacity-70">Chạm vào thẻ để lật</span>
+                                </div>
+
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoạt Động Cặp Đôi: Luyện Tiếng Trung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Lightest blue background */
+        }
+        .main-container {
+            max-width: 800px; /* Consistent max-width */
+            margin: 1.5rem auto;
+            padding: 1rem;
+        }
+        .lesson-selection-card, .activity-card, .dialogue-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            padding: 1.75rem; 
+        }
+        .lesson-selection-card {
+            border-left: 6px solid #4A90E2; /* Blue for selection */
+            text-align: center;
+        }
+        .activity-card { border-left: 6px solid #4CAF50; }
+        .dialogue-card { border-left-color: #2196F3; }
+
+        .lesson-selection-title, .dialogue-title, .activity-title {
+            font-size: 1.75rem; 
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .lesson-selection-title { color: #3367D6; justify-content: center;} /* Blue for selection title */
+        .dialogue-title { color: #1976D2; } 
+        .activity-title { color: #2E7D32; }
+        .lesson-selection-title i, .dialogue-title i, .activity-title i {
+            margin-right: 0.75rem;
+            font-size: 1.5rem;
+        }
+        .lesson-btn-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically on small screens */
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .lesson-btn {
+            background-color: #4A90E2;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .lesson-btn:hover {
+            background-color: #357ABD;
+            transform: translateY(-1px);
+        }
+        .lesson-btn .lesson-title-sub {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+
+        .dialogue-line { margin-bottom: 0.75rem; padding: 0.5rem; border-radius: 6px; }
+        .dialogue-line .speaker { font-weight: 600; color: #1976D2; /* Default Blue for Mǎlì */ }
+        .dialogue-line .speaker.tianfang { color: #EF6C00; } /* Orange for Tian Fang */
+        .dialogue-line .speaker.wanglaoshi { color: #00796B; } /* Teal for Wang Laoshi */
+        .dialogue-line .speaker.maike { color: #7B1FA2; } /* Purple for Maike */
+        .dialogue-line .speaker.shanben { color: #D32F2F; } /* Red for Shanben */
+
+
+        .question-item, .discussion-item, .scenario-item {
+            background-color: #f9f9f9; padding: 1rem; border-radius: 8px;
+            margin-bottom: 1rem; border: 1px solid #e0e0e0;
+        }
+        .chinese-text { font-style: italic; color: #555; font-size: 1.05em; }
+        .pinyin-text { font-size: 0.9em; color: #777; display: none; }
+        .pinyin-text.visible { display: inline; }
+        .suggestion-box {
+            background-color: #e8f5e9; border: 1px dashed #81c784;
+            padding: 1rem; border-radius: 8px; margin-top: 0.75rem;
+        }
+        .suggestion-box h4 { color: #388e3c; font-weight: 600; margin-top: 0; margin-bottom: 0.5rem; }
+        .suggestion-box ul { list-style-type: disc; padding-left: 1.5rem; font-size: 0.95em; }
+        
+        .toggle-pinyin-btn, .back-to-selection-btn {
+            background-color: #FF9800; color: white; padding: 0.5rem 1rem;
+            border-radius: 6px; font-weight: 500; cursor: pointer;
+            transition: background-color 0.2s; border: none; margin-bottom: 1.5rem;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .toggle-pinyin-btn:hover { background-color: #F57C00; }
+        .back-to-selection-btn { background-color: #757575; } /* Gray for back button */
+        .back-to-selection-btn:hover { background-color: #616161; }
+
+        .note-box {
+            background-color: #e3f2fd; border: 1px solid #90caf9;
+            padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;
+        }
+        .section-divider {
+            border-top: 2px dashed #a5d6a7; margin-top: 2rem; margin-bottom: 2rem;
+        }
+        textarea {
+            width: 100%; padding: 0.75rem; border-radius: 6px;
+            border: 1px solid #ccc; margin-top: 0.5rem; font-size: 1rem;
+            min-height: 80px; resize: vertical;
+        }
+        .interactive-area label {
+            font-weight: 500; color: #4CAF50; display: block; margin-bottom: 0.25rem;
+        }
+        .role-play-suggestion {
+            background-color: #e3f2fd; border-left: 4px solid #2196F3;
+            padding: 1rem; margin-top: 1rem; border-radius: 4px;
+        }
+        .role-play-suggestion p { margin-bottom: 0.5rem; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="main-container">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold" style="color: #3367D6;">Hoạt Động Cặp Đôi Tiếng Trung</h1>
+        </header>
+
+        <div id="lesson-selection-view" class="lesson-selection-card">
+            <h2 class="lesson-selection-title"><i class="fas fa-book-reader"></i>Chọn Bài Học Hôm Nay</h2>
+            <div class="lesson-btn-container">
+                <button id="select-lesson1-btn" class="lesson-btn">
+                    <i class="fas fa-home"></i>
+                    <span>Bài khoá 1: Nhà Cũ, Nhà Mới</span>
+                </button>
+                <button id="select-lesson2-btn" class="lesson-btn">
+                    <i class="fas fa-comments"></i>
+                    <span>Bài khoá 2: Càng Học Càng Thú Vị</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="lesson1-content" class="hidden">
+            <button class="back-to-selection-btn"><i class="fas fa-arrow-left"></i> Quay lại chọn bài</button>
+            <h1 class="text-3xl font-bold text-green-700 text-center my-4">Bài khoá 1: "Nhà Cũ, Nhà Mới" 🏡🏢</h1>
+            <button class="toggle-pinyin-btn lesson-pinyin-toggle">
+                <i class="fas fa-eye"></i> Hiện Pinyin Bài Này
+            </button>
+            
+            <div class="dialogue-card">
+                <h2 class="dialogue-title"><i class="fas fa-comments-dollar"></i>Bài Khoá: Nhà Cũ, Nhà Mới</h2>
+                <p class="text-sm text-gray-500 mb-3 italic">(Một ngày mùa thu, 田芳 mời 玛丽 đến nhà chơi...)</p>
+                <div class="dialogue-line">
+                    <span class="speaker tianfang">田芳 (Tián Fāng):</span>
+                    <span class="chinese-text">等车的人越来越多了，咱们还是打的去吧，别坐公共汽车了。</span>
+                    <span class="pinyin-text">(Děng chē de rén yuèláiyuè duō le, zánmen háishì dǎ dí qù ba, bié zuò gōnggòng qìchē le.)</span>
+                </div>
+                <div class="dialogue-line">
+                    <span class="speaker">玛丽 (Mǎlì):</span>
+                    <span class="chinese-text">好吧，你看，那边正好开过来一辆空车，就坐这辆吧。</span>
+                    <span class="pinyin-text">(Hǎo ba, nǐ kàn, nà biān zhènghǎo kāi guòlai yī liàng kōng chē, jiù zuò zhè liàng ba.)</span>
+                </div>
+                <p class="text-sm text-gray-500 my-3 italic">(Trên xe taxi)</p>
+                <div class="dialogue-line">
+                    <span class="speaker">玛丽 (Mǎlì):</span>
+                    <span class="chinese-text">你家住的是四合院儿吗？</span>
+                    <span class="pinyin-text">(Nǐ jiā zhù de shì sìhéyuànr ma?)</span>
+                </div>
+                <div class="dialogue-line">
+                    <span class="speaker tianfang">田芳 (Tián Fāng):</span>
+                    <span class="chinese-text">是啊。我家院子里种着一棵大枣树，树上结着很多红枣，远远儿地就能看见。一看见那棵大枣树就看到我家了。今天请你们尝尝我家的红枣，可甜了。</span>
+                    <span class="pinyin-text">(Shì a. Wǒ jiā yuànzi lǐ zhǒngzhe yī kē dà zǎoshù, shù shàng jiēzhe hěnduō hóngzǎo, yuǎnyuǎnr de jiù néng kànjiàn. Yī kànjiàn nà kē dà zǎoshù jiù kàndào wǒ jiā le. Jīntiān qǐng nǐmen chángchang wǒ jiā de hóngzǎo, kě tián le.)</span>
+                </div>
+                <div class="dialogue-line">
+                    <span class="speaker">玛丽 (Mǎlì):</span>
+                    <span class="chinese-text">我听说现在住四合院儿的越来越少了。</span>
+                    <span class="pinyin-text">(Wǒ tīngshuō xiànzài zhù sìhéyuànr de yuèláiyuè shǎo le.)</span>
+                </div>
+                <div class="dialogue-line">
+                    <span class="speaker tianfang">田芳 (Tián Fāng):</span>
+                    <span class="chinese-text">是。现在城市里大楼越盖越多，住宅小区也越建越漂亮。很多人都搬进楼房里去住了。我们院子里最近也搬走了五六家，明年我们家也要搬走了。</span>
+                    <span class="pinyin-text">(Shì. Xiànzài chéngshì lǐ dàlóu yuè gài yuè duō, zhùzhái xiǎoqū yě yuè jiàn yuè piàoliang. Hěnduō rén dōu bānjìn lóufáng lǐ qù zhù le. Wǒmen yuànzi lǐ zuìjìn yě bānzǒu le wǔliù jiā, míngnián wǒmen jiā yě yào bānzǒu le.)</span>
+                </div>
+                <div class="dialogue-line">
+                    <span class="speaker">玛丽 (Mǎlì):</span>
+                    <span class="chinese-text">那太遗憾了。</span>
+                    <span class="pinyin-text">(Nà tài yíhàn le.)</span>
+                </div>
+                <div class="dialogue-line">
+                    <span class="speaker tianfang">田芳 (Tián Fāng):</span>
+                    <span class="chinese-text">我虽然也舍不得离开我们家的小院儿，但还是希望快点儿搬进现代化的楼房里去住。</span>
+                    <span class="pinyin-text">(Wǒ suīrán yě shěbude líkāi wǒmen jiā de xiǎo yuànr, dàn háishì xīwàng kuài diǎnr bānjìn xiàndàihuà de lóufáng lǐ qù zhù.)</span>
+                </div>
+            </div>
+            <div class="note-box">
+                <p><strong>Hướng dẫn:</strong> Hai bạn học sinh sẽ cùng nhau đọc bài khoá trên. Sau đó, thực hiện các hoạt động bên dưới.</p>
+            </div>
+            <div class="activity-card">
+                <h2 class="activity-title"><i class="fas fa-comments"></i>Hoạt động 1: Đóng vai và Thảo luận mở rộng (10-12 phút)</h2>
+                <p class="text-gray-700 mb-4"><strong>Mục đích:</strong> Kết nối nội dung bài học với trải nghiệm của bản thân và vận dụng từ vựng.</p>
+                <div class="mb-4">
+                    <strong class="text-green-600">1. Đóng vai lại:</strong>
+                    <p class="text-gray-600">Hai bạn đổi vai (玛丽 và 田芳) cho nhau và đọc lại bài khoá một lần nữa để tăng sự nhuần nhuyễn.</p>
+                </div>
+                <div>
+                    <strong class="text-green-600">2. Thảo luận mở rộng:</strong>
+                    <p class="text-gray-600 mb-3">Dựa vào chủ đề của bài khoá, hai bạn hãy thảo luận các câu hỏi sau. Khuyến khích dùng những từ vựng và cấu trúc trong bài (ví dụ: <span class="chinese-text">越来越...</span>, <span class="chinese-text">虽然...但是...</span>, <span class="chinese-text">舍不得</span>, <span class="chinese-text">希望...</span>) để trả lời.</p>
+                    <div class="discussion-item">
+                        <p><strong>Về nhà ở:</strong> <span class="chinese-text">你喜欢住田芳家这样的四合院儿，还是喜欢住现代化的楼房？为什么？</span><br><span class="pinyin-text">(Nǐ xǐhuān zhù Tián Fāng jiā zhèyàng de sìhéyuànr, háishì xǐhuān zhù xiàndàihuà de lóufáng? Wèishéme?)</span></p>
+                        <div class="suggestion-box">
+                            <h4>Kịch bản gợi ý thảo luận:</h4>
+                            <p><strong>Bạn A (ví dụ, thích tứ hợp viện):</strong> <span class="chinese-text">我比较喜欢四合院儿。虽然可能不太方便，但是我觉得四合院儿很有意思，有文化气息，而且院子里可以种花种树，很安静。</span> <span class="pinyin-text">(Wǒ bǐjiào xǐhuān sìhéyuànr. Suīrán kěnéng bù tài fāngbiàn, dànshì wǒ juéde sìhéyuànr hěn yǒuyìsi, yǒu wénhuà qìxī, érqiě yuànzi lǐ kěyǐ zhòng huā zhòng shù, hěn ānjìng.)</span></p>
+                            <p><strong>Bạn B (ví dụ, thích nhà lầu):</strong> <span class="chinese-text">我更喜欢现代化的楼房。楼房又干净又安全，生活也方便多了，买东西、去银行都很近。而且冬天不冷，夏天不热。</span> <span class="pinyin-text">(Wǒ gèng xǐhuān xiàndàihuà de lóufáng. Lóufáng yòu gānjìng yòu ānquán, shēnghuó yě fāngbiàn duō le, mǎi dōngxi, qù yínháng dōu hěn jìn. Érqiě dōngtiān bù lěng, xiàtiān bù rè.)</span></p>
+                        </div><div class="interactive-area"><label for="l1-d1-discussion">Nội dung thảo luận của nhóm:</label><textarea id="l1-d1-discussion" placeholder="Ghi chú..."></textarea></div>
+                    </div>
+                    <div class="discussion-item">
+                        <p><strong>Về sự thay đổi:</strong> <span class="chinese-text">你的老家或者你住的城市，这几年有什么变化吗？比如，是不是大楼越来越多了？交通方便了吗？</span><br><span class="pinyin-text">(Nǐ de lǎojiā huòzhě nǐ zhù de chéngshì, zhè jǐ nián yǒu shé me biànhuà ma? Bǐrú, shì bùshì dàlóu yuèláiyuè duōle? Jiāotōng fāngbiàn le ma?)</span></p>
+                         <div class="suggestion-box"><h4>Kịch bản gợi ý thảo luận:</h4><p><strong>Bạn A:</strong> <span class="chinese-text">我的城市这几年变化很大。以前老房子比较多，现在新的大楼越来越多了，马路也变宽了。</span> <span class="pinyin-text">(Wǒ de chéngshì zhè jǐ nián biànhuà hěn dà. Yǐqián lǎo fángzi bǐjiào duō, xiànzài xīn de dàlóu yuèláiyuè duō le, mǎlù yě biàn kuān le.)</span></p><p><strong>Bạn B:</strong> <span class="chinese-text">是啊，我们那儿也是。现在出门坐地铁很方便，去哪儿都快。不过，人也越来越多了，有时候感觉有点儿吵。</span> <span class="pinyin-text">(Shì a, wǒmen nàr yěshì. Xiànzài chūmén zuò dìtiě hěn fāngbiàn, qù nǎr dōu kuài. Bùguò, rén yě yuèláiyuè duō le, yǒushíhou gǎnjué yǒudiǎnr chǎo.)</span></p></div><div class="interactive-area"><label for="l1-d2-discussion">Nội dung thảo luận của nhóm:</label><textarea id="l1-d2-discussion" placeholder="Ghi chú..."></textarea></div>
+                    </div>
+                    <div class="discussion-item">
+                        <p><strong>Về cảm xúc:</strong> <span class="chinese-text">像田芳一样，如果你要离开一个住了很久的地方，你会舍不得吗？你会舍不得什么？</span><br><span class="pinyin-text">(Xiàng Tián Fāng yīyàng, rúguǒ nǐ yào líkāi yīgè zhùle hěnjiǔ de dìfāng, nǐ huì shěbude ma? Nǐ huì shěbude shénme?)</span></p>
+                        <div class="suggestion-box"><h4>Kịch bản gợi ý thảo luận:</h4><p><strong>Bạn A:</strong> <span class="chinese-text">如果是我，我肯定会舍不得。我会舍不得我的老邻居，还有家附近那个我常去的书店。</span> <span class="pinyin-text">(Rúguǒ shì wǒ, wǒ kěndìng huì shěbude. Wǒ huì shěbude wǒ de lǎo línjū, hái yǒu jiā fùjìn nàge wǒ cháng qù de shūdiàn.)</span></p><p><strong>Bạn B:</strong> <span class="chinese-text">我也会。我最舍不得的是房间里那些小东西，每一个都有一些回忆。虽然也希望住新房子，但离开旧家肯定很难过。</span> <span class="pinyin-text">(Wǒ yě huì. Wǒ zuì shěbude de shì fángjiān lǐ nàxiē xiǎo dōngxi, měi yī ge dōu yǒu yīxiē huíyì. Suīrán yě xīwàng zhù xīn fángzi, dàn líkāi jiù jiā kěndìng hěn nánguò.)</span></p></div><div class="interactive-area"><label for="l1-d3-discussion">Nội dung thảo luận của nhóm:</label><textarea id="l1-d3-discussion" placeholder="Ghi chú..."></textarea></div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-divider"></div>
+            <div class="activity-card">
+                <h2 class="activity-title"><i class="fas fa-lightbulb"></i>Hoạt động 2: Sáng tạo tình huống (8-10 phút)</h2>
+                <div class="scenario-item">
+                    <p><strong>Tình huống:</strong> <span class="chinese-text">玛丽已经到了田芳的家，正在院子里参观。她们看到了大枣树。请你们两个人想象一下，然后编一段对话。</span><br><span class="pinyin-text">(Mǎlì yǐjīng dàole Tián Fāng de jiā, zhèngzài yuànzi lǐ cānguān. Tāmen kàndàole dà zǎoshù. Qǐng nǐmen liǎng gèrén xiǎngxiàng yīxià, ránhòu biān yīduàn duìhuà.)</span></p>
+                    <div class="role-play-suggestion"><h4>Kịch bản gợi ý chi tiết:</h4><p><strong>玛丽:</strong> <span class="chinese-text">田芳，这就是你说的大枣树吗？真高大啊！上面真的有很多红枣！</span> <span class="pinyin-text">(Tián Fāng, zhè jiùshì nǐ shuō de dà zǎoshù ma? Zhēn gāodà a! Shàngmiàn zhēnde yǒu hěnduō hóngzǎo!)</span></p><p><strong>田芳:</strong> <span class="chinese-text">是啊，玛丽！你看，这些红枣又大又红，特别甜。这是我爷爷年轻的时候种的，有很多年了。</span> <span class="pinyin-text">(Shì a, Mǎlì! Nǐ kàn, zhèxiē hóngzǎo yòu dà yòu hóng, tèbié tián. Zhè shì wǒ yéye niánqīng de shíhou zhòng de, yǒu hěnduō nián le.)</span></p><p><strong>玛丽:</strong> <span class="chinese-text">太棒了！从远处就能看见这棵树，真特别。住在这样的院子里一定很舒服吧？</span> <span class="pinyin-text">(Tài bàng le! Cóng yuǎnchù jiù néng kànjiàn zhè kē shù, zhēn tèbié. Zhù zài zhèyàng de yuànzi lǐ yīdìng hěn shūfu ba?)</span></p><p><strong>田芳:</strong> <span class="chinese-text">嗯，夏天的时候，我们常常在树下乘凉、聊天。不过，明年我们就要搬走了，真有点儿舍不得这棵树。</span> <span class="pinyin-text">(Ń, xiàtiān de shíhou, wǒmen chángcháng zài shù xià chéngliáng, liáotiān. Bùguò, míngnián wǒmen jiù yào bānzǒu le, zhēn yǒudiǎnr shěbude zhè kē shù.)</span></p></div><div class="interactive-area"><label for="l1-s1-dialogue">Viết đoạn hội thoại của nhóm bạn:</label><textarea id="l1-s1-dialogue" placeholder="玛丽: ...\n田芳: ..."></textarea></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lesson2-content" class="hidden">
+            <button class="back-to-selection-btn"><i class="fas fa-arrow-left"></i> Quay lại chọn bài</button>
+            <h1 class="text-3xl font-bold text-green-700 text-center my-4">Bài khoá 2: "Càng Học Càng Thú Vị" 📖💬</h1>
+             <button class="toggle-pinyin-btn lesson-pinyin-toggle">
+                <i class="fas fa-eye"></i> Hiện Pinyin Bài Này
+            </button>
+
+            <div class="dialogue-card">
+                <h2 class="dialogue-title"><i class="fas fa-chalkboard-teacher"></i>Bài Khoá: Càng Học Càng Thú Vị</h2>
+                <p class="text-sm text-gray-500 mb-3 italic">(Giáng Sinh và năm mới đang tới gần...)</p>
+                <div id="bai-khoa-2-content">
+                    <div class="dialogue-line">
+                        <span class="speaker wanglaoshi">王老师 (Wáng lǎoshī):</span>
+                        <span class="chinese-text">同学们已经学了两个多月汉语了。今天，想请大家随便谈谈自己的感想和体会，有什么意见和建议也可以提。</span>
+                        <span class="pinyin-text">(Tóngxuémen yǐjīng xué le liǎng ge duō yuè Hànyǔ le. Jīntiān, xiǎng qǐng dàjiā suíbiàn tántan zìjǐ de gǎnxiǎng hé tǐhuì, yǒu shénme yìjiàn hé jiànyì yě kěyǐ tí.)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker">玛丽 (Mǎlì):</span>
+                        <span class="chinese-text">刚来的时候，我不习惯北京的气候，常常感冒，现在越来越习惯了。</span>
+                        <span class="pinyin-text">(Gāng lái de shíhou, wǒ bù xíguàn Běijīng de qìhòu, chángcháng gǎnmào, xiànzài yuèláiyuè xíguàn le.)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker maike">麦克 (Màikè):</span>
+                        <span class="chinese-text">我们的汉语越来越好，觉得越学越有意思了。</span>
+                        <span class="pinyin-text">(Wǒmen de Hànyǔ yuèláiyuè hǎo, juéde yuè xué yuè yǒuyìsi le.)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker">玛丽 (Mǎlì):</span>
+                        <span class="chinese-text">我的朋友也越来越多了。</span>
+                        <span class="pinyin-text">(Wǒ de péngyou yě yuèláiyuè duō le.)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker maike">麦克 (Màikè):</span>
+                        <span class="chinese-text">朋友越多越好，“在家靠父母，出门靠朋友”嘛。</span>
+                        <span class="pinyin-text">(Péngyou yuè duō yuè hǎo, “zài jiā kào fùmǔ, chūmén kào péngyou” ma.)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker shanben">山本 (Shānběn):</span>
+                        <span class="chinese-text">中国菜很好吃，我越吃越喜欢吃，所以也越来越胖了。</span>
+                        <span class="pinyin-text">(Zhōngguó cài hěn hǎochī, wǒ yuè chī yuè xǐhuān chī, suǒyǐ yě yuèláiyuè pàng le.)</span>
+                    </div>
+                     <div class="dialogue-line">
+                        <span class="speaker maike">麦克 (Màikè):</span>
+                        <span class="chinese-text">我觉得人们的生活一天比一天丰富，年轻人越来越会打扮，打扮得越来越漂亮了。</span>
+                        <span class="pinyin-text">(Wǒ juéde rénmen de shēnghuó yī tiān bǐ yī tiān fēngfù, niánqīngrén yuèláiyuè huì dǎban, dǎban de yuèláiyuè piàoliang le.)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker">玛丽 (Mǎlì):</span>
+                        <span class="chinese-text">圣诞节和新年快到了，不少商店都摆着圣诞树，装饰得非常漂亮，我看见很多中国人也买圣诞树和圣诞礼物。</span>
+                        <span class="pinyin-text">(Shèngdànjié hé Xīnnián kuài dàole, bùshǎo shāngdiàn dōu bǎizhe Shèngdànshù, zhuāngshì de fēicháng piàoliang, wǒ kànjiàn hěnduō Zhōngguórén yě mǎi Shèngdànshù hé Shèngdàn lǐwù.)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker maike">麦克 (Màikè):</span>
+                        <span class="chinese-text">老师，我听说中国过圣诞节的人越来越多了，是吗？</span>
+                        <span class="pinyin-text">(Lǎoshī, wǒ tīngshuō Zhōngguó guò Shèngdànjié de rén yuèláiyuè duō le, shì ma?)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker wanglaoshi">王老师 (Wáng lǎoshī):</span>
+                        <span class="chinese-text">一般家庭是不过圣诞节的。有的人过圣诞节，可能是喜欢圣诞节那种欢乐的气氛，孩子们能从爸爸妈妈那儿得到礼物，当然也很高兴。不过，中国最大的节日还是春节。</span>
+                        <span class="pinyin-text">(Yībān jiātíng shì bùguò Shèngdànjié de. Yǒude rén guò Shèngdànjié, kěnéng shì xǐhuān Shèngdànjié nà zhǒng huānlè de qìfēn, háizimen néng cóng bàba māma nàr dédào lǐwù, dāngrán yě hěn gāoxìng. Bùguò, Zhōngguó zuìdà de jiérì háishì Chūnjié.)</span>
+                    </div>
+                     <div class="dialogue-line">
+                        <span class="speaker maike">麦克 (Màikè):</span>
+                        <span class="chinese-text">老师，我建议，咱们开一个新年联欢会，怎么样？</span>
+                        <span class="pinyin-text">(Lǎoshī, wǒ jiànyì, zánmen kāi yī ge Xīnnián liánhuānhuì, zěnmeyàng?)</span>
+                    </div>
+                    <div class="dialogue-line">
+                        <span class="speaker wanglaoshi">王老师 (Wáng lǎoshī):</span>
+                        <span class="chinese-text">好啊！</span>
+                        <span class="pinyin-text">(Hǎo a!)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="note-box">
+                <p><strong>Hướng dẫn:</strong> Hai bạn học sinh sẽ cùng nhau đọc bài khoá 2 ở trên. Sau đó, thực hiện các hoạt động bên dưới.</p>
+            </div>
+
+            <div class="activity-card">
+                <h2 class="activity-title"><i class="fas fa-search"></i>Hoạt động 1: Đọc và "Săn" Ngữ Pháp (5 phút)</h2>
+                <p class="text-gray-700 mb-4"><strong>Mục đích:</strong> Nhận diện và củng cố các cấu trúc ngữ pháp cốt lõi.</p>
+                <div class="mb-4">
+                    <strong class="text-green-600">1. Phân vai đọc:</strong>
+                    <p class="text-gray-600">Chia vai để đọc: một bạn đọc vai <span class="speaker wanglaoshi">王老师</span> và <span class="speaker">玛丽</span>, bạn còn lại đọc vai <span class="speaker maike">麦克</span> và <span class="speaker shanben">山本</span>.</p>
+                </div>
+                <div>
+                    <strong class="text-green-600">2. Săn tìm cấu trúc:</strong>
+                    <p class="text-gray-600 mb-3">Sau khi đọc xong, hai bạn hãy cùng nhau tìm và gạch chân (hoặc ghi lại) tất cả các câu trong bài có sử dụng hai cấu trúc sau:</p>
+                    <ul class="list-disc pl-5 mb-3 text-gray-700">
+                        <li><span class="chinese-text font-semibold">越来越...</span> <span class="pinyin-text">(yuèláiyuè... - ngày càng...)</span></li>
+                        <li><span class="chinese-text font-semibold">越 A 越 B</span> <span class="pinyin-text">(yuè A yuè B - càng A càng B)</span></li>
+                    </ul>
+                    <div class="interactive-area">
+                        <label for="l2-grammar-hunt">Các câu tìm được:</label>
+                        <textarea id="l2-grammar-hunt" placeholder="Liệt kê các câu có cấu trúc 越来越... và 越 A 越 B mà các bạn tìm thấy..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="activity-card">
+                <h2 class="activity-title"><i class="fas fa-user-friends"></i>Hoạt động 2: Góc Nhìn Nhân Vật và Liên Hệ Bản Thân (7-10 phút)</h2>
+                <p class="text-gray-700 mb-4"><strong>Mục đích:</strong> Đào sâu nội dung bài học và kết nối với trải nghiệm cá nhân.</p>
+                <div class="mb-4">
+                    <strong class="text-green-600">1. Tóm tắt góc nhìn nhân vật:</strong>
+                    <ul class="list-disc pl-5 text-gray-600">
+                        <li><strong>Bạn A:</strong> Tóm tắt lại những cảm nhận và trải nghiệm của <span class="speaker">玛丽 (Mary)</span> trong bài (về khí hậu Bắc Kinh, về việc có thêm bạn bè, về không khí Giáng Sinh).</li>
+                        <li><strong>Bạn B:</strong> Tóm tắt lại những cảm nhận và trải nghiệm của <span class="speaker maike">麦克 (Mike)</span> (về việc học tiếng Trung, câu thành ngữ "在家靠父母，出门靠朋友", nhận xét về cuộc sống và giới trẻ, đề xuất tổ chức liên hoan).</li>
+                         <li>(Có thể thêm <span class="speaker shanben">山本</span> nếu muốn: về món ăn Trung Quốc và việc tăng cân).</li>
+                    </ul>
+                     <div class="interactive-area">
+                        <label for="l2-char-summary">Ghi chú tóm tắt:</label>
+                        <textarea id="l2-char-summary" placeholder="Bạn A (玛丽): ...\nBạn B (麦克): ..."></textarea>
+                    </div>
+                </div>
+                <div>
+                    <strong class="text-green-600">2. Thảo luận cá nhân:</strong>
+                    <p class="text-gray-600 mb-3">Bây giờ, hãy dùng những chủ đề đó để nói về chính mình.</p>
+                    <div class="discussion-item">
+                        <p><span class="chinese-text">刚开始学汉语的时候，你有什么不习惯的地方？现在呢？是不是越来越习惯了？</span><br><span class="pinyin-text">(Gāng kāishǐ xué Hànyǔ de shíhòu, nǐ yǒu shé me bù xíguàn de dìfāng? Xiànzài ne? Shì bùshì yuèláiyuè xíguànle?)</span></p>
+                        <div class="suggestion-box"><h4>Kịch bản gợi ý thảo luận:</h4>
+                            <p><strong>Bạn A:</strong> <span class="chinese-text">刚开始学汉语的时候，我觉得声调最难，常常说错。汉字也像画画一样，很难记。</span><span class="pinyin-text">(Gāng kāishǐ xué Hànyǔ de shíhòu, wǒ juéde shēngdiào zuì nán, chángcháng shuō cuò. Hànzì yě xiàng huàhuà yīyàng, hěn nán jì.)</span></p>
+                            <p><strong>Bạn B:</strong> <span class="chinese-text">是啊，我也是。不过现在好多了，练习多了，声调也越来越准了。汉字虽然还是很难，但是我已经认识不少了。</span><span class="pinyin-text">(Shì a, wǒ yěshì. Bùguò xiànzài hǎo duō le, liànxí duō le, shēngdiào yě yuèláiyuè zhǔn le. Hànzì suīrán háishì hěn nán, dànshì wǒ yǐjīng rènshi bù shǎo le.)</span></p>
+                        </div><div class="interactive-area"><label for="l2-d1-discussion">Nội dung thảo luận:</label><textarea id="l2-d1-discussion" placeholder="Ghi chú..."></textarea></div>
+                    </div>
+                    <div class="discussion-item">
+                        <p><span class="chinese-text">你同意麦克说的“汉语越学越有意思”这个说法吗？为什么？</span><br><span class="pinyin-text">(Nǐ tóngyì Màikè shuō de “Hànyǔ yuè xué yuè yǒuyìsi” zhège shuōfǎ ma? Wèishéme?)</span></p>
+                        <div class="suggestion-box"><h4>Kịch bản gợi ý thảo luận:</h4>
+                            <p><strong>Bạn A:</strong> <span class="chinese-text">我非常同意！刚开始觉得有点儿枯燥，但是学得越多，能看懂的东西越多，能交流的人也越多，就觉得越有意思。</span><span class="pinyin-text">(Wǒ fēicháng tóngyì! Gāng kāishǐ juéde yǒudiǎnr kūzào, dànshì xué de yuè duō, néng kàndǒng de dōngxi yuè duō, néng jiāoliú de rén yě yuè duō, jiù juéde yuè yǒuyìsi.)</span></p>
+                            <p><strong>Bạn B:</strong> <span class="chinese-text">我也是这么觉得。特别是能用汉语看懂一些简单的故事或者新闻的时候，非常有成就感。而且通过学汉语，还能了解很多中国文化，像麦克说的“在家靠父母，出门靠朋友”这样的说法也很有意思。</span><span class="pinyin-text">(Wǒ yěshì zhème juéde. Tèbié shì néng yòng Hànyǔ kàndǒng yīxiē jiǎndān de gùshì huòzhě xīnwén de shíhou, fēicháng yǒu chéngjiù gǎn. Érqiě tōngguò xué Hànyǔ, hái néng liǎojiě hěnduō Zhōngguó wénhuà, xiàng Màikè shuō de “zài jiā kào fùmǔ, chūmén kào péngyou” zhèyàng de shuōfǎ yě hěn yǒuyìsi.)</span></p>
+                        </div><div class="interactive-area"><label for="l2-d2-discussion">Nội dung thảo luận:</label><textarea id="l2-d2-discussion" placeholder="Ghi chú..."></textarea></div>
+                    </div>
+                    <div class="discussion-item">
+                        <p><span class="chinese-text">王老师说“中国最大的节日还是春节”。在你的国家，最大的节日是什么？人们一般怎么过节？和中国的春节有什么一样和不一样的地方？</span><br><span class="pinyin-text">(Wáng lǎoshī shuō “Zhōngguó zuìdà de jiérì háishì Chūnjié”. Zài nǐ de guójiā, zuìdà de jiérì shì shénme? Rénmen yī̠bān zěnmeguò jié? Hé Zhōngguó de Chūnjié yǒu shénme yīyàng hé bù yīyàng de dìfāng?)</span></p>
+                        <div class="suggestion-box"><h4>Kịch bản gợi ý thảo luận:</h4>
+                            <p><strong>Bạn A:</strong> <span class="chinese-text">在我的国家 (ví dụ: Việt Nam)，最大的节日也是春节 (Tết)。跟中国一样，我们也会回家和家人团聚，一起吃年夜饭，孩子们会收到红包 (lì xì)。我们也会去亲戚朋友家拜年。</span><span class="pinyin-text">(Zài wǒ de guójiā (ví dụ: Yuènán), zuìdà de jiérì yěshì Chūnjié (Tết). Gēn Zhōngguó yīyàng, wǒmen yě huì huíjiā hé jiārén tuánjù, yīqǐ chī niányèfàn, háizimen huì shōudào hóngbāo (lì xì). Wǒmen yě huì qù qīnqi péngyou jiā bàinián.)</span></p>
+                            <p><strong>Bạn B:</strong> <span class="chinese-text">不一样的地方可能是一些传统食物或者习俗。比如我们春节会吃粽子 (bánh chưng)。你们国家过圣诞节吗？像玛丽说的，现在很多中国人也对圣诞节感兴趣。</span><span class="pinyin-text">(Bù yīyàng de dìfāng kěnéng shì yīxiē chuántǒng shíwù huòzhě xísú. Bǐrú wǒmen Chūnjié huì chī zòngzi (bánh chưng). Nǐmen guójiā guò Shèngdànjié ma? Xiàng Mǎlì shuō de, xiànzài hěnduō Zhōngguórén yě duì Shèngdànjié gǎn xìngqù.)</span></p>
+                        </div><div class="interactive-area"><label for="l2-d3-discussion">Nội dung thảo luận:</label><textarea id="l2-d3-discussion" placeholder="Ghi chú..."></textarea></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-divider"></div>
+
+            <div class="activity-card">
+                <h2 class="activity-title"><i class="fas fa-edit"></i>Hoạt động 3: Vận Dụng Sáng Tạo - Lên Kế Hoạch (5-7 phút)</h2>
+                <p class="text-gray-700 mb-4"><strong>Mục đích:</strong> Sử dụng ngôn ngữ đã học để giải quyết một tình huống thực tế.</p>
+                <div class="scenario-item">
+                    <p><strong>Tình huống:</strong> <span class="chinese-text">快到新年了，麦克建议开一个新年联欢会。假设你是玛丽和麦克，请你们一起商量一下怎么准备这个联欢会。</span><br><span class="pinyin-text">(Kuài dào Xīnnián le, Màikè jiànyì kāi yī ge Xīnnián liánhuānhuì. Jiǎshè nǐ shì Mǎlì hé Màikè, qǐng nǐmen yīqǐ shāngliang yīxià zěnme zhǔnbèi zhège liánhuānhuì.)</span></p>
+                    <div class="suggestion-box">
+                        <h4>Gợi ý các việc cần chuẩn bị cho联欢会 (liánhuānhuì - buổi liên hoan):</h4>
+                        <ul>
+                            <li><span class="chinese-text">时间 (shíjiān - thời gian)，地点 (dìdiǎn - địa điểm)</span></li>
+                            <li><span class="chinese-text">邀请谁？(yāoqǐng shéi? - mời ai?)</span> - 王老师，山本，别的同学...</li>
+                            <li><span class="chinese-text">准备什么吃的、喝的？</span> <span class="pinyin-text">(Zhǔnbèi shénme chī de, hē de?)</span> - 中国菜，点心，水果，饮料...</li>
+                            <li><span class="chinese-text">有什么活动/节目？</span> <span class="pinyin-text">(Yǒu shénme huódòng/jiémù?)</span> - 唱歌，跳舞，说笑话，做游戏...</li>
+                            <li><span class="chinese-text">怎么装饰教室/活动地点？</span> <span class="pinyin-text">(Zěnme zhuāngshì jiàoshì/huódòng dìdiǎn?)</span> - 气球 (qìqiú - bóng bay), 彩带 (cǎidài - dây kim tuyến), 春联 (Chūnlián - câu đối Tết)...</li>
+                        </ul>
+                        <h4>Kịch bản gợi ý thảo luận kế hoạch:</h4>
+                        <p><strong>麦克:</strong> <span class="chinese-text">玛丽，老师同意我们开新年联欢会了！我们商量一下怎么准备吧。</span><span class="pinyin-text">(Mǎlì, lǎoshī tóngyì wǒmen kāi Xīnnián liánhuānhuì le! Wǒmen shāngliang yīxià zěnme zhǔnbèi ba.)</span></p>
+                        <p><strong>玛丽:</strong> <span class="chinese-text">太好了！我们什么时候开？在教室可以吗？</span><span class="pinyin-text">(Tài hǎo le! Wǒmen shénme shíhou kāi? Zài jiàoshì kěyǐ ma?)</span></p>
+                        <p><strong>麦克:</strong> <span class="chinese-text">我觉得可以。吃的喝的怎么办？我们可以每人带一个菜吗？像山本，他做的日本菜一定很好吃。</span><span class="pinyin-text">(Wǒ juéde kěyǐ. Chī de hē de zěnme bàn? Wǒmen kěyǐ měi rén dài yī ge cài ma? Xiàng Shānběn, tā zuò de Rìběn cài yīdìng hěn hǎochī.)</span></p>
+                        <p><strong>玛丽:</strong> <span class="chinese-text">好主意！我们还可以准备一些中国的小吃和水果。节目呢？我们可以请同学们表演节目，唱歌、跳舞什么的。</span><span class="pinyin-text">(Hǎo zhǔyi! Wǒmen hái kěyǐ zhǔnbèi yīxiē Zhōngguó de xiǎochī hé shuǐguǒ. Jiémù ne? Wǒmen kěyǐ qǐng tóngxuémen biǎoyǎn jiémù, chànggē, tiàowǔ shénme de.)</span></p>
+                         <p><strong>麦克:</strong> <span class="chinese-text">对！我们还可以一起做游戏，气氛一定会越来越热闹！</span><span class="pinyin-text">(Duì! Wǒmen hái kěyǐ yīqǐ zuò yóuxì, qìfēn yīdìng huì yuèláiyuè rènào!)</span></p>
+                    </div>
+                    <div class="interactive-area">
+                        <label for="l2-s1-plan">Kế hoạch cho buổi liên hoan (do nhóm bạn thảo luận):</label>
+                        <textarea id="l2-s1-plan" placeholder="Thời gian:\nĐịa điểm:\nMời những ai:\nĐồ ăn thức uống:\nHoạt động/Chương trình:\nTrang trí:"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-300">
+            <p class="text-gray-600">Chúc các em học tốt và có một buổi luyện tập vui vẻ! 🎉</p>
+        </footer>
+    </div>
+
+    <script>
+        const lessonSelectionView = document.getElementById('lesson-selection-view');
+        const lesson1Content = document.getElementById('lesson1-content');
+        const lesson2Content = document.getElementById('lesson2-content');
+        const selectLesson1Btn = document.getElementById('select-lesson1-btn');
+        const selectLesson2Btn = document.getElementById('select-lesson2-btn');
+        const backToSelectionBtns = document.querySelectorAll('.back-to-selection-btn');
+        const lessonPinyinToggleBtns = document.querySelectorAll('.lesson-pinyin-toggle');
+
+        function showLesson(lessonId) {
+            lessonSelectionView.classList.add('hidden');
+            if (lessonId === 1) {
+                lesson1Content.classList.remove('hidden');
+                lesson2Content.classList.add('hidden');
+            } else if (lessonId === 2) {
+                lesson2Content.classList.remove('hidden');
+                lesson1Content.classList.add('hidden');
+            }
+            // Reset pinyin visibility for the shown lesson
+            const activeLessonContent = lessonId === 1 ? lesson1Content : lesson2Content;
+            activeLessonContent.querySelectorAll('.pinyin-text').forEach(pinyin => pinyin.classList.remove('visible'));
+            const activeToggleButton = activeLessonContent.querySelector('.lesson-pinyin-toggle');
+            if(activeToggleButton) activeToggleButton.innerHTML = '<i class="fas fa-eye"></i> Hiện Pinyin Bài Này';
+        }
+
+        selectLesson1Btn.addEventListener('click', () => showLesson(1));
+        selectLesson2Btn.addEventListener('click', () => showLesson(2));
+
+        backToSelectionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                lesson1Content.classList.add('hidden');
+                lesson2Content.classList.add('hidden');
+                lessonSelectionView.classList.remove('hidden');
+            });
+        });
+
+        lessonPinyinToggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const parentLessonContent = btn.closest('#lesson1-content, #lesson2-content');
+                if (!parentLessonContent) return;
+
+                const pinyinTextsInLesson = parentLessonContent.querySelectorAll('.pinyin-text');
+                const isCurrentlyVisible = btn.innerHTML.includes('Ẩn'); // Check based on current button text
+
+                pinyinTextsInLesson.forEach(pinyin => {
+                    if (isCurrentlyVisible) {
+                        pinyin.classList.remove('visible');
+                    } else {
+                        pinyin.classList.add('visible');
+                    }
+                });
+                btn.innerHTML = isCurrentlyVisible ? '<i class="fas fa-eye"></i> Hiện Pinyin Bài Này' : '<i class="fas fa-eye-slash"></i> Ẩn Pinyin Bài Này';
+            });
+        });
+
+    </script>
+</body>
+</html>

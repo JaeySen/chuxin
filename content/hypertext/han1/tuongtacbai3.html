@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện tập Hội thoại: Bài 3</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Sử dụng font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS tùy chỉnh */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Các lớp này sẽ được bật/tắt bằng JavaScript */
+        }
+        body.hide-pinyin .pinyin {
+            display: none;
+        }
+        body.hide-vietnamese .dich-nghia {
+            display: none;
+        }
+        
+        /* Tạo kiểu cho dropdown thay thế từ */
+        .substitute-select {
+            @apply border border-gray-300 rounded-md p-1 shadow-sm bg-teal-50 text-teal-800 font-medium focus:ring-teal-500 focus:border-teal-500 mx-1;
+        }
+        /* Tạo kiểu cho placeholder của select */
+        .substitute-select:invalid {
+            @apply text-gray-400;
+        }
+
+        /* Định dạng dòng hội thoại */
+        .dialogue-line {
+            @apply flex items-start mb-4;
+        }
+
+        .speaker {
+            @apply w-12 font-bold text-lg text-teal-700 flex-shrink-0; /* A: hoặc B: */
+        }
+
+        .content {
+            @apply flex-1 text-lg text-gray-800;
+        }
+
+        .pinyin {
+            @apply text-sm text-gray-500 mt-1 ml-12 transition-all duration-200; /* Phiên âm */
+        }
+
+        .dich-nghia {
+            @apply text-sm text-green-700 italic mt-1 ml-12 transition-all duration-200; /* Thêm kiểu cho nghĩa TV */
+        }
+
+        /* Nút chế độ */
+        .mode-btn {
+            @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2;
+        }
+        
+        .mode-btn.active {
+            @apply bg-teal-600 text-white shadow-md;
+        }
+
+        .mode-btn.inactive {
+            @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+        }
+        
+        /* Nút bật/tắt mới */
+        .toggle-btn {
+            @apply px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2;
+        }
+        .toggle-btn.active {
+            @apply bg-teal-600 text-white shadow-sm;
+        }
+        .toggle-btn.inactive {
+            @apply bg-gray-200 text-gray-600 hover:bg-gray-300;
+        }
+
+        /* Icon SVG inline */
+        .icon {
+            @apply w-5 h-5;
+        }
+    </style>
+</head>
+<body class="bg-teal-50 min-h-screen p-4 md:p-8">
+
+    <!-- Bố cục chính 2 cột -->
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:space-x-8">
+
+        <!-- CỘT BÊN TRÁI (Hội thoại) -->
+        <div class="flex-1">
+            <!-- Tiêu đề -->
+            <header class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-teal-900">
+                    Bài 3: 明天见
+                </h1>
+                <p class="text-xl text-gray-600">Luyện tập Hội thoại Tương tác</p>
+            </header>
+            
+            <!-- Bộ điều khiển -->
+            <div class="bg-white rounded-xl shadow-lg p-4 mb-6 sticky top-4 z-10">
+                <div class="flex flex-col sm:flex-row justify-center items-center sm:space-x-4 space-y-3 sm:space-y-0">
+                    <!-- Nút chế độ -->
+                    <div class="flex space-x-4">
+                        <button id="mode-1-student" class="mode-btn inactive">
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A1.125 1.125 0 0 1 18.374 21H5.626a1.125 1.125 0 0 1-1.125-.882Z" /></svg>
+                            <span>1 Học viên</span>
+                        </button>
+                        <button id="mode-2-student" class="mode-btn active">
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A9.065 9.065 0 0 1 6 18.719m12 0a9.049 9.049 0 0 0-12 0m12 0c.031-.046.062-.092.092-.137a9.09 9.09 0 0 0-2.86-1.57M6.092 18.582A9.09 9.09 0 0 1 3.14 17.013m3.05-1.479a9.09 9.09 0 0 1-2.86 1.57M12 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0c0 1.657 1.343 3 3 3s3-1.343 3-3 0-6-3-6-3 1.343-3 3Zm0 0c0 1.657-1.343 3-3 3s-3-1.343-3-3 0-6 3-6 3 1.343 3 3Z" /></svg>
+                            <span>2 Học viên</span>
+                        </button>
+                    </div>
+                    <!-- Nút Bật/Tắt Pinyin & Nghĩa -->
+                    <div class="flex space-x-4">
+                        <button id="toggle-pinyin" class="toggle-btn active">
+                            <svg class="icon icon-eye-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            <svg class="icon icon-eye-closed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
+                            <span class="btn-text">Ẩn Pinyin</span>
+                        </button>
+                        <button id="toggle-vietnamese" class="toggle-btn active">
+                            <svg class="icon icon-eye-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            <svg class="icon icon-eye-closed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
+                            <span class="btn-text">Ẩn Nghĩa</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khu vực hội thoại -->
+            <main class="space-y-8">
+
+                <!-- Hội thoại 1: Học tiếng Trung -->
+                <section class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6 text-teal-800 border-b border-teal-100 pb-2">
+                        Hội thoại 1: 学汉语
+                    </h2>
+
+                    <!-- Dòng 1 (A) -->
+                    <div class="dialogue-line role-A">
+                        <span class="speaker">A:</span>
+                        <div class="content">
+                            你学
+                            <select id="sub-lang-1" class="substitute-select" data-target-pinyin="#pinyin-lang-1" data-target-vietnamese="#translation-lang-1" required>
+                                <option value="" data-pinyin="..." data-vietnamese="..." selected disabled>---chọn ngôn ngữ---</option>
+                                <option value="英语" data-pinyin="Yīngyǔ" data-vietnamese="Tiếng Anh">英语</option>
+                                <option value="汉语" data-pinyin="Hànyǔ" data-vietnamese="Tiếng Trung">汉语</option>
+                                <option value="德语" data-pinyin="Déyǔ" data-vietnamese="Tiếng Đức">德语</option>
+                                <option value="俄语" data-pinyin="Éyǔ" data-vietnamese="Tiếng Nga">俄语</option>
+                                <option value="法语" data-pinyin="Fǎyǔ" data-vietnamese="Tiếng Pháp">法语</option>
+                                <option value="日语" data-pinyin="Rìyǔ" data-vietnamese="Tiếng Nhật">日语</option>
+                                <option value="韩国语" data-pinyin="Hánguóyǔ" data-vietnamese="Tiếng Hàn">韩国语</option>
+                                <option value="西班牙语" data-pinyin="Xībānyáyǔ" data-vietnamese="Tiếng TBN">西班牙语</option>
+                            </select>
+                            吗？
+                        </div>
+                    </div>
+                    <div class="pinyin role-A">Nǐ xué <span id="pinyin-lang-1">...</span> ma?</div>
+                    <div class="dich-nghia role-A">Bạn học <span id="translation-lang-1">...</span> phải không?</div>
+
+                    <!-- Dòng 2 (B) -->
+                    <div class="dialogue-line role-B mt-4">
+                        <span class="speaker">B:</span>
+                        <div class="content">
+                            不。学
+                            <select id="sub-lang-2" class="substitute-select" data-target-pinyin="#pinyin-lang-2" data-target-vietnamese="#translation-lang-2" required>
+                                <option value="" data-pinyin="..." data-vietnamese="..." selected disabled>---chọn ngôn ngữ---</option>
+                                <option value="英语" data-pinyin="Yīngyǔ" data-vietnamese="Tiếng Anh">英语</option>
+                                <option value="汉语" data-pinyin="Hànyǔ" data-vietnamese="Tiếng Trung">汉语</option>
+                                <option value="德语" data-pinyin="Déyǔ" data-vietnamese="Tiếng Đức">德语</option>
+                                <option value="俄语" data-pinyin="Éyǔ" data-vietnamese="Tiếng Nga">俄语</option>
+                                <option value="法语" data-pinyin="Fǎyǔ" data-vietnamese="Tiếng Pháp">法语</option>
+                                <option value="日语" data-pinyin="Rìyǔ" data-vietnamese="Tiếng Nhật">日语</option>
+                                <option value="韩国语" data-pinyin="Hánguóyǔ" data-vietnamese="Tiếng Hàn">韩国语</option>
+                                <option value="西班牙语" data-pinyin="Xībānyáyǔ" data-vietnamese="Tiếng TBN">西班牙语</option>
+                            </select>
+                            。
+                        </div>
+                    </div>
+                    <div class="pinyin role-B">Bù. Xué <span id="pinyin-lang-2">...</span>.</div>
+                    <div class="dich-nghia role-B">Không. Học <span id="translation-lang-2">...</span>.</div>
+                    
+                    <!-- Dòng 3 (A) -->
+                    <div class="dialogue-line role-A mt-4">
+                        <span class="speaker">A:</span>
+                        <div class="content">
+                            去
+                            <select id="sub-place-1" class="substitute-select" data-target-pinyin="#pinyin-place-1" data-target-vietnamese="#translation-place-1" required>
+                                <option value="" data-pinyin="..." data-vietnamese="..." selected disabled>---chọn địa điểm---</option>
+                                <option value="北京" data-pinyin="Běijīng" data-vietnamese="Bắc Kinh">北京</option>
+                                <option value="邮局" data-pinyin="yóujú" data-vietnamese="bưu điện">邮局</option>
+                                <option value="银行" data-pinyin="yínháng" data-vietnamese="ngân hàng">银行</option>
+                                <option value="学校" data-pinyin="xuéxiào" data-vietnamese="trường học">学校</option>
+                            </select>
+                            吗？
+                        </div>
+                    </div>
+                    <div class="pinyin role-A">Qù <span id="pinyin-place-1">...</span> ma?</div>
+                    <div class="dich-nghia role-A">Đi <span id="translation-place-1">...</span> phải không?</div>
+
+                    <!-- Dòng 4 (B) -->
+                    <div class="dialogue-line role-B mt-4">
+                        <span class="speaker">B:</span>
+                        <div class="content">对。</div>
+                    </div>
+                    <div class="pinyin role-B">Duì.</div>
+                    <div class="dich-nghia role-B">Đúng vậy.</div>
+                </section>
+
+                <!-- Hội thoại 2: Hẹn gặp ngày mai -->
+                <section class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6 text-teal-800 border-b border-teal-100 pb-2">
+                        Hội thoại 2: 明天见
+                    </h2>
+                    
+                    <!-- Dòng 1 (A) -->
+                    <div class="dialogue-line role-A">
+                        <span class="speaker">A:</span>
+                        <div class="content">
+                            你去
+                            <select id="sub-place-2" class="substitute-select" data-target-pinyin="#pinyin-place-2" data-target-vietnamese="#translation-place-2" required>
+                                <option value="" data-pinyin="..." data-vietnamese="..." selected disabled>---chọn địa điểm---</option>
+                                <option value="邮局" data-pinyin="yóujú" data-vietnamese="bưu điện">邮局</option>
+                                <option value="银行" data-pinyin="yínháng" data-vietnamese="ngân hàng">银行</option>
+                                <option value="学校" data-pinyin="xuéxiào" data-vietnamese="trường học">学校</option>
+                                <option value="医院" data-pinyin="yīyuàn" data-vietnamese="bệnh viện">医院</option>
+                                <option value="北京" data-pinyin="Běijīng" data-vietnamese="Bắc Kinh">北京</option>
+                            </select>
+                            <select id="sub-action-1" class="substitute-select" data-target-pinyin="#pinyin-action-1" data-target-vietnamese="#translation-action-1" required>
+                                <option value="" data-pinyin="..." data-vietnamese="..." selected disabled>---chọn hành động---</option>
+                                <option value="寄信" data-pinyin="jì xìn" data-vietnamese="gửi thư">寄信</option>
+                                <option value="取钱" data-pinyin="qǔ qián" data-vietnamese="rút tiền">取钱</option>
+                                <option value="学习" data-pinyin="xuéxí" data-vietnamese="học">学习</option>
+                                <option value="看病" data-pinyin="kàn bìng" data-vietnamese="khám bệnh">看病</option>
+                            </select>
+                            吗？
+                        </div>
+                    </div>
+                    <div class="pinyin role-A">Nǐ qù <span id="pinyin-place-2">...</span> <span id="pinyin-action-1">...</span> ma?</div>
+                    <div class="dich-nghia role-A">Bạn đi <span id="translation-place-2">...</span> để <span id="translation-action-1">...</span> phải không?</div>
+
+                    <!-- Dòng 2 (B) -->
+                    <div class="dialogue-line role-B mt-4">
+                        <span class="speaker">B:</span>
+                        <div class="content">
+                            不去。去
+                            <select id="sub-place-3" class="substitute-select" data-target-pinyin="#pinyin-place-3" data-target-vietnamese="#translation-place-3" required>
+                                <option value="" data-pinyin="..." data-vietnamese="..." selected disabled>---chọn địa điểm---</option>
+                                <option value="邮局" data-pinyin="yóujú" data-vietnamese="bưu điện">邮局</option>
+                                <option value="银行" data-pinyin="yínháng" data-vietnamese="ngân hàng">银行</option>
+                                <option value="学校" data-pinyin="xuéxiào" data-vietnamese="trường học">学校</option>
+                                <option value="医院" data-pinyin="yīyuàn" data-vietnamese="bệnh viện">医院</option>
+                                <option value="北京" data-pinyin="Běijīng" data-vietnamese="Bắc Kinh">北京</option>
+                            </select>
+                            <select id="sub-action-2" class="substitute-select" data-target-pinyin="#pinyin-action-2" data-target-vietnamese="#translation-action-2" required>
+                                <option value="" data-pinyin="..." data-vietnamese="..." selected disabled>---chọn hành động---</option>
+                                <option value="寄信" data-pinyin="jì xìn" data-vietnamese="gửi thư">寄信</option>
+                                <option value="取钱" data-pinyin="qǔ qián" data-vietnamese="rút tiền">取钱</option>
+                                <option value="学习" data-pinyin="xuéxí" data-vietnamese="học">学习</option>
+                                <option value="看病" data-pinyin="kàn bìng" data-vietnamese="khám bệnh">看病</option>
+                            </select>
+                            。
+                        </div>
+                    </div>
+                    <div class="pinyin role-B">Bú qù. Qù <span id="pinyin-place-3">...</span> <span id="pinyin-action-2">...</span>.</div>
+                    <div class="dich-nghia role-B">Không đi. Đi <span id="translation-place-3">...</span> để <span id="translation-action-2">...</span>.</div>
+                    
+                    <!-- Dòng 3 (A) -->
+                    <div class="dialogue-line role-A mt-4">
+                        <span class="speaker">A:</span>
+                        <div class="content">明天见！</div>
+                    </div>
+                    <div class="pinyin role-A">Míngtiān jiàn!</div>
+                    <div class="dich-nghia role-A">Ngày mai gặp!</div>
+
+                    <!-- Dòng 4 (B) -->
+                    <div class="dialogue-line role-B mt-4">
+                        <span class="speaker">B:</span>
+                        <div class="content">明天见！</div>
+                    </div>
+                    <div class="pinyin role-B">Míngtiān jiàn!</div>
+                    <div class="dich-nghia role-B">Ngày mai gặp!</div>
+                </section>
+
+            </main>
+        </div> <!-- Hết cột bên trái -->
+        
+        <!-- CỘT BÊN PHẢI (Từ vựng) -->
+        <aside class="w-full md:w-1/3 lg:w-1/4 mt-8 md:mt-0">
+            <div class="bg-white rounded-xl shadow-lg p-5 sticky top-4">
+                <h3 class="text-xl font-bold text-teal-800 mb-4 border-b border-teal-100 pb-2">
+                    <svg class="icon inline-block -mt-1 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25" /></svg>
+                    Từ vựng Thay thế
+                </h3>
+                
+                <!-- Ngôn ngữ -->
+                <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">
+                    <svg class="icon inline-block -mt-1 mr-2 text-teal-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C13.18 6.062 14.11 6.5 15 6.5c.89 0 1.82-.438 2.666-.786M15 6.5v-2.5" /></svg>
+                    Ngôn ngữ (语言)
+                </h4>
+                <ul class="space-y-2 text-sm pl-4 list-disc list-inside text-gray-700">
+                    <li><strong>英语</strong> (Yīngyǔ): Tiếng Anh</li>
+                    <li><strong>汉语</strong> (Hànyǔ): Tiếng Trung</li>
+                    <li><strong>德语</strong> (Déyǔ): Tiếng Đức</li>
+                    <li><strong>俄语</strong> (Éyǔ): Tiếng Nga</li>
+                    <li><strong>法语</strong> (Fǎyǔ): Tiếng Pháp</li>
+                    <li><strong>日语</strong> (Rìyǔ): Tiếng Nhật</li>
+                    <li><strong>韩国语</strong> (Hánguóyǔ): Tiếng Hàn</li>
+                    <li><strong>西班牙语</strong> (Xībānyáyǔ): Tiếng TBN</li>
+                </ul>
+
+                <!-- Địa điểm -->
+                <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">
+                    <svg class="icon inline-block -mt-1 mr-2 text-teal-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+                    Địa điểm (地点)
+                </h4>
+                <ul class="space-y-2 text-sm pl-4 list-disc list-inside text-gray-700">
+                    <li><strong>北京</strong> (Běijīng): Bắc Kinh</li>
+                    <li><strong>邮局</strong> (yóujú): Bưu điện</li>
+                    <li><strong>银行</strong> (yínháng): Ngân hàng</li>
+                    <li><strong>学校</strong> (xuéxiào): Trường học</li>
+                    <li><strong>医院</strong> (yīyuàn): Bệnh viện</li>
+                </ul>
+
+                <!-- Hành động -->
+                <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">
+                    <svg class="icon inline-block -mt-1 mr-2 text-teal-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" /></svg>
+                    Hành động (动作)
+                </h4>
+                <ul class="space-y-2 text-sm pl-4 list-disc list-inside text-gray-700">
+                    <li><strong>寄信</strong> (jì xìn): Gửi thư</li>
+                    <li><strong>取钱</strong> (qǔ qián): Rút tiền</li>
+                    <li><strong>学习</strong> (xuéxí): Học</li>
+                    <li><strong>看病</strong> (kàn bìng): Khám bệnh</li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mode1StudentBtn = document.getElementById('mode-1-student');
+            const mode2StudentBtn = document.getElementById('mode-2-student');
+            const togglePinyinBtn = document.getElementById('toggle-pinyin');
+            const toggleVietnameseBtn = document.getElementById('toggle-vietnamese');
+            const substituteSelects = document.querySelectorAll('.substitute-select');
+
+            // Hàm cập nhật chế độ hiển thị
+            function setMode(mode) {
+                const linesRoleB = document.querySelectorAll('.role-B');
+                
+                if (mode === '1-student') {
+                    // Chế độ 1 học viên: Ẩn lời thoại B
+                    linesRoleB.forEach(line => line.style.display = 'none');
+                    mode1StudentBtn.classList.replace('inactive', 'active');
+                    mode2StudentBtn.classList.replace('active', 'inactive');
+                } else {
+                    // Chế độ 2 học viên: Hiện tất cả
+                    // Sử dụng 'flex' cho .dialogue-line và 'block' cho .pinyin, .dich-nghia
+                    document.querySelectorAll('.dialogue-line.role-B').forEach(line => line.style.display = 'flex');
+                    document.querySelectorAll('.pinyin.role-B').forEach(line => line.style.display = 'block');
+                    document.querySelectorAll('.dich-nghia.role-B').forEach(line => line.style.display = 'block');
+                    
+                    mode1StudentBtn.classList.replace('active', 'inactive');
+                    mode2StudentBtn.classList.replace('inactive', 'active');
+                }
+            }
+
+            // Hàm cập nhật Pinyin VÀ Nghĩa khi thay đổi lựa chọn
+            function updateSubstitution(selectElement) {
+                try {
+                    const selectedOption = selectElement.options[selectElement.selectedIndex];
+                    
+                    const pinyin = selectedOption.dataset.pinyin;
+                    const pinyinTargetSelector = selectElement.dataset.targetPinyin;
+                    
+                    const vietnamese = selectedOption.dataset.vietnamese;
+                    const vietnameseTargetSelector = selectElement.dataset.targetVietnamese;
+
+                    if (pinyinTargetSelector) {
+                        const pinyinElement = document.querySelector(pinyinTargetSelector);
+                        if (pinyinElement) {
+                            pinyinElement.textContent = pinyin;
+                        }
+                    }
+                    
+                    if (vietnameseTargetSelector) {
+                        const vietnameseElement = document.querySelector(vietnameseTargetSelector);
+                        if (vietnameseElement) {
+                            vietnameseElement.textContent = vietnamese;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Lỗi cập nhật:", e, selectElement);
+                }
+            }
+            
+            // Hàm quản lý nút bật/tắt (cho cả Pinyin và Nghĩa)
+            function setupToggleButton(btn, bodyClass, openIconSelector, closedIconSelector, textSpanSelector) {
+                const textSpan = btn.querySelector(textSpanSelector);
+                const openIcon = btn.querySelector(openIconSelector);
+                const closedIcon = btn.querySelector(closedIconSelector);
+                const baseText = textSpan.textContent.replace('Ẩn', '').replace('Hiện', '').trim();
+
+                btn.addEventListener('click', () => {
+                    document.body.classList.toggle(bodyClass);
+                    const isActive = !document.body.classList.contains(bodyClass);
+                    
+                    textSpan.textContent = isActive ? `Ẩn ${baseText}` : `Hiện ${baseText}`;
+                    btn.classList.toggle('active', isActive);
+                    btn.classList.toggle('inactive', !isActive);
+                    
+                    openIcon.style.display = isActive ? 'block' : 'none';
+                    closedIcon.style.display = isActive ? 'none' : 'block';
+                });
+
+                // Đặt trạng thái ban đầu
+                const isActive = !document.body.classList.contains(bodyClass);
+                textSpan.textContent = isActive ? `Ẩn ${baseText}` : `Hiện ${baseText}`;
+                btn.classList.toggle('active', isActive);
+                btn.classList.toggle('inactive', !isActive);
+                openIcon.style.display = isActive ? 'block' : 'none';
+                closedIcon.style.display = isActive ? 'none' : 'block';
+            }
+
+            // Gán sự kiện cho các nút chế độ
+            mode1StudentBtn.addEventListener('click', () => setMode('1-student'));
+            mode2StudentBtn.addEventListener('click', () => setMode('2-student'));
+
+            // Đặt trạng thái ban đầu
+            document.body.classList.remove('hide-pinyin');
+            document.body.classList.remove('hide-vietnamese');
+
+            // Gán sự kiện cho nút Pinyin
+            setupToggleButton(
+                togglePinyinBtn, 
+                'hide-pinyin', 
+                '.icon-eye-open', 
+                '.icon-eye-closed',
+                '.btn-text'
+            );
+
+            // Gán sự kiện cho nút Nghĩa
+            setupToggleButton(
+                toggleVietnameseBtn, 
+                'hide-vietnamese', 
+                '.icon-eye-open', 
+                '.icon-eye-closed',
+                '.btn-text'
+            );
+
+            // Gán sự kiện cho tất cả các dropdown
+            substituteSelects.forEach(select => {
+                // Cập nhật pinyin khi có thay đổi
+                select.addEventListener('change', () => updateSubstitution(select));
+                
+                // Cập nhật lần đầu khi tải trang (để hiển thị '...')
+                updateSubstitution(select);
+            });
+
+            // Đặt chế độ mặc định là 2 học viên
+            setMode('2-student');
+        });
+    </script>
+
+</body>
+</html>
+

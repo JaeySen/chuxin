@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ôn tập Bài 13 – 得/不 bổ ngữ khả năng · Kinh kịch 🎭</title>
+  <style>
+    :root{
+      --bg:#f7f9fc;--card:#ffffff;--ink:#1f2937;--muted:#6b7280;--brand:#6366f1;--brand-2:#22c55e;--danger:#ef4444;--warn:#f59e0b;--shadow:0 10px 30px rgba(2,6,23,.12);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(135deg,#eef2ff,#f0fdfa);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--ink)}
+    header{padding:18px 16px 8px;max-width:1080px;margin:auto}
+    .app{max-width:1080px;margin:auto;padding:12px}
+    .card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:18px}
+    h1{font-size:clamp(22px,3vw,30px);margin:0 0 8px}
+    .sub{color:var(--muted);font-size:14px}
+    .topbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-top:12px}
+    .pill{background:#eef2ff;border-radius:999px;padding:6px 12px;display:inline-flex;align-items:center;gap:8px;font-weight:600}
+    .timer{background:#ecfeff}
+    .score{background:#f0fdf4}
+    .level{background:#fff7ed}
+    .progress{height:10px;background:#eef2ff;border-radius:999px;overflow:hidden}
+    .progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--brand),#7c3aed);width:0%}
+
+    /* Question area */
+    .qwrap{margin-top:14px}
+    .qtitle{font-size:18px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+    .qprompt{font-size:17px}
+    .optlist{margin-top:10px;display:grid;gap:10px}
+    .opt{border:2px solid #e5e7eb;border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center;cursor:pointer;background:#fff}
+    .opt input{accent-color:var(--brand)}
+    .opt.correct{border-color:var(--brand-2);background:#f0fdf4}
+    .opt.wrong{border-color:var(--danger);background:#fef2f2}
+
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    button{border:none;border-radius:14px;padding:10px 14px;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--brand);color:#fff}
+    .btn-ghost{background:#eef2ff}
+    .btn-warn{background:var(--warn);color:#111}
+    .btn-danger{background:#fee2e2;color:#991b1b}
+
+    .feedback{margin-top:10px;border-left:4px solid #e5e7eb;padding:10px 12px;background:#fafafa;border-radius:10px}
+    .feedback.good{border-left-color:var(--brand-2);background:#f0fdf4}
+    .feedback.bad{border-left-color:var(--danger);background:#fef2f2}
+
+    .badge{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px dashed #c7d2fe;border-radius:12px;padding:6px 10px}
+
+    .hidden{display:none}
+
+    /* Summary */
+    .summary{margin-top:18px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:8px;border-bottom:1px solid #e5e7eb;text-align:left}
+    tr:nth-child(even){background:#fafafa}
+
+    /* Responsive */
+    @media (max-width:640px){
+      .topbar{grid-template-columns:1fr 1fr;gap:8px}
+      .pill{justify-content:center}
+      .qprompt{font-size:16px}
+      .opt{padding:10px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="card">
+      <h1>🎯 Ôn tập Bài 13: 得/不 bổ ngữ khả năng & mẫu câu về <em>hiểu/không hiểu</em></h1>
+      <p class="sub">Thân thiện – sinh động – phản hồi tức thì. Khi bạn trả lời xong, “AI trợ giảng” sẽ chấm điểm, gợi ý 💡 và động viên 🤗.</p>
+      <div class="topbar">
+        <div class="pill timer" id="timer">⏱️ 00:00</div>
+        <div class="pill score" id="scorepill">⭐ Điểm: <span id="score">0</span></div>
+        <div class="pill level" id="levelpill">📶 Cấp: <span id="levelName">—</span></div>
+      </div>
+      <div class="progress" aria-label="tiến độ" title="Tiến độ">
+        <span id="progressBar"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="card" id="intro">
+      <p>👋 Xin chào! Bài chơi gồm nhiều cấp độ, tăng dần độ khó. Dùng <b>Gợi ý</b> khi cần (trừ nhẹ điểm), hoặc <b>Bỏ qua</b> để kiểm thử từng phần. Chúc bạn vui! 🐼</p>
+      <ul>
+        <li>⚡ Phản hồi tức thì: biết đúng/sai ngay.</li>
+        <li>⏱️ Đồng hồ chạy xuyên suốt.</li>
+        <li>🏅 Hoàn thành mỗi cấp để nhận huy hiệu.</li>
+        <li>📈 Cuối bài có bảng tổng kết chi tiết.</li>
+      </ul>
+      <button class="btn-primary" id="startBtn">🚀 Bắt đầu</button>
+    </section>
+
+    <section class="card hidden" id="game">
+      <div class="qwrap">
+        <div class="qtitle">🧩 <span id="qtitle">Câu hỏi</span></div>
+        <div class="qprompt" id="qprompt"></div>
+        <div class="optlist" id="optlist"></div>
+        <div id="textAnswer" class="hidden" style="margin-top:10px">
+          <input id="textInput" type="text" placeholder="Nhập đáp án…" style="width:100%;padding:12px;border-radius:12px;border:2px solid #e5e7eb"/>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" id="checkBtn">✅ Kiểm tra</button>
+          <button class="btn-ghost" id="hintBtn">💡 Gợi ý</button>
+          <button class="btn-warn" id="skipBtn">⏭️ Bỏ qua</button>
+          <button class="btn-ghost" id="nextBtn" disabled>➡️ Tiếp tục</button>
+        </div>
+        <div id="feedback" class="feedback hidden"></div>
+        <div style="margin-top:10px" id="badgeSlot"></div>
+      </div>
+    </section>
+
+    <section class="card hidden" id="summary">
+      <h2>📊 Tổng kết</h2>
+      <p><b>Thời gian:</b> <span id="sumTime"></span> · <b>Điểm:</b> <span id="sumScore"></span> · <b>Đúng:</b> <span id="sumRight"></span> · <b>Sai:</b> <span id="sumWrong"></span> · <b>Bỏ qua:</b> <span id="sumSkip"></span></p>
+      <div class="badge">🏆 Huy hiệu: <span id="sumBadges" style="margin-left:6px"></span></div>
+      <div class="summary" style="margin-top:14px">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Câu hỏi</th><th>Đáp án của bạn</th><th>Đáp án đúng</th><th>Kết quả</th></tr>
+          </thead>
+          <tbody id="sumTable"></tbody>
+        </table>
+      </div>
+      <div class="actions" style="margin-top:14px">
+        <button class="btn-primary" onclick="location.reload()">🔁 Chơi lại</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  // ====== Data (có thể mở rộng tùy nội dung bài giảng) ======
+  // Cấp 1: TỪ VỰNG – lấy từ hội thoại Kinh kịch
+  const level1 = {
+    id: 'vocab',
+    name: 'Từ vựng vui 🎈',
+    intro: 'Chọn nghĩa đúng cho từ Hán ngữ.',
+    badge: '🧠 Từ vựng thủ',
+    questions: [
+      {type:'mcq', prompt:'“京剧” nghĩa là gì?', options:['Nhạc rap','Kinh kịch (Peking Opera)','Kịch câm'], answer:'Kinh kịch (Peking Opera)', hint:'Nghệ thuật truyền thống nổi tiếng của Trung Quốc.', explain:'京剧 = Kinh kịch – nghệ thuật sân khấu truyền thống Trung Quốc.'},
+      {type:'mcq', prompt:'“脸谱” là…', options:['Mặt nạ/hoạ mặt nhân vật','Bản đồ khuôn mặt','Máy ảnh chụp chân dung'], answer:'Mặt nạ/hoạ mặt nhân vật', hint:'Dùng để thể hiện tính cách, địa vị nhân vật.', explain:'京剧脸谱 dùng màu sắc/hoa văn để biểu hiện tính cách, thân phận.'},
+      {type:'mcq', prompt:'“武打” trong ngữ cảnh Kinh kịch là…', options:['Âm nhạc nền','Động tác võ thuật','Tiếu lâm'], answer:'Động tác võ thuật', hint:'Các động tác biểu diễn mạnh mẽ trên sân khấu.', explain:'武打 = võ thuật/sắc thái hành động trong biểu diễn.'},
+      {type:'mcq', prompt:'“演出” nghĩa là…', options:['Buổi biểu diễn','Học bổng','Tự học'], answer:'Buổi biểu diễn', hint:'Bạn mua vé để xem cái này.', explain:'演出 = biểu diễn, suất diễn.'},
+      {type:'mcq', prompt:'“服装” nghĩa là…', options:['Trang phục','Phụ kiện điện tử','Sách vở'], answer:'Trang phục', hint:'Đồ mặc của diễn viên trên sân khấu.', explain:'服装 = quần áo, trang phục.'},
+      {type:'mcq', prompt:'“影响” là…', options:['Ảnh hưởng','Cơn gió','Ánh đèn'], answer:'Ảnh hưởng', hint:'Thầy cô có thể có điều này với học sinh.', explain:'影响 = ảnh hưởng, tác động.'},
+    ]
+  };
+
+  // Cấp 2: MẪU CÂU 得/不 + bổ ngữ (khả năng)
+  const level2 = {
+    id: 'pattern',
+    name: 'Mẫu câu ✍️',
+    intro: 'Chọn/cập nhật cấu trúc đúng theo ngữ cảnh (V + 得/不 + bổ ngữ).',
+    badge: '🧩 Ghép mẫu câu',
+    questions: [
+      {type:'mcq', prompt:'我____京剧。Tôi không thể nghe hiểu Kinh kịch.', options:['听得懂','听不懂','看得懂'], answer:'听不懂', hint:'Phủ định khả năng: V + 不 + 补语。', explain:'听不懂 = không nghe hiểu.'},
+      {type:'mcq', prompt:'票好买，肯定____。Bạn đừng lo, chắc chắn mua được vé.', options:['买得到','买不到','买不完'], answer:'买得到', hint:'Khẳng định khả năng: V + 得 + 补语。', explain:'买得到 = có thể mua được.'},
+      {type:'mcq', prompt:'今天作业太多，我一个小时____。Bài nhiều, 1h không xong.', options:['做得完','做不完','做得了'], answer:'做不完', hint:'Phủ định khả năng thường dùng nhiều.', explain:'做不完 = làm không xong.'},
+      {type:'mcq', prompt:'屋子里太黑，我____。Trong phòng tối quá, tôi…', options:['看不见','不能看见','看不得'], answer:'看不见', hint:'Thiếu điều kiện khách quan → dùng bổ ngữ khả năng.', explain:'看不见 (không nhìn thấy) tự nhiên hơn 不能看见.'},
+      {type:'mcq', prompt:'这个包太小，毛衣太大了，____。Túi quá nhỏ, áo len quá to…', options:['装得下','装不下','坐不下'], answer:'装不下', hint:'Nói về chứa/nhét được hay không: 得下/不下', explain:'装不下 = không đựng vừa.'},
+      {type:'mcq', prompt:'他腿摔伤了，自己____。Chân bị thương, tự mình…', options:['走得了','走不了','能走'], answer:'走不了', hint:'得了/不了: phát sinh/hoàn thành động tác được không.', explain:'走不了 = không tự đi được.'}
+    ]
+  };
+
+  // Cấp 3: PHÂN BIỆT 能/可以 vs 补语能力
+  const level3 = {
+    id: 'grammar',
+    name: 'Ngữ pháp ⚖️',
+    intro: 'Chọn phương án tự nhiên/đúng hơn trong ngữ cảnh.',
+    badge: '📚 Ngữ pháp thủ',
+    questions: [
+      {type:'mcq', prompt:'那儿太危险，你__去。Ở đó nguy hiểm, bạn không thể đi.', options:['不能','去不了'], answer:'不能', hint:'Khuyên/ra lệnh: 不能 + V', explain:'Cấm/ngăn: 不能去 tự nhiên hơn 去不了.'},
+      {type:'mcq', prompt:'今天有时间，我__去。Hôm nay rảnh, tôi có thể đi.', options:['能','去得了'], answer:'能', hint:'Nói năng lực/điều kiện chủ quan → 能/可以.', explain:'“能去” phù hợp; “去得了” cũng có thể dùng, song cách thường gặp là 能/可以.'},
+      {type:'mcq', prompt:'如果没有票，我们就__剧场。Nếu không có vé thì không … vào.', options:['进不了','不能进得去'], answer:'进不了', hint:'Bổ ngữ khả năng với điều kiện khách quan (vé).', explain:'进不了 = không vào được.'},
+      {type:'mcq', prompt:'黑板上的字你__？Chữ trên bảng bạn có nhìn rõ không?', options:['看得清楚看不清楚','能不能看清楚'], answer:'看得清楚看不清楚', hint:'Mẫu hỏi chính-phản với 得/不.', explain:'A-not-A dùng 得/不 đúng mẫu: 看得清楚看不清楚？'},
+      {type:'mcq', prompt:'这儿太挤了，____十个人。Ở đây chật quá, (không) ngồi vừa 10 người.', options:['坐不下','不能坐'], answer:'坐不下', hint:'Không gian chứa: 得下/不下', explain:'坐不下 nói về sức chứa.'},
+      {type:'mcq', prompt:'我__一个小时就完成了。Tôi không cần hết 1h là xong.', options:['用不了','不能用'], answer:'用不了', hint:'得了/不了 chỉ mức độ/nhu cầu thời gian.', explain:'用不了 = không cần dùng/không mất đến (bao nhiêu).'}
+    ]
+  };
+
+  // Cấp 4: ĐỌC HIỂU – trích đoạn hội thoại/ghi chép
+  const level4 = {
+    id: 'reading',
+    name: 'Đọc hiểu 📖',
+    intro: 'Đọc đoạn trích và trả lời.',
+    badge: '🔎 Thám tử đọc hiểu',
+    passage: '玛丽：你看过京剧吗？\n山本：看过一次。\n玛丽：看得懂吗？\n山本：看得懂，但是听不懂。看了演出能猜得出大概的意思。\n昨天我给山本打电话，约她晚上一起去看京剧。但是她说晚上有事，去不了。所以我们就决定今天晚上去。我们是下午五点半出发的。山本希望能买到前十排的…最后买到的是十二排的票。',
+    questions: [
+      {type:'mcq', prompt:'山本看过京剧几次？', options:['一次','两次','很多次'], answer:'一次', hint:'看过一次 = đã xem một lần.', explain:'“一次” = 1 lần.'},
+      {type:'mcq', prompt:'他们为什么昨天没去看？', options:['买不到票','晚上有事，去不了','下雨了'], answer:'晚上有事，去不了', hint:'去不了 = không thể đi.', explain:'Vì tối qua bận việc.'},
+      {type:'mcq', prompt:'他们几点出发？', options:['五点','五点半','七点半'], answer:'五点半', hint:'“我们是下午五点半出发的。”', explain:'5:30 chiều.'},
+      {type:'mcq', prompt:'他们最后买到了第__排的票。', options:['十','十二','二十'], answer:'十二', hint:'前十排卖完 → 十二排。', explain:'Mua ghế hàng 12.'},
+      {type:'mcq', prompt:'“看得懂，但是听不懂”表达了什么？', options:['完全不懂','能看懂大概意思，但听不懂唱词','都懂'], answer:'能看懂大概意思，但听不懂唱词', hint:'得/不 表 khả năng.', explain:'Nhìn hiểu đại ý, nhưng không nghe hiểu lời hát.'}
+    ]
+  };
+
+  const LEVELS = [level1, level2, level3, level4];
+
+  // ====== State ======
+  const state = {
+    started:false, startTime:null, timerId:null,
+    levelIndex:0, qIndex:0, score:0,
+    answers:[], // {lvl, idx, user, correct, right}
+    usedHint:false,
+    badges:[],
+  };
+
+  // ====== Helpers ======
+  const $ = sel => document.querySelector(sel);
+  const fmtTime = secs => {
+    const m = Math.floor(secs/60).toString().padStart(2,'0');
+    const s = (secs%60).toString().padStart(2,'0');
+    return `${m}:${s}`;
+  };
+
+  function startTimer(){
+    state.startTime = Date.now();
+    state.timerId = setInterval(()=>{
+      const t = Math.floor((Date.now()-state.startTime)/1000);
+      $('#timer').textContent = '⏱️ ' + fmtTime(t);
+    }, 500);
+  }
+
+  function currentLevel(){return LEVELS[state.levelIndex];}
+  function currentQuestion(){return currentLevel().questions[state.qIndex];}
+
+  function updateTop(){
+    $('#score').textContent = state.score;
+    $('#levelName').textContent = `${state.levelIndex+1}/${LEVELS.length} – ${currentLevel().name}`;
+    const done = state.qIndex, total = currentLevel().questions.length;
+    const pct = Math.round((done/total)*100);
+    $('#progressBar').style.width = pct + '%';
+  }
+
+  function renderQuestion(){
+    const lvl = currentLevel();
+    const q = currentQuestion();
+    $('#qtitle').textContent = `${lvl.name} · Câu ${state.qIndex+1}/${lvl.questions.length}`;
+    const promptHTML = [];
+    if(lvl.passage && state.qIndex===0){
+      promptHTML.push(`<div class="card" style="background:#f8fafc;border:1px solid #e5e7eb;margin-bottom:10px">📜 <b>Đoạn trích</b><pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace">${lvl.passage}</pre></div>`);
+    }
+    promptHTML.push(q.prompt);
+    $('#qprompt').innerHTML = promptHTML.join('');
+
+    $('#feedback').classList.add('hidden');
+    $('#badgeSlot').innerHTML='';
+
+    // options or text
+    const optlist = $('#optlist');
+    optlist.innerHTML='';
+    $('#textAnswer').classList.add('hidden');
+
+    if(q.type==='mcq'){
+      q.options.forEach((opt,i)=>{
+        const id=`opt${i}`;
+        const el=document.createElement('label');
+        el.className='opt';
+        el.innerHTML=`<input type="radio" name="choice" value="${opt}"><span>${opt}</span>`;
+        optlist.appendChild(el);
+      });
+    } else if(q.type==='text'){
+      $('#textAnswer').classList.remove('hidden');
+      $('#textInput').value='';
+    }
+
+    $('#nextBtn').disabled=true;
+    state.usedHint=false;
+  }
+
+  function getUserAnswer(){
+    const q=currentQuestion();
+    if(q.type==='mcq'){
+      const checked=document.querySelector('input[name="choice"]:checked');
+      return checked?checked.value:null;
+    }else{
+      return $('#textInput').value.trim();
+    }
+  }
+
+  function normalize(str){
+    return (str||'').replace(/\s+/g,'').toLowerCase();
+  }
+
+  function checkAnswer(isSkip=false){
+    const q=currentQuestion();
+    let user = isSkip? null : getUserAnswer();
+    const feedback=$('#feedback');
+    feedback.classList.remove('hidden','good','bad');
+
+    let right=false, correctAns=q.answer;
+    if(isSkip){
+      feedback.classList.add('bad');
+      feedback.innerHTML = `🤖 <b>AI trợ giảng:</b> Mình sẽ bỏ qua câu này để bạn kiểm thử phần khác. Đáp án đúng là: <b>${correctAns}</b>. ${q.explain?('<br>'+q.explain):''}`;
+    } else if(user==null || user===''){
+      feedback.classList.add('bad');
+      feedback.textContent='🤖 Hãy chọn/nhập đáp án nhé!';
+      return; // do not proceed
+    } else {
+      if(Array.isArray(correctAns)){
+        right = correctAns.map(normalize).includes(normalize(user));
+      } else {
+        right = normalize(user)===normalize(correctAns);
+      }
+      if(q.type==='mcq'){
+        // mark options
+        document.querySelectorAll('.opt').forEach(l=>{
+          const val = l.querySelector('input').value;
+          if(normalize(val)===normalize(correctAns)) l.classList.add('correct');
+          if(val===user && !right) l.classList.add('wrong');
+        });
+      }
+
+      if(right){
+        const bonus = 10 - (state.usedHint?2:0);
+        state.score += Math.max(1, bonus);
+        feedback.classList.add('good');
+        feedback.innerHTML = `🎉 Chính xác! +${Math.max(1,bonus)} điểm. ${q.explain?('<br>'+q.explain):''}`;
+      } else {
+        feedback.classList.add('bad');
+        feedback.innerHTML = `🧐 Chưa đúng. Đáp án là <b>${correctAns}</b>. ${q.explain?('<br>'+q.explain):''}`;
+      }
+    }
+
+    state.answers.push({lvl:state.levelIndex, idx:state.qIndex, user, correct:correctAns, right});
+    $('#nextBtn').disabled=false;
+    updateTop();
+  }
+
+  function nextStep(){
+    const lvl=currentLevel();
+    if(state.qIndex < lvl.questions.length-1){
+      state.qIndex++;
+      renderQuestion();
+      updateTop();
+      return;
+    }
+    // level finished → badge
+    const levelAnswers = state.answers.filter(a=>a.lvl===state.levelIndex);
+    const rightCount = levelAnswers.filter(a=>a.right).length;
+    const ratio = rightCount / lvl.questions.length;
+    let earned = '';
+    if(ratio>=0.8){ earned = `${lvl.badge} 💎`; }
+    else if(ratio>=0.6){ earned = `${lvl.badge} 🥈`; }
+    else { earned = `${lvl.badge} 🎖️`; }
+    state.badges.push(earned);
+    $('#badgeSlot').innerHTML = `<span class="badge">🏅 Bạn nhận được huy hiệu: <b>${earned}</b></span>`;
+
+    // auto proceed to next level after short delay
+    setTimeout(()=>{
+      if(state.levelIndex < LEVELS.length-1){
+        state.levelIndex++;
+        state.qIndex=0;
+        renderQuestion();
+        updateTop();
+      } else {
+        finishGame();
+      }
+    }, 1000);
+  }
+
+  function showHint(){
+    const q=currentQuestion();
+    const feedback=$('#feedback');
+    feedback.classList.remove('hidden','good');
+    feedback.classList.add('bad');
+    const penalty = feedback.dataset.hinted? 0 : 2; // only deduct once per question
+    if(!feedback.dataset.hinted){
+      state.score = Math.max(0, state.score - penalty);
+      feedback.dataset.hinted = '1';
+      state.usedHint=true;
+      updateTop();
+    }
+    feedback.innerHTML = `💡 Gợi ý: ${q.hint || 'Thử đọc kỹ lại ngữ cảnh nhé!'} ${penalty?`(−${penalty} điểm)`:''}`;
+  }
+
+  function finishGame(){
+    clearInterval(state.timerId);
+    $('#game').classList.add('hidden');
+    $('#summary').classList.remove('hidden');
+
+    // totals
+    const secs = Math.floor((Date.now()-state.startTime)/1000);
+    const right = state.answers.filter(a=>a.right).length;
+    const wrong = state.answers.filter(a=>a.user!==null && !a.right).length;
+    const skip = state.answers.filter(a=>a.user===null).length;
+
+    $('#sumTime').textContent = fmtTime(secs);
+    $('#sumScore').textContent = state.score;
+    $('#sumRight').textContent = right;
+    $('#sumWrong').textContent = wrong;
+    $('#sumSkip').textContent = skip;
+    $('#sumBadges').textContent = state.badges.join(' · ');
+
+    // table
+    const tbody = $('#sumTable');
+    tbody.innerHTML='';
+    state.answers.forEach((a,i)=>{
+      const lvl = LEVELS[a.lvl];
+      const q = lvl.questions[a.idx];
+      const tr=document.createElement('tr');
+      tr.innerHTML = `<td>${i+1}</td><td>${q.prompt}</td><td>${a.user===null?'⏭️ Bỏ qua':a.user}</td><td>${Array.isArray(a.correct)?a.correct.join(' / '):a.correct}</td><td>${a.right?'✅ Đúng':'❌ Sai'}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ====== Init & Events ======
+  $('#startBtn').addEventListener('click',()=>{
+    state.started=true; startTimer();
+    $('#intro').classList.add('hidden');
+    $('#game').classList.remove('hidden');
+    state.levelIndex=0; state.qIndex=0; state.score=0; state.answers=[]; state.badges=[];
+    renderQuestion(); updateTop();
+  });
+
+  $('#checkBtn').addEventListener('click',()=>checkAnswer(false));
+  $('#skipBtn').addEventListener('click',()=>checkAnswer(true));
+  $('#nextBtn').addEventListener('click',nextStep);
+  $('#hintBtn').addEventListener('click',showHint);
+  </script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoạt động nói: 你吃什么？</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Font hiện đại, ưu tiên font hệ thống của Mac */
+            line-height: 1.7; /* Tăng nhẹ line-height cho dễ đọc hơn */
+            margin: 0;
+            padding: 20px;
+            background-color: hsl(210, 40%, 97%); /* Màu nền xám xanh rất nhạt */
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto; /* Tăng margin trên dưới */
+            background: #fff;
+            padding: 25px 30px; /* Tăng padding */
+            border-radius: 12px; /* Bo góc mềm mại hơn */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08); /* Bóng đổ tinh tế hơn */
+        }
+        h1, h2, h3 {
+            color: hsl(210, 30%, 30%); /* Màu tiêu đề đậm hơn */
+            text-align: center;
+            font-weight: 600; /* Tăng độ đậm cho tiêu đề */
+        }
+        h1 {
+            font-size: 2em; /* Tăng cỡ chữ h1 */
+            margin-bottom: 15px;
+        }
+        h2 {
+            font-size: 1.6em; /* Tăng cỡ chữ h2 */
+            margin-top: 35px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid hsl(210, 30%, 90%);
+            padding-bottom: 10px;
+            color: hsl(210, 25%, 40%);
+        }
+        .student-name-input, .section, .question-group, .example, table {
+             margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 500; /* Giảm độ đậm của label một chút */
+            margin-bottom: 8px; /* Tăng khoảng cách dưới label */
+            color: hsl(210, 20%, 45%);
+        }
+        input[type="text"], textarea {
+            width: calc(100% - 24px); /* Điều chỉnh lại width */
+            padding: 12px; /* Tăng padding cho input */
+            margin-bottom: 12px;
+            border: 1px solid hsl(210, 20%, 85%); /* Màu viền nhạt hơn */
+            border-radius: 8px; /* Bo tròn góc input */
+            box-sizing: border-box;
+            background-color: hsl(210, 30%, 98.5%); /* Nền input hơi xám nhẹ */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: hsl(200, 70%, 55%); /* Màu viền khi focus */
+            box-shadow: 0 0 0 3px hsla(200, 70%, 55%, 0.2); /* Hiệu ứng focus nhẹ nhàng */
+        }
+        textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+         button {
+            display: inline-block;
+            padding: 12px 24px; /* Điều chỉnh padding nút */
+            color: white;
+            border: none;
+            border-radius: 8px; /* Bo tròn nút */
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            margin-top: 20px;
+            margin-right: 10px;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+        button:hover {
+            transform: translateY(-1px); /* Hiệu ứng nhấc nhẹ khi hover */
+        }
+        button:active {
+            transform: translateY(0px);
+        }
+        button#printButton { /* Đổi ID cho nút In */
+            background-color: hsl(145, 55%, 48%); /* Xanh lá cây */
+        }
+        button#printButton:hover {
+            background-color: hsl(145, 55%, 42%);
+        }
+        button#pinyinToggleButton {
+            background-color: hsl(35, 85%, 60%); /* Cam */
+        }
+        button#pinyinToggleButton:hover {
+            background-color: hsl(35, 85%, 55%);
+        }
+        .chinese-text {
+             font-family: 'KaiTi', 'SimSun', 'Noto Sans SC', sans-serif; /* Thêm Noto Sans SC nếu có */
+        }
+        .pinyin-hint {
+            display: none;
+            font-size: 0.9em; /* Tăng nhẹ cỡ chữ pinyin */
+            color: hsl(210, 15%, 60%); /* Màu pinyin dịu hơn */
+            margin-top: 3px;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid hsl(210, 20%, 90%); /* Viền bảng nhạt hơn */
+            padding: 10px 12px; /* Tăng padding ô */
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: hsl(210, 30%, 96%); /* Nền tiêu đề bảng nhạt */
+            font-weight: 500;
+            color: hsl(210, 25%, 35%);
+        }
+        .input-cell input[type="text"] {
+            width: calc(100% - 10px); /* Giữ nguyên */
+            padding: 8px; /* Điều chỉnh padding input trong bảng */
+            margin-bottom: 0;
+            background-color: #fff; /* Nền trắng cho input trong bảng */
+        }
+        .action-buttons {
+            text-align: center;
+            margin-bottom: 25px;
+            margin-top: 10px; /* Thêm margin trên cho cụm nút */
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background-color: hsl(210, 20%, 90%); /* Đường kẻ ngang nhạt hơn */
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .example {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            background-color: hsl(210, 40%, 98%);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid hsl(35, 85%, 60%);
+        }
+
+        /* CSS cho bản in */
+        @media print {
+            body {
+                font-family: 'Times New Roman', Times, serif; /* Font serif cho bản in thường dễ đọc hơn */
+                background-color: #fff;
+                margin: 20px;
+                font-size: 11pt; /* Cỡ chữ phù hợp cho in ấn */
+                color: #000; /* In màu đen cho rõ */
+            }
+            .container {
+                box-shadow: none;
+                border: 1px solid #999; /* Viền đậm hơn chút khi in */
+                padding: 15px;
+                margin: 0;
+                max-width: 100%;
+            }
+            .action-buttons, button {
+                display: none !important;
+            }
+            h1, h2, h3 {
+                color: #000;
+            }
+            input[type="text"], textarea {
+                border: 1px solid #999 !important;
+                background-color: #fff !important; /* Nền trắng hoàn toàn khi in */
+                padding: 6px; /* Giảm padding chút khi in */
+                -webkit-print-color-adjust: exact; /* Đảm bảo màu nền input được in (nếu có) */
+                color-adjust: exact;
+            }
+             /* Để hiển thị giá trị của input và textarea khi in */
+            input[type="text"]::after, textarea::after {
+                content: attr(value); /* Không thực sự hiệu quả trên mọi trình duyệt, trình duyệt tự xử lý giá trị */
+            }
+            .pinyin-hint {
+                 color: #555 !important; /* Màu pinyin đậm hơn chút khi in */
+                 display: var(--pinyin-print-display, none) !important;
+            }
+            hr {
+                border-color: #aaa;
+            }
+             table, th, td {
+                border: 1px solid #999 !important; /* Viền bảng đậm hơn khi in */
+            }
+            th {
+                background-color: #eee !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗣️ Hoạt động nói: <span class="chinese-text">你吃什么？</span></h1>
+        <div class="pinyin-hint" style="text-align:center; display:block; margin-bottom:10px; font-size: 1em; color: hsl(210, 15%, 55%);">Nǐ chī shénme?</div>
+
+        <div class="action-buttons">
+            <button onclick="togglePinyin()" id="pinyinToggleButton">Hiện Pinyin gợi ý</button>
+            <button onclick="printWork()" id="printButton">In bài làm (Lưu PDF)</button> 
+        </div>
+
+        <div class="student-name-input">
+            <label for="studentName">👤 Họ tên học sinh:</label>
+            <input type="text" id="studentName" name="studentName" placeholder="Nhập họ tên của bạn">
+        </div>
+        <hr>
+
+        <div class="section" id="sectionA">
+            <h2>📄 A. TỰ TRẢ LỜI – <span class="chinese-text">我</span> <span class="pinyin-hint">(Wǒ)</span></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th><span class="chinese-text">问题</span> <span class="pinyin-hint">(Wèntí)</span><br>(Câu hỏi)</th>
+                        <th><span class="chinese-text">我的回答</span> <span class="pinyin-hint">(Wǒ de huídá)</span><br>(Trả lời của tôi)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你早上吃什么？</span>
+                            <div class="pinyin-hint">Nǐ zǎoshang chī shénme?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q1a" class="chinese-text" placeholder="例如：我早上吃面包。"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你几点吃早饭？</span>
+                            <div class="pinyin-hint">Nǐ jǐ diǎn chī zǎofàn?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q2a" class="chinese-text" placeholder="例如：我早上七点吃早饭。"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你喜欢吃饺子吗？</span>
+                            <div class="pinyin-hint">Nǐ xǐhuān chī jiǎozi ma?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q3a" class="chinese-text" placeholder="例如：我喜欢吃饺子。 / 我不喜欢。"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你喜欢喝什么？</span>
+                            <div class="pinyin-hint">Nǐ xǐhuān hē shénme?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q4a" class="chinese-text" placeholder="例如：我喜欢喝茶。"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你去哪儿吃饭？</span>
+                            <div class="pinyin-hint">Nǐ qù nǎr chīfàn?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q5a" class="chinese-text" placeholder="例如：我去食堂吃饭。"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+
+        <div class="section" id="sectionB">
+            <h2>👥 B. PHỎNG VẤN BẠN HỌC – <span class="chinese-text">朋友</span> <span class="pinyin-hint">(Péngyǒu)</span></h2>
+            <p><span class="chinese-text">Hãy hỏi bạn học những câu trên và ghi lại câu trả lời của họ bằng tiếng Trung.</span></p>
+            <div class="question-group">
+                <label for="friendName"><span class="chinese-text">朋友的名字 (Tên bạn):</span> <span class="pinyin-hint">Péngyǒu de míngzì</span></label>
+                <input type="text" id="friendName" class="chinese-text" placeholder="例如：小月">
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><span class="chinese-text">问题</span> <span class="pinyin-hint">(Wèntí)</span><br>(Câu hỏi)</th>
+                        <th><span class="chinese-text">他/她的回答</span> <span class="pinyin-hint">(Tā de huídá)</span><br>(Câu trả lời của bạn)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你早上吃什么？</span>
+                            <div class="pinyin-hint">Nǐ zǎoshang chī shénme?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q1b" class="chinese-text" placeholder="例如：她早上吃包子。"></td>
+                    </tr>
+                     <tr>
+                        <td>
+                            <span class="chinese-text">你几点吃早饭？</span>
+                            <div class="pinyin-hint">Nǐ jǐ diǎn chī zǎofàn?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q2b" class="chinese-text" placeholder="例如：她七点半吃早饭。"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你喜欢吃饺子吗？</span>
+                            <div class="pinyin-hint">Nǐ xǐhuān chī jiǎozi ma?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q3b" class="chinese-text" placeholder="例如：她很喜欢。"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你喜欢喝什么？</span>
+                            <div class="pinyin-hint">Nǐ xǐhuān hē shénme?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q4b" class="chinese-text" placeholder="例如：她喜欢喝牛奶。"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="chinese-text">你去哪儿吃饭？</span>
+                            <div class="pinyin-hint">Nǐ qù nǎr chīfàn?</div>
+                        </td>
+                        <td class="input-cell"><input type="text" id="q5b" class="chinese-text" placeholder="例如：她去饭馆吃饭。"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        
+        <div class="section" id="sectionC">
+            <h2>📝 C. VIẾT LẠI (<span class="chinese-text">Chia sẻ về bạn học</span> <span class="pinyin-hint">(Xiě xià guānyú péngyǒu dehuà)</span>)</h2>
+            <p><span class="chinese-text">Dựa vào câu trả lời của bạn học, viết lại 2–3 câu giới thiệu về họ bằng tiếng Trung:</span></p>
+            <div class="example">
+                <span class="chinese-text">例如 (Ví dụ):</span><br>
+                <span class="chinese-text">他早上吃包子。</span> <span class="pinyin-hint" style="display:inline; font-size:0.8em; color:gray;">(Tā zǎoshang chī bāozi.)</span><br>
+                <span class="chinese-text">他喜欢喝汤。</span> <span class="pinyin-hint" style="display:inline; font-size:0.8em; color:gray;">(Tā xǐhuān hē tāng.)</span>
+            </div>
+            <div class="question-group">
+                <label for="share1">➡️ 1.</label>
+                <textarea id="share1" rows="2" class="chinese-text" placeholder="Viết câu thứ nhất tại đây"></textarea>
+            </div>
+            <div class="question-group">
+                <label for="share2">➡️ 2.</label>
+                <textarea id="share2" rows="2" class="chinese-text" placeholder="Viết câu thứ hai tại đây"></textarea>
+            </div>
+            <div class="question-group">
+                <label for="share3">➡️ 3. (Nếu có)</label>
+                <textarea id="share3" rows="2" class="chinese-text" placeholder="Viết câu thứ ba tại đây (không bắt buộc)"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pinyinVisible = false;
+        let pinyinShouldPrint = false;
+
+        function togglePinyin() {
+            const pinyinHints = document.querySelectorAll('.pinyin-hint:not(.example .pinyin-hint)');
+            const allPinyinSpans = document.querySelectorAll('.pinyin-hint');
+            const button = document.getElementById('pinyinToggleButton');
+            pinyinVisible = !pinyinVisible;
+            pinyinShouldPrint = pinyinVisible;
+
+            const displayValue = pinyinVisible ? 'block' : 'none';
+            pinyinHints.forEach(hint => {
+                hint.style.display = displayValue;
+            });
+            
+            allPinyinSpans.forEach(hint => {
+                if (hint.closest('.example')) {
+                    hint.style.setProperty('--pinyin-print-display', 'inline');
+                } else if (pinyinShouldPrint) {
+                    hint.style.setProperty('--pinyin-print-display', 'block');
+                } else {
+                     hint.style.setProperty('--pinyin-print-display', 'none');
+                }
+            });
+
+            button.textContent = pinyinVisible ? 'Ẩn Pinyin gợi ý' : 'Hiện Pinyin gợi ý';
+        }
+
+        function printWork() {
+             document.querySelectorAll('.pinyin-hint').forEach(hint => {
+                if (hint.closest('.example')) {
+                     hint.style.setProperty('--pinyin-print-display', 'inline');
+                } else if (pinyinShouldPrint) {
+                    hint.style.setProperty('--pinyin-print-display', 'block');
+                } else {
+                    hint.style.setProperty('--pinyin-print-display', 'none');
+                }
+            });
+            window.print();
+        }
+    </script>
+</body>
+</html>

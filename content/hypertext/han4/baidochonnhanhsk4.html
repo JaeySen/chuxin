@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài học: Hôn nhân Hạnh phúc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chinese-char {
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            padding: 2px 0;
+            border-bottom: 2px dotted #9ca3af;
+            transition: all 0.2s ease-in-out;
+        }
+        .chinese-char:hover {
+            background-color: #e0f2fe;
+            border-bottom-color: #0ea5e9;
+        }
+        #tooltip {
+            position: absolute;
+            display: none;
+            background-color: #1f2937;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 100;
+            text-align: center;
+            font-size: 0.9rem;
+            pointer-events: none; /* Để không bị tooltip che mất chữ */
+        }
+        .tooltip-pinyin {
+            font-weight: 600;
+            color: #7dd3fc;
+        }
+        .tooltip-viet {
+            font-style: italic;
+        }
+        .section-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #0ea5e9;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0284c7;
+        }
+        /* Style cho câu trả lời trắc nghiệm */
+        .quiz-option label {
+            display: block;
+            padding: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quiz-option input[type="radio"] {
+            display: none;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            border-color: #0ea5e9;
+            background-color: #f0f9ff;
+            box-shadow: 0 0 0 2px #0ea5e9;
+        }
+        .quiz-option label:hover {
+            border-color: #9ca3af;
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Tooltip để hiển thị Pinyin và nghĩa -->
+    <div id="tooltip"></div>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-600">Bài 12: 幸福婚姻</h1>
+            <p class="text-lg text-slate-500 mt-2">Hôn nhân Hạnh phúc</p>
+        </header>
+
+        <!-- Phần 1: Bài đọc -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">I. Bài đọc (课文)</h2>
+            <div id="reading-text" class="text-lg leading-loose space-y-4">
+                <p>
+                    <span class="chinese-char" data-pinyin="jù diàochá" data-viet="theo điều tra">据调查</span>，
+                    <span class="chinese-char" data-pinyin="quánguó" data-viet="toàn quốc">全国</span>
+                    <span class="chinese-char" data-pinyin="jiéhūn" data-viet="kết hôn">结婚</span>
+                    <span class="chinese-char" data-pinyin="shùliàng" data-viet="số lượng">数量</span>
+                    <span class="chinese-char" data-pinyin="zhúnián" data-viet="từng năm">逐年</span>
+                    <span class="chinese-char" data-pinyin="xiàjiàng" data-viet="giảm xuống">下降</span>，
+                    <span class="chinese-char" data-pinyin="ér" data-viet="mà">而</span>
+                    <span class="chinese-char" data-pinyin="tóngshí" data-viet="đồng thời">同时</span>，
+                    <span class="chinese-char" data-pinyin="líhūn" data-viet="ly hôn">离婚</span>
+                    <span class="chinese-char" data-pinyin="shù" data-viet="số">数</span>
+                    <span class="chinese-char" data-pinyin="shàngshēng" data-viet="tăng lên">上升</span>。
+                    <span class="chinese-char" data-pinyin="2000 nián" data-viet="năm 2000">2000年</span>，
+                    <span class="chinese-char" data-pinyin="quánguó" data-viet="toàn quốc">全国</span>
+                    <span class="chinese-char" data-pinyin="yǒu" data-viet="có">有</span>
+                    <span class="chinese-char" data-pinyin="848 wàn duō duì" data-viet="hơn 8.48 triệu cặp">848万多对</span>
+                    <span class="chinese-char" data-pinyin="xīnrén" data-viet="tân nhân">新人</span>
+                    <span class="chinese-char" data-pinyin="jiéhūn" data-viet="kết hôn">结婚</span>，
+                    <span class="chinese-char" data-pinyin="121 wàn duō duì" data-viet="hơn 1.21 triệu cặp">121万多对</span>
+                    <span class="chinese-char" data-pinyin="fūqī" data-viet="vợ chồng">夫妻</span>
+                    <span class="chinese-char" data-pinyin="fēnshǒu" data-viet="chia tay">分手</span>。
+                </p>
+                <p>
+                    <span class="chinese-char" data-pinyin="cóng" data-viet="từ">从</span>
+                    <span class="chinese-char" data-pinyin="20 shìjì 90 niándài" data-viet="thập niên 90 thế kỷ 20">20世纪90年代</span>
+                    <span class="chinese-char" data-pinyin="yǐlái" data-viet="trở lại đây">以来</span>，
+                    <span class="chinese-char" data-pinyin="quánguó" data-viet="toàn quốc">全国</span>
+                    <span class="chinese-char" data-pinyin="hūnyīn" data-viet="hôn nhân">婚姻</span>
+                    <span class="chinese-char" data-pinyin="dēngjì" data-viet="đăng ký">登记</span>
+                    <span class="chinese-char" data-pinyin="jiéhūn" data-viet="kết hôn">结婚</span>
+                    <span class="chinese-char" data-pinyin="de rénshù" data-viet="số người">的人数</span>
+                    <span class="chinese-char" data-pinyin="zhúnián" data-viet="từng năm">逐年</span>
+                    <span class="chinese-char" data-pinyin="xiàjiàng" data-viet="giảm xuống">下降</span>。
+                    <span class="chinese-char" data-pinyin="1990 nián" data-viet="năm 1990">1990年</span>，
+                    <span class="chinese-char" data-pinyin="quánguó" data-viet="toàn quốc">全国</span>
+                    <span class="chinese-char" data-pinyin="yǒu" data-viet="có">有</span>
+                    <span class="chinese-char" data-pinyin="951 wàn duì" data-viet="9.51 triệu cặp">951万对</span>
+                    <span class="chinese-char" data-pinyin="dēngjì" data-viet="đăng ký">登记</span>
+                    <span class="chinese-char" data-pinyin="jiéhūn" data-viet="kết hôn">结婚</span>；
+                    <span class="chinese-char" data-pinyin="1995 nián" data-viet="năm 1995">1995年</span>
+                    <span class="chinese-char" data-pinyin="wéi" data-viet="là">为</span>
+                    <span class="chinese-char" data-pinyin="934 wàn duì" data-viet="9.34 triệu cặp">934万对</span>；
+                    <span class="chinese-char" data-pinyin="1999 nián" data-viet="năm 1999">1999年</span>，
+                    <span class="chinese-char" data-pinyin="jiéhūn" data-viet="kết hôn">结婚</span>
+                    <span class="chinese-char" data-pinyin="shù" data-viet="số">数</span>
+                    <span class="chinese-char" data-pinyin="yǐ" data-viet="đã">已</span>
+                    <span class="chinese-char" data-pinyin="jiàngdào" data-viet="giảm đến">降到</span>
+                    <span class="chinese-char" data-pinyin="885 wàn duì" data-viet="8.85 triệu cặp">885万对</span>。
+                    <span class="chinese-char" data-pinyin="yǔ cǐ tóngshí" data-viet="cùng lúc đó">与此同时</span>，
+                    <span class="chinese-char" data-pinyin="yóuyú" data-viet="do">由于</span>
+                    <span class="chinese-char" data-pinyin="shèhuì" data-viet="xã hội">社会</span>
+                    <span class="chinese-char" data-pinyin="de" data-viet="của">的</span>
+                    <span class="chinese-char" data-pinyin="fāzhǎn" data-viet="phát triển">发展</span>
+                    <span class="chinese-char" data-pinyin="hé" data-viet="và">和</span>
+                    <span class="chinese-char" data-pinyin="rénmen" data-viet="mọi người">人们</span>
+                    <span class="chinese-char" data-pinyin="hūnyīn guānniàn" data-viet="quan niệm hôn nhân">婚姻观念</span>
+                    <span class="chinese-char" data-pinyin="de" data-viet="của">的</span>
+                    <span class="chinese-char" data-pinyin="biànhuà" data-viet="thay đổi">变化</span>，
+                    <span class="chinese-char" data-pinyin="líhūn" data-viet="ly hôn">离婚</span>
+                    <span class="chinese-char" data-pinyin="rénshù" data-viet="số người">人数</span>
+                    <span class="chinese-char" data-pinyin="zé" data-viet="thì">则</span>
+                    <span class="chinese-char" data-pinyin="zhúnián" data-viet="từng năm">逐年</span>
+                    <span class="chinese-char" data-pinyin="shàngshēng" data-viet="tăng lên">上升</span>。
+                    <span class="chinese-char" data-pinyin="1990 nián" data-viet="năm 1990">1990年</span>
+                    <span class="chinese-char" data-pinyin="quánguó" data-viet="toàn quốc">全国</span>
+                    <span class="chinese-char" data-pinyin="líhūn" data-viet="ly hôn">离婚</span>
+                    <span class="chinese-char" data-pinyin="shù" data-viet="số">数</span>
+                    <span class="chinese-char" data-pinyin="wéi" data-viet="là">为</span>
+                    <span class="chinese-char" data-pinyin="80 wàn duì" data-viet="800,000 cặp">80万对</span>，
+                    <span class="chinese-char" data-pinyin="1995 nián" data-viet="năm 1995">1995年</span>
+                    <span class="chinese-char" data-pinyin="shì" data-viet="là">是</span>
+                    <span class="chinese-char" data-pinyin="105 wàn duì" data-viet="1.05 triệu cặp">105万对</span>，
+                    <span class="chinese-char" data-pinyin="1999 nián" data-viet="năm 1999">1999年</span>
+                    <span class="chinese-char" data-pinyin="dádào" data-viet="đạt đến">达到</span>
+                    <span class="chinese-char" data-pinyin="120 wàn duì" data-viet="1.2 triệu cặp">120万对</span>。
+                </p>
+                <p>
+                    <span class="chinese-char" data-pinyin="quánguó jiéhūn, líhūn shùliàng de 'yī jiàng yī shēng'" data-viet="sự 'một giảm một tăng' của số lượng kết hôn, ly hôn toàn quốc">全国结婚、离婚数量的“一降一升”</span>
+                    <span class="chinese-char" data-pinyin="fǎnyìng chū" data-viet="phản ánh">反映出</span>
+                    <span class="chinese-char" data-pinyin="jìnniánlái" data-viet="những năm gần đây">近年来</span>
+                    <span class="chinese-char" data-pinyin="zhōngguórén hūnyīn jiātíng guānniàn" data-viet="quan niệm hôn nhân gia đình của người Trung Quốc">中国人婚姻家庭观念</span>
+                    <span class="chinese-char" data-pinyin="zhèng cóng chuántǒng zǒuxiàng xiàndài" data-viet="đang từ truyền thống hướng đến hiện đại">正从传统走向现代</span>。
+                    <span class="chinese-char" data-pinyin="suízhe shèhuì hé jīngjì de fāzhǎn" data-viet="cùng với sự phát triển của xã hội và kinh tế">随着社会和经济的发展</span>，
+                    <span class="chinese-char" data-pinyin="rénmen gǎibiànle" data-viet="mọi người đã thay đổi">人们改变了</span>
+                    <span class="chinese-char" data-pinyin="bǎ 'chuánzōngjiēdài' 'yīqǐguò rìzi'" data-viet="quan niệm coi 'nối dõi tông đường', 'sống cùng nhau qua ngày'">把“传宗接代”“一起过日子”</span>
+                    <span class="chinese-char" data-pinyin="zuòwéi hūnyīn de zhǔyào mùdì de guānniàn" data-viet="là mục đích chính của hôn nhân">作为婚姻的主要目的的观念</span>，
+                    <span class="chinese-char" data-pinyin="hūnyīn zhìliàng" data-viet="chất lượng hôn nhân">婚姻质量</span>
+                    <span class="chinese-char" data-pinyin="yuèláiyuè shòudào zhòngshì" data-viet="ngày càng được coi trọng">越来越受到重视</span>。
+                    <span class="chinese-char" data-pinyin="fūqī shuāngfāng" data-viet="vợ chồng hai bên">夫妻双方</span>
+                    <span class="chinese-char" data-pinyin="gèng qiángdiào" data-viet="càng nhấn mạnh">更强调</span>
+                    <span class="chinese-char" data-pinyin="gǎnqíng de róngqià" data-viet="sự hòa hợp tình cảm">感情的融洽</span>、
+                    <span class="chinese-char" data-pinyin="shēnghuó de xìngfú" data-viet="hạnh phúc trong cuộc sống">生活的幸福</span>，
+                    <span class="chinese-char" data-pinyin="gèng jiǎngqiú" data-viet="càng chú trọng">更讲求</span>
+                    <span class="chinese-char" data-pinyin="jiātíng rénjì guānxì de píngděng" data-viet="sự bình đẳng trong các mối quan hệ gia đình">家庭人际关系的平等</span>。
+                    <span class="chinese-char" data-pinyin="yīdàn hūnhòu de xiànshí" data-viet="một khi thực tế sau hôn nhân">一旦婚后的现实</span>
+                    <span class="chinese-char" data-pinyin="yǔ hūnqián de qīwàng" data-viet="với kỳ vọng trước hôn nhân">与婚前的期望</span>
+                    <span class="chinese-char" data-pinyin="chǎnshēng máodùn" data-viet="phát sinh mâu thuẫn">产生矛盾</span>
+                    <span class="chinese-char" data-pinyin="qiě bùkě tiáohé de shíhou" data-viet="và không thể hòa giải được">且不可调和的时候</span>，
+                    <span class="chinese-char" data-pinyin="tāmen duōshù" data-viet="họ đa số">他们多数</span>
+                    <span class="chinese-char" data-pinyin="xuǎnzé líhūn" data-viet="lựa chọn ly hôn">选择离婚</span>
+                    <span class="chinese-char" data-pinyin="ér bù yuànyì" data-viet="mà không muốn">而不愿意</span>
+                    <span class="chinese-char" data-pinyin="jìxù còuhé xiàqù" data-viet="tiếp tục sống tạm bợ">继续凑合下去</span>。
+                </p>
+                <p>
+                    <span class="chinese-char" data-pinyin="duōnián cóngshì hūnyīn guǎnlǐ gōngzuò de hūnyīn dēngjì chù Xú nǚshì" data-viet="bà Từ, người nhiều năm làm công tác quản lý hôn nhân tại phòng đăng ký">多年从事婚姻管理工作的婚姻登记处徐女士</span>，
+                    <span class="chinese-char" data-pinyin="cóng shíjì jiēchù de dàliàng shìlì zhōng" data-viet="từ vô số trường hợp tiếp xúc thực tế">从实际接触的大量事例中</span>
+                    <span class="chinese-char" data-pinyin="yě gǎnshòu dàole zhè yīdiǎn" data-viet="cũng cảm nhận được điều này">也感受到了这一点</span>。
+                    <span class="chinese-char" data-pinyin="tā jièshào shuō" data-viet="bà giới thiệu rằng">她介绍说</span>，
+                    <span class="chinese-char" data-pinyin="jìnniánlái dào dēngjì chù bànlǐ líhūn shǒuxù de rén" data-viet="những người đến phòng đăng ký làm thủ tục ly hôn gần đây">近年来到登记处办理离婚手续的人</span>，
+                    <span class="chinese-char" data-pinyin="tíchū fēnshǒu de lǐyóu" data-viet="lý do chia tay đưa ra">提出分手的理由</span>
+                    <span class="chinese-char" data-pinyin="duō shì xìnggé huò gǎnqíng bùhé" data-viet="đa số là tính cách hoặc tình cảm không hợp">多是性格或感情不合</span>，
+                    <span class="chinese-char" data-pinyin="yěyǒu jiātíng bàolì" data-viet="cũng có bạo lực gia đình">也有家庭暴力</span>
+                    <span class="chinese-char" data-pinyin="yǐjí jiātíng jīngjì wèntí" data-viet="cũng như vấn đề kinh tế gia đình">以及家庭经济问题</span>，
+                    <span class="chinese-char" data-pinyin="'dì sān zhě' děng yuányīn" data-viet="nguyên nhân như 'người thứ ba'">“第三者”等原因</span>。
+                    <span class="chinese-char" data-pinyin="xiànzài, rénmen líhūn" data-viet="bây giờ, mọi người ly hôn">现在，人们离婚</span>
+                    <span class="chinese-char" data-pinyin="suīrán yào shòu shèhuì dàodé de yuēshù" data-viet="tuy phải chịu sự ràng buộc của đạo đức xã hội">虽然要受社会道德的约束</span>，
+                    <span class="chinese-char" data-pinyin="dàn gǎnqíng zài hūnyīn zhōng de dìwèi" data-viet="nhưng vị thế của tình cảm trong hôn nhân">但感情在婚姻中的地位</span>
+                    <span class="chinese-char" data-pinyin="míngxiǎn shàngshēngle" data-viet="đã tăng lên rõ rệt">明显上升了</span>，
+                    <span class="chinese-char" data-pinyin="shèhuì duì líhūn zhě de kuānróng dù" data-viet="mức độ bao dung của xã hội đối với người ly hôn">社会对离婚者的宽容度</span>
+                    <span class="chinese-char" data-pinyin="yě yuèláiyuè gāo" data-viet="cũng ngày càng cao">也越来越高</span>。
+                </p>
+            </div>
+        </div>
+
+        <!-- Phần 2: Luyện tập trắc nghiệm -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">II. Luyện tập trắc nghiệm (练习)</h2>
+            <form id="quiz-form" class="space-y-8">
+                <!-- Câu hỏi 1 -->
+                <div>
+                    <p class="font-semibold text-lg mb-4">1. 根据课文，从20世纪90年代以来，中国的婚姻状况有什么主要趋势？</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option">
+                            <input type="radio" id="q1a1" name="q1" value="a">
+                            <label for="q1a1">A. 结婚和离婚的数量都逐年上升。</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q1a2" name="q1" value="b">
+                            <label for="q1a2">B. 结婚数量逐年下降，离婚数量逐年上升。</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q1a3" name="q1" value="c">
+                            <label for="q1a3">C. 结婚和离婚的数量都逐年下降。</label>
+                        </div>
+                         <div class="quiz-option">
+                            <input type="radio" id="q1a4" name="q1" value="d">
+                            <label for="q1a4">D. 结婚数量稳定，离婚数量逐年上升。</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Câu hỏi 2 -->
+                <div>
+                    <p class="font-semibold text-lg mb-4">2. 2000年，全国有多少对新人结婚？</p>
+                    <div class="space-y-3">
+                        <div class="quiz-option">
+                            <input type="radio" id="q2a1" name="q2" value="a">
+                            <label for="q2a1">A. 121万多对</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q2a2" name="q2" value="b">
+                            <label for="q2a2">B. 951万对</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q2a3" name="q2" value="c">
+                            <label for="q2a3">C. 848万多对</label>
+                        </div>
+                         <div class="quiz-option">
+                            <input type="radio" id="q2a4" name="q2" value="d">
+                            <label for="q2a4">D. 885万对</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Câu hỏi 3 -->
+                <div>
+                    <p class="font-semibold text-lg mb-4">3. 课文提到导致离婚人数上升的原因是什么？</p>
+                     <div class="space-y-3">
+                        <div class="quiz-option">
+                            <input type="radio" id="q3a1" name="q3" value="a">
+                            <label for="q3a1">A. 经济压力增大。</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q3a2" name="q3" value="b">
+                            <label for="q3a2">B. 结婚数量下降。</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q3a3" name="q3" value="c">
+                            <label for="q3a3">C. 社会的发展和人们婚姻观念的变化。</label>
+                        </div>
+                         <div class="quiz-option">
+                            <input type="radio" id="q3a4" name="q3" value="d">
+                            <label for="q3a4">D. 法律政策的改变。</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Câu hỏi 4 (Mới) -->
+                <div>
+                    <p class="font-semibold text-lg mb-4">4. 根据徐女士的介绍，以下哪一项不是人们提出离婚的常见理由？</p>
+                     <div class="space-y-3">
+                        <div class="quiz-option">
+                            <input type="radio" id="q4a1" name="q4" value="a">
+                            <label for="q4a1">A. 性格或感情不合。</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q4a2" name="q4" value="b">
+                            <label for="q4a2">B. 家庭暴力。</label>
+                        </div>
+                        <div class="quiz-option">
+                            <input type="radio" id="q4a3" name="q4" value="c">
+                            <label for="q4a3">C. 工作地点太远。</label>
+                        </div>
+                         <div class="quiz-option">
+                            <input type="radio" id="q4a4" name="q4" value="d">
+                            <label for="q4a4">D. “第三者”等原因。</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="text-center mt-8">
+                    <button type="submit" class="btn btn-primary">Kiểm tra đáp án</button>
+                </div>
+            </form>
+            <div id="quiz-results" class="mt-6 text-center text-lg font-medium"></div>
+        </div>
+
+        <!-- Phần 3: Ngữ pháp và Cụm từ thông dụng -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">III. Ngữ pháp và Cụm từ (语法与词组)</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold text-sky-700">1. 逐年 (zhúnián)</h3>
+                    <p class="mt-2 text-slate-600">
+                        <strong>Nghĩa:</strong> Từng năm, năm này qua năm khác. Dùng để chỉ sự thay đổi hoặc phát triển diễn ra liên tục qua các năm.
+                    </p>
+                    <p class="mt-3 bg-slate-100 p-3 rounded-lg">
+                        <strong>Ví dụ:</strong> 最近几年，来这里旅游的人数<strong class="text-red-600">逐年</strong>增加。
+                        <br>
+                        <span class="text-sm text-slate-500 italic">(Zuìjìn jǐ nián, lái zhèlǐ lǚyóu de rénshù <strong class="text-red-600">zhúnián</strong> zēngjiā.)</span>
+                        <br>
+                        <span class="text-sm text-slate-500">Mấy năm gần đây, số người đến đây du lịch tăng lên từng năm.</span>
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-sky-700">2. 与此同时 (yǔ cǐ tóngshí)</h3>
+                    <p class="mt-2 text-slate-600">
+                        <strong>Nghĩa:</strong> Cùng lúc đó, đồng thời. Dùng để nối hai sự việc, tình huống xảy ra trong cùng một khoảng thời gian.
+                    </p>
+                    <p class="mt-3 bg-slate-100 p-3 rounded-lg">
+                        <strong>Ví dụ:</strong> 他努力学习，<strong class="text-red-600">与此同时</strong>，他还积极参加学校的各种活动。
+                        <br>
+                        <span class="text-sm text-slate-500 italic">(Tā nǔlì xuéxí, <strong class="text-red-600">yǔ cǐ tóngshí</strong>, tā hái jījí cānjiā xuéxiào de gèzhǒng huódòng.)</span>
+                        <br>
+                        <span class="text-sm text-slate-500">Anh ấy học hành chăm chỉ, cùng lúc đó, anh ấy còn tích cực tham gia các hoạt động của trường.</span>
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-sky-700">3. 由于..., ... (yóuyú...)</h3>
+                    <p class="mt-2 text-slate-600">
+                        <strong>Nghĩa:</strong> Do, bởi vì. Dùng để chỉ nguyên nhân của một sự việc, thường đứng ở đầu câu hoặc vế câu thứ nhất.
+                    </p>
+                    <p class="mt-3 bg-slate-100 p-3 rounded-lg">
+                        <strong>Ví dụ:</strong> <strong class="text-red-600">由于</strong>天气不好，我们只好取消了明天的旅行计划。
+                        <br>
+                        <span class="text-sm text-slate-500 italic">(<strong class="text-red-600">Yóuyú</strong> tiānqì bù hǎo, wǒmen zhǐhǎo qǔxiāole míngtiān de lǚxíng jìhuà.)</span>
+                        <br>
+                        <span class="text-sm text-slate-500">Do thời tiết xấu, chúng tôi đành phải hủy kế hoạch du lịch ngày mai.</span>
+                    </p>
+                </div>
+                 <div>
+                    <h3 class="text-xl font-semibold text-sky-700">4. 凑合 (còuhé)</h3>
+                    <p class="mt-2 text-slate-600">
+                        <strong>Nghĩa:</strong> Tạm bợ, cho qua. Dùng để chỉ việc làm hoặc chấp nhận một điều gì đó một cách miễn cưỡng, không thực sự hài lòng.
+                    </p>
+                    <p class="mt-3 bg-slate-100 p-3 rounded-lg">
+                        <strong>Ví dụ trong bài:</strong> 他们多数选择离婚而不愿意继续<strong class="text-red-600">凑合</strong>下去。
+                        <br>
+                        <span class="text-sm text-slate-500 italic">(Tāmen duōshù xuǎnzé líhūn ér bù yuànyì jìxù <strong class="text-red-600">còuhé</strong> xiàqù.)</span>
+                        <br>
+                        <span class="text-sm text-slate-500">Họ đa số chọn ly hôn chứ không muốn tiếp tục sống tạm bợ với nhau nữa.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phần 4: Luyện viết -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">IV. Luyện viết (写作)</h2>
+            <p class="mb-4 text-slate-600">
+                <strong>Chủ đề:</strong> Dựa vào bài đọc và hiểu biết của bạn, hãy viết một bài văn khoảng 500 chữ trình bày suy nghĩ của bạn về những thay đổi trong quan niệm hôn nhân của giới trẻ hiện nay và những yếu tố tạo nên một cuộc hôn nhân hạnh phúc.
+            </p>
+            <textarea id="writing-area" class="w-full h-64 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-400 focus:border-sky-400 transition" placeholder="Bắt đầu viết bài của bạn ở đây..."></textarea>
+            <div class="text-right mt-2 text-sm text-slate-500">
+                Số chữ: <span id="char-count">0</span> / 500
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chars = document.querySelectorAll('.chinese-char');
+            const tooltip = document.getElementById('tooltip');
+
+            // --- Logic cho Tooltip ---
+            chars.forEach(char => {
+                char.addEventListener('click', function(event) {
+                    event.stopPropagation(); 
+                    const pinyin = this.dataset.pinyin;
+                    const viet = this.dataset.viet;
+                    
+                    tooltip.innerHTML = `<div class="tooltip-pinyin">${pinyin}</div><div class="tooltip-viet">${viet}</div>`;
+                    
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = `${rect.left + window.scrollX + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+                    tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 5}px`;
+                });
+            });
+
+            document.addEventListener('click', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // --- Logic cho bài trắc nghiệm ---
+            const quizForm = document.getElementById('quiz-form');
+            const quizResults = document.getElementById('quiz-results');
+            const correctAnswers = {
+                q1: 'b',
+                q2: 'c',
+                q3: 'c',
+                q4: 'c'
+            };
+
+            quizForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                let score = 0;
+                const userAnswers = {
+                    q1: quizForm.q1.value,
+                    q2: quizForm.q2.value,
+                    q3: quizForm.q3.value,
+                    q4: quizForm.q4.value
+                };
+
+                for (const question in userAnswers) {
+                    if (userAnswers[question] === correctAnswers[question]) {
+                        score++;
+                    }
+                }
+                
+                quizResults.innerHTML = `Bạn đã trả lời đúng ${score} / ${Object.keys(correctAnswers).length} câu.`;
+                if(score === Object.keys(correctAnswers).length){
+                    quizResults.innerHTML += ' <span class="text-green-600">Rất tốt!</span>';
+                } else {
+                    quizResults.innerHTML += ' <span class="text-amber-600">Hãy cố gắng hơn nhé!</span>';
+                }
+            });
+
+            // --- Logic cho đếm ký tự bài viết ---
+            const writingArea = document.getElementById('writing-area');
+            const charCount = document.getElementById('char-count');
+
+            writingArea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count;
+                if (count > 500) {
+                    charCount.classList.add('text-red-600');
+                    charCount.classList.remove('text-slate-500');
+                } else {
+                    charCount.classList.remove('text-red-600');
+                    charCount.classList.add('text-slate-500');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+

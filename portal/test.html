@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="vi" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HỌC LIỆU TRỰC TUYẾN HANAI LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CẤU HÌNH GIAO DIỆN --- */
+        :root {
+            --color-text-dark: #1e293b;
+            --color-text-medium: #475569;
+            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background: var(--bg-gradient);
+            color: var(--color-text-dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- LOADING OVERLAY --- */
+        #loadingOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff; z-index: 9999;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #f3f3f3; border-top: 5px solid #3498db;
+            border-radius: 50%; animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- LOGO WATERMARK (NỀN CHÌM) --- */
+        .watermark-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            max-width: 80vw;
+            height: auto;
+            background-image: url('https://res.cloudinary.com/dylnm79id/image/upload/v1769343424/Kho%CC%82ng_ne%CC%82%CC%80n_ev0wrm.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            filter: grayscale(20%);
+        }
+
+        /* --- GLASSMORPHISM MODERN --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            position: relative;
+            z-index: 10;
+        }
+
+        .hover-card-effect {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .hover-card-effect:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Modal Styles */
+        #linkModal, #videoSecurityModal { backdrop-filter: blur(8px); }
+        .modal-content { animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes modalPop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* Nav Sticky */
+        .sticky-nav {
+            position: sticky; top: 1rem; z-index: 50; margin: 0 auto; max-width: fit-content;
+            border-radius: 9999px; padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            display: flex; gap: 0.5rem; overflow-x: auto; white-space: nowrap;
+        }
+        .sticky-nav::-webkit-scrollbar { display: none; }
+        .sticky-nav { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .nav-item {
+            padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600;
+            color: #64748b; transition: all 0.3s; text-decoration: none;
+        }
+        .nav-item:hover, .nav-item.active { background: white; color: #0f172a; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+        /* Button & Input */
+        .btn-modern {
+            background: linear-gradient(135deg, #FF8C00 0%, #ff7b00 100%);
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+        .btn-modern:hover { box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4); transform: translateY(-2px); }
+        
+        .input-modern {
+            background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(203, 213, 225, 0.8);
+            transition: all 0.3s ease;
+        }
+        .input-modern:focus { background: rgba(255, 255, 255, 0.9); border-color: #FF8C00; box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.1); }
+
+        /* Animation */
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none !important; }
+        
+        /* === HỆ THỐNG MÀU SẮC PHÂN BIỆT === */
+
+        /* 1. BTVN (Giữ nguyên - Hệ màu chuẩn) */
+        .hsk-1 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); } /* Green */
+        .hsk-2 { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); } /* Sky */
+        .hsk-3 { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); } /* Violet */
+        .hsk-4 { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); } /* Rose */
+        .hsk-5 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); } /* Amber */
+        .hsk-6 { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); } /* Red */
+
+        .text-hsk-1 { color: #059669; } .text-hsk-2 { color: #0284c7; } .text-hsk-3 { color: #7c3aed; }
+        .text-hsk-4 { color: #e11d48; } .text-hsk-5 { color: #d97706; } .text-hsk-6 { color: #991b1b; }
+
+        /* 2. HOẠT ĐỘNG NHÓM (Hệ màu Lạnh/Trí tuệ - Blue/Teal Spectrum) */
+        .group-bg-1 { background: linear-gradient(135deg, #2dd4bf 0%, #0d9488 100%); } /* Teal */
+        .group-bg-2 { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); } /* Cyan */
+        .group-bg-3 { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); } /* Blue */
+        .group-bg-4 { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); } /* Indigo */
+        .group-bg-5 { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); } /* Violet */
+        .group-bg-6 { background: linear-gradient(135deg, #475569 0%, #1e293b 100%); } /* Slate */
+
+        .text-group-1 { color: #0f766e; } .text-group-2 { color: #0e7490; } .text-group-3 { color: #1e40af; }
+        .text-group-4 { color: #3730a3; } .text-group-5 { color: #5b21b6; } .text-group-6 { color: #334155; }
+
+        /* 3. HOẠT ĐỘNG 1-1 (Hệ màu Ấm/Năng động - Warm/Vibrant Spectrum) */
+        .one-bg-1 { background: linear-gradient(135deg, #a3e635 0%, #4d7c0f 100%); } /* Lime */
+        .one-bg-2 { background: linear-gradient(135deg, #facc15 0%, #ca8a04 100%); } /* Yellow */
+        .one-bg-3 { background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%); } /* Orange */
+        .one-bg-4 { background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%); } /* Coral */
+        .one-bg-5 { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); } /* Pink */
+        .one-bg-6 { background: linear-gradient(135deg, #be123c 0%, #881337 100%); } /* Rose */
+
+        .text-one-1 { color: #3f6212; } .text-one-2 { color: #854d0e; } .text-one-3 { color: #9a3412; }
+        .text-one-4 { color: #c0392b; } .text-one-5 { color: #9d174d; } .text-one-6 { color: #881337; }
+
+    </style>
+</head>
+<body>
+
+    <!-- [MỚI] MÀN HÌNH CHỜ -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="text-gray-500 font-medium animate-pulse">Đang xác thực bảo mật...</p>
+    </div>
+
+    <!-- LOGO CHÌM -->
+    <div class="watermark-logo"></div>
+
+    <!-- MODAL POPUP HIỂN THỊ LINKS -->
+    <div id="linkModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4" onclick="closeModal(event)">
+        <div class="modal-content glass-card w-full max-w-lg rounded-2xl p-0 overflow-hidden shadow-2xl relative bg-white" onclick="event.stopPropagation()">
+            <div id="modalHeader" class="p-6 bg-gradient-to-r from-gray-100 to-gray-50 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 id="modalTitle" class="text-xl font-bold text-gray-800">Tiêu đề</h3>
+                    <button onclick="closeModalDirect()" class="text-gray-400 hover:text-gray-600 focus:outline-none transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <p id="modalSubtitle" class="text-sm text-gray-500 mt-1">Chọn bài tập bên dưới để bắt đầu</p>
+            </div>
+            <div id="modalBody" class="p-6 max-h-[60vh] overflow-y-auto space-y-3 bg-white/80">
+                <!-- Links sẽ được JS chèn vào đây -->
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100 text-center">
+                <button onclick="closeModalDirect()" class="px-6 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- [MỚI] MODAL BẢO MẬT RIÊNG CHO VIDEO -->
+    <div id="videoSecurityModal" class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/50 p-4" onclick="closeVideoModal(event)">
+        <div class="modal-content glass-card w-full max-w-md rounded-2xl p-6 shadow-2xl relative bg-white" onclick="event.stopPropagation()">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4 text-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800">Video Bài Giảng</h3>
+                <p class="text-sm text-gray-500 mt-2">Nội dung này yêu cầu mã truy cập đặc biệt (VD: vid.xxx)</p>
+            </div>
+            <div class="space-y-4">
+                <input type="password" id="videoPassInput" placeholder="Nhập mã truy cập..." class="w-full px-4 py-3 rounded-xl input-modern outline-none text-center" onkeypress="if(event.key==='Enter') unlockVideoContent()">
+                <button id="btnUnlockVideo" onclick="unlockVideoContent()" class="w-full py-3 rounded-xl font-bold text-white bg-teal-500 hover:bg-teal-600 transition-colors shadow-lg">MỞ KHÓA</button>
+            </div>
+            <button onclick="closeVideoModalDirect()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- PHẦN ĐĂNG NHẬP -->
+    <div id="loginSection" class="hidden min-h-screen flex flex-col justify-center items-center px-4 relative z-10">
+        <div class="max-w-md w-full glass-card rounded-3xl p-10 fade-in-up">
+            <div class="flex justify-center mb-6">
+                <!-- Login Logo -->
+                <div class="w-24 h-24 rounded-full flex items-center justify-center mb-2 overflow-hidden bg-white/50 backdrop-blur-sm border border-white/60 shadow-inner">
+                    <img src="https://res.cloudinary.com/dylnm79id/image/upload/v1769343424/Kho%CC%82ng_ne%CC%82%CC%80n_ev0wrm.png" alt="Han AI Lab Logo" class="w-full h-full object-contain p-2">
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold text-center mb-2 text-blue-800">HAN AI LAB XIN CHÀO</h2>
+            <p class="text-center mb-8 text-gray-500 text-sm">Vui lòng nhập mã truy cập để vào hệ thống</p>
+            <div class="space-y-6">
+                <div>
+                    <input type="password" id="code" placeholder="Nhập mã truy cập..." class="w-full px-5 py-4 rounded-xl input-modern outline-none text-lg text-center tracking-widest" onkeypress="handleKeyPress(event)">
+                </div>
+                <button id="loginBtn" class="w-full py-4 px-4 rounded-xl font-bold text-white transition-all duration-300 btn-modern tracking-wide" onclick="handleManualLogin()">ĐĂNG NHẬP</button>
+                <div id="message" class="text-center font-medium text-sm mt-4 hidden bg-white/50 py-2 rounded-lg"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div id="mainContent" class="hidden relative z-10 min-h-screen flex flex-col">
+        <header class="py-12 fade-in-up">
+            <div class="max-w-5xl mx-auto px-4 text-center">
+                
+                <!-- [MỚI] LOGO BUTTON - Quay về trang chủ -->
+                <a href="https://hanailab.id.vn/" target="_blank" rel="noopener noreferrer" title="Về trang chủ HAN AI LAB" class="block w-24 mx-auto mb-6 hover:scale-105 transition-transform duration-300 group">
+                    <img src="https://res.cloudinary.com/dylnm79id/image/upload/v1769343424/Kho%CC%82ng_ne%CC%82%CC%80n_ev0wrm.png" 
+                         alt="Han AI Lab Logo" 
+                         class="w-full h-auto drop-shadow-md group-hover:drop-shadow-lg transition-all">
+                </a>
+
+                <div class="inline-block px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold tracking-wider mb-4 shadow-sm">HAN AI LAB EDUCATION</div>
+                
+                <!-- ĐÃ SỬA: Đổi leading-tight -> leading-normal và thêm pb-2 để tránh cắt dấu tiếng Việt -->
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-normal pb-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-500">
+                    CỔNG THÔNG TIN TÀI NGUYÊN<br>TRỰC TUYẾN
+                </h1>
+                
+                <!-- SLOGAN MỚI -->
+                <p class="mt-4 text-lg sm:text-xl text-gray-600 font-medium italic mb-6">
+                    Công nghệ dẫn đường – Giáo dục làm gốc – Con người làm trung tâm
+                </p>
+
+                <button onclick="logout()" class="mt-4 px-6 py-2 rounded-full font-semibold text-gray-500 bg-white/50 hover:bg-white transition-all text-xs border border-gray-200">Đăng xuất</button>
+            </div>
+        </header>
+
+        <!-- THANH ĐIỀU HƯỚNG -->
+        <nav class="sticky-nav mb-10 fade-in-up" style="animation-delay: 0.1s;">
+            <a href="#section-teacher" class="nav-item text-red-500 font-bold border border-red-100 bg-red-50 hover:bg-red-100">Dành cho Giáo viên</a>
+            <div class="w-px h-6 bg-gray-300 mx-2"></div>
+            <a href="#section-so-dau-bai" class="nav-item">Sổ đầu bài</a>
+            <a href="#section-kiem-tra" class="nav-item">Kiểm tra</a>
+            <a href="#section-btvn" class="nav-item">BTVN (HSK)</a>
+            <a href="#section-tuong-tac" class="nav-item">Tương tác</a>
+            <a href="#section-nang-cao" class="nav-item">Nâng cao</a>
+            <a href="#section-du-phong-1" class="nav-item">Mở rộng 1</a>
+        </nav>
+
+        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 w-full pb-24">
+            
+            <!-- [MỚI] 0. KHU VỰC DÀNH RIÊNG CHO GIÁO VIÊN -->
+            <section id="section-teacher" class="max-w-4xl mx-auto mb-16 fade-in-up" style="animation-delay: 0.15s;">
+                <!-- Trạng thái 1: Bị khóa -->
+                <div id="teacher-locked" class="glass-card p-6 rounded-2xl border-l-4 border-red-500 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md bg-red-50/30">
+                    <div class="flex items-center">
+                        <div class="w-14 h-14 rounded-full bg-red-100 text-red-500 flex items-center justify-center mr-5 shrink-0 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-lg uppercase tracking-wide">Khu vực Giáo viên</h3>
+                            <p class="text-sm text-gray-500">Yêu cầu mã định danh Giáo viên (VD: gv.xxx)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full md:w-auto bg-white p-1 rounded-xl border border-gray-200 shadow-inner">
+                        <input type="password" id="teacherPass" placeholder="Nhập mã (gv...)" class="outline-none bg-transparent px-3 py-2 text-sm w-full md:w-40 text-gray-700 placeholder-gray-400" onkeypress="if(event.key==='Enter') unlockTeacherContent()">
+                        <button id="btnUnlockTeacher" onclick="unlockTeacherContent()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-xs transition-colors shrink-0 shadow-md">MỞ KHÓA</button>
+                    </div>
+                </div>
+
+                <!-- Trạng thái 2: Đã mở khóa (Ẩn mặc định) -->
+                <div id="teacher-unlocked" class="hidden glass-card p-8 rounded-2xl border-t-4 border-emerald-500 bg-white shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-4 -mt-4 opacity-50 z-0"></div>
+                    
+                    <div class="flex justify-between items-start mb-6 relative z-10">
+                        <h3 class="font-bold text-emerald-800 text-xl flex items-center">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center mr-3 text-emerald-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </span>
+                            TÀI NGUYÊN GIẢNG DẠY
+                        </h3>
+                        <button onclick="lockTeacherContent()" class="px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-medium hover:bg-red-50 hover:text-red-500 transition-colors flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                            Khóa lại
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
+                        <!-- Teacher Link 1 -->
+                        <a href="https://example.com/giao-an" target="_blank" class="block p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-emerald-50 hover:border-emerald-200 transition-all group text-center">
+                            <div class="text-3xl mb-2">📂</div>
+                            <div class="font-bold text-gray-700 text-sm group-hover:text-emerald-700">Kho Giáo Án</div>
+                        </a>
+                        <!-- Teacher Link 2 -->
+                        <a href="https://example.com/dap-an" target="_blank" class="block p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-emerald-50 hover:border-emerald-200 transition-all group text-center">
+                            <div class="text-3xl mb-2">🔑</div>
+                            <div class="font-bold text-gray-700 text-sm group-hover:text-emerald-700">Đáp Án BTVN</div>
+                        </a>
+                        <!-- Teacher Link 3 -->
+                        <a href="https://example.com/diem-so" target="_blank" class="block p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-emerald-50 hover:border-emerald-200 transition-all group text-center">
+                            <div class="text-3xl mb-2">📊</div>
+                            <div class="font-bold text-gray-700 text-sm group-hover:text-emerald-700">Quản Lý Điểm</div>
+                        </a>
+                        <!-- Teacher Link 4 -->
+                        <a href="https://example.com/admin" target="_blank" class="block p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-emerald-50 hover:border-emerald-200 transition-all group text-center">
+                            <div class="text-3xl mb-2">⚙️</div>
+                            <div class="font-bold text-gray-700 text-sm group-hover:text-emerald-700">Cài Đặt Lớp</div>
+                        </a>
+                    </div>
+                    <p class="text-center text-xs text-gray-400 mt-6 italic">Lưu ý: Vui lòng khóa lại sau khi sử dụng để bảo mật thông tin.</p>
+                </div>
+            </section>
+            
+            <hr class="border-gray-200/50 mb-12">
+
+            <!-- 1. SỔ ĐẦU BÀI & KIỂM TRA -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 fade-in-up" style="animation-delay: 0.2s;">
+                <div id="section-so-dau-bai">
+                    <h3 class="text-xl font-bold text-gray-700 mb-4 flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>SỔ ĐẦU BÀI</h3>
+                    <a href="https://unknown.github.io/portal/tiendohoctap" target="_blank" class="glass-card hover-card-effect p-6 rounded-2xl flex items-center justify-between group cursor-pointer block">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                            </div>
+                            <span class="font-bold text-gray-700">Theo dõi tiến độ</span>
+                        </div>
+                        <span class="text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                </div>
+                <div id="section-kiem-tra">
+                    <h3 class="text-xl font-bold text-gray-700 mb-4 flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>KIỂM TRA</h3>
+                    <a href="https://unknown.github.io/han1/bai1" target="_blank" class="glass-card hover-card-effect p-6 rounded-2xl flex items-center justify-between group cursor-pointer block">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            </div>
+                            <span class="font-bold text-gray-700">Đề kiểm tra</span>
+                        </div>
+                        <span class="text-gray-400 group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <hr class="border-gray-200/50 mb-12">
+
+            <!-- 2. BÀI TẬP VỀ NHÀ (HSK 1-6) - MÀU CHUẨN -->
+            <section id="section-btvn" class="mb-16 fade-in-up" style="animation-delay: 0.3s;">
+                <div class="flex items-center mb-6">
+                    <div class="w-1.5 h-8 bg-green-500 rounded-full mr-4"></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">BÀI TẬP VỀ NHÀ</h2>
+                        <p class="text-sm text-gray-500">Luyện tập theo cấp độ HSK</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <!-- HSK 1 -->
+                    <div onclick="openModal('btvn_hsk1')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-40 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hsk-1"></div>
+                        <div class="w-10 h-10 rounded-full bg-green-50 text-hsk-1 flex items-center justify-center mb-2 font-bold text-lg">1</div>
+                        <span class="font-bold text-gray-700 mb-1">HSK 1</span>
+                        <span class="text-xs text-gray-400 group-hover:text-green-600">Sơ cấp 1</span>
+                    </div>
+                    <!-- HSK 2 -->
+                    <div onclick="openModal('btvn_hsk2')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-40 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hsk-2"></div>
+                        <div class="w-10 h-10 rounded-full bg-sky-50 text-hsk-2 flex items-center justify-center mb-2 font-bold text-lg">2</div>
+                        <span class="font-bold text-gray-700 mb-1">HSK 2</span>
+                        <span class="text-xs text-gray-400 group-hover:text-sky-600">Sơ cấp 2</span>
+                    </div>
+                    <!-- HSK 3 -->
+                    <div onclick="openModal('btvn_hsk3')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-40 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hsk-3"></div>
+                        <div class="w-10 h-10 rounded-full bg-violet-50 text-hsk-3 flex items-center justify-center mb-2 font-bold text-lg">3</div>
+                        <span class="font-bold text-gray-700 mb-1">HSK 3</span>
+                        <span class="text-xs text-gray-400 group-hover:text-violet-600">Trung cấp 1</span>
+                    </div>
+                    <!-- HSK 4 -->
+                    <div onclick="openModal('btvn_hsk4')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-40 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hsk-4"></div>
+                        <div class="w-10 h-10 rounded-full bg-rose-50 text-hsk-4 flex items-center justify-center mb-2 font-bold text-lg">4</div>
+                        <span class="font-bold text-gray-700 mb-1">HSK 4</span>
+                        <span class="text-xs text-gray-400 group-hover:text-rose-600">Trung cấp 2</span>
+                    </div>
+                    <!-- HSK 5 -->
+                    <div onclick="openModal('btvn_hsk5')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-40 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hsk-5"></div>
+                        <div class="w-10 h-10 rounded-full bg-amber-50 text-hsk-5 flex items-center justify-center mb-2 font-bold text-lg">5</div>
+                        <span class="font-bold text-gray-700 mb-1">HSK 5</span>
+                        <span class="text-xs text-gray-400 group-hover:text-amber-600">Cao cấp 1</span>
+                    </div>
+                    <!-- HSK 6 -->
+                    <div onclick="openModal('btvn_hsk6')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-40 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 hsk-6"></div>
+                        <div class="w-10 h-10 rounded-full bg-red-50 text-hsk-6 flex items-center justify-center mb-2 font-bold text-lg">6</div>
+                        <span class="font-bold text-gray-700 mb-1">HSK 6</span>
+                        <span class="text-xs text-gray-400 group-hover:text-red-800">Cao cấp 2</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. BÀI TẬP TƯƠNG TÁC (ĐỔI MÀU PHÂN BIỆT) -->
+            <section id="section-tuong-tac" class="mb-16 fade-in-up" style="animation-delay: 0.4s;">
+                <div class="flex items-center mb-6">
+                    <div class="w-1.5 h-8 bg-blue-600 rounded-full mr-4"></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">TƯƠNG TÁC TRÊN LỚP</h2>
+                        <p class="text-sm text-gray-500">Hoạt động nhóm và cá nhân theo cấp độ</p>
+                    </div>
+                </div>
+
+                <!-- 3.1 TƯƠNG TÁC NHÓM (THEME: COOL/INTELLECTUAL - Xanh/Chàm/Tím) -->
+                <div class="mb-10">
+                    <h3 class="text-lg font-bold text-indigo-700 mb-4 flex items-center uppercase tracking-wide">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center mr-3 text-indigo-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        </span>
+                        HOẠT ĐỘNG NHÓM
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <!-- HSK 1 - Teal -->
+                        <div onclick="openModal('tuongtac_nhom_hsk1')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 group-bg-1"></div>
+                            <div class="w-10 h-10 rounded-full bg-teal-50 text-group-1 flex items-center justify-center mb-2 font-bold text-lg border border-teal-100">1</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-teal-600 transition-colors">HSK 1</div>
+                            <span class="text-xs text-gray-400">Nhóm</span>
+                        </div>
+                        <!-- HSK 2 - Cyan -->
+                        <div onclick="openModal('tuongtac_nhom_hsk2')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 group-bg-2"></div>
+                            <div class="w-10 h-10 rounded-full bg-cyan-50 text-group-2 flex items-center justify-center mb-2 font-bold text-lg border border-cyan-100">2</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-cyan-600 transition-colors">HSK 2</div>
+                            <span class="text-xs text-gray-400">Nhóm</span>
+                        </div>
+                        <!-- HSK 3 - Blue -->
+                        <div onclick="openModal('tuongtac_nhom_hsk3')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 group-bg-3"></div>
+                            <div class="w-10 h-10 rounded-full bg-blue-50 text-group-3 flex items-center justify-center mb-2 font-bold text-lg border border-blue-100">3</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-blue-600 transition-colors">HSK 3</div>
+                            <span class="text-xs text-gray-400">Nhóm</span>
+                        </div>
+                        <!-- HSK 4 - Indigo -->
+                        <div onclick="openModal('tuongtac_nhom_hsk4')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 group-bg-4"></div>
+                            <div class="w-10 h-10 rounded-full bg-indigo-50 text-group-4 flex items-center justify-center mb-2 font-bold text-lg border border-indigo-100">4</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">HSK 4</div>
+                            <span class="text-xs text-gray-400">Nhóm</span>
+                        </div>
+                        <!-- HSK 5 - Violet -->
+                        <div onclick="openModal('tuongtac_nhom_hsk5')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 group-bg-5"></div>
+                            <div class="w-10 h-10 rounded-full bg-violet-50 text-group-5 flex items-center justify-center mb-2 font-bold text-lg border border-violet-100">5</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-violet-600 transition-colors">HSK 5</div>
+                            <span class="text-xs text-gray-400">Nhóm</span>
+                        </div>
+                        <!-- HSK 6 - Slate -->
+                        <div onclick="openModal('tuongtac_nhom_hsk6')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 group-bg-6"></div>
+                            <div class="w-10 h-10 rounded-full bg-slate-100 text-group-6 flex items-center justify-center mb-2 font-bold text-lg border border-slate-200">6</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-slate-600 transition-colors">HSK 6</div>
+                            <span class="text-xs text-gray-400">Nhóm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.2 TƯƠNG TÁC 1-1 (THEME: WARM/VIBRANT - Vàng/Cam/Hồng) -->
+                <div>
+                    <h3 class="text-lg font-bold text-pink-700 mb-4 flex items-center uppercase tracking-wide">
+                        <span class="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center mr-3 text-pink-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        </span>
+                        HOẠT ĐỘNG 1-1
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <!-- HSK 1 - Lime -->
+                        <div onclick="openModal('tuongtac_11_hsk1')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 one-bg-1"></div>
+                            <div class="w-10 h-10 rounded-full bg-lime-50 text-one-1 flex items-center justify-center mb-2 font-bold text-lg border border-lime-100">1</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-lime-600 transition-colors">HSK 1</div>
+                            <span class="text-xs text-gray-400">1-1</span>
+                        </div>
+                        <!-- HSK 2 - Yellow -->
+                        <div onclick="openModal('tuongtac_11_hsk2')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 one-bg-2"></div>
+                            <div class="w-10 h-10 rounded-full bg-yellow-50 text-one-2 flex items-center justify-center mb-2 font-bold text-lg border border-yellow-100">2</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-yellow-600 transition-colors">HSK 2</div>
+                            <span class="text-xs text-gray-400">1-1</span>
+                        </div>
+                        <!-- HSK 3 - Orange -->
+                        <div onclick="openModal('tuongtac_11_hsk3')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 one-bg-3"></div>
+                            <div class="w-10 h-10 rounded-full bg-orange-50 text-one-3 flex items-center justify-center mb-2 font-bold text-lg border border-orange-100">3</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-orange-600 transition-colors">HSK 3</div>
+                            <span class="text-xs text-gray-400">1-1</span>
+                        </div>
+                        <!-- HSK 4 - Coral/Red-Orange -->
+                        <div onclick="openModal('tuongtac_11_hsk4')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 one-bg-4"></div>
+                            <div class="w-10 h-10 rounded-full bg-red-50 text-one-4 flex items-center justify-center mb-2 font-bold text-lg border border-red-100">4</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-red-500 transition-colors">HSK 4</div>
+                            <span class="text-xs text-gray-400">1-1</span>
+                        </div>
+                        <!-- HSK 5 - Pink -->
+                        <div onclick="openModal('tuongtac_11_hsk5')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 one-bg-5"></div>
+                            <div class="w-10 h-10 rounded-full bg-pink-50 text-one-5 flex items-center justify-center mb-2 font-bold text-lg border border-pink-100">5</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-pink-600 transition-colors">HSK 5</div>
+                            <span class="text-xs text-gray-400">1-1</span>
+                        </div>
+                        <!-- HSK 6 - Deep Rose -->
+                        <div onclick="openModal('tuongtac_11_hsk6')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-center text-center group h-36 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-1 one-bg-6"></div>
+                            <div class="w-10 h-10 rounded-full bg-rose-50 text-one-6 flex items-center justify-center mb-2 font-bold text-lg border border-rose-100">6</div>
+                            <div class="text-xl font-bold text-gray-700 mb-1 group-hover:text-rose-700 transition-colors">HSK 6</div>
+                            <span class="text-xs text-gray-400">1-1</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. BÀI TẬP NÂNG CAO -->
+            <section id="section-nang-cao" class="mb-12 fade-in-up" style="animation-delay: 0.5s;">
+                <div class="flex items-center mb-6">
+                    <div class="w-1.5 h-8 bg-gray-700 rounded-full mr-4"></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">BÀI TẬP NÂNG CAO</h2>
+                        <p class="text-sm text-gray-500">Thử thách chuyên sâu (Advanced)</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div onclick="openModal('nangcao_hsk1')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-between h-48 group border-t-4 border-emerald-500 relative">
+                        <span class="absolute top-2 right-2 text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">PRO</span>
+                        <div class="mt-4 text-3xl font-black text-gray-200 group-hover:text-emerald-500 transition-colors">1</div>
+                        <div class="text-center mb-4">
+                            <span class="block font-bold text-gray-800 text-sm">HSK 1</span>
+                            <span class="text-xs text-gray-400">Nâng cao</span>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal('nangcao_hsk2')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-between h-48 group border-t-4 border-sky-500 relative">
+                        <span class="absolute top-2 right-2 text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">PRO</span>
+                        <div class="mt-4 text-3xl font-black text-gray-200 group-hover:text-sky-500 transition-colors">2</div>
+                        <div class="text-center mb-4">
+                            <span class="block font-bold text-gray-800 text-sm">HSK 2</span>
+                            <span class="text-xs text-gray-400">Nâng cao</span>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal('nangcao_hsk3')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-between h-48 group border-t-4 border-violet-500 relative">
+                        <span class="absolute top-2 right-2 text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">PRO</span>
+                        <div class="mt-4 text-3xl font-black text-gray-200 group-hover:text-violet-500 transition-colors">3</div>
+                        <div class="text-center mb-4">
+                            <span class="block font-bold text-gray-800 text-sm">HSK 3</span>
+                            <span class="text-xs text-gray-400">Nâng cao</span>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal('nangcao_hsk4')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-between h-48 group border-t-4 border-rose-500 relative">
+                        <span class="absolute top-2 right-2 text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">PRO</span>
+                        <div class="mt-4 text-3xl font-black text-gray-200 group-hover:text-rose-500 transition-colors">4</div>
+                        <div class="text-center mb-4">
+                            <span class="block font-bold text-gray-800 text-sm">HSK 4</span>
+                            <span class="text-xs text-gray-400">Nâng cao</span>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal('nangcao_hsk5')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-between h-48 group border-t-4 border-amber-500 relative">
+                        <span class="absolute top-2 right-2 text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">PRO</span>
+                        <div class="mt-4 text-3xl font-black text-gray-200 group-hover:text-amber-500 transition-colors">5</div>
+                        <div class="text-center mb-4">
+                            <span class="block font-bold text-gray-800 text-sm">HSK 5</span>
+                            <span class="text-xs text-gray-400">Nâng cao</span>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal('nangcao_hsk6')" class="glass-card hover-card-effect p-4 rounded-xl flex flex-col items-center justify-between h-48 group border-t-4 border-red-700 relative">
+                        <span class="absolute top-2 right-2 text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">PRO</span>
+                        <div class="mt-4 text-3xl font-black text-gray-200 group-hover:text-red-700 transition-colors">6</div>
+                        <div class="text-center mb-4">
+                            <span class="block font-bold text-gray-800 text-sm">HSK 6</span>
+                            <span class="text-xs text-gray-400">Nâng cao</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- [MỚI] 5. SECTION DỰ PHÒNG 1 (KHU VỰC MỞ RỘNG 1) -->
+            <section id="section-du-phong-1" class="mb-16 fade-in-up" style="animation-delay: 0.6s;">
+                <div class="flex items-center mb-6">
+                    <div class="w-1.5 h-8 bg-teal-500 rounded-full mr-4"></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">TÀI NGUYÊN MỞ RỘNG 1</h2>
+                        <p class="text-sm text-gray-500">Video, văn hóa và tài liệu tham khảo thêm</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Placeholder Item 1: VIDEO BÀI GIẢNG (ĐÃ THÊM KHÓA BẢO MẬT) -->
+                    <div onclick="handleVideoClick()" class="glass-card hover-card-effect p-6 rounded-2xl flex items-center group cursor-pointer relative">
+                         <!-- Icon Lock -->
+                        <div class="absolute top-2 right-2 text-gray-300">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                        </div>
+
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="font-bold text-gray-700 group-hover:text-teal-600 transition-colors">Video bài giảng</span>
+                    </div>
+                    <!-- Placeholder Item 2 -->
+                    <div onclick="openModal('duphong1_item2')" class="glass-card hover-card-effect p-6 rounded-2xl flex items-center group">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <span class="font-bold text-gray-700 group-hover:text-teal-600 transition-colors">Góc văn hóa</span>
+                    </div>
+                    <!-- Placeholder Item 3 -->
+                    <div onclick="openModal('duphong1_item3')" class="glass-card hover-card-effect p-6 rounded-2xl flex items-center group">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <span class="font-bold text-gray-700 group-hover:text-teal-600 transition-colors">Tài liệu khác</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- [MỚI] 6. SECTION DỰ PHÒNG 2 (KHU VỰC MỞ RỘNG 2) -->
+            <section id="section-du-phong-2" class="mb-12 fade-in-up" style="animation-delay: 0.7s;">
+                <div class="flex items-center mb-6">
+                    <div class="w-1.5 h-8 bg-indigo-500 rounded-full mr-4"></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">KHU VỰC MỞ RỘNG 2</h2>
+                        <p class="text-sm text-gray-500">Hoạt động ngoại khóa và tiện ích</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Placeholder Item 1 -->
+                    <div onclick="openModal('duphong2_item1')" class="glass-card hover-card-effect p-6 rounded-2xl flex flex-row items-center relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-100 rounded-full opacity-30 -mr-6 -mt-6 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-sm mr-6 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-1">Góc giải trí</h3>
+                            <p class="text-sm text-gray-500">Game và câu đố vui</p>
+                        </div>
+                    </div>
+                    <!-- Placeholder Item 2 -->
+                    <div onclick="openModal('duphong2_item2')" class="glass-card hover-card-effect p-6 rounded-2xl flex flex-row items-center relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-100 rounded-full opacity-30 -mr-6 -mt-6 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-sm mr-6 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-1">Thông báo chung</h3>
+                            <p class="text-sm text-gray-500">Tin tức từ trung tâm</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT (LOGIC & DỮ LIỆU) -->
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0UuBeAYAEUcmx81DU6S1MxpJBm_VOutbkBvTGzl__bV2FvEPAtllTcBpn0gizsWEa/exec";
+
+        // --- 1. LOGIC GIÁO VIÊN (Yêu cầu mã bắt đầu bằng "gv.") ---
+        async function unlockTeacherContent() {
+            const passInput = document.getElementById('teacherPass');
+            const pass = passInput.value.trim().toLowerCase(); // Chuyển về chữ thường để dễ so sánh
+            const btn = document.getElementById('btnUnlockTeacher');
+
+            if (!pass) {
+                alert('Vui lòng nhập mật khẩu!');
+                return;
+            }
+
+            // [LOGIC MỚI] Kiểm tra tiền tố "gv."
+            if (!pass.startsWith('gv.')) {
+                alert('Mã này không phải mã Giáo viên. Vui lòng nhập mã có định dạng gv.xxx');
+                passInput.value = '';
+                passInput.focus();
+                return;
+            }
+
+            // Hiệu ứng Loading
+            const originalText = btn.innerText;
+            btn.innerText = 'Đang kiểm tra...';
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                // Gọi tới AppScript để kiểm tra
+                const response = await fetch(`${SCRIPT_URL}?code=${encodeURIComponent(pass)}`, { method: 'GET', redirect: 'follow' });
+                const textResult = await response.text();
+                
+                let data; 
+                try { data = JSON.parse(textResult); } 
+                catch (e) { throw new Error("Lỗi dữ liệu server"); }
+
+                if (data.valid === true) {
+                    document.getElementById('teacher-locked').classList.add('hidden');
+                    document.getElementById('teacher-unlocked').classList.remove('hidden');
+                    document.getElementById('teacher-unlocked').classList.add('fade-in-up');
+                    passInput.value = '';
+                } else {
+                    alert('Mã không đúng hoặc chưa được kích hoạt!');
+                    passInput.value = '';
+                    passInput.focus();
+                }
+            } catch (error) {
+                console.error("Lỗi xác thực:", error);
+                alert("Lỗi kết nối đến máy chủ xác thực. Vui lòng thử lại.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        }
+
+        function lockTeacherContent() {
+             document.getElementById('teacher-unlocked').classList.add('hidden');
+             document.getElementById('teacher-locked').classList.remove('hidden');
+             document.getElementById('teacherPass').value = '';
+        }
+
+        // --- 2. LOGIC VIDEO (Yêu cầu mã bắt đầu bằng "vid.") ---
+        function handleVideoClick() {
+            if (sessionStorage.getItem('videoUnlocked') === 'true') {
+                openModal('duphong1_item1');
+            } else {
+                document.getElementById('videoSecurityModal').classList.remove('hidden');
+                document.getElementById('videoPassInput').focus();
+            }
+        }
+
+        function closeVideoModal(event) {
+             if (event.target.id === 'videoSecurityModal') {
+                document.getElementById('videoSecurityModal').classList.add('hidden');
+             }
+        }
+        
+        function closeVideoModalDirect() {
+            document.getElementById('videoSecurityModal').classList.add('hidden');
+        }
+
+        async function unlockVideoContent() {
+            const passInput = document.getElementById('videoPassInput');
+            const pass = passInput.value.trim().toLowerCase();
+            const btn = document.getElementById('btnUnlockVideo');
+
+            if (!pass) {
+                alert('Vui lòng nhập mã truy cập video!');
+                return;
+            }
+
+            // [LOGIC MỚI] Kiểm tra tiền tố "vid."
+            if (!pass.startsWith('vid.')) {
+                alert('Mã này không phải mã Video. Vui lòng nhập mã có định dạng vid.xxx');
+                passInput.value = '';
+                passInput.focus();
+                return;
+            }
+
+            const originalText = btn.innerText;
+            btn.innerText = 'Đang xác thực...';
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?code=${encodeURIComponent(pass)}`, { method: 'GET', redirect: 'follow' });
+                const textResult = await response.text();
+                
+                let data; 
+                try { data = JSON.parse(textResult); } 
+                catch (e) { throw new Error("Lỗi dữ liệu server"); }
+
+                if (data.valid === true) {
+                    sessionStorage.setItem('videoUnlocked', 'true');
+                    document.getElementById('videoSecurityModal').classList.add('hidden');
+                    passInput.value = '';
+                    openModal('duphong1_item1');
+                } else {
+                    alert('Mã không tồn tại hoặc chưa kích hoạt!');
+                    passInput.value = '';
+                    passInput.focus();
+                }
+            } catch (error) {
+                console.error("Lỗi xác thực:", error);
+                alert("Lỗi kết nối. Vui lòng thử lại.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        }
+
+
+        // --- CẤU HÌNH DỮ LIỆU BÀI TẬP (GIỮ NGUYÊN) ---
+        const resourceData = {
+            "btvn_hsk1": { title: "Bài tập về nhà - HSK 1", subtitle: "Các bài luyện tập cơ bản cho HSK 1", links: [{ name: "Bài 1: Xin chào (你好)", url: "https://example.com/hsk1/bai1" }, { name: "Bài 2: Cảm ơn (谢谢)", url: "https://example.com/hsk1/bai2" }, { name: "Bài 3: Tên bạn là gì?", url: "https://example.com/hsk1/bai3" }] },
+            "btvn_hsk2": { title: "Bài tập về nhà - HSK 2", subtitle: "Luyện tập sơ cấp 2", links: [{ name: "Bài 1: Ngày tháng năm", url: "https://example.com/hsk2/bai1" }, { name: "Bài 2: Gia đình", url: "https://example.com/hsk2/bai2" }] },
+            "btvn_hsk3": { title: "Bài tập về nhà - HSK 3", subtitle: "Luyện tập trung cấp 1", links: [{ name: "Bài 1: Cuối tuần", url: "#" }, { name: "Bài 2: Sở thích", url: "#" }] },
+            "btvn_hsk4": { title: "Bài tập về nhà - HSK 4", subtitle: "Luyện tập trung cấp 2", links: [{ name: "Bài 1: Công việc", url: "#" }, { name: "Bài 2: Du lịch", url: "#" }] },
+            "btvn_hsk5": { title: "Bài tập về nhà - HSK 5", subtitle: "Luyện tập cao cấp 1", links: [{ name: "Bài 1: Kinh tế", url: "#" }] },
+            "btvn_hsk6": { title: "Bài tập về nhà - HSK 6", subtitle: "Luyện tập cao cấp 2", links: [{ name: "Bài 1: Văn hóa", url: "#" }] },
+            "tuongtac_nhom_hsk1": { title: "Tương tác Nhóm - HSK 1", subtitle: "Hoạt động nhóm Sơ cấp 1", links: [{ name: "Đếm số", url: "https://hanailab.github.io/tuongtachsk1/demso" }] },
+            "tuongtac_nhom_hsk2": { title: "Tương tác Nhóm - HSK 2", subtitle: "Hoạt động nhóm Sơ cấp 2", links: [{ name: "Thảo luận: Mua sắm", url: "#" }] },
+            "tuongtac_nhom_hsk3": { title: "Tương tác Nhóm - HSK 3", subtitle: "Hoạt động nhóm Trung cấp 1", links: [{ name: "Dự án: Kế hoạch cuối tuần", url: "#" }] },
+            "tuongtac_nhom_hsk4": { title: "Tương tác Nhóm - HSK 4", subtitle: "Hoạt động nhóm Trung cấp 2", links: [{ name: "Tranh luận: Lợi ích internet", url: "#" }] },
+            "tuongtac_nhom_hsk5": { title: "Tương tác Nhóm - HSK 5", subtitle: "Hoạt động nhóm Cao cấp 1", links: [{ name: "Thuyết trình: Văn hóa doanh nghiệp", url: "#" }] },
+            "tuongtac_nhom_hsk6": { title: "Tương tác Nhóm - HSK 6", subtitle: "Hoạt động nhóm Cao cấp 2", links: [{ name: "Phân tích tin tức", url: "#" }] },
+            "tuongtac_11_hsk1": { title: "Tương tác 1-1 - HSK 1", subtitle: "Luyện tập cá nhân Sơ cấp 1", links: [{ name: "Luyện phát âm cơ bản", url: "#" }] },
+            "tuongtac_11_hsk2": { title: "Tương tác 1-1 - HSK 2", subtitle: "Luyện tập cá nhân Sơ cấp 2", links: [{ name: "Hội thoại: Đi khám bệnh", url: "#" }] },
+            "tuongtac_11_hsk3": { title: "Tương tác 1-1 - HSK 3", subtitle: "Luyện tập cá nhân Trung cấp 1", links: [{ name: "Phỏng vấn xin việc giả định", url: "#" }] },
+            "tuongtac_11_hsk4": { title: "Tương tác 1-1 - HSK 4", subtitle: "Luyện tập cá nhân Trung cấp 2", links: [{ name: "Sửa bài viết luận", url: "#" }] },
+            "tuongtac_11_hsk5": { title: "Tương tác 1-1 - HSK 5", subtitle: "Luyện tập cá nhân Cao cấp 1", links: [{ name: "Phản biện xã hội", url: "#" }] },
+            "tuongtac_11_hsk6": { title: "Tương tác 1-1 - HSK 6", subtitle: "Luyện tập cá nhân Cao cấp 2", links: [{ name: "Dịch thuật chuyên sâu", url: "#" }] },
+            "nangcao_hsk1": { title: "Nâng cao - HSK 1 Pro", subtitle: "Thử thách khó cho trình độ 1", links: [{ name: "Thử thách nghe hiểu nhanh", url: "#" }, { name: "Dịch câu phức", url: "#" }] },
+            "nangcao_hsk2": { title: "Nâng cao - HSK 2 Pro", subtitle: "Thử thách khó cho trình độ 2", links: [{ name: "Bài đọc hiểu mở rộng", url: "#" }] },
+            "nangcao_hsk3": { title: "Nâng cao - HSK 3 Pro", subtitle: "Thử thách khó cho trình độ 3", links: [{ name: "Bài tập tổng hợp", url: "#" }] },
+            "nangcao_hsk4": { title: "Nâng cao - HSK 4 Pro", subtitle: "Thử thách khó cho trình độ 4", links: [{ name: "Bài tập tổng hợp", url: "#" }] },
+            "nangcao_hsk5": { title: "Nâng cao - HSK 5 Pro", subtitle: "Thử thách khó cho trình độ 5", links: [{ name: "Bài tập tổng hợp", url: "#" }] },
+            "nangcao_hsk6": { title: "Nâng cao - HSK 6 Pro", subtitle: "Thử thách khó cho trình độ 6", links: [{ name: "Bài tập tổng hợp", url: "#" }] },
+            "duphong1_item1": { title: "Video Bài Giảng (Dự phòng 1)", subtitle: "Danh sách video bổ trợ", links: [{ name: "Video giới thiệu", url: "#" }] },
+            "duphong1_item2": { title: "Góc Văn Hóa (Dự phòng 1)", subtitle: "Tìm hiểu văn hóa Trung Hoa", links: [{ name: "Bài viết về Tết Nguyên Đán", url: "#" }] },
+            "duphong1_item3": { title: "Tài liệu khác (Dự phòng 1)", subtitle: "Các file PDF và tài liệu tải về", links: [] },
+            "duphong2_item1": { title: "Góc giải trí (Dự phòng 2)", subtitle: "Game và câu đố", links: [{ name: "Game từ vựng HSK 1", url: "#" }] },
+            "duphong2_item2": { title: "Thông báo chung (Dự phòng 2)", subtitle: "Tin tức mới nhất", links: [] }
+        };
+
+        function openModal(key) {
+            const data = resourceData[key];
+            if (!data) return;
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle || "Danh sách bài tập";
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '';
+            if (data.links && data.links.length > 0) {
+                data.links.forEach(link => {
+                    const a = document.createElement('a'); a.href = link.url; a.target = "_blank";
+                    a.className = "flex items-center justify-between p-4 rounded-xl border border-gray-100 bg-gray-50 hover:bg-white hover:border-blue-200 hover:shadow-md transition-all group";
+                    a.innerHTML = `<span class="font-medium text-gray-700 group-hover:text-blue-700">${link.name}</span><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>`;
+                    body.appendChild(a);
+                });
+            } else { body.innerHTML = '<p class="text-center text-gray-400 italic py-4">Chưa có bài tập nào được cập nhật.</p>'; }
+            const modal = document.getElementById('linkModal'); modal.classList.remove('hidden');
+        }
+
+        function closeModal(event) { if (event.target.id === 'linkModal') { document.getElementById('linkModal').classList.add('hidden'); } }
+        function closeModalDirect() { document.getElementById('linkModal').classList.add('hidden'); }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const storedCode = localStorage.getItem('ddkTeacherCode'); 
+            if (storedCode) { verifySession(storedCode); } else { hideLoader(); showLoginScreen(); }
+        });
+
+        async function verifySession(code) {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?code=${encodeURIComponent(code)}`, { method: 'GET', redirect: 'follow' });
+                const textResult = await response.text();
+                let data; try { data = JSON.parse(textResult); } catch (e) { throw new Error("Lỗi dữ liệu server"); }
+                if (data.valid === true) { hideLoader(); showMainContent(); } else { alert("Phiên đăng nhập đã hết hạn hoặc mã truy cập đã bị thay đổi. Vui lòng đăng nhập lại."); logout(); }
+            } catch (error) { console.error("Lỗi xác thực:", error); alert("Không thể xác thực bảo mật. Vui lòng kiểm tra kết nối internet."); logout(); }
+        }
+
+        function handleKeyPress(event) { if (event.key === 'Enter') handleManualLogin(); }
+
+        async function handleManualLogin() {
+            const inputEl = document.getElementById('code'); const code = inputEl.value.trim(); 
+            const message = document.getElementById('message'); const loginBtn = document.getElementById('loginBtn');
+            if (!code) { showMessage('Vui lòng nhập mã truy cập!', 'error'); return; }
+            loginBtn.innerHTML = 'ĐANG KIỂM TRA...'; loginBtn.disabled = true; message.classList.add('hidden'); 
+            try {
+                const response = await fetch(`${SCRIPT_URL}?code=${encodeURIComponent(code)}`, { method: 'GET', redirect: 'follow' });
+                const textResult = await response.text();
+                let data; try { data = JSON.parse(textResult); } catch (e) { throw new Error("Lỗi kết nối."); }
+                if (data.valid === true) {
+                    showMessage(data.message || 'Thành công!', 'success'); localStorage.setItem('ddkTeacherCode', code);
+                    setTimeout(() => { showMainContent(); document.getElementById('loginSection').classList.add('hidden'); }, 1000);
+                } else { showMessage(data.message || 'Sai mã!', 'error'); }
+            } catch (error) { showMessage('Lỗi kết nối server', 'error'); } finally { loginBtn.innerHTML = 'ĐĂNG NHẬP'; loginBtn.disabled = false; }
+        }
+
+        function showMessage(text, type) {
+            const message = document.getElementById('message'); message.textContent = text; message.classList.remove('hidden');
+            message.className = type === 'success' ? "text-center font-medium text-sm mt-4 bg-green-50 text-green-700 py-2 rounded-lg border border-green-200" : "text-center font-medium text-sm mt-4 bg-red-50 text-red-700 py-2 rounded-lg border border-red-200";
+        }
+
+        function showMainContent() {
+            document.getElementById('loginSection').classList.add('hidden'); document.getElementById('mainContent').classList.remove('hidden');
+            document.querySelectorAll('a').forEach(link => { link.removeAttribute('rel'); link.setAttribute('rel', 'opener'); });
+        }
+
+        function showLoginScreen() { document.getElementById('loadingOverlay').style.display = 'none'; document.getElementById('loginSection').classList.remove('hidden'); document.getElementById('mainContent').classList.add('hidden'); }
+        function hideLoader() { const loader = document.getElementById('loadingOverlay'); loader.style.opacity = '0'; setTimeout(() => { loader.style.display = 'none'; }, 500); }
+        function logout() { localStorage.removeItem('ddkTeacherCode'); location.reload(); }
+    </script>
+</body>
+</html>

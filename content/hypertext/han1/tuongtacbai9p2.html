@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Đếm Số & Tiền Trung Quốc (万)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fff1f2; /* Rose-50 */
+            user-select: none;
+        }
+
+        .font-chinese {
+            font-family: 'Ma Shan Zheng', cursive; /* Calligraphy style for headers */
+        }
+
+        /* Money Styles - RMB Inspired Colors */
+        .money-note {
+            transition: all 0.2s ease;
+            box-shadow: 2px 4px 6px rgba(0,0,0,0.15);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid rgba(255,255,255,0.4);
+            padding: 0 1rem;
+        }
+
+        .money-note:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 4px 8px 12px rgba(0,0,0,0.25);
+            z-index: 10;
+        }
+
+        /* Gradient backgrounds loosely inspired by RMB series */
+        .note-10 { background: linear-gradient(135deg, #60a5fa, #2563eb); color: white; } /* 10 Yuan - Blue */
+        .note-100 { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; } /* 100 Yuan - Red */
+        .note-1000 { background: linear-gradient(135deg, #14b8a6, #0f766e); color: white; } /* Greenish/Teal for abstract */
+        .note-10000 { background: linear-gradient(135deg, #f59e0b, #b45309); color: white; border-color: #fde68a; } /* 1 Wan - Gold/Orange (Special) */
+        .note-100000 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; } /* Purple */
+        .note-1000000 { background: linear-gradient(135deg, #ec4899, #be185d); color: white; } /* Pink */
+        .note-10000000 { background: linear-gradient(135deg, #374151, #111827); color: white; } /* Dark Grey */
+
+        .border-wan {
+            border: 3px solid #fcd34d; /* Gold border for Wan units */
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(252, 211, 77, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(252, 211, 77, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(252, 211, 77, 0); }
+        }
+
+        /* Celebration Animation */
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .hanzi-lg {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+        
+        .pinyin {
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .hanviet {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        /* Sidebar Money Layout */
+        .money-label-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* Dropped money styles */
+        .dropped-money {
+            width: 140px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            animation: dropIn 0.3s ease-out forwards;
+        }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-20px) rotate(0deg); }
+            to { opacity: 1; } /* Rotation set inline via JS */
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-red-700 text-white shadow-lg p-3 flex justify-between items-center z-20">
+        <div class="flex items-center gap-3">
+            <div class="bg-yellow-400 text-red-800 p-2 rounded-lg text-2xl w-12 h-12 flex items-center justify-center font-chinese">¥</div>
+            <div>
+                <h1 class="text-xl font-bold">Lớp Tiếng Trung: Đếm Tiền (万)</h1>
+                <p class="text-xs text-red-100 opacity-90">Học đếm đơn vị Vạn - Ức</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="switchMode('learn')" id="btn-learn" class="px-4 py-2 rounded-full font-bold transition-colors bg-yellow-400 text-red-800 border-2 border-yellow-300 shadow-sm">
+                <i class="fas fa-book-open mr-2"></i>Lý Thuyết
+            </button>
+            <button onclick="switchMode('practice')" id="btn-practice" class="px-4 py-2 rounded-full font-bold transition-colors bg-red-800 text-white border border-red-600 hover:bg-red-900">
+                <i class="fas fa-gamepad mr-2"></i>Thực Hành
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-hidden relative flex">
+        
+        <!-- Sidebar (Wallet) -->
+        <aside class="w-1/3 md:w-1/4 bg-red-50 border-r border-red-100 p-4 overflow-y-auto flex flex-col gap-4 shadow-inner z-10 custom-scrollbar">
+            <h3 class="font-bold text-red-800 text-center uppercase text-sm tracking-wider mb-2 border-b-2 border-red-200 pb-2">Ngân Khố (Kho Tiền)</h3>
+            <div id="money-palette" class="w-full flex flex-col gap-3 pb-8">
+                <!-- Generated by JS -->
+            </div>
+        </aside>
+
+        <!-- Workspace -->
+        <section class="flex-1 bg-white relative flex flex-col">
+            
+            <!-- MODE: LEARNING (Lý thuyết) -->
+            <div id="learn-mode" class="absolute inset-0 p-4 flex flex-col items-center justify-center transition-all duration-300">
+                
+                <div class="bg-white border-2 border-red-100 p-6 rounded-3xl shadow-xl max-w-3xl w-full text-center relative overflow-hidden">
+                    <!-- Background Decoration -->
+                    <div class="absolute top-0 right-0 opacity-5 text-9xl pointer-events-none font-chinese text-red-600">钱</div>
+
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-center gap-2">
+                        <span>Quy tắc 4 số 0</span>
+                        <span class="bg-red-100 text-red-600 px-3 py-1 rounded text-sm">四位分级</span>
+                    </h2>
+                    
+                    <!-- Interactive Display -->
+                    <div class="flex items-center justify-center gap-4 md:gap-8 mb-8">
+                        <button onclick="changeLearnIndex(-1)" class="w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition flex items-center justify-center shadow"><i class="fas fa-chevron-left"></i></button>
+                        
+                        <div id="learn-card" class="relative w-80 h-48 md:w-96 md:h-56 rounded-xl shadow-2xl transition-all duration-500 transform flex flex-col items-center justify-center text-white p-4">
+                            <!-- Content injected by JS -->
+                        </div>
+
+                        <button onclick="changeLearnIndex(1)" class="w-12 h-12 rounded-full bg-red-100 hover:bg-red-200 text-red-600 transition flex items-center justify-center shadow"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+
+                    <!-- Explanation Text -->
+                    <div class="bg-red-50 p-5 rounded-xl border border-red-100 text-left">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-lightbulb text-yellow-500 text-xl mt-1"></i>
+                            <div>
+                                <h3 class="font-bold text-red-800 text-lg mb-1" id="learn-viet-label"></h3>
+                                <p id="learn-desc" class="text-gray-700"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODE: PRACTICE (Thực hành) -->
+            <div id="practice-mode" class="absolute inset-0 flex flex-col hidden opacity-0 transition-opacity duration-300 bg-red-50/30">
+                <!-- Target Bar -->
+                <div class="bg-white p-4 shadow-sm flex justify-between items-center px-6 border-b border-gray-200">
+                    <div>
+                        <span class="text-xs text-gray-500 font-bold uppercase block">Mục tiêu (Target):</span>
+                        <div class="flex items-baseline gap-2">
+                            <span id="target-hanzi" class="text-3xl font-chinese text-red-600"></span>
+                            <span id="target-pinyin" class="text-sm text-gray-500 font-bold"></span>
+                        </div>
+                        <div id="target-number" class="text-xs text-gray-400"></div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500 font-bold uppercase block">Đang có (Current):</span>
+                        <span id="current-amount-display" class="text-2xl font-bold text-blue-600">0</span>
+                        <span class="text-sm text-gray-400">¥</span>
+                    </div>
+                </div>
+
+                <!-- Drop Zone -->
+                <div id="drop-zone" class="flex-1 p-6 overflow-y-auto flex content-start flex-wrap gap-4" onclick="clickWorkspace()">
+                    <div id="empty-state" class="w-full h-full flex items-center justify-center text-gray-300 flex-col pointer-events-none">
+                        <i class="fas fa-hand-holding-usd text-6xl mb-4 opacity-20"></i>
+                        <p class="text-lg font-chinese">请把钱放在这里</p>
+                        <p class="text-sm">Hãy chọn tiền ở cột trái thả vào đây</p>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="bg-white p-4 border-t border-gray-200 flex justify-between items-center">
+                    <button onclick="resetPractice()" class="px-4 py-2 text-gray-500 hover:text-red-500 font-bold text-sm">
+                        <i class="fas fa-trash-alt mr-1"></i> Làm lại
+                    </button>
+                    
+                    <div id="feedback-msg" class="font-bold text-lg px-4 text-center"></div>
+                    
+                    <button onclick="checkAnswer()" class="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold shadow-lg transform active:scale-95 transition flex items-center gap-2">
+                        <span>Kiểm tra</span> <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl animate-[popIn_0.3s_ease-out]">
+            <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 text-yellow-500 text-4xl border-4 border-yellow-200">
+                <i class="fas fa-thumbs-up"></i>
+            </div>
+            <h2 class="text-3xl font-chinese text-red-600 mb-1">太棒了!</h2>
+            <p class="text-lg font-bold text-gray-800 mb-2">Tài bàng le! (Giỏi quá)</p>
+            <p class="text-gray-500 text-sm mb-6">Em đã đếm đúng số tiền yêu cầu.</p>
+            <button onclick="nextLevel()" class="w-full py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg">
+                Câu tiếp theo <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        // Chinese Counting System Logic
+        const denominations = [
+            { 
+                value: 10, 
+                hanzi: "十", pinyin: "Shí", hanviet: "Thập", 
+                class: "note-10", 
+                desc: "1 số 0. Tương đương 10 đồng. Trong tiếng Trung đọc là 'Shí'." 
+            },
+            { 
+                value: 100, 
+                hanzi: "一百", pinyin: "Yì Bǎi", hanviet: "Nhất Bách", 
+                class: "note-100", 
+                desc: "2 số 0. Đọc là 'Bǎi'. Lưu ý màu đỏ đặc trưng của tờ 100 Tệ." 
+            },
+            { 
+                value: 1000, 
+                hanzi: "一千", pinyin: "Yì Qiān", hanviet: "Nhất Thiên", 
+                class: "note-1000", 
+                desc: "3 số 0. Đọc là 'Qiān'. Giống hệ đếm phương Tây ở đây." 
+            },
+            { 
+                value: 10000, 
+                hanzi: "一万", pinyin: "Yí Wàn", hanviet: "Nhất Vạn", 
+                class: "note-10000", isMilestone: true,
+                desc: "<b>4 số 0. Đây là điểm khác biệt lớn nhất!</b><br>Người Trung Quốc bắt đầu nhóm 4 số 0 lại thành 1 Vạn. <br>Không đọc là 'Mười Nghìn', phải đọc là 'Một Vạn'." 
+            },
+            { 
+                value: 100000, 
+                hanzi: "十万", pinyin: "Shí Wàn", hanviet: "Thập Vạn", 
+                class: "note-100000", 
+                desc: "5 số 0. <br>Việt Nam: 100 Nghìn. <br>Trung Quốc: <b>10 cái Vạn</b> (10 x 10,000). Đọc là 'Shí Wàn'." 
+            },
+            { 
+                value: 1000000, 
+                hanzi: "一百万", pinyin: "Yì Bǎi Wàn", hanviet: "Nhất Bách Vạn", 
+                class: "note-1000000", 
+                desc: "6 số 0. <br>Việt Nam: 1 Triệu. <br>Trung Quốc: <b>100 cái Vạn</b> (100 x 10,000). Đọc là 'Bǎi Wàn'." 
+            },
+            { 
+                value: 10000000, 
+                hanzi: "一千万", pinyin: "Yì Qiān Wàn", hanviet: "Nhất Thiên Vạn", 
+                class: "note-10000000", 
+                desc: "7 số 0. <br>Việt Nam: 10 Triệu. <br>Trung Quốc: <b>1.000 cái Vạn</b> (1000 x 10,000). Đọc là 'Qiān Wàn'." 
+            }
+        ];
+
+        let state = {
+            mode: 'learn',
+            learnIndex: 3, // Start at 10,000 (Wan) to highlight lesson
+            currentTotal: 0,
+            targetTotal: 0
+        };
+
+        // --- CORE FUNCTIONS ---
+
+        function init() {
+            renderSidebar();
+            updateLearnCard();
+        }
+
+        function switchMode(mode) {
+            state.mode = mode;
+            
+            // UI Toggles
+            document.getElementById('learn-mode').classList.toggle('hidden', mode !== 'learn');
+            document.getElementById('learn-mode').classList.toggle('opacity-0', mode !== 'learn');
+            
+            const practiceDiv = document.getElementById('practice-mode');
+            if (mode === 'practice') {
+                practiceDiv.classList.remove('hidden');
+                setTimeout(() => practiceDiv.classList.remove('opacity-0'), 50);
+                document.getElementById('btn-practice').className = "px-4 py-2 rounded-full font-bold transition-colors bg-yellow-400 text-red-800 border-2 border-yellow-300 shadow-sm";
+                document.getElementById('btn-learn').className = "px-4 py-2 rounded-full font-bold transition-colors bg-red-800 text-white border border-red-600 hover:bg-red-900";
+                startLevel();
+            } else {
+                practiceDiv.classList.add('hidden', 'opacity-0');
+                document.getElementById('btn-learn').className = "px-4 py-2 rounded-full font-bold transition-colors bg-yellow-400 text-red-800 border-2 border-yellow-300 shadow-sm";
+                document.getElementById('btn-practice').className = "px-4 py-2 rounded-full font-bold transition-colors bg-red-800 text-white border border-red-600 hover:bg-red-900";
+            }
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('de-DE').format(num); // Use dots for thousands
+        }
+
+        // --- SIDEBAR ---
+        function renderSidebar() {
+            const container = document.getElementById('money-palette');
+            container.innerHTML = '';
+
+            denominations.forEach(d => {
+                const btn = document.createElement('div');
+                btn.className = `money-note ${d.class} w-full h-20 rounded-lg mb-2 shadow-sm select-none ${d.isMilestone ? 'border-wan' : ''}`;
+                
+                // Content Layout
+                btn.innerHTML = `
+                    <div class="money-label-group text-left">
+                        <span class="text-xl font-bold font-chinese">${d.hanzi}</span>
+                        <span class="text-xs uppercase opacity-80">${d.pinyin}</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold">${formatNumber(d.value)}</div>
+                        <div class="text-[10px] opacity-75">${d.hanviet}</div>
+                    </div>
+                `;
+                
+                btn.onclick = () => addMoney(d);
+                container.appendChild(btn);
+            });
+        }
+
+        // --- LEARN MODE ---
+        function changeLearnIndex(delta) {
+            const newIndex = state.learnIndex + delta;
+            if (newIndex >= 0 && newIndex < denominations.length) {
+                state.learnIndex = newIndex;
+                updateLearnCard();
+            }
+        }
+
+        function updateLearnCard() {
+            const d = denominations[state.learnIndex];
+            const card = document.getElementById('learn-card');
+            
+            // Update Visuals
+            card.className = `relative w-80 h-48 md:w-96 md:h-56 rounded-xl shadow-2xl transition-all duration-300 transform flex flex-col items-center justify-center text-white p-4 ${d.class}`;
+            
+            // Animation reset
+            card.classList.remove('animate-pulse');
+            void card.offsetWidth;
+            if(d.isMilestone) card.classList.add('animate-pulse');
+
+            card.innerHTML = `
+                <div class="absolute top-2 right-4 text-xs opacity-60">Nhân dân tệ (RMB)</div>
+                <div class="text-5xl font-chinese mb-1">${d.hanzi}</div>
+                <div class="text-xl font-bold mb-4 opacity-90">${d.pinyin}</div>
+                <div class="bg-black bg-opacity-20 px-4 py-1 rounded-full text-2xl font-mono tracking-widest">
+                    ¥ ${formatNumber(d.value)}
+                </div>
+            `;
+
+            document.getElementById('learn-viet-label').innerText = `${d.hanviet} (${formatNumber(d.value)})`;
+            document.getElementById('learn-desc').innerHTML = d.desc;
+        }
+
+        // --- PRACTICE MODE ---
+        function addMoney(denom) {
+            if (state.mode !== 'practice') return;
+
+            state.currentTotal += denom.value;
+            updatePracticeDisplay();
+
+            // Visual Drop
+            const zone = document.getElementById('drop-zone');
+            document.getElementById('empty-state').style.display = 'none';
+
+            const el = document.createElement('div');
+            const rot = Math.random() * 10 - 5;
+            el.className = `dropped-money ${denom.class} shadow-md text-white select-none cursor-pointer hover:opacity-80 transition relative`;
+            el.style.transform = `rotate(${rot}deg)`;
+            
+            el.innerHTML = `
+                <span class="font-chinese text-2xl">${denom.hanzi}</span>
+                <span class="text-xs font-mono absolute bottom-1 right-2">${formatNumber(denom.value)}</span>
+            `;
+
+            el.onclick = function() {
+                this.style.transform = 'scale(0) rotate(180deg)';
+                this.style.opacity = '0';
+                setTimeout(() => this.remove(), 250);
+                state.currentTotal -= denom.value;
+                updatePracticeDisplay();
+                
+                if(zone.querySelectorAll('.dropped-money').length <= 1) { // checking before removal completes
+                    if(state.currentTotal <= 0) document.getElementById('empty-state').style.display = 'flex';
+                }
+            };
+
+            zone.appendChild(el);
+        }
+
+        function updatePracticeDisplay() {
+            document.getElementById('current-amount-display').innerText = formatNumber(state.currentTotal);
+            // Hint logic could go here
+        }
+
+        function resetPractice() {
+            state.currentTotal = 0;
+            const zone = document.getElementById('drop-zone');
+            const items = zone.querySelectorAll('.dropped-money');
+            items.forEach(i => i.remove());
+            document.getElementById('empty-state').style.display = 'flex';
+            document.getElementById('feedback-msg').innerHTML = '';
+            updatePracticeDisplay();
+        }
+
+        function startLevel() {
+            resetPractice();
+            // Generate a simple sum suitable for learning
+            // e.g., 2 Wan + 3 Qian
+            const count1 = Math.floor(Math.random() * 3) + 1;
+            const type1 = denominations[Math.floor(Math.random() * denominations.length)];
+            
+            state.targetTotal = count1 * type1.value;
+
+            // Optional: add a second component to make it harder (e.g. 1 Wan 5 Qian)
+            if (Math.random() > 0.5) {
+                const type2 = denominations[Math.floor(Math.random() * (denominations.indexOf(type1) || 1))]; // smaller denom
+                state.targetTotal += type2.value;
+            }
+
+            // Convert target to Chinese representation for the UI
+            // Simple display logic: Just show the numeric value + Pinyin hint
+            // In a real advanced app, we would parse number to Chinese text, but here we construct based on components? 
+            // Let's just use numeric display + generic label for now to test their counting math.
+            
+            // Better Approach: Convert the Number to basic Chinese Text (e.g. "Two Wan")
+            const displayChinese = convertToChineseSimple(state.targetTotal);
+            
+            document.getElementById('target-hanzi').innerText = displayChinese.hanzi;
+            document.getElementById('target-pinyin').innerText = displayChinese.pinyin;
+            document.getElementById('target-number').innerText = `(${formatNumber(state.targetTotal)})`;
+        }
+
+        // Very simplified number to Chinese text for this specific game subset
+        function convertToChineseSimple(num) {
+            // Find largest denomination that fits
+            // Since our generator is simple (mix of 2 types max), we build string manually
+            
+            // This is a mock function since full number-to-chinese is complex
+            // We reverse map based on our specific denominations for the game labels
+            
+            if (num === 0) return { hanzi: "零", pinyin: "Líng" };
+
+            // Check exact matches first
+            let exact = denominations.find(d => d.value === num);
+            if (exact) return { hanzi: "1 tờ " + exact.hanzi, pinyin: "Yí ge " + exact.pinyin };
+
+            // Construct string
+            let hanzi = "";
+            let pinyin = "";
+            
+            // Greedy logic
+            let temp = num;
+            
+            // Check for Wan
+            if (temp >= 10000) {
+                let wans = Math.floor(temp / 10000);
+                hanzi += wans + " 万 ";
+                pinyin += wans + " Wàn ";
+                temp %= 10000;
+            }
+            
+            if (temp > 0) {
+                // If we have remaining, it's < 10000
+                // Check for Qian? Or just display number
+                 hanzi += temp;
+                 pinyin += " ...";
+            }
+
+            // Since we want to teach reading, let's just show the numeric target clearly 
+            // and maybe the major Unit involved
+            let majorUnit = denominations.slice().reverse().find(d => num >= d.value);
+            return { 
+                hanzi: formatNumber(num), 
+                pinyin: `(Tổng cộng: ${formatNumber(num)} Tệ)` 
+            };
+        }
+
+        function checkAnswer() {
+            const fb = document.getElementById('feedback-msg');
+            const diff = state.currentTotal - state.targetTotal;
+
+            if (diff === 0) {
+                document.getElementById('success-modal').classList.remove('hidden');
+            } else if (diff < 0) {
+                fb.innerHTML = `<span class="text-orange-500"><i class="fas fa-arrow-up"></i> Thiếu ${formatNumber(Math.abs(diff))} nữa (Hải chà)</span>`;
+            } else {
+                fb.innerHTML = `<span class="text-red-600"><i class="fas fa-arrow-down"></i> Dư ${formatNumber(diff)} rồi (Tuô le)</span>`;
+            }
+        }
+
+        function nextLevel() {
+            document.getElementById('success-modal').classList.add('hidden');
+            startLevel();
+        }
+
+        init();
+    </script>
+</body>
+</html>

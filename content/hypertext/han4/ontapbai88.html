@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Tiếng Trung - Bài 15 & 20</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+            font-weight: 600;
+        }
+        .question-item {
+            border-left: 4px solid #e5e7eb;
+            transition: border-color 0.3s ease;
+        }
+        .question-item.correct {
+            border-left-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .question-item.incorrect {
+            border-left-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .feedback {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .feedback.correct {
+            color: #16a34a;
+        }
+        .feedback.incorrect {
+            color: #dc2626;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700">Bài Ôn Tập Tổng Hợp</h1>
+            <p class="text-slate-500 mt-2">Dựa trên nội dung bài "京剧我看得懂，但是听不懂" và "南辕北辙"</p>
+        </header>
+
+        <!-- Tabs Navigation -->
+        <div class="mb-8 border-b border-slate-200">
+            <nav class="flex space-x-4" aria-label="Tabs">
+                <button class="tab-btn active py-4 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-indigo-600 hover:border-indigo-300" data-tab="vocabulary">
+                    Từ Vựng
+                </button>
+                <button class="tab-btn py-4 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-indigo-600 hover:border-indigo-300" data-tab="grammar">
+                    Ngữ Pháp
+                </button>
+                <button class="tab-btn py-4 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-indigo-600 hover:border-indigo-300" data-tab="paragraph">
+                    Đoạn Văn
+                </button>
+                <button class="tab-btn py-4 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-indigo-600 hover:border-indigo-300" data-tab="reading">
+                    Bài Đọc
+                </button>
+            </nav>
+        </div>
+
+        <!-- Content Sections -->
+        <main>
+            <!-- Vocabulary Section -->
+            <section id="vocabulary" class="tab-content space-y-6">
+                <h2 class="text-2xl font-semibold text-slate-700">Phần 1: Từ vựng - Chọn từ điền vào chỗ trống</h2>
+                <div id="vocabulary-questions" class="space-y-4"></div>
+                <div class="flex space-x-4 mt-6">
+                    <button onclick="checkAnswers('vocabulary')" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition">Kiểm tra đáp án</button>
+                    <button onclick="resetSection('vocabulary')" class="bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300 transition">Làm lại</button>
+                </div>
+                <div id="vocabulary-score" class="mt-4 font-bold text-lg"></div>
+            </section>
+
+            <!-- Grammar Section -->
+            <section id="grammar" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-semibold text-slate-700">Phần 2: Ngữ pháp - Sửa câu sai</h2>
+                 <p class="text-sm text-slate-500">Viết lại câu đúng vào ô trống. Trọng tâm: Bổ ngữ khả năng.</p>
+                <div id="grammar-questions" class="space-y-4"></div>
+                <div class="flex space-x-4 mt-6">
+                    <button onclick="checkAnswers('grammar')" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition">Kiểm tra đáp án</button>
+                    <button onclick="resetSection('grammar')" class="bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300 transition">Làm lại</button>
+                </div>
+                 <div id="grammar-score" class="mt-4 font-bold text-lg"></div>
+            </section>
+
+            <!-- Paragraph Section -->
+            <section id="paragraph" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-semibold text-slate-700">Phần 3: Đoạn văn - Điền từ vào chỗ trống</h2>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <p class="text-slate-600 leading-relaxed">
+                        昨天我给山本打电话，(1) <input data-answer="约" type="text" class="inline-input"> 她晚上一起去看京剧。但是她说晚上有事，(2) <input data-answer="去不了" type="text" class="inline-input">。所以我们就 (3) <input data-answer="决定" type="text" class="inline-input"> 今天晚上去。我们是下午五点半出发的。正是上下班时间，我 (4) <input data-answer="担心" type="text" class="inline-input"> 买不到票，但是山本说，票好买，(5) <input data-answer="肯定" type="text" class="inline-input"> 买得到。到了剧场，前十排的票都 (6) <input data-answer="卖完" type="text" class="inline-input"> 了，没买到。这个剧场不大，(7) <input data-answer="估计" type="text" class="inline-input"> 坐不下一千人。我买了一张说明书，上面说的是一个古代 (8) <input data-answer="神话" type="text" class="inline-input"> 故事。说的是天上一个仙女，很 (9) <input data-answer="羡慕" type="text" class="inline-input"> 人间的生活，就 (10) <input data-answer="偷偷" type="text" class="inline-input"> 来到人间。
+                    </p>
+                </div>
+                 <style>.inline-input { width: 80px; border: 1px solid #ccc; border-radius: 4px; padding: 2px 4px; text-align: center; margin: 0 4px; }</style>
+                <div class="flex space-x-4 mt-6">
+                    <button onclick="checkParagraph()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition">Kiểm tra đáp án</button>
+                    <button onclick="resetSection('paragraph')" class="bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300 transition">Làm lại</button>
+                </div>
+                 <div id="paragraph-score" class="mt-4 font-bold text-lg"></div>
+            </section>
+
+            <!-- Reading Section -->
+            <section id="reading" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-semibold text-slate-700">Phần 4: Bài đọc - 南辕北辙</h2>
+                <div class="bg-white p-6 rounded-lg shadow space-y-4 text-slate-600 leading-relaxed">
+                    <h3 class="text-xl font-bold text-center text-indigo-700">南辕北辙</h3>
+                    <p>这是中国古代的一个故事。</p>
+                    <p>一个人想到南方的楚国去。他坐着马车，飞快地向北方跑去。路上有个人问他：“你要到哪儿去？”</p>
+                    <p>他说：“我要到楚国去。”</p>
+                    <p>那个人说：“你去楚国，怎么往北走呢？方向错了。”</p>
+                    <p>他说：“没关系，我的马跑得很快。”</p>
+                    <p>那个人说：“马跑得越快，离楚国不就越远了吗？”</p>
+                    <p>他说：“没关系，我带的钱很多。”</p>
+                    <p>那个人说：“你钱再多，方向不对，也到不了楚国呀！”</p>
+                    <p>那个人还想说什么，坐车的人不高兴了，说：“你别管了，我的车夫赶车的技术很好。”说完，他就让车夫赶着车，一直向北跑去了。</p>
+                </div>
+                <h3 class="text-xl font-semibold text-slate-700 pt-4">Trả lời câu hỏi:</h3>
+                <div id="reading-questions" class="space-y-4"></div>
+                <div class="flex space-x-4 mt-6">
+                    <button onclick="checkAnswers('reading')" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition">Kiểm tra đáp án</button>
+                    <button onclick="resetSection('reading')" class="bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300 transition">Làm lại</button>
+                </div>
+                <div id="reading-score" class="mt-4 font-bold text-lg"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- DATA FOR QUIZZES ---
+
+        const questions = {
+            vocabulary: [
+                { q: "我觉得京剧的武打动作很 ______。", options: ["精彩", "有趣", "热闹", "传统"], a: "精彩" },
+                { q: "京剧用各种 ______ 来表现人物的性格。", options: ["服装", "动作", "脸谱", "艺术"], a: "脸谱" },
+                { q: "京剧是中国的 ______ 艺术。", options: ["神话", "社会", "传统", "影响"], a: "传统" },
+                { q: "要把汉语学好，应该多 ______ 一些中国文化。", options: ["了解", "决定", "羡慕", "担心"], a: "了解" },
+                { q: "我受中文老师的 ______，也喜欢上京剧了。", options: ["内容", "性格", "影响", "地位"], a: "影响" },
+                { q: "路上人多车也多，我 ______ 买不到票。", options: ["担心", "估计", "肯定", "决定"], a: "担心" },
+                { q: "山本说，票好买，______ 买得到。", options: ["十分", "肯定", "偷偷", "只是"], a: "肯定" },
+                { q: "这个剧场不大，我 ______ 坐不下一千人。", options: ["羡慕", "约", "猜", "估计"], a: "估计" },
+                { q: "说明书上说的是一个古代 ______ 故事。", options: ["神话", "人物", "社会", "艺术"], a: "神话" },
+                { q: "仙女很 ______ 人间的生活。", options: ["了解", "羡慕", "表现", "担心"], a: "羡慕" },
+                { q: "京剧的 ______ 也很美，我想买一套。", options: ["服装", "脸谱", "动作", "演出"], a: "服装" }
+            ],
+            grammar: [
+                { q: "我把今天的作业做得完。", a: "今天的作业我做得完。" },
+                { q: "你把中文小说看得懂看不懂？", a: "中文小说你看得懂看不懂？" },
+                { q: "中文广播说得太快了，我不能听懂。", a: "中文广播说得太快了，我听不懂。" },
+                { q: "今天的作业太多了，我做到十点也不做完。", a: "今天的作业太多了，我做到十点也做不完。" },
+                { q: "因为买不了机票，今天我不能回去。", a: "因为买不到机票，今天我回不去。" },
+                { q: "这个包儿放得不下这么多书。", a: "这个包儿放不下这么多书。" },
+                { q: "那儿太危险，你去不了。", a: "那儿太危险，你不能去。" },
+                { q: "屋子里太黑，我不能看见。", a: "屋子里太黑，我看不见。" },
+                { q: "他腿摔伤了，自己不能走。", a: "他腿摔伤了，自己走不了。" },
+                { q: "这么多饺子，你不能吃完。", a: "这么多饺子，你吃不完。" }
+            ],
+            reading: [
+                { q: "坐车的人想去哪个国家？", options: ["秦国", "楚国", "韩国", "赵国"], a: "楚国" },
+                { q: "楚国在哪个方向？", options: ["东边", "西边", "南边", "北边"], a: "南边" },
+                { q: "坐车的人实际上往哪个方向走？", options: ["东边", "西边", "南边", "北边"], a: "北边" },
+                { q: "为什么他认为走错方向没关系？（第一个理由）", options: ["他的钱很多", "他的车夫技术好", "他的马跑得快", "他的车很漂亮"], a: "他的马跑得快" },
+                { q: "路人认为，马跑得越快会怎么样？", options: ["离楚国越近", "离楚国越远", "马会很累", "很快就能到"], a: "离楚国越远" },
+                { q: "坐车的人提出的第二个理由是什么？", options: ["他带了很多钱", "他的马是最好的", "他的车夫很有名", "他不怕迷路"], a: "他带了很多钱" },
+                { q: "坐车的人提出的第三个理由是什么？", options: ["他的车夫技术很好", "他的地图很准", "他认识路", "他喜欢往北走"], a: "他的车夫技术很好" },
+                { q: "坐车的人听了路人的话后是什么态度？", options: ["很高兴", "很感谢", "不高兴", "很害怕"], a: "不高兴" },
+                { q: "最后，坐车的人继续往哪个方向去了？", options: ["往南", "往东", "往西", "往北"], a: "往北" },
+                { q: "这个故事告诉我们什么道理？", options: ["有钱最重要", "有好马最重要", "方向比努力更重要", "车夫的技术最重要"], a: "方向比努力更重要" }
+            ]
+        };
+
+        // --- FUNCTIONS ---
+
+        function renderQuestions(section) {
+            const container = document.getElementById(`${section}-questions`);
+            if (!container) return;
+            container.innerHTML = '';
+            
+            questions[section].forEach((item, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-item bg-white p-4 rounded-lg shadow-sm';
+                questionDiv.id = `${section}-q-${index}`;
+
+                if (section === 'vocabulary' || section === 'reading') {
+                    let optionsHTML = item.options.map(opt => `
+                        <label class="flex items-center space-x-3 p-2 rounded-md hover:bg-slate-100 cursor-pointer">
+                            <input type="radio" name="${section}-q${index}" value="${opt}" class="form-radio h-4 w-4 text-indigo-600">
+                            <span class="text-slate-700">${opt}</span>
+                        </label>
+                    `).join('');
+
+                    questionDiv.innerHTML = `
+                        <p class="font-medium mb-3">${index + 1}. ${item.q}</p>
+                        <div class="space-y-2">${optionsHTML}</div>
+                        <div class="feedback mt-2 text-sm hidden"></div>
+                    `;
+                } else if (section === 'grammar') {
+                    questionDiv.innerHTML = `
+                        <p class="font-medium mb-2 text-red-600">${index + 1}. ${item.q}</p>
+                        <input type="text" placeholder="Viết lại câu đúng..." class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <div class="feedback mt-2 text-sm hidden"></div>
+                    `;
+                }
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswers(section) {
+            const questionsInSection = questions[section];
+            let score = 0;
+            
+            questionsInSection.forEach((item, index) => {
+                const qDiv = document.getElementById(`${section}-q-${index}`);
+                const feedbackDiv = qDiv.querySelector('.feedback');
+                let isCorrect = false;
+
+                if (section === 'vocabulary' || section === 'reading') {
+                    const selected = qDiv.querySelector(`input[name=${section}-q${index}]:checked`);
+                    if (selected) {
+                        if (selected.value === item.a) {
+                            isCorrect = true;
+                        }
+                        feedbackDiv.textContent = isCorrect ? `Chính xác!` : `Sai rồi. Đáp án đúng là: ${item.a}`;
+                    } else {
+                        feedbackDiv.textContent = `Bạn chưa chọn đáp án. Đáp án đúng là: ${item.a}`;
+                    }
+                } else if (section === 'grammar') {
+                    const userInput = qDiv.querySelector('input').value.trim().replace(/。/g, '.');
+                    const correctAnswer = item.a.replace(/。/g, '.');
+                    if (userInput.toLowerCase() === correctAnswer.toLowerCase()) {
+                        isCorrect = true;
+                    }
+                    feedbackDiv.textContent = isCorrect ? `Chính xác!` : `Sai rồi. Đáp án đúng là: ${item.a}`;
+                }
+
+                qDiv.classList.remove('correct', 'incorrect');
+                qDiv.classList.add(isCorrect ? 'correct' : 'incorrect');
+                feedbackDiv.classList.remove('correct', 'incorrect', 'hidden');
+                feedbackDiv.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                if (isCorrect) score++;
+            });
+
+            const scoreDiv = document.getElementById(`${section}-score`);
+            scoreDiv.textContent = `Kết quả: ${score} / ${questionsInSection.length}`;
+        }
+
+        function checkParagraph() {
+            const inputs = document.querySelectorAll('#paragraph .inline-input');
+            let score = 0;
+            inputs.forEach(input => {
+                const userAnswer = input.value.trim();
+                const correctAnswer = input.dataset.answer;
+                if (userAnswer === correctAnswer) {
+                    score++;
+                    input.style.borderColor = '#22c55e';
+                    input.style.backgroundColor = '#f0fdf4';
+                } else {
+                    input.style.borderColor = '#ef4444';
+                    input.style.backgroundColor = '#fef2f2';
+                }
+            });
+            const scoreDiv = document.getElementById('paragraph-score');
+            scoreDiv.textContent = `Kết quả: ${score} / ${inputs.length}`;
+        }
+
+        function resetSection(section) {
+            document.getElementById(`${section}-score`).textContent = '';
+            const questionsContainer = document.getElementById(section);
+            const questionItems = questionsContainer.querySelectorAll('.question-item, .inline-input');
+            
+            if (section === 'paragraph') {
+                 const inputs = document.querySelectorAll('#paragraph .inline-input');
+                 inputs.forEach(input => {
+                    input.value = '';
+                    input.style.borderColor = '#ccc';
+                    input.style.backgroundColor = 'white';
+                 });
+            } else {
+                const inputs = questionsContainer.querySelectorAll('input');
+                inputs.forEach(input => {
+                    if (input.type === 'radio') input.checked = false;
+                    if (input.type === 'text') input.value = '';
+                });
+            }
+            
+            const allItems = questionsContainer.querySelectorAll('.question-item');
+            allItems.forEach(item => {
+                item.classList.remove('correct', 'incorrect');
+                const feedback = item.querySelector('.feedback');
+                if (feedback) {
+                    feedback.classList.add('hidden');
+                    feedback.textContent = '';
+                }
+            });
+        }
+
+        // --- TABS LOGIC ---
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(item => item.classList.remove('active'));
+                tab.classList.add('active');
+
+                const target = tab.getAttribute('data-tab');
+                contents.forEach(content => {
+                    if (content.id === target) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // --- INITIAL RENDER ---
+        window.onload = () => {
+            renderQuestions('vocabulary');
+            renderQuestions('grammar');
+            renderQuestions('reading');
+        };
+    </script>
+</body>
+</html>

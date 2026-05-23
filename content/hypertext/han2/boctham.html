@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Rút Thăm May Mắn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        .ticket {
+            transition: all 0.3s ease-in-out;
+            border-style: dashed;
+        }
+        .ticket:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        #result-modal {
+            display: none; /* Hidden by default */
+            transition: opacity 0.3s ease-in-out;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            border-radius: 50%;
+            animation: fall 3s linear forwards;
+            pointer-events: none;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-200 to-cyan-200 min-h-screen flex items-center justify-center p-4">
+
+    <div id="main-container" class="text-center w-full max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4">Rút Thăm May Mắn</h1>
+        <p class="text-lg md:text-xl text-gray-600 mb-12">Hãy chọn thử vận may của bạn nhé!</p>
+
+        <!-- Ticket options -->
+        <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-12">
+            <!-- Ticket 1 -->
+            <div class="ticket bg-rose-100 border-2 border-rose-400 p-8 rounded-2xl w-72 h-48 flex flex-col justify-center items-center shadow-lg">
+                <h2 class="text-2xl font-bold text-rose-800">Lựa chọn 1</h2>
+                <p class="text-lg text-rose-600 mt-2">Gấp đôi bài tập về nhà</p>
+            </div>
+            <!-- Ticket 2 -->
+            <div class="ticket bg-emerald-100 border-2 border-emerald-400 p-8 rounded-2xl w-72 h-48 flex flex-col justify-center items-center shadow-lg">
+                <h2 class="text-2xl font-bold text-emerald-800">Lựa chọn 2</h2>
+                <p class="text-lg text-emerald-600 mt-2">Không có bài tập về nhà</p>
+            </div>
+        </div>
+
+        <!-- Draw button -->
+        <button id="draw-button" class="bg-blue-600 text-white font-bold text-2xl py-4 px-10 rounded-full shadow-xl hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+            Rút Thăm!
+        </button>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 text-center max-w-lg w-full transform scale-95" id="result-content">
+            <h2 id="result-title" class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-4">Chúc Mừng!</h2>
+            <p id="result-text" class="text-xl md:text-2xl text-gray-700 mb-8">Bạn đã rút được phiếu:</p>
+            <div class="bg-emerald-100 border-2 border-dashed border-emerald-400 p-6 rounded-2xl w-full">
+                <p class="text-2xl font-bold text-emerald-800">"Không có bài tập về nhà"</p>
+            </div>
+            <button id="close-button" class="mt-8 bg-gray-600 text-white font-bold text-lg py-2 px-8 rounded-full hover:bg-gray-700 transition">Tuyệt vời!</button>
+        </div>
+    </div>
+    
+    <canvas id="confetti-canvas" class="absolute top-0 left-0 w-full h-full pointer-events-none"></canvas>
+
+    <script>
+        const drawButton = document.getElementById('draw-button');
+        const resultModal = document.getElementById('result-modal');
+        const resultContent = document.getElementById('result-content');
+        const closeButton = document.getElementById('close-button');
+        const mainContainer = document.getElementById('main-container');
+
+        // Confetti logic
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const ctx = confettiCanvas.getContext('2d');
+        let particles = [];
+        const colors = ["#26ccff", "#a25afd", "#ff5e7e", "#88ff5a", "#fcff42", "#ffa62d", "#ff36ff"];
+
+        function resizeCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+
+        function createParticles() {
+            particles = [];
+            const particleCount = 200;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    radius: Math.random() * 5 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speed: Math.random() * 3 + 2,
+                    rotation: Math.random() * 360
+                });
+            }
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            particles.forEach(p => {
+                p.y += p.speed;
+                p.rotation += p.speed / 2;
+                if (p.y > confettiCanvas.height) {
+                    p.x = Math.random() * confettiCanvas.width;
+                    p.y = -20;
+                }
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.radius, -p.radius, p.radius * 2, p.radius * 2);
+                ctx.restore();
+            });
+
+            if (particles.length > 0) {
+                requestAnimationFrame(animateConfetti);
+            }
+        }
+        
+        // Event listener for the draw button
+        drawButton.addEventListener('click', () => {
+            // Add a loading/thinking state to the button
+            drawButton.textContent = 'Đang quay...';
+            drawButton.disabled = true;
+
+            // Simulate the drawing process
+            setTimeout(() => {
+                // Show the result modal with an animation
+                mainContainer.style.filter = 'blur(8px)';
+                resultModal.style.display = 'flex';
+                resultModal.style.opacity = '0';
+                setTimeout(() => {
+                    resultModal.style.opacity = '1';
+                    resultContent.style.transform = 'scale(1)';
+                }, 10);
+                
+                // Trigger confetti
+                resizeCanvas();
+                createParticles();
+                animateConfetti();
+
+            }, 1500); // Wait 1.5 seconds before showing the result
+        });
+
+        // Event listener for the close button
+        closeButton.addEventListener('click', () => {
+            resultModal.style.opacity = '0';
+            resultContent.style.transform = 'scale(0.95)';
+            mainContainer.style.filter = 'none';
+
+            setTimeout(() => {
+                 resultModal.style.display = 'none';
+                 // Reset button
+                 drawButton.textContent = 'Rút Thăm!';
+                 drawButton.disabled = false;
+                 // Stop confetti animation
+                 particles = [];
+                 ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }, 300);
+        });
+
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>

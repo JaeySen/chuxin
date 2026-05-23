@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Ôn Tập Tiếng Trung</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items to the top */
+            min-height: 100vh;
+        }
+
+        #game-container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1, h2 {
+            color: #0056b3; /* Darker blue */
+            margin-bottom: 15px;
+        }
+
+        #welcome-screen ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            display: inline-block; /* Center the list block */
+            margin-bottom: 20px;
+        }
+
+        #welcome-screen li {
+            margin-bottom: 8px;
+        }
+
+        #welcome-screen b {
+            color: #007bff; /* Brighter blue */
+        }
+
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #hint-button {
+            background-color: #ffc107; /* Yellow for hint */
+            color: #333;
+        }
+
+        #hint-button:hover {
+            background-color: #e0a800;
+        }
+
+        #restart-button {
+            background-color: #28a745; /* Green for restart */
+        }
+        #restart-button:hover {
+            background-color: #218838;
+        }
+
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 10px 0;
+            width: calc(100% - 22px); /* Adjust width considering padding */
+            font-size: 1em;
+        }
+
+        #vocab-image {
+            max-width: 250px; /* Limit image size */
+            max-height: 200px;
+            height: auto;
+            margin: 15px auto; /* Center image */
+            display: block;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+
+        #pinyin-display, #scrambled-sentence {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        #scrambled-sentence {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace; /* Makes slashes clearer */
+        }
+
+
+        p#feedback-part1, p#feedback-part2 {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        p#attempts-left {
+            color: #dc3545; /* Red for attempts */
+            font-size: 0.9em;
+        }
+
+        p#hint-display {
+            margin-top: 10px;
+            color: #17a2b8; /* Teal for hint text */
+            background-color: #e2f6f8;
+            padding: 8px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        /* Feedback colors */
+        .correct {
+            color: #28a745; /* Green */
+        }
+
+        .incorrect {
+            color: #dc3545; /* Red */
+        }
+
+        .info {
+            color: #0056b3; /* Blue for info like correct answer */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Summary Table */
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+    </style>
+    </head>
+<body>
+
+    <div id="game-container">
+        <h1>Trò Chơi Ôn Tập Tiếng Trung 🇨🇳</h1>
+
+        <div id="welcome-screen">
+            <p>Chào mừng bạn! Trò chơi gồm 2 phần:</p>
+            <ul>
+                <li><b>Phần 1:</b> Điền chữ Hán dựa vào hình ảnh và Pinyin (3 lần đoán sai).</li>
+                <li><b>Phần 2:</b> Sắp xếp lại câu tiếng Trung bị đảo lộn.</li>
+            </ul>
+            <button id="start-button">Bắt Đầu!</button>
+        </div>
+
+        <div id="part1-area" class="hidden">
+            <h2>Phần 1: Ôn Tập Từ Vựng</h2>
+            <p id="vocab-counter"></p>
+            <img id="vocab-image" src="" alt="Hình ảnh từ vựng">
+            <p><b>Pinyin:</b> <span id="pinyin-display"></span></p>
+            <label for="hanzi-input">Nhập chữ Hán:</label>
+            <input type="text" id="hanzi-input" autocomplete="off">
+            <button id="submit-part1">Kiểm Tra</button>
+            <p id="feedback-part1"></p>
+            <p id="attempts-left"></p>
+        </div>
+
+        <div id="part2-area" class="hidden">
+            <h2>Phần 2: Sắp Xếp Câu</h2>
+            <p id="sentence-counter"></p>
+            <p><b>Các cụm từ bị đảo lộn:</b></p>
+            <p id="scrambled-sentence"></p>
+            <label for="sentence-input">Nhập câu đúng:</label>
+            <input type="text" id="sentence-input" autocomplete="off">
+            <button id="submit-part2">Kiểm Tra</button>
+            <button id="hint-button">Gợi Ý</button>
+            <p id="feedback-part2"></p>
+            <p id="hint-display"></p>
+        </div>
+
+        <div id="summary-area" class="hidden">
+            <h2>📊 Tổng Kết Trò Chơi 📊</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phần chơi</th>
+                        <th>Nội dung</th>
+                        <th>Số lượng</th>
+                        <th>Số câu/từ đúng</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Phần 1</td>
+                        <td>Ôn tập Từ vựng</td>
+                        <td id="summary-p1-total"></td>
+                        <td id="summary-p1-correct"></td>
+                        <td id="summary-p1-notes"></td>
+                    </tr>
+                    <tr>
+                        <td>Phần 2</td>
+                        <td>Sắp xếp câu</td>
+                        <td id="summary-p2-total"></td>
+                        <td id="summary-p2-correct"></td>
+                        <td id="summary-p2-notes"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="restart-button">Chơi Lại</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Data ---
+            const vocabData = [
+                { hanzi: '今天', pinyin: 'Jīntiān', image: 'https://images.freeimages.com/images/premium/previews/2162/21624660-yesterday-today-tomorrow.jpg' },
+                { hanzi: '昨天', pinyin: 'Zuótiān', image: 'https://yt3.googleusercontent.com/d5QFuiVHizL1fDvvPIM_tIn7u0DPGgCKxHVdCe1KDkifeipdBY-XQZWR1vt9JE9DjhEeXs10Gw=s160-c-k-c0x00ffffff-no-rj' }, // Note: This image link might not work reliably
+                { hanzi: '星期一', pinyin: 'Xīngqīyī', image: 'https://cdnphoto.dantri.com.vn/Mysr7DDc5QZQI99_7zzg662QUy0=/zoom/1200_630/WZKQ2cccccccccccckCc0AfnZ0zh4c/Image/2015/03/9591655084_3064086f33_z-68951.jpg' },
+                { hanzi: '星期二', pinyin: 'Xīngqīèr', image: 'https://gcs.tripi.vn/public-tripi/tripi-feed/img/474061TqH/hinh-anh-chao-ngay-moi-thu-3-dep-va-y-nghia_042035629.jpg' },
+                { hanzi: '星期三', pinyin: 'Xīngqīsān', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv-6IAfmalMNjwtM-JfQga0CvMQPL7CIecNA&s' },
+                { hanzi: '星期四', pinyin: 'Xīngqīsì', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKGhrON1V8FGSqEukuTg3P2rLm4ErfHFVxKw&s' },
+                { hanzi: '星期五', pinyin: 'Xīngqīwǔ', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTW0sAZkgMCAJ3mUUmuBlbF9W1p33KfhtCxQ&s' },
+                { hanzi: '星期六', pinyin: 'Xīngqīliù', image: 'https://img.docnhanh.vn/images/fullsize/2018/09/08/thu-bay.jpg' },
+                { hanzi: '星期天', pinyin: 'Xīngqītiān', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNdtBodS50TwYRtPcxFivhJJvX08hmeM8GFA&s' },
+                { hanzi: '几', pinyin: 'Jǐ', image: 'https://i.ytimg.com/vi/h6WByypwsT0/maxresdefault.jpg' },
+                { hanzi: '哪儿', pinyin: 'Nǎr', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3dLBlJX1_KHSCkxRoKrQ6bR5tO69fLGsMeg&s' },
+                { hanzi: '那儿', pinyin: 'Nàr', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGM3HNlbD4iBxP2MiHWz0WfoqFlohXGQwUDw&s' },
+                { hanzi: '回家', pinyin: 'Huíjiā', image: 'https://pic2.sucaisucai.com/02/77/02077572_2.jpg' },
+                { hanzi: '学校', pinyin: 'Xuéxiào', image: 'https://bpic.588ku.com/element_pic/23/04/24/c9841d3d5771d4156bdff8bee4a2630d.png!/fw/350/quality/99/unsharp/true/compress/true' },
+                { hanzi: '再见', pinyin: 'Zàijiàn', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKR5JyjiD2v02G5gMr427zyT_y_RCwRvwpFQ&s' },
+                { hanzi: '对不起', pinyin: 'Duìbùqǐ', image: 'https://bpic.588ku.com/element_pic/23/04/24/50ea1c0770c926c7e350e91db598c363.png!/fw/350/quality/99/unsharp/true/compress/true' }
+            ];
+
+            const sentenceData = [
+                { correct: '我今天去银行取钱', pinyin: 'Wǒ jīntiān qù yínháng qǔ qián', scrambled: '钱取 / 银行 / 去 / 今天 / 我', translation: 'Tôi hôm nay đi ngân hàng rút tiền' },
+                { correct: '你们去哪儿？', pinyin: 'Nǐmen qù nǎr?', scrambled: '哪儿 / 去 / 你们？', translation: 'Các bạn đi đâu?' },
+                { correct: '今天星期几？', pinyin: 'Jīntiān xīngqī jǐ?', scrambled: '星期几 / 今天？', translation: 'Hôm nay là thứ mấy?' },
+                { correct: '你几岁？', pinyin: 'Nǐ jǐ suì?', scrambled: '岁 / 几 / 你？', translation: 'Bạn bao nhiêu tuổi?' },
+                { correct: '你多大？', pinyin: 'Nǐ duō dà?', scrambled: '多大 / 你？', translation: 'Bạn bao nhiêu tuổi?' },
+                { correct: '明天妈妈去上海', pinyin: 'Míngtiān māma qù Shànghǎi', scrambled: '上海 / 去 / 妈妈 / 明天', translation: 'Ngày mai mẹ đi đến Thượng Hải' },
+                { correct: '我哥哥今天回学校', pinyin: 'Wǒ gēge jīntiān huí xuéxiào', scrambled: '学校 / 回 / 今天 / 我哥哥', translation: 'Anh trai tôi hôm nay trở lại trường' }
+            ];
+
+            // --- DOM Elements ---
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const startButton = document.getElementById('start-button');
+            const restartButton = document.getElementById('restart-button');
+
+            const part1Area = document.getElementById('part1-area');
+            const vocabCounter = document.getElementById('vocab-counter');
+            const vocabImage = document.getElementById('vocab-image');
+            const pinyinDisplay = document.getElementById('pinyin-display');
+            const hanziInput = document.getElementById('hanzi-input');
+            const submitPart1 = document.getElementById('submit-part1');
+            const feedbackPart1 = document.getElementById('feedback-part1');
+            const attemptsLeftDisplay = document.getElementById('attempts-left');
+
+            const part2Area = document.getElementById('part2-area');
+            const sentenceCounter = document.getElementById('sentence-counter');
+            const scrambledSentence = document.getElementById('scrambled-sentence');
+            const sentenceInput = document.getElementById('sentence-input');
+            const submitPart2 = document.getElementById('submit-part2');
+            const hintButton = document.getElementById('hint-button');
+            const feedbackPart2 = document.getElementById('feedback-part2');
+            const hintDisplay = document.getElementById('hint-display');
+
+            const summaryArea = document.getElementById('summary-area');
+            const summaryP1Total = document.getElementById('summary-p1-total');
+            const summaryP1Correct = document.getElementById('summary-p1-correct');
+            const summaryP1Notes = document.getElementById('summary-p1-notes');
+            const summaryP2Total = document.getElementById('summary-p2-total');
+            const summaryP2Correct = document.getElementById('summary-p2-correct');
+            const summaryP2Notes = document.getElementById('summary-p2-notes');
+
+            // --- Game State ---
+            let currentPart = 0; // 0: Welcome, 1: Vocab, 2: Sentence, 3: Summary
+            let currentWordIndex = 0;
+            let currentSentenceIndex = 0;
+            let attemptsLeft = 3;
+            let scorePart1 = 0;
+            let scorePart2 = 0;
+            let part1CorrectFirstTry = 0; // Track correct on first attempt for Part 1
+            let part1Revealed = 0; // Track answers revealed after 3 fails
+            let hintsUsed = 0;
+            let shuffledVocab = [];
+            let shuffledSentences = [];
+
+            // --- Utility Functions ---
+            function shuffleArray(array) {
+                // Simple Fisher-Yates shuffle
+                let currentIndex = array.length, randomIndex;
+                while (currentIndex !== 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                }
+                return array;
+            }
+
+
+            function hideAllSections() {
+                welcomeScreen.classList.add('hidden');
+                part1Area.classList.add('hidden');
+                part2Area.classList.add('hidden');
+                summaryArea.classList.add('hidden');
+            }
+
+            function updateFeedback(element, message, type) {
+                element.innerHTML = message.replace(/\n/g, '<br>'); // Replace newline chars with <br> for HTML display
+                element.className = type; // 'correct', 'incorrect', 'info'
+            }
+
+            // --- Game Logic Functions ---
+
+            function startGame() {
+                // Reset state
+                currentPart = 1;
+                currentWordIndex = 0;
+                currentSentenceIndex = 0;
+                scorePart1 = 0;
+                scorePart2 = 0;
+                part1CorrectFirstTry = 0;
+                part1Revealed = 0;
+                hintsUsed = 0;
+
+                // Shuffle data for variety
+                shuffledVocab = shuffleArray([...vocabData]);
+                shuffledSentences = shuffleArray([...sentenceData]);
+
+                hideAllSections();
+                part1Area.classList.remove('hidden');
+                loadVocabQuestion();
+            }
+
+            function loadVocabQuestion() {
+                if (currentWordIndex >= shuffledVocab.length) {
+                    startPart2(); // Move to part 2 if vocab is done
+                    return;
+                }
+
+                const currentWord = shuffledVocab[currentWordIndex];
+                vocabCounter.textContent = `Từ ${currentWordIndex + 1} / ${shuffledVocab.length}`;
+                vocabImage.src = currentWord.image;
+                vocabImage.alt = `Hình ảnh cho ${currentWord.pinyin}`; // Better alt text
+                pinyinDisplay.textContent = currentWord.pinyin;
+                hanziInput.value = '';
+                feedbackPart1.textContent = '';
+                feedbackPart1.className = '';
+                attemptsLeft = 3;
+                attemptsLeftDisplay.textContent = `Số lần thử còn lại: ${attemptsLeft}`;
+                hanziInput.focus(); // Focus input for convenience
+                hanziInput.disabled = false;
+                submitPart1.disabled = false;
+            }
+
+            function checkVocabAnswer() {
+                const userAnswer = hanziInput.value.trim();
+                const correctAnswer = shuffledVocab[currentWordIndex].hanzi;
+
+                if (!userAnswer) return; // Do nothing if input is empty
+
+                if (userAnswer === correctAnswer) {
+                    updateFeedback(feedbackPart1, 'Chính xác! 👍', 'correct');
+                    // Only increment score once per word
+                    if (hanziInput.disabled === false) { // Check if it wasn't already answered correctly
+                       scorePart1++;
+                        if (attemptsLeft === 3) { // Count if correct on the very first try
+                            part1CorrectFirstTry++;
+                        }
+                    }
+
+                    hanziInput.disabled = true; // Disable input after correct answer
+                    submitPart1.disabled = true; // Disable button
+                    setTimeout(() => { // Wait a moment before next question
+                        currentWordIndex++;
+                        loadVocabQuestion();
+                    }, 1200);
+                } else {
+                    attemptsLeft--;
+                    attemptsLeftDisplay.textContent = `Số lần thử còn lại: ${attemptsLeft}`;
+                    if (attemptsLeft > 0) {
+                        updateFeedback(feedbackPart1, `Sai rồi, thử lại nhé.`, 'incorrect');
+                        hanziInput.select(); // Select text for easy retyping
+                    } else {
+                        part1Revealed++; // Count revealed answers
+                        updateFeedback(feedbackPart1, `Hết lượt rồi! Đáp án đúng là: ${correctAnswer}`, 'info');
+                        hanziInput.disabled = true; // Disable input after failing
+                        submitPart1.disabled = true; // Disable button
+                        attemptsLeftDisplay.textContent = 'Số lần thử còn lại: 0';
+                        setTimeout(() => { // Wait a moment before next question
+                            currentWordIndex++;
+                            loadVocabQuestion();
+                        }, 2000); // Longer delay to read the answer
+                    }
+                }
+            }
+
+            function startPart2() {
+                currentPart = 2;
+                hideAllSections();
+                part2Area.classList.remove('hidden');
+                loadSentenceQuestion();
+            }
+
+            function loadSentenceQuestion() {
+                if (currentSentenceIndex >= shuffledSentences.length) {
+                    showSummary(); // Move to summary if sentences are done
+                    return;
+                }
+                const currentSentence = shuffledSentences[currentSentenceIndex];
+                sentenceCounter.textContent = `Câu ${currentSentenceIndex + 1} / ${shuffledSentences.length}`;
+                scrambledSentence.textContent = currentSentence.scrambled;
+                sentenceInput.value = '';
+                feedbackPart2.textContent = '';
+                feedbackPart2.className = '';
+                hintDisplay.textContent = ''; // Clear previous hint
+                hintDisplay.classList.add('hidden'); // Hide hint area
+                hintButton.disabled = false; // Re-enable hint button
+                sentenceInput.disabled = false;
+                submitPart2.disabled = false;
+                sentenceInput.focus();
+            }
+
+            function checkSentenceAnswer() {
+                const userAnswer = sentenceInput.value.trim().replace(/[？。！，\s]/g, ''); // Remove punctuation AND spaces for comparison
+                const correctAnswer = shuffledSentences[currentSentenceIndex].correct.replace(/[？。！，\s]/g, '');
+                const fullCorrectSentence = shuffledSentences[currentSentenceIndex].correct;
+                const pinyin = shuffledSentences[currentSentenceIndex].pinyin;
+                const translation = shuffledSentences[currentSentenceIndex].translation;
+
+                if (!userAnswer) return; // Do nothing if input is empty
+
+                if (userAnswer === correctAnswer) {
+                    updateFeedback(feedbackPart2, `Hoàn hảo! ✅\n${fullCorrectSentence}\n(${pinyin})\nNghĩa: ${translation}`, 'correct');
+                     // Only score once per sentence
+                    if (sentenceInput.disabled === false) {
+                       scorePart2++;
+                    }
+                    sentenceInput.disabled = true;
+                    submitPart2.disabled = true;
+                    hintButton.disabled = true;
+                    setTimeout(() => {
+                        currentSentenceIndex++;
+                        loadSentenceQuestion();
+                    }, 3000); // Longer delay to read feedback
+                } else {
+                    updateFeedback(feedbackPart2, 'Chưa đúng lắm, thử lại xem nào hoặc dùng gợi ý.', 'incorrect');
+                    sentenceInput.select();
+                }
+            }
+
+            function showHint() {
+                if (currentSentenceIndex < shuffledSentences.length) {
+                    const currentSentence = shuffledSentences[currentSentenceIndex];
+                    // Show Pinyin and Translation in the hint area
+                    updateFeedback(hintDisplay, `Gợi ý Pinyin: ${currentSentence.pinyin}\nNghĩa: ${currentSentence.translation}`, 'info');
+                    hintDisplay.classList.remove('hidden');
+                     // Only count hint use once per question
+                    if (hintButton.disabled === false) {
+                       hintsUsed++;
+                    }
+                    hintButton.disabled = true; // Disable after one use per question
+                }
+            }
+
+            function showSummary() {
+                currentPart = 3;
+                hideAllSections();
+                summaryArea.classList.remove('hidden');
+
+                summaryP1Total.textContent = shuffledVocab.length;
+                summaryP1Correct.textContent = scorePart1;
+                summaryP1Notes.textContent = `Đúng lần đầu: ${part1CorrectFirstTry}, Hiện đáp án: ${part1Revealed}`;
+
+                summaryP2Total.textContent = shuffledSentences.length;
+                summaryP2Correct.textContent = scorePart2;
+                summaryP2Notes.textContent = `Sử dụng gợi ý: ${hintsUsed} lần`;
+            }
+
+
+            // --- Event Listeners ---
+            startButton.addEventListener('click', startGame);
+            submitPart1.addEventListener('click', checkVocabAnswer);
+            // Allow pressing Enter in input field for Part 1
+            hanziInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !submitPart1.disabled) { // Check if button is enabled
+                    checkVocabAnswer();
+                }
+            });
+
+            submitPart2.addEventListener('click', checkSentenceAnswer);
+            // Allow pressing Enter in input field for Part 2
+            sentenceInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !submitPart2.disabled) { // Check if button is enabled
+                    checkSentenceAnswer();
+                }
+            });
+            hintButton.addEventListener('click', showHint);
+            restartButton.addEventListener('click', startGame); // Restart button calls startGame again
+
+        });
+    </script>
+    </body>
+</html>

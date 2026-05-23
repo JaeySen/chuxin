@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Điền Từ Vựng Tiếng Trung</title>
+    <style>
+        /* --- CSS Code Starts Here --- */
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .game-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #timer {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            margin-bottom: 20px;
+            min-height: 200px; /* Đảm bảo có không gian khi ảnh chưa tải */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #word-image {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .input-area {
+            margin-bottom: 15px;
+            display: flex; /* Sắp xếp input và button trên cùng hàng */
+            justify-content: center; /* Căn giữa input và button */
+            gap: 10px; /* Khoảng cách giữa input và button */
+        }
+
+        #answer-input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 60%; /* Điều chỉnh độ rộng của input */
+        }
+
+        #submit-button, #next-button {
+            padding: 10px 15px;
+            font-size: 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #submit-button:hover, #next-button:hover {
+            background-color: #0056b3;
+        }
+
+        #feedback {
+            margin-bottom: 10px;
+            font-weight: bold;
+            min-height: 1.2em; /* Giữ không gian cho feedback */
+        }
+
+        #feedback.correct {
+            color: green;
+        }
+
+        #feedback.incorrect {
+            color: red;
+        }
+
+        #attempts {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        #correct-answer {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #4CAF50; /* Màu xanh lá cây */
+            font-weight: bold;
+            min-height: 1.2em;
+        }
+
+        #final-message {
+            margin-top: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #28a745; /* Màu xanh lá cây đậm hơn */
+            display: none; /* Ẩn ban đầu */
+        }
+
+        /* Ẩn nút "Next" ban đầu */
+        #next-button {
+            margin-top: 10px; /* Thêm khoảng cách trên nếu cần */
+            background-color: #ffc107; /* Màu vàng */
+            color: #333;
+            display: none; /* Ẩn ban đầu */
+        }
+        #next-button:hover {
+             background-color: #e0a800; /* Màu vàng đậm hơn khi hover */
+        }
+        /* --- CSS Code Ends Here --- */
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Điền Từ Vựng Tiếng Trung</h1>
+
+        <div id="timer">Thời gian: 00:00</div>
+
+        <div class="image-container">
+            <img id="word-image" src="" alt="Hình ảnh từ vựng">
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="answer-input" placeholder="Nhập chữ Hán...">
+            <button id="submit-button">Kiểm tra</button>
+        </div>
+
+        <div id="feedback"></div>
+        <div id="attempts">Số lần sai còn lại: 3</div>
+        <div id="correct-answer"></div>
+        <button id="next-button">Từ Tiếp Theo</button>
+         <div id="final-message"></div>
+    </div>
+
+    <script>
+        // --- JavaScript Code Starts Here ---
+        // Dữ liệu từ vựng
+        const vocabulary = [
+            { hanzi: "炸鸡", pinyin: "zhájī", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/REROWG0011_Shot1_1080x1080_v1.png" },
+            { hanzi: "通常", pinyin: "tōngcháng", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIqfT6Se60L6k4P3af3rVpOYqKPtAoMfq0qQ&s" },
+            { hanzi: "海鲜", pinyin: "hǎixiān", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUQxawS8TJIU8tsicgb3VIO-uUY7lszRmwfA&s" },
+            { hanzi: "舍不得", pinyin: "shěbude", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4Xo8ZpClCYUxVqIiEfCWHp8HCGS5dqjRLVw&s" },
+            { hanzi: "丰富", pinyin: "fēngfù", imageUrl: "https://p6.itc.cn/q_70/images01/20211025/15952c435a0146ec99ea534f930d15ea.jpeg" },
+            { hanzi: "时差", pinyin: "shíchā", imageUrl: "https://lh6.googleusercontent.com/proxy/SVilHszvLXFuuIT7ma_J9lGlcHwn51XfkrKB4lRzyHaEjWClFuGY8TiEkwFmGy2eVFFS65fNFJtjApk3Jwk1og63uX9jZvjZ3Xe6LieXVYgkF91BFuxlMgI" }, // Lưu ý: Link này có thể không hiển thị ảnh trực tiếp
+            { hanzi: "调整", pinyin: "tiáozhěng", imageUrl: "https://www.seikowatches.com/-/media/HtmlUploader/Common/Seiko/Home/instructions/html/SEIKO_V131_V145_V147_V157_V158_D_SC/assets/fig/V131D_Set--Time-2-2_BONDILffawgiky.png" },
+            { hanzi: "作息", pinyin: "zuòxī", imageUrl: "https://png.pngtree.com/png-vector/20220119/ourmid/pngtree-pupils--healthy-lifestyle-schedule-png-image_4217731.png" },
+            { hanzi: "酒吧", pinyin: "jiǔbā", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFPzUByXK7tAJcGGNwTkm2a8LjFeDBcdRzJw&s" },
+            { hanzi: "夜猫子", pinyin: "yèmāozi", imageUrl: "https://www.chinlingo.com/daily/upload/ueditor/image/20170112/33681484201563441.jpg" },
+            { hanzi: "熬夜", pinyin: "áoyè", imageUrl: "https://image.sggp.org.vn/w1000/Uploaded/2025/bwvvopqi/2021_10_31/ban-dem_AEZJ.jpg" }
+        ];
+
+        // Lấy các phần tử DOM
+        const wordImage = document.getElementById('word-image');
+        const answerInput = document.getElementById('answer-input');
+        const submitButton = document.getElementById('submit-button');
+        const feedback = document.getElementById('feedback');
+        const attemptsDisplay = document.getElementById('attempts');
+        const correctAnswerDisplay = document.getElementById('correct-answer');
+        const nextButton = document.getElementById('next-button');
+        const timerDisplay = document.getElementById('timer');
+        const finalMessage = document.getElementById('final-message');
+
+
+        // Biến trạng thái game
+        let currentWordIndex = 0;
+        let shuffledVocab = [];
+        let wrongAttempts = 0;
+        const maxWrongAttempts = 3;
+        let timerInterval = null;
+        let startTime = 0;
+        let gameEnded = false;
+
+        // Hàm xáo trộn mảng (Fisher-Yates Shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+        }
+
+        // Hàm bắt đầu game
+        function startGame() {
+            gameEnded = false;
+            currentWordIndex = 0;
+            wrongAttempts = 0; // Reset số lần sai khi bắt đầu game mới hoặc từ mới
+            shuffledVocab = [...vocabulary]; // Tạo bản sao và xáo trộn
+            shuffleArray(shuffledVocab);
+            finalMessage.style.display = 'none'; // Ẩn thông báo kết thúc
+            finalMessage.textContent = '';
+            displayWord();
+            startTimer();
+            // Đảm bảo input và button được kích hoạt khi bắt đầu
+            answerInput.disabled = false;
+            submitButton.disabled = false;
+            nextButton.style.display = 'none'; // Ẩn nút Next khi bắt đầu
+            answerInput.focus();
+        }
+
+        // Hàm hiển thị từ hiện tại
+        function displayWord() {
+            if (currentWordIndex >= shuffledVocab.length) {
+                endGame();
+                return;
+            }
+
+            const currentWord = shuffledVocab[currentWordIndex];
+            wordImage.src = currentWord.imageUrl;
+            wordImage.alt = `Hình ảnh cho ${currentWord.hanzi}`; // Thêm alt text
+            answerInput.value = ''; // Xóa input cũ
+            feedback.textContent = ''; // Xóa feedback cũ
+            feedback.className = ''; // Xóa class feedback
+            correctAnswerDisplay.textContent = ''; // Xóa đáp án cũ
+            wrongAttempts = 0; // Reset số lần sai cho từ mới
+            updateAttemptsDisplay(); // Cập nhật hiển thị số lần sai
+            nextButton.style.display = 'none'; // Ẩn nút "Next"
+            answerInput.disabled = false; // Kích hoạt lại input
+            submitButton.disabled = false; // Kích hoạt lại nút submit
+            answerInput.focus(); // Focus vào ô input
+        }
+
+        // Hàm cập nhật hiển thị số lần sai còn lại
+        function updateAttemptsDisplay() {
+            const remainingAttempts = maxWrongAttempts - wrongAttempts;
+            attemptsDisplay.textContent = `Số lần sai còn lại: ${remainingAttempts}`;
+        }
+
+        // Hàm kiểm tra đáp án
+        function checkAnswer() {
+            if (gameEnded) return; // Không làm gì nếu game đã kết thúc
+
+            const userAnswer = answerInput.value.trim(); // Lấy và làm sạch đầu vào
+            const currentWord = shuffledVocab[currentWordIndex];
+            const correctAnswer = currentWord.hanzi;
+
+            if (!userAnswer) {
+                feedback.textContent = 'Vui lòng nhập đáp án!';
+                feedback.className = 'incorrect';
+                return; // Không xử lý nếu input trống
+            }
+
+            if (userAnswer === correctAnswer) {
+                feedback.textContent = 'Chính xác!';
+                feedback.className = 'correct';
+                answerInput.disabled = true; // Tạm vô hiệu hóa khi chờ chuyển
+                submitButton.disabled = true;
+                // Tạm dừng một chút để người dùng thấy feedback đúng
+                setTimeout(() => {
+                    currentWordIndex++;
+                    displayWord(); // Tự động gọi displayWord để kích hoạt lại nút và input
+                }, 1000); // Chờ 1 giây trước khi chuyển từ
+            } else {
+                wrongAttempts++;
+                updateAttemptsDisplay();
+                feedback.textContent = 'Sai rồi! Thử lại.';
+                feedback.className = 'incorrect';
+                answerInput.focus(); // Focus lại vào input để thử lại
+                answerInput.select(); // Chọn text cũ để dễ dàng xóa
+
+                if (wrongAttempts >= maxWrongAttempts) {
+                    feedback.textContent = 'Bạn đã hết lượt thử!';
+                    correctAnswerDisplay.textContent = `Đáp án đúng: ${currentWord.hanzi} (${currentWord.pinyin})`;
+                    answerInput.disabled = true; // Vô hiệu hóa input
+                    submitButton.disabled = true; // Vô hiệu hóa nút submit
+                    nextButton.style.display = 'inline-block'; // Hiển thị nút "Next"
+                }
+            }
+        }
+
+        // Hàm chuyển sang từ tiếp theo sau khi sai quá 3 lần
+        function nextWordAfterFail() {
+            currentWordIndex++;
+            displayWord();
+        }
+
+        // Hàm bắt đầu đếm giờ
+        function startTimer() {
+            clearInterval(timerInterval); // Xóa interval cũ nếu có
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                if (gameEnded) return; // Dừng cập nhật nếu game đã kết thúc
+
+                const elapsedTime = Date.now() - startTime;
+                const seconds = Math.floor((elapsedTime / 1000) % 60);
+                const minutes = Math.floor((elapsedTime / (1000 * 60)) % 60);
+
+                // Định dạng MM:SS
+                const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timerDisplay.textContent = `Thời gian: ${formattedTime}`;
+            }, 1000); // Cập nhật mỗi giây
+        }
+
+        // Hàm dừng đếm giờ
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        // Hàm kết thúc game
+        function endGame() {
+            gameEnded = true;
+            stopTimer();
+            wordImage.src = ""; // Xóa ảnh cuối cùng
+            wordImage.alt = "Trò chơi kết thúc";
+            answerInput.disabled = true;
+            submitButton.disabled = true;
+            nextButton.style.display = 'none';
+            feedback.textContent = '';
+            attemptsDisplay.textContent = '';
+            correctAnswerDisplay.textContent = '';
+
+            const finalTime = timerDisplay.textContent; // Lấy thời gian cuối cùng đã được định dạng
+            finalMessage.textContent = `Hoàn thành! ${finalTime}`;
+            finalMessage.style.display = 'block';
+
+            // Tùy chọn: Thêm nút Chơi lại
+            // const restartButton = document.createElement('button');
+            // restartButton.textContent = 'Chơi lại';
+            // restartButton.style.marginLeft = '10px'; // Thêm khoảng cách
+            // restartButton.onclick = startGame;
+            // // Thêm nút vào container thay vì finalMessage để tránh bị ẩn cùng
+            // const container = document.querySelector('.game-container');
+            // container.appendChild(restartButton);
+            // // Cần xử lý việc xóa nút chơi lại cũ khi startGame được gọi lại
+        }
+
+        // --- Khởi chạy Game ---
+        // Thêm sự kiện listener
+        submitButton.addEventListener('click', checkAnswer);
+        nextButton.addEventListener('click', nextWordAfterFail);
+
+        // Cho phép nhấn Enter để kiểm tra đáp án
+        answerInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Ngăn hành vi mặc định của Enter (vd: submit form)
+                // Chỉ gọi checkAnswer nếu nút submit đang được kích hoạt
+                if (!submitButton.disabled) {
+                     checkAnswer();
+                }
+            }
+        });
+
+        // Bắt đầu game khi trang tải xong
+        document.addEventListener('DOMContentLoaded', startGame); // Đảm bảo DOM sẵn sàng trước khi chạy game
+
+        // --- JavaScript Code Ends Here ---
+    </script>
+</body>
+</html>

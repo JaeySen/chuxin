@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập Giao tiếp Tương tác - Bài 17</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .scenario-card {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-style: preserve-3d;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .scenario-card.is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .hints {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out, opacity 0.5s ease-out;
+            opacity: 0;
+        }
+        .hints.show {
+            max-height: 500px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-700">Bài tập Giao tiếp Tương tác</h1>
+            <p class="text-lg text-gray-600 mt-2">Dành cho 2 học viên - Dựa trên Bài 17</p>
+        </header>
+
+        <div class="text-center mb-8">
+            <button id="new-scenario-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                🚀 Tạo tình huống mới
+            </button>
+        </div>
+
+        <div id="scenario-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Card for Student A -->
+            <div id="card-a" class="scenario-card">
+                <div class="bg-white p-6 rounded-2xl shadow-lg h-full flex flex-col">
+                    <div class="flex-grow">
+                        <h2 class="text-2xl font-bold text-sky-600 mb-4">Dành cho Học viên A</h2>
+                        <div id="role-a-content" class="text-gray-700 space-y-3">
+                            <p>Nhấn nút "Tạo tình huống mới" để bắt đầu!</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="toggle-hints-btn w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg" data-target="hints-a">
+                            Từ vựng & Mẫu câu gợi ý
+                        </button>
+                        <div id="hints-a" class="hints mt-4 text-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card for Student B -->
+            <div id="card-b" class="scenario-card">
+                <div class="bg-white p-6 rounded-2xl shadow-lg h-full flex flex-col">
+                     <div class="flex-grow">
+                        <h2 class="text-2xl font-bold text-teal-600 mb-4">Dành cho Học viên B</h2>
+                        <div id="role-b-content" class="text-gray-700 space-y-3">
+                             <p>Nhấn nút "Tạo tình huống mới" để bắt đầu!</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="toggle-hints-btn w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg" data-target="hints-b">
+                            Từ vựng & Mẫu câu gợi ý
+                        </button>
+                        <div id="hints-b" class="hints mt-4 text-sm"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                title: "Rủ đi xem phim cuối tuần",
+                roleA: {
+                    description: "Hôm nay là thứ Sáu. Bạn gọi điện cho B để rủ đi xem phim ở CGV vào cuối tuần.",
+                    tasks: [
+                        "Chào hỏi và hỏi B: 你正在做什么呢？ (Bạn đang làm gì thế?)",
+                        "Rủ B: 这个周末我们一起去看电影，好吗？ (Cuối tuần này chúng mình đi xem phim nhé?)",
+                        "Hỏi xem B muốn đi bằng phương tiện gì: 我们怎么去呢？"
+                    ],
+                    hints: `
+                        <p><strong>Từ vựng:</strong> 周末 (zhōumò - cuối tuần), 电影 (diànyǐng - phim), 怎么样 (zěnmeyàng - thế nào?), 坐车 (zuòchē - đi xe buýt), 骑车 (qíchē - đi xe máy/đạp)</p>
+                        <p><strong>Mẫu câu:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>喂，是 [Tên B] 吗？ (Alo, có phải B không?)</li>
+                            <li>你现在有事儿吗？ (Bây giờ bạn có bận không?)</li>
+                        </ul>
+                    `
+                },
+                roleB: {
+                    description: "Bạn đang ở nhà làm bài tập. Bạn rất muốn đi xem phim.",
+                    tasks: [
+                        "Trả lời bạn đang làm gì: 我正在做练习呢。 (Tôi đang làm bài tập.)",
+                        "Đồng ý với lời rủ rê: 好啊！/ 行！",
+                        "Đề xuất phương tiện: 今天星期六，坐车可能太挤了，我们骑车去，怎么样？ (Hôm nay thứ 7, đi xe buýt có thể đông lắm, chúng ta đi xe máy nhé?)"
+                    ],
+                    hints: `
+                        <p><strong>Từ vựng:</strong> 练习 (liànxí - bài tập), 太挤 (tài jǐ - quá đông), 可能 (kěnéng - có thể), 骑车 (qíchē - đi xe máy/đạp)</p>
+                        <p><strong>Mẫu câu:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>太好了！ (Tốt quá!)</li>
+                            <li>你想看什么电影？ (Bạn muốn xem phim gì?)</li>
+                        </ul>
+                    `
+                }
+            },
+            {
+                title: "Hỏi thăm về việc học và rủ đi trà sữa",
+                roleA: {
+                    description: "Bạn gặp B ở căng tin. Bạn muốn hỏi thăm về lịch học của B và rủ đi uống trà sữa.",
+                    tasks: [
+                        "Chào B và hỏi thăm: 你好！你去上课吗？ (Chào bạn! Bạn đi học à?)",
+                        "Hỏi về các môn học: 这个学期你有什么课？有几门课？ (Học kỳ này bạn có môn gì? Có mấy môn?)",
+                        "Hỏi về giáo viên: 谁教你们口语课？ (Ai dạy bạn môn khẩu ngữ?)",
+                        "Rủ đi uống trà sữa: 等一下我们一起去喝奶茶，好吗？ (Lát nữa chúng mình đi uống trà sữa nhé?)"
+                    ],
+                    hints: `
+                        <p><strong>Từ vựng:</strong> 学期 (xuéqī), 门 (mén), 综合课 (zōnghé kè), 口语课 (kǒuyǔ kè), 听力课 (tīnglì kè), 阅读课 (yuèdú kè), 教 (jiāo), 奶茶 (nǎichá - trà sữa)</p>
+                        <p><strong>Mẫu câu:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>你的课有意思吗？ (Môn học của bạn có thú vị không?)</li>
+                        </ul>
+                    `
+                },
+                roleB: {
+                    description: "Bạn vừa tan học và đang định đi ăn trưa. Bạn sẵn lòng chia sẻ về việc học của mình.",
+                    tasks: [
+                        "Chào lại và trả lời: 我刚下课，正要去吃午饭。(Tôi vừa tan học, đang định đi ăn trưa.)",
+                        "Liệt kê các môn học của bạn.",
+                        "Trả lời tên giáo viên dạy môn khẩu ngữ. (Ví dụ: 王老师教我们口语课。)",
+                        "Đồng ý đi uống trà sữa: 行！我们去哪儿喝？ (Được! Chúng mình đi đâu uống?)"
+                    ],
+                    hints: `
+                        <p><strong>Từ vựng:</strong> 刚 (gāng - vừa mới), 下课 (xiàkè - tan học), 正要 (zhèngyào - đang định), 吃午饭 (chī wǔfàn - ăn trưa)</p>
+                        <p><strong>Mẫu câu:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>我们学校旁边有一家奶茶店。(Cạnh trường mình có một quán trà sữa.)</li>
+                        </ul>
+                    `
+                }
+            },
+            {
+                title: "Rủ bạn đi nhà sách Fahasa",
+                roleA: {
+                    description: "Bạn đang ở thư viện và thấy B cũng ở đó. Bạn cần mua một cuốn từ điển Hán-Việt.",
+                    tasks: [
+                        "Bắt chuyện với B: 你也在这儿看书吗？ (Bạn cũng đọc sách ở đây à?)",
+                        "Nói về dự định của mình: 我想去书店买一本《汉越词典》。(Tôi muốn đi nhà sách mua một cuốn từ điển Hán-Việt.)",
+                        "Rủ B đi cùng: 你想不想跟我一起去？",
+                        "Thảo luận phương tiện: 我们怎么去呢？"
+                    ],
+                    hints: `
+                        <p><strong>Từ vựng:</strong> 书店 (shūdiàn), 买 (mǎi), 《汉越词典》(Hàn-Yuè Cídiǎn - từ điển Hán-Việt), 一起 (yìqǐ - cùng nhau)</p>
+                        <p><strong>Mẫu câu:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>Fahasa书店不太远。(Nhà sách Fahasa không xa lắm.)</li>
+                        </ul>
+                    `
+                },
+                roleB: {
+                    description: "Bạn đang tìm tài liệu cho môn nghe. Bạn cũng muốn mua thêm vở.",
+                    tasks: [
+                        "Trả lời: 对，我正在找听力课的资料。(Đúng vậy, tôi đang tìm tài liệu cho môn nghe.)",
+                        "Đồng ý đi cùng và nói ra nhu cầu của mình: 好啊！我也想买几个本子。(Được thôi! Tôi cũng muốn mua mấy quyển vở.)",
+                        "Đề xuất phương tiện: 坐公共汽车去吧，很方便。(Đi xe buýt đi, rất tiện lợi.)"
+                    ],
+                    hints: `
+                        <p><strong>Từ vựng:</strong> 找 (zhǎo - tìm), 资料 (zīliào - tài liệu), 本子 (běnzi - vở), 公共汽车 (gōnggòng qìchē - xe buýt), 方便 (fāngbiàn - tiện lợi)</p>
+                        <p><strong>Mẫu câu:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 mt-2">
+                            <li>那我们走吧！(Vậy chúng mình đi thôi!)</li>
+                        </ul>
+                    `
+                }
+            }
+        ];
+
+        const newScenarioBtn = document.getElementById('new-scenario-btn');
+        const roleAContent = document.getElementById('role-a-content');
+        const roleBContent = document.getElementById('role-b-content');
+        const hintsA = document.getElementById('hints-a');
+        const hintsB = document.getElementById('hints-b');
+        const cardA = document.getElementById('card-a');
+        const cardB = document.getElementById('card-b');
+
+        let audioCtx;
+        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        document.body.addEventListener('click', initAudio, { once: true });
+        
+        function playSound(type, freq, dur, vol = 0.1) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + dur);
+        }
+        
+        const sounds = {
+            click: () => playSound('triangle', 600, 0.08, 0.05),
+            generate: () => playSound('sine', 440, 0.2),
+        };
+
+        function generateScenario() {
+            sounds.generate();
+            const randomIndex = Math.floor(Math.random() * scenarios.length);
+            const scenario = scenarios[randomIndex];
+
+            // Animation
+            cardA.style.transform = 'scale(0.95)';
+            cardB.style.transform = 'scale(0.95)';
+            cardA.style.opacity = '0';
+            cardB.style.opacity = '0';
+
+            setTimeout(() => {
+                // Update content for Role A
+                roleAContent.innerHTML = `
+                    <p class="text-base font-semibold text-gray-800">${scenario.roleA.description}</p>
+                    <p class="mt-4 font-semibold">Nhiệm vụ của bạn:</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600">
+                        ${scenario.roleA.tasks.map(task => `<li>${task}</li>`).join('')}
+                    </ul>
+                `;
+                hintsA.innerHTML = scenario.roleA.hints;
+
+                // Update content for Role B
+                roleBContent.innerHTML = `
+                    <p class="text-base font-semibold text-gray-800">${scenario.roleB.description}</p>
+                    <p class="mt-4 font-semibold">Nhiệm vụ của bạn:</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600">
+                        ${scenario.roleB.tasks.map(task => `<li>${task}</li>`).join('')}
+                    </ul>
+                `;
+                hintsB.innerHTML = scenario.roleB.hints;
+                
+                // Reset hints visibility
+                hintsA.classList.remove('show');
+                hintsB.classList.remove('show');
+
+                // Animation in
+                cardA.style.transform = 'scale(1)';
+                cardB.style.transform = 'scale(1)';
+                cardA.style.opacity = '1';
+                cardB.style.opacity = '1';
+
+            }, 300);
+        }
+
+        newScenarioBtn.addEventListener('click', generateScenario);
+
+        document.querySelectorAll('.toggle-hints-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                sounds.click();
+                const targetId = button.dataset.target;
+                const hintsEl = document.getElementById(targetId);
+                hintsEl.classList.toggle('show');
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>第13课 · 这是不是中药？ — Ôn tập tương tác</title>
+  <meta name="description" content="Trang web ôn tập tương tác Bài 13: từ vựng, ngữ pháp, mẫu câu, bài tập. Thiết kế responsive cho điện thoại và máy tính." />
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: #121934;
+      --muted: #8ea2d6;
+      --text: #e8eeff;
+      --accent: #7aa2ff;
+      --accent-2: #21d4a3;
+      --warn: #ff8960;
+      --good: #45d483;
+      --bad: #ff5a7a;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    [data-theme=\"light\"]{
+      --bg:#f7f9ff; --card:#ffffff; --muted:#5a6aa9; --text:#0b1020; --accent:#3a63ff; --accent-2:#0fb48f; --warn:#ef6c4e; --good:#10a87b; --bad:#e33a5a; --shadow:0 8px 24px rgba(32,41,78,.15);
+    }
+    [data-theme=\"light\"] body{ background: linear-gradient(120deg,#f5f8ff,#ffffff 60%, #ffffff 100%);}
+    html,body{height:100%;}
+    body{margin:0;font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Noto Sans, "Liberation Sans", Arial, "Apple Color Emoji","Segoe UI Emoji"; background:linear-gradient(120deg,var(--bg), #0c1430 40%, #0d1a3f 100%); color:var(--text);}
+    .container{max-width:1100px;margin:0 auto;padding:18px;}
+    header{position:sticky;top:0;background:linear-gradient(180deg,rgba(12,20,48,.9),rgba(12,20,48,.75));backdrop-filter: blur(10px);z-index:50;border-bottom:1px solid rgba(255,255,255,.06);} 
+    .brand{display:flex;align-items:center;gap:12px;padding:14px 0;}
+    .logo{width:40px;height:40px;border-radius:12px;background:conic-gradient(from 210deg, var(--accent), var(--accent-2));box-shadow:var(--shadow);display:grid;place-items:center;color:white;font-weight:800}
+    h1{font-size: clamp(18px, 2.5vw, 28px);margin:0}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 16px}
+    .btn{--bgc:var(--card);--bd:rgba(255,255,255,.08);display:inline-flex;align-items:center;gap:8px;background:var(--bgc);color:var(--text);border:1px solid var(--bd);padding:10px 14px;border-radius:14px;cursor:pointer;transition:transform .06s ease, background .2s ease, border-color .2s ease;box-shadow:var(--shadow);}
+    .btn:hover{transform:translateY(-1px)}
+    .btn[aria-pressed="true"], .btn.primary{--bgc:linear-gradient(135deg,var(--accent), var(--accent-2));--bd:transparent;color:white}
+    .btn.small{padding:8px 12px;border-radius:12px;font-size:14px}
+    .chip{padding:7px 10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:999px;font-size:12px}
+
+    nav.tabs{display:flex;flex-wrap:wrap;gap:10px}
+    nav.tabs button{flex:1 1 auto;min-width:120px}
+
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;}
+    .card h3{margin:2px 0 8px;font-size:18px}
+    .card .meta{color:var(--muted);font-size:13px}
+    .card .vi{display:none;color:#e3ffd8}
+    .show-vi .card .vi{display:block}
+    .grid{display:grid;gap:14px}
+    .two-col{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:900px){.two-col{grid-template-columns:1fr 1fr}}
+
+    section[hidden]{display:none !important}
+
+    .search{display:flex;gap:10px}
+    input[type="search"]{flex:1;background:var(--card);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:12px 14px;border-radius:14px}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);padding:2px 6px;border-radius:6px;font-size:12px}
+
+    .quiz{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px}
+    .quiz h4{margin:0 0 12px}
+    .opts{display:grid;gap:10px}
+    .opt{padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:var(--card);cursor:pointer}
+    .opt[aria-checked="true"]{outline:2px solid var(--accent)}
+    .result{margin-top:8px;font-weight:700}
+    .good{color:var(--good)} .bad{color:var(--bad)}
+
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+
+    .foot{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:10px}
+
+    /* Drag & drop board */
+    .board{background:var(--card);border:1px dashed rgba(255,255,255,.18);border-radius:16px;min-height:220px;padding:10px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px;position:relative}
+    .cell{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;display:grid;place-items:center;font-size:20px;min-height:60px}
+    .box{position:absolute;inset:calc(50% - 42px) auto auto calc(50% - 42px);width:84px;height:84px;border-radius:12px;background:linear-gradient(135deg,#ffc371,#ff5f6d);display:grid;place-items:center;color:#111;font-weight:900;box-shadow:var(--shadow)}
+    .cat{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#b8c6ff,#e0e7ff);display:grid;place-items:center;position:absolute;left:10px;top:10px;user-select:none;touch-action:none;cursor:grab}
+
+    .swatch{width:22px;height:22px;border-radius:8px;border:1px solid rgba(255,255,255,.15)}
+
+    .toast{position:fixed;right:16px;bottom:16px;background:var(--card);border:1px solid rgba(255,255,255,.12);padding:12px 14px;border-radius:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:.25s;}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    .progress{height:10px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+    .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%}
+
+    .kbd-hint{color:var(--muted);font-size:12px}
+    .muted{color:var(--muted)}
+    .hide{display:none}
+      /* Light theme hard-white overrides */
+    [data-theme="light"]{ --bg:#ffffff; --card:#ffffff; --muted:#3f4a75; --text:#0a0f1a; --accent:#2d5bff; --accent-2:#0aa37f; --warn:#e85c3f; --good:#0d966f; --bad:#cf2d4f; --shadow:0 8px 24px rgba(32,41,78,.10); }
+    [data-theme="light"] body{ background:#ffffff !important; }
+    [data-theme="light"] header{ background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.9)); border-bottom:1px solid rgba(0,0,0,.06); }
+    [data-theme="light"] .pill{ background:#f5f7ff; border-color:#e7ecff; }
+    [data-theme="light"] .card{ border-color:rgba(0,0,0,.06); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">13</div>
+        <div>
+          <h1>第13课 · 这是不是中药？ — Ôn tập tương tác</h1>
+          <div class="muted" style="font-size:14px">Từ vựng · Ngữ pháp · Mẫu câu · Bài tập · Luyện nói — Thiết kế cho điện thoại & máy tính</div>
+        </div>
+      </div>
+      <div class="toolbar" role="toolbar" aria-label="Tùy chọn giao diện">
+        <button id="tab-vocab" class="btn primary" data-tab="vocab" aria-pressed="true">📚 Từ vựng</button>
+        <button id="tab-grammar" class="btn" data-tab="grammar">🧩 Ngữ pháp & mẫu câu</button>
+        <button id="tab-practice" class="btn" data-tab="practice">📝 Bài tập</button>
+        <button id="tab-review" class="btn" data-tab="review">⚡ Ôn tập nhanh</button>
+        <span class="chip" id="xp">⭐ Điểm: <b>0</b></span>
+        <span class="chip" id="streak">🔥 Chuỗi: <b>0</b></span>
+        <span style="flex:1"></span>
+        <button id="toggle-vi" class="btn small" aria-pressed="false" title="Hiện/ẩn nghĩa tiếng Việt">VI</button>
+        <button id="toggle-theme" class="btn small" title="Chuyển giao diện sáng/tối">🌓</button>
+        <button id="speak-toggle" class="btn small" title="Bật/Tắt phát âm">🔊</button>
+        <button id="reset" class="btn small" title="Xóa tiến độ">♻️</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="app">
+    <!-- VOCAB -->
+    <section id="panel-vocab">
+      <div class="two-col">
+        <div class="card">
+          <h3>Thẻ từ vựng</h3>
+          <div class="muted">Chạm để nghe; bật <span class="kbd">VI</span> để xem nghĩa.</div>
+          <div class="search" style="margin:12px 0">
+            <input id="vocab-search" type="search" placeholder="Tìm theo Hán tự/VI… (vd: 牙刷 / bàn chải)" aria-label="Tìm từ vựng" />
+            <button class="btn" id="shuffle">🔀 Trộn</button>
+          </div>
+          <div id="chips" class="toolbar" role="tablist" aria-label="Nhóm từ"></div>
+          <div id="vocab-cards" class="cards" aria-live="polite"></div>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <h3>Gợi ý chủ điểm</h3>
+            <div class="muted">Sức khỏe · Hành lý/định vị · Đồ dùng · Màu sắc · Tính chất · Thiết bị · Động từ</div>
+            <div style="margin-top:10px" class="grid">
+              <div class="pill">🩺 <b>你生病的时候，觉得怎么样？</b><span class="vi">— Khi bị bệnh, bạn thấy thế nào?</span></div>
+              <div class="pill">📦 <b>箱子/行李</b> · <b>里/上/下/左/右/前/后/旁/对面/中间</b></div>
+              <div class="pill">🧴 <b>日用品</b>: 防晒霜、牙刷、卫生纸、浴巾、湿巾、洗发水、护发素、沐浴露</div>
+              <div class="pill">🎨 <b>颜色</b>: 黑/白/红/黄/绿/紫 · <b>深/浅</b></div>
+              <div class="pill">⚖️ <b>轻/重</b> · 🆕 <b>新/旧</b></div>
+              <div class="pill">🖊️ 量词: 件/把/本/张/支/台/条/瓶/只</div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Mẹo</h3>
+            <ul class="muted">
+              <li>Nhấn <span class="kbd">VI</span> để bật nghĩa tiếng Việt.</li>
+              <li>Nhấn biểu tượng <b>🔊</b> để phát âm tự động khi bấm thẻ.</li>
+              <li>Dùng ô tìm kiếm để lọc nhanh.</li>
+            </ul>
+            <div class="progress" aria-label="Tiến độ thẻ đã mở"><span id="vocab-progress"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRAMMAR -->
+    <section id="panel-grammar" hidden>
+      <div class="grid">
+        <div class="card">
+          <h3>1) Mẫu câu: …的时候 + 觉得 + 形容词</h3>
+          <div class="muted">Khi … thì cảm thấy …</div>
+          <p><b>你生病的时候，觉得怎么样？</b><span class="vi"> — Khi bạn bị bệnh, bạn cảm thấy thế nào?</span></p>
+          <div class="quiz" data-quiz="when-feel">
+            <h4>Chọn đáp án đúng để hoàn câu</h4>
+            <div class="q" data-a="舒服">我 <u>生病的时候</u> 觉得 ____ 。</div>
+            <div class="opts">
+              <button class="opt">舒服</button>
+              <button class="opt">中药</button>
+              <button class="opt">行李</button>
+            </div>
+            <div class="result"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>2) 有 / 没（有）</h3>
+          <p>表示“có/không có”. Ví dụ: <b>妹妹有英语书吗？妹妹没有英语书。</b></p>
+          <div class="quiz" data-quiz="you-meiyou">
+            <h4>Điền vào chỗ trống</h4>
+            <div class="q" data-a="有">你箱子里____日用品吗？</div>
+            <div class="opts">
+              <button class="opt">有</button>
+              <button class="opt">是</button>
+              <button class="opt">在</button>
+            </div>
+            <div class="result"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>3) So sánh nhẹ/đậm & nhẹ/nặng</h3>
+          <p><b>比较</b> diễn tả “khá/so với”: <b>这个黑的很重，那个红的<b class="muted">比较</b>轻。</b></p>
+          <div class="quiz" data-quiz="bijiao">
+            <h4>Chọn câu tự nhiên</h4>
+            <div class="q" data-a="那个红的比较轻。">A: 这个黑的很重。B: ____</div>
+            <div class="opts">
+              <button class="opt">那个红的比较轻。</button>
+              <button class="opt">那个红的是轻比较。</button>
+              <button class="opt">那个红的轻很比较。</button>
+            </div>
+            <div class="result"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>4) 方位词 (vị trí)</h3>
+          <p>里/上/下/左/右/前/后/旁/对面/中间</p>
+          <div class="pill">例: 小猫在箱子的 <b>左边</b> 。</div>
+          <div class="pill">例: 手机在书的 <b>上面</b> 。</div>
+        </div>
+
+        <div class="card">
+          <h3>5) 颜色 + 的 + 名词</h3>
+          <p>这支笔是 <b>黑色</b> 的。那台手机是 <b>紫色</b> 的。衣服 <b>深蓝色</b>。</p>
+          <div class="quiz" data-quiz="yansi">
+            <h4>Chọn đúng</h4>
+            <div class="q" data-a="这台手机是紫色的。">____</div>
+            <div class="opts">
+              <button class="opt">这台手机是紫色的。</button>
+              <button class="opt">这支手机是紫色的。</button>
+              <button class="opt">这本手机是紫色的。</button>
+            </div>
+            <div class="result"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>6) 量词 (lượng từ)</h3>
+          <p>件(衣服) · 把(伞) · 本(书/词典) · 张(银行卡) · 支(笔) · 台(电脑/手机) · 条(裤子) · 瓶(啤酒) · 只(小鸟)</p>
+        </div>
+
+        <div class="card">
+          <h3>7) 课文对话 (Clozé)</h3>
+          <p>从课文改编：</p>
+          <div class="quiz" data-quiz="dialog1">
+            <h4>Điền từ còn thiếu</h4>
+            <div class="q" data-a="重">A：我的很 ____ ，你的重不重？</div>
+            <div class="opts">
+              <button class="opt">重</button>
+              <button class="opt">新</button>
+              <button class="opt">黑</button>
+            </div>
+            <div class="result"></div>
+          </div>
+          <div class="quiz" data-quiz="dialog2">
+            <div class="q" data-a="比较轻">B：这个黑的很重，那个红的 ____ 。</div>
+            <div class="opts">
+              <button class="opt">比较轻</button>
+              <button class="opt">很旧</button>
+              <button class="opt">很黑</button>
+            </div>
+            <div class="result"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICE -->
+    <section id="panel-practice" hidden>
+      <div class="grid">
+        <div class="card">
+          <h3>1) 量词填空 — chọn đáp án đúng</h3>
+          <div id="mw-quiz" class="grid"></div>
+        </div>
+
+        <div class="card">
+          <h3>2) Kéo thả vị trí — 小猫在箱子的…</h3>
+          <p class="muted">Kéo 🐱 đến vị trí được yêu cầu so với 📦. Hỗ trợ cảm ứng.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+            <div id="pos-target" class="pill">Đặt: <b class="need">左边</b></div>
+            <button id="pos-next" class="btn small">Câu khác ↻</button>
+          </div>
+          <div class="board" id="board" aria-label="Bảng vị trí 3x3">
+            <div class="cell" data-pos="前边">前</div>
+            <div class="cell" data-pos="上面">上</div>
+            <div class="cell" data-pos="对面">对</div>
+            <div class="cell" data-pos="左边">左</div>
+            <div class="cell" data-pos="中间">中</div>
+            <div class="cell" data-pos="右边">右</div>
+            <div class="cell" data-pos="后边">后</div>
+            <div class="cell" data-pos="下面">下</div>
+            <div class="cell" data-pos="旁边">旁</div>
+            <div class="box" aria-label="箱子">📦</div>
+            <div class="cat" id="cat" draggable="false" aria-label="小猫">🐱</div>
+          </div>
+          <div class="result" id="pos-result"></div>
+        </div>
+
+        <div class="card">
+          <h3>3) Màu sắc — chọn mô tả đúng</h3>
+          <div class="quiz" data-quiz="color-pen">
+            <div class="q" data-a="这支笔是黑色的。">🖊️ Câu đúng là?</div>
+            <div class="opts">
+              <button class="opt">这支笔是黑色的。</button>
+              <button class="opt">这台笔是黑色的。</button>
+              <button class="opt">这本笔是黑色的。</button>
+            </div>
+            <div class="result"></div>
+          </div>
+          <div class="quiz" data-quiz="color-phone">
+            <div class="q" data-a="这台手机是紫色的。">📱 Câu đúng là?</div>
+            <div class="opts">
+              <button class="opt">这台手机是紫色的。</button>
+              <button class="opt">这支手机是紫色的。</button>
+              <button class="opt">这条手机是紫色的。</button>
+            </div>
+            <div class="result"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>4) Đóng gói hành lý — 介绍5个物品</h3>
+          <p class="muted">Chọn 5 món bạn muốn mang. Hệ thống sẽ tạo câu mẫu.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap" id="pack-items"></div>
+          <div class="foot">
+            <button id="pack-generate" class="btn">✍️ Tạo câu tiếng Trung</button>
+            <button id="pack-clear" class="btn">🧹 Xóa</button>
+          </div>
+          <div id="pack-output" class="grid"></div>
+        </div>
+
+        <div class="card">
+          <h3>5) Luyện nói — phát âm câu mẫu</h3>
+          <p class="muted">Chọn câu để nghe, sau đó tự nhại lại.</p>
+          <div id="speak-list" class="grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEW -->
+    <section id="panel-review" hidden>
+      <div class="card">
+        <h3>Ôn tập nhanh (10 câu)</h3>
+        <div class="foot">
+          <button id="start-review" class="btn">▶️ Bắt đầu</button>
+          <div class="muted">Thời gian: <b id="timer">—</b></div>
+        </div>
+        <div id="review-area" class="grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  // ====== DỮ LIỆU BÀI 13 ======
+  const DATA = {
+    groups: {
+      "Sức khỏe": [
+        {zh:"你生病的时候，觉得怎么样？", vi:"Khi bạn bị bệnh, bạn cảm thấy thế nào?"},
+        {zh:"舒服", vi:"thoải mái"},
+        {zh:"不舒服", vi:"không thoải mái"},
+        {zh:"中药", vi:"thuốc Đông y"},
+        {zh:"西药", vi:"thuốc Tây y"},
+        {zh:"吃药", vi:"uống thuốc"},
+      ],
+      "Hành lý & vị trí": [
+        {zh:"箱子", vi:"va li / thùng"},
+        {zh:"行李 / 行李箱", vi:"hành lý / va li"},
+        {zh:"旅游 / 旅行", vi:"du lịch / lữ hành"},
+        {zh:"里边 / 里面", vi:"bên trong"},
+        {zh:"旁边", vi:"bên cạnh"},
+        {zh:"左边 / 右边", vi:"bên trái / bên phải"},
+        {zh:"对面", vi:"đối diện"},
+        {zh:"中间", vi:"ở giữa"},
+        {zh:"上面", vi:"bên trên"},
+        {zh:"下边", vi:"bên dưới"},
+        {zh:"前边 / 后边", vi:"phía trước / phía sau"},
+      ],
+      "Đồ dùng hàng ngày": [
+        {zh:"日用品", vi:"đồ dùng hàng ngày"},
+        {zh:"防晒霜", vi:"kem chống nắng"},
+        {zh:"牙刷", vi:"bàn chải"},
+        {zh:"卫生纸", vi:"giấy vệ sinh"},
+        {zh:"浴巾", vi:"khăn tắm"},
+        {zh:"湿巾", vi:"khăn ướt"},
+        {zh:"洗发水", vi:"dầu gội"},
+        {zh:"护发素", vi:"dầu xả"},
+        {zh:"沐浴露", vi:"sữa tắm"},
+      ],
+      "Vật dụng & thiết bị": [
+        {zh:"衣服", vi:"quần áo"},
+        {zh:"一件衣服", vi:"một chiếc áo (lượng từ 件)"},
+        {zh:"雨伞 / 一把雨伞", vi:"ô/dù (1 cái 把)"},
+        {zh:"词典 / 一本词典", vi:"từ điển (1 quyển 本)"},
+        {zh:"银行卡 / 一张银行卡", vi:"thẻ ngân hàng (1 thẻ 张)"},
+        {zh:"笔 / 一支笔", vi:"bút (1 cây 支)"},
+        {zh:"圆珠笔 / 铅笔 / 毛笔", vi:"bút bi / bút chì / bút lông"},
+        {zh:"平板电脑 / 电脑 / 手机", vi:"máy tính bảng / máy tính / điện thoại (台)"},
+        {zh:"优盘", vi:"USB"},
+      ],
+      "Tính chất & màu": [
+        {zh:"轻", vi:"nhẹ"},
+        {zh:"重", vi:"nặng"},
+        {zh:"新 / 旧", vi:"mới / cũ"},
+        {zh:"深 / 浅", vi:"đậm / nhạt"},
+        {zh:"黄色", vi:"màu vàng"},
+        {zh:"黑色", vi:"màu đen"},
+        {zh:"紫色", vi:"màu tím"},
+        {zh:"深蓝色", vi:"xanh lam đậm"},
+      ],
+      "Khác": [
+        {zh:"泡茶", vi:"pha trà"},
+        {zh:"茶叶", vi:"lá trà"},
+        {zh:"使用", vi:"sử dụng"},
+        {zh:"卖", vi:"bán"},
+      ]
+    },
+    measureWordQs: [
+      {q:"妈妈的桌上有三 ______ 铅笔和一_____ 平板电脑。", options:["支，双","只，台","台，支","支，台"], answer:3},
+      {q:"妈妈只喜欢穿裙子，所以她的衣柜里只有 ______ 裤子。", options:["一双","一张","一条","一台"], answer:2},
+      {q:"周末我和家人去动物园看动物，我看到很多 _____ 漂亮的小鸟在房子里飞来飞去。", options:["支","条","只","台"], answer:2},
+      {q:"今天是我的生日，你喝两____啤酒吧！", options:["瓶","支","个","台"], answer:0},
+    ],
+    packable: [
+      {id:"sunscreen", zh:"防晒霜", vi:"kem chống nắng", color:"橙色"},
+      {id:"toothbrush", zh:"牙刷", vi:"bàn chải", color:"蓝色"},
+      {id:"towel", zh:"浴巾", vi:"khăn tắm", color:"白色"},
+      {id:"wetwipes", zh:"湿巾", vi:"khăn ướt", color:"粉色"},
+      {id:"shampoo", zh:"洗发水", vi:"dầu gội", color:"绿色"},
+      {id:"conditioner", zh:"护发素", vi:"dầu xả", color:"紫色"},
+      {id:"gel", zh:"沐浴露", vi:"sữa tắm", color:"蓝色"},
+      {id:"umbrella", zh:"雨伞", vi:"ô/dù", color:"黑色"},
+      {id:"dictionary", zh:"词典", vi:"từ điển", color:"红色"},
+      {id:"usb", zh:"优盘", vi:"USB", color:"银色"},
+      {id:"phone", zh:"手机", vi:"điện thoại", color:"紫色"},
+      {id:"clothes", zh:"衣服", vi:"quần áo", color:"黄色"},
+    ],
+    speakSentences: [
+      "你生病的时候，觉得怎么样？",
+      "我行李箱有防晒霜，我很喜欢使用它。",
+      "这台手机是紫色的。",
+      "这个黑的很重，那个红的比较轻。",
+      "小猫在箱子的左边。",
+      "我去中国十天，所以我的箱子有很多衣服。"
+    ]
+  };
+
+  // ====== TRẠNG THÁI & TIỆN ÍCH ======
+  const LS_KEY = "l13_state_v1";
+  const state = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+  state.xp ??= 0; state.streak ??= 0; state.vocabSeen ??= {};
+
+  const $ = (sel, el=document) => el.querySelector(sel);
+  const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+  const toast = (msg) => { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1800); };
+  const save = () => localStorage.setItem(LS_KEY, JSON.stringify(state));
+  const addXP = (n=5) => { state.xp += n; state.streak += 1; updateBadges(); save(); };
+  const decStreak = () => { state.streak = 0; updateBadges(); save(); };
+  const updateBadges = () => { $('#xp b').textContent = state.xp; $('#streak b').textContent = state.streak; };
+
+  document.documentElement.setAttribute('data-theme','light');
+
+  // ====== PHÁT ÂM ======
+  let speakEnabled = false;
+  function speak(txt){
+    if(!speakEnabled) return;
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'zh-CN';
+    u.rate = 0.95; u.pitch = 1; u.volume = 1;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }
+
+  // ====== NAV TABS ======
+  const panels = {
+    vocab: $('#panel-vocab'),
+    grammar: $('#panel-grammar'),
+    practice: $('#panel-practice'),
+    review: $('#panel-review')
+  };
+  $$('#tab-vocab, #tab-grammar, #tab-practice, #tab-review').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const tab = btn.dataset.tab; Object.values(panels).forEach(p=>p.hidden=true);
+      panels[tab].hidden=false; $$('#tab-vocab, #tab-grammar, #tab-practice, #tab-review').forEach(b=>b.classList.remove('primary')); btn.classList.add('primary');
+    });
+  });
+
+  // ====== THEME / VI / SPEAK / RESET ======
+  $('#toggle-theme').addEventListener('click',()=>{
+    const cur = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', cur==='light'? 'dark': 'light');
+  });
+  $('#toggle-vi').addEventListener('click', e=>{
+    const on = document.body.classList.toggle('show-vi');
+    e.currentTarget.setAttribute('aria-pressed', on);
+  });
+  $('#speak-toggle').addEventListener('click', e=>{
+    speakEnabled = !speakEnabled; e.currentTarget.setAttribute('aria-pressed', speakEnabled);
+    toast(speakEnabled? 'Đã bật phát âm': 'Đã tắt phát âm');
+  });
+  $('#reset').addEventListener('click', ()=>{ localStorage.removeItem(LS_KEY); location.reload(); });
+
+  // ====== VOCAB CARDS ======
+  const chips = Object.keys(DATA.groups);
+  function renderChips(){
+    const box = $('#chips'); box.innerHTML='';
+    chips.forEach((c,i)=>{
+      const b = document.createElement('button'); b.className='btn small'; b.textContent = c; b.dataset.group = c;
+      if(i===0) b.classList.add('primary');
+      b.addEventListener('click', ()=>{ $$('#chips .btn').forEach(x=>x.classList.remove('primary')); b.classList.add('primary'); renderVocab(c); });
+      box.appendChild(b);
+    });
+  }
+  function renderVocab(group){
+    const list = DATA.groups[group];
+    const term = $('#vocab-search').value.trim().toLowerCase();
+    const box = $('#vocab-cards'); box.innerHTML = '';
+    const items = list.filter(x=> (x.zh+ (x.vi||'')).toLowerCase().includes(term));
+    items.forEach((item)=>{
+      const el = document.createElement('div'); el.className='card'; el.tabIndex=0; el.role='button'; el.ariaLabel = `Từ: ${item.zh}`;
+      el.innerHTML = `<h3>${item.zh}</h3>${item.pinyin?`<div class="meta">${item.pinyin}</div>`:''}<div class="vi">${item.vi||''}</div>`;
+      el.addEventListener('click', ()=>{ speak(item.zh); state.vocabSeen[item.zh]=true; save(); updateVocabProgress(); addXP(1);});
+      el.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); el.click(); }});
+      box.appendChild(el);
+    });
+  }
+  function updateVocabProgress(){
+    const total = Object.values(DATA.groups).flat().length;
+    const seen = Object.keys(state.vocabSeen||{}).length;
+    $('#vocab-progress').style.width = Math.min(100, Math.round(100*seen/total)) + '%';
+  }
+  $('#vocab-search').addEventListener('input', ()=>{
+    const current = $('#chips .primary')?.dataset.group || chips[0];
+    renderVocab(current);
+  });
+  $('#shuffle').addEventListener('click', ()=>{
+    // Shuffle each group order by reassigning
+    for(const g of Object.keys(DATA.groups)){
+      DATA.groups[g] = DATA.groups[g].sort(()=>Math.random()-.5);
+    }
+    renderVocab($('#chips .primary')?.dataset.group || chips[0]);
+  });
+
+  // ====== QUIZ ENGINE (MCQ) ======
+  function initQuizzes(){
+    $$('.quiz').forEach(box=>{
+      const correctText = box.querySelector('.q').dataset.a;
+      box.querySelectorAll('.opt').forEach((btn)=>{
+        btn.addEventListener('click', ()=>{
+          box.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-checked','false'));
+          btn.setAttribute('aria-checked','true');
+          const ok = btn.textContent.trim() === correctText.trim();
+          const res = box.querySelector('.result');
+          if(ok){ res.innerHTML = `<span class="good">✔ Đúng!</span>`; addXP(5); speak(correctText); }
+          else { res.innerHTML = `<span class="bad">✖ Sai. Đáp án: ${correctText}</span>`; decStreak(); }
+        });
+      });
+    });
+  }
+
+  // ====== MEASURE WORD QUIZ ======
+  function renderMWQuiz(){
+    const c = $('#mw-quiz'); c.innerHTML='';
+    DATA.measureWordQs.forEach((it, idx)=>{
+      const wrap = document.createElement('div'); wrap.className='quiz';
+      wrap.innerHTML = `<h4>Câu ${idx+1}</h4><div class="q">${it.q}</div>`;
+      const opts = document.createElement('div'); opts.className='opts';
+      it.options.forEach((op,i)=>{
+        const b = document.createElement('button'); b.className='opt'; b.textContent = (i+1)+'. '+op; b.addEventListener('click',()=>{
+          const correct = it.answer === i; wrap.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+          const res = document.createElement('div'); res.className='result'; res.innerHTML = correct? '<span class="good">✔ Đúng</span>' : `<span class="bad">✖ Sai</span> · Đáp án: ${(it.answer+1)}. ${it.options[it.answer]}`;
+          wrap.appendChild(res); if(correct) addXP(5); else decStreak();
+        }); opts.appendChild(b);
+      });
+      wrap.appendChild(opts); c.appendChild(wrap);
+    });
+  }
+
+  // ====== POSITION DRAG ======
+  const POS_LIST = ['左边','右边','上面','下面','前边','后边','对面','旁边','中间'];
+  let needPos = '左边';
+  function setRandomPos(){ needPos = POS_LIST[Math.floor(Math.random()*POS_LIST.length)]; $('.need').textContent = needPos; $('#pos-result').textContent=''; resetCat(); }
+  $('#pos-next').addEventListener('click', setRandomPos);
+
+  // Simple drag via pointer events
+  function resetCat(){ const cat=$('#cat'); cat.style.left='10px'; cat.style.top='10px'; }
+  (function enableDrag(){
+    const el = $('#cat'); const board = $('#board'); let startX=0,startY=0,origX=0,origY=0, dragging=false;
+    function onDown(e){ dragging=true; el.style.cursor='grabbing'; const p = getPoint(e); startX=p.x; startY=p.y; origX=parseFloat(el.style.left)||0; origY=parseFloat(el.style.top)||0; e.preventDefault(); }
+    function onMove(e){ if(!dragging) return; const p=getPoint(e); const dx=p.x-startX, dy=p.y-startY; el.style.left=(origX+dx)+'px'; el.style.top=(origY+dy)+'px'; }
+    function onUp(){ if(!dragging) return; dragging=false; el.style.cursor='grab'; checkPos(); }
+    function getPoint(ev){ if(ev.touches?.[0]) return {x:ev.touches[0].clientX, y:ev.touches[0].clientY}; return {x:ev.clientX,y:ev.clientY}; }
+    el.addEventListener('mousedown', onDown); el.addEventListener('touchstart', onDown, {passive:false});
+    window.addEventListener('mousemove', onMove); window.addEventListener('touchmove', onMove, {passive:false});
+    window.addEventListener('mouseup', onUp); window.addEventListener('touchend', onUp);
+  })();
+
+  function checkPos(){
+    const cat = $('#cat').getBoundingClientRect();
+    const box = $('.box').getBoundingClientRect();
+    let ok=false;
+    const pad = 16; // tolerance
+    switch(needPos){
+      case '左边': ok = cat.right <= box.left - pad; break;
+      case '右边': ok = cat.left >= box.right + pad; break;
+      case '上面': ok = cat.bottom <= box.top - pad; break;
+      case '下面': ok = cat.top >= box.bottom + pad; break;
+      case '前边': ok = cat.top < box.top && Math.abs((cat.left+cat.right)/2 - (box.left+box.right)/2) < 120; break;
+      case '后边': ok = cat.top > box.bottom && Math.abs((cat.left+cat.right)/2 - (box.left+box.right)/2) < 120; break;
+      case '对面': ok = Math.abs((cat.left+cat.right)/2 - (box.left+box.right)/2) < 20 && (cat.top < box.top - 80 || cat.top > box.bottom + 80); break;
+      case '旁边': ok = (Math.abs(cat.left - box.right) < 60 || Math.abs(cat.right - box.left) < 60) && Math.abs((cat.top+cat.bottom)/2 - (box.top+box.bottom)/2) < 60; break;
+      case '中间': ok = (cat.left > box.left && cat.right < box.right && cat.top > box.top && cat.bottom < box.bottom); break;
+    }
+    const res = $('#pos-result');
+    if(ok){ res.innerHTML = '<span class="good">✔ 正确！</span>'; addXP(6); speak(`小猫在箱子的${needPos}`); setTimeout(setRandomPos, 1000); }
+    else { res.innerHTML = '<span class="bad">✖ 还不对，再试试！</span>'; decStreak(); }
+  }
+  setRandomPos();
+
+  // ====== PACK GAME ======
+  const chosen = new Set();
+  function renderPackItems(){
+    const box = $('#pack-items'); box.innerHTML='';
+    DATA.packable.forEach(it=>{
+      const b = document.createElement('button'); b.className='btn small'; b.textContent = `${it.zh} (${it.vi})`; b.dataset.id = it.id;
+      b.addEventListener('click', ()=>{ if(chosen.has(it.id)) { chosen.delete(it.id); b.classList.remove('primary'); } else if(chosen.size<5){ chosen.add(it.id); b.classList.add('primary'); } else { toast('Tối đa 5 món'); } });
+      box.appendChild(b);
+    });
+  }
+  $('#pack-generate').addEventListener('click', ()=>{
+    const out = $('#pack-output'); out.innerHTML='';
+    if(chosen.size===0){ toast('Hãy chọn ít nhất 1 món'); return; }
+    const items = DATA.packable.filter(x=>chosen.has(x.id));
+    const sents = [];
+    sents.push(`我行李有很多东西，我给你介绍${items.length}个：`);
+    items.forEach((it,i)=>{
+      const color = it.color || '颜色';
+      if(i===0){ sents.push(`我行李箱有一件${color}的${it.zh}，我很喜欢使用它。`); }
+      else if(i===1){ sents.push(`我去中国十天，所以我的箱子有很多衣服，还有${it.zh}。`); }
+      else { sents.push(`我的行李箱也有${it.zh}。`); }
+    });
+    sents.forEach(s=>{
+      const p = document.createElement('div'); p.className='pill'; p.textContent = s; p.addEventListener('click', ()=>speak(s)); out.appendChild(p);
+    });
+    addXP(5);
+  });
+  $('#pack-clear').addEventListener('click', ()=>{ chosen.clear(); renderPackItems(); $('#pack-output').innerHTML=''; });
+
+  // ====== SPEAK LIST ======
+  function renderSpeakList(){
+    const box = $('#speak-list'); box.innerHTML='';
+    DATA.speakSentences.forEach(s=>{
+      const b = document.createElement('button'); b.className='btn'; b.textContent = s; b.addEventListener('click', ()=>speak(s)); box.appendChild(b);
+    });
+  }
+
+  // ====== REVIEW MODE ======
+  const REVIEW_BANK = [
+    {q:'我生病的时候觉得____。', opts:['舒服','行李','中药'], a:0},
+    {q:'这台手机是____的。', opts:['紫色','一本','比较'], a:0},
+    {q:'“裤子”的量词 là?', opts:['条','支','本'], a:0},
+    {q:'小猫在箱子的____。 (opposite side gần như đối diện)', opts:['对面','里面','上面'], a:0},
+    {q:'“牙刷” tiếng Việt là?', opts:['bàn chải','khăn tắm','kem chống nắng'], a:0},
+    {q:'选择正确：那个红的____。', opts:['比较轻','轻比较','比较很轻'], a:0},
+    {q:'“重/轻” nghĩa là?', opts:['nặng/nhẹ','mới/cũ','đậm/nhạt'], a:0},
+    {q:'银行卡 dùng lượng từ?', opts:['张','支','把'], a:0},
+    {q:'这支笔是____色的。', opts:['黑','条','张'], a:0},
+    {q:'我行李箱有_____，我很喜欢使用它。', opts:['防晒霜','比较轻','很旧'], a:0},
+  ];
+  let reviewTimer=null, left=0, score=0;
+  $('#start-review').addEventListener('click', ()=>{
+    const area = $('#review-area'); area.innerHTML='';
+    score = 0; left = 60; $('#timer').textContent = left + 's';
+    const qs = REVIEW_BANK.sort(()=>Math.random()-.5).slice(0,10);
+    qs.forEach((it,i)=>{
+      const wrap = document.createElement('div'); wrap.className='quiz';
+      wrap.innerHTML = `<h4>Câu ${i+1}</h4><div class="q">${it.q}</div>`;
+      const opts = document.createElement('div'); opts.className='opts';
+      it.opts.forEach((op,idx)=>{
+        const b = document.createElement('button'); b.className='opt'; b.textContent = op; b.addEventListener('click',()=>{
+          opts.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+          const ok = idx===it.a; const r=document.createElement('div'); r.className='result';
+          if(ok){ r.innerHTML='<span class="good">✔</span>'; score++; addXP(2);} else { r.innerHTML='<span class="bad">✖</span>'; decStreak(); }
+          wrap.appendChild(r);
+        }); opts.appendChild(b);
+      }); wrap.appendChild(opts); area.appendChild(wrap);
+    });
+    if(reviewTimer) clearInterval(reviewTimer);
+    reviewTimer = setInterval(()=>{ left--; $('#timer').textContent = left + 's'; if(left<=0){ clearInterval(reviewTimer); toast('Hết giờ! Điểm: '+score+'/10'); } }, 1000);
+  });
+
+  // ====== INIT ======
+  function init(){
+    updateBadges(); renderChips(); renderVocab(chips[0]); updateVocabProgress(); initQuizzes(); renderMWQuiz(); renderPackItems(); renderSpeakList();
+  }
+  init();
+  </script>
+</body>
+</html>

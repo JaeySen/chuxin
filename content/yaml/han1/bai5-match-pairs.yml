@@ -1,0 +1,16 @@
+id: han1-bai5-match-pairs
+course: han1
+order: 5
+title: "Bài 5 — Ghép cặp Hán tự với phiên âm"
+subtitle: "Lật thẻ và tìm cặp Hán tự ↔ pinyin"
+interactionType: match-pairs
+pairKind: hanzi-pinyin
+estimatedMinutes: 6
+tags: [memory-game, vocabulary]
+pairs:
+  - { a: "你好", b: "nǐ hǎo" }
+  - { a: "谢谢", b: "xiè xie" }
+  - { a: "再见", b: "zài jiàn" }
+  - { a: "对不起", b: "duì bu qǐ" }
+  - { a: "没关系", b: "méi guān xi" }
+  - { a: "请问", b: "qǐng wèn" }

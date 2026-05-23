@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Thi Giữa Kỳ Tiếng Trung - 练习 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fff1f2; /* Rose-50 */
+            background-image: radial-gradient(#fecdd3 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .chinese-text {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .cute-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .cute-card:hover {
+            transform: translateY(-2px);
+        }
+        .input-line {
+            border: none;
+            border-bottom: 2px dashed #cbd5e1;
+            outline: none;
+            padding: 0 5px;
+            color: #db2777;
+            text-align: center;
+            background: transparent;
+            transition: border-color 0.3s;
+        }
+        .input-line:focus {
+            border-bottom: 2px solid #db2777;
+        }
+        
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 1rem;
+            z-index: 50;
+        }
+
+        /* Pinyin Styles */
+        ruby {
+            ruby-position: over;
+        }
+        rt {
+            font-size: 0.6em;
+            color: #888;
+            font-weight: normal;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease;
+            user-select: none; /* Prevent selecting pinyin when copying text */
+        }
+        /* Class to show pinyin */
+        body.show-pinyin rt {
+            opacity: 1;
+        }
+
+        /* Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #ec4899;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ec4899;
+        }
+
+        /* Audio Player Styles */
+        .audio-player-container {
+            background: #fff0f5;
+            border-radius: 15px;
+            padding: 15px;
+            border: 2px dashed #fbcfe8;
+            text-align: center;
+        }
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ec4899;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(236, 72, 153, 0.3);
+        }
+        .play-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            background: #db2777;
+        }
+        .play-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none; /* Only show when playing */
+        }
+        .progress-fill {
+            height: 100%;
+            background: #ec4899;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        /* Result Mode Styles */
+        .review-mode .hide-on-review { display: none; }
+        .review-mode input, .review-mode textarea {
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            pointer-events: none;
+        }
+        .correct-answer {
+            color: #16a34a;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+        .review-mode .correct-answer { display: block; }
+    </style>
+</head>
+<body class="pb-20">
+
+    <div class="max-w-3xl mx-auto p-4">
+        <!-- Control Header: Timer & Pinyin Toggle -->
+        <div class="sticky-header flex flex-col md:flex-row justify-between items-center bg-white/95 backdrop-blur-sm p-4 rounded-2xl shadow-lg border-2 border-pink-100 mb-8 gap-4">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="bg-pink-100 p-2 rounded-full hidden md:block">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-gray-700 text-lg md:text-xl">ĐỀ KIỂM TRA GIỮA KỲ</h1>
+                    <!-- Pinyin Toggle Switch -->
+                    <div class="flex items-center mt-1">
+                        <label for="pinyinToggle" class="flex items-center cursor-pointer">
+                            <div class="relative">
+                                <input type="checkbox" id="pinyinToggle" class="sr-only" onchange="togglePinyin()">
+                                <div class="w-10 h-6 bg-gray-200 rounded-full shadow-inner transition-colors duration-300 ease-in-out toggle-bg"></div>
+                                <div class="dot absolute w-4 h-4 bg-white rounded-full shadow -left-1 -top-1 transition transform duration-300 ease-in-out" style="top: 4px; left: 4px;"></div>
+                            </div>
+                            <div class="ml-2 text-xs font-semibold text-gray-500">Hiện Pinyin</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 pt-2 md:pt-0 border-gray-100">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500">Thời gian</p>
+                    <div id="timer" class="text-xl font-bold text-pink-600 font-mono">45:00</div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            #pinyinToggle:checked ~ .toggle-bg { background-color: #ec4899; }
+            #pinyinToggle:checked ~ .dot { transform: translateX(100%); }
+        </style>
+
+        <!-- Student Info -->
+        <div class="cute-card p-6 mb-6 border-l-8 border-pink-400">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-600 mb-1">Họ và tên (姓名):</label>
+                    <input type="text" id="studentName" class="w-full p-2 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-300 outline-none" placeholder="Nhập tên của bạn...">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-600 mb-1">Lớp (班级):</label>
+                    <input type="text" class="w-full p-2 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-300 outline-none" placeholder="Ví dụ: Hán 1-K15">
+                </div>
+            </div>
+        </div>
+
+        <form id="examForm" onsubmit="return false;">
+            
+            <!-- Part A -->
+            <div class="cute-card p-6 mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-pink-100 text-pink-600 font-bold px-3 py-1 rounded-full text-sm">Phần A</span>
+                    <h2 class="font-bold text-gray-700">Hoàn thành câu (完成句子)</h2>
+                </div>
+                <div class="space-y-4 chinese-text text-lg text-gray-700">
+                    <div class="p-3 bg-pink-50 rounded-lg">
+                        <span>1. <ruby>你<rt>nǐ</rt>学<rt>xué</rt></ruby></span>
+                        <input type="text" class="input-line w-32" placeholder="...">
+                        <span>?</span>
+                    </div>
+                    <div class="p-3 bg-white border border-pink-100 rounded-lg">
+                        <span>2. <ruby>今<rt>jīn</rt>天<rt>tiān</rt>是<rt>shì</rt></ruby></span>
+                        <input type="text" class="input-line w-32" placeholder="...">
+                        <span>。</span>
+                    </div>
+                    <div class="p-3 bg-pink-50 rounded-lg">
+                        <span>3. <ruby>我<rt>wǒ</rt>去<rt>qù</rt>中<rt>zhōng</rt>国<rt>guó</rt></ruby>，<ruby>我<rt>wǒ</rt>学<rt>xué</rt></ruby></span>
+                        <input type="text" class="input-line w-32" placeholder="...">
+                        <span>。</span>
+                    </div>
+                    <div class="p-3 bg-white border border-pink-100 rounded-lg">
+                        <span>4. <ruby>我<rt>wǒ</rt>很<rt>hěn</rt>忙<rt>máng</rt></ruby>，<ruby>我<rt>wǒ</rt>回<rt>huí</rt></ruby></span>
+                        <input type="text" class="input-line w-32" placeholder="...">
+                        <span>吗?</span>
+                    </div>
+                    <div class="p-3 bg-pink-50 rounded-lg">
+                        <span>5. <ruby>今<rt>jīn</rt>天<rt>tiān</rt>星<rt>xīng</rt>期<rt>qī</rt>二<rt>èr</rt></ruby>，<ruby>后<rt>hòu</rt>天<rt>tiān</rt></ruby></span>
+                        <input type="text" class="input-line w-32" placeholder="...">
+                        <span>，<ruby>银<rt>yín</rt>行<rt>háng</rt>不<rt>bù</rt>工<rt>gōng</rt>作<rt>zuò</rt></ruby>。</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part B: Auto-Graded -->
+            <div class="cute-card p-6 mb-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-bl-lg font-bold">
+                    Tự động chấm điểm
+                </div>
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-teal-100 text-teal-600 font-bold px-3 py-1 rounded-full text-sm">Phần B</span>
+                    <h2 class="font-bold text-gray-700">Sắp xếp câu (重组句子)</h2>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Q1 -->
+                    <div class="border-b border-gray-100 pb-4">
+                        <p class="chinese-text text-gray-600 mb-2 bg-gray-50 p-2 rounded">
+                            1. <ruby>爸<rt>bà</rt>爸<rt>ba</rt></ruby> / <ruby>身<rt>shēn</rt>体<rt>tǐ</rt></ruby> / <ruby>妈<rt>mā</rt>妈<rt>ma</rt></ruby> / <ruby>吗<rt>ma</rt></ruby> / <ruby>好<rt>hǎo</rt></ruby> / ?
+                        </p>
+                        <input type="text" id="q_b1" class="w-full p-3 rounded-lg border border-gray-200 focus:border-teal-400 outline-none chinese-text" placeholder="Nhập câu trả lời...">
+                        <div id="res_b1" class="correct-answer">Đáp án: 爸爸妈妈身体好吗？</div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border-b border-gray-100 pb-4">
+                        <p class="chinese-text text-gray-600 mb-2 bg-gray-50 p-2 rounded">
+                            2. <ruby>我<rt>wǒ</rt></ruby> / <ruby>邮<rt>yóu</rt>局<rt>jú</rt></ruby> / <ruby>去<rt>qù</rt></ruby> / <ruby>信<rt>xìn</rt></ruby> / <ruby>寄<rt>jì</rt></ruby> 。
+                        </p>
+                        <input type="text" id="q_b2" class="w-full p-3 rounded-lg border border-gray-200 focus:border-teal-400 outline-none chinese-text" placeholder="Nhập câu trả lời...">
+                        <div id="res_b2" class="correct-answer">Đáp án: 我去邮局寄信。</div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border-b border-gray-100 pb-4">
+                        <p class="chinese-text text-gray-600 mb-2 bg-gray-50 p-2 rounded">
+                            3. <ruby>是<rt>shì</rt></ruby> / <ruby>这<rt>zhè</rt></ruby> / <ruby>段<rt>Duàn</rt></ruby> / <ruby>老<rt>lǎo</rt>师<rt>shī</rt></ruby> 。
+                        </p>
+                        <input type="text" id="q_b3" class="w-full p-3 rounded-lg border border-gray-200 focus:border-teal-400 outline-none chinese-text" placeholder="Nhập câu trả lời...">
+                        <div id="res_b3" class="correct-answer">Đáp án: 这是段老师。</div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="border-b border-gray-100 pb-4">
+                        <p class="chinese-text text-gray-600 mb-2 bg-gray-50 p-2 rounded">
+                            4. <ruby>英<rt>yīng</rt>语<rt>yǔ</rt></ruby> / <ruby>我<rt>wǒ</rt></ruby> / <ruby>在<rt>zài</rt></ruby>(ở) / <ruby>美<rt>měi</rt>国<rt>guó</rt></ruby> / <ruby>学<rt>xué</rt>习<rt>xí</rt></ruby> 。
+                        </p>
+                        <input type="text" id="q_b4" class="w-full p-3 rounded-lg border border-gray-200 focus:border-teal-400 outline-none chinese-text" placeholder="Nhập câu trả lời...">
+                        <div id="res_b4" class="correct-answer">Đáp án: 我在美国学习英语。</div>
+                    </div>
+                    
+                     <!-- Q5 -->
+                     <div class="pb-2">
+                        <p class="chinese-text text-gray-600 mb-2 bg-gray-50 p-2 rounded">
+                            5. <ruby>请<rt>qǐng</rt></ruby> / <ruby>工<rt>gōng</rt>作<rt>zuò</rt></ruby> / <ruby>请<rt>qǐng</rt></ruby> / <ruby>吗<rt>ma</rt></ruby> / <ruby>忙<rt>máng</rt></ruby> / <ruby>坐<rt>zuò</rt></ruby> / <ruby>请<rt>qǐng</rt></ruby> / <ruby>茶<rt>chá</rt></ruby> / <ruby>好<rt>hǎo</rt></ruby> / <ruby>喝<rt>hē</rt></ruby> / <ruby>您<rt>nín</rt></ruby> / <ruby>您<rt>nín</rt></ruby> / <ruby>进<rt>jìn</rt></ruby> / ! / ! / ! / ! 。
+                        </p>
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:border-teal-400 outline-none chinese-text" rows="2" placeholder="Nhập câu trả lời..."></textarea>
+                         <div class="correct-answer">Gợi ý: 您好！请进！请坐！请喝茶！您工作忙吗？</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part C -->
+            <div class="cute-card p-6 mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-purple-100 text-purple-600 font-bold px-3 py-1 rounded-full text-sm">Phần C</span>
+                    <h2 class="font-bold text-gray-700">Đặt câu (造句)</h2>
+                </div>
+                <div class="grid gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="chinese-text w-20 font-bold text-gray-700">1. <ruby>忙<rt>máng</rt></ruby>:</span>
+                        <input type="text" class="flex-1 p-2 border-b-2 border-purple-100 focus:border-purple-400 outline-none bg-transparent chinese-text">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="chinese-text w-20 font-bold text-gray-700">2. <ruby>中<rt>zhōng</rt>国<rt>guó</rt></ruby>:</span>
+                        <input type="text" class="flex-1 p-2 border-b-2 border-purple-100 focus:border-purple-400 outline-none bg-transparent chinese-text">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="chinese-text w-20 font-bold text-gray-700">3. <ruby>德<rt>dé</rt>语<rt>yǔ</rt></ruby>:</span>
+                        <input type="text" class="flex-1 p-2 border-b-2 border-purple-100 focus:border-purple-400 outline-none bg-transparent chinese-text">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="chinese-text w-20 font-bold text-gray-700">4. <ruby>学<rt>xué</rt>校<rt>xiào</rt></ruby>:</span>
+                        <input type="text" class="flex-1 p-2 border-b-2 border-purple-100 focus:border-purple-400 outline-none bg-transparent chinese-text">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="chinese-text w-20 font-bold text-gray-700">5. <ruby>星<rt>xīng</rt>期<rt>qī</rt>二<rt>èr</rt></ruby>:</span>
+                        <input type="text" class="flex-1 p-2 border-b-2 border-purple-100 focus:border-purple-400 outline-none bg-transparent chinese-text">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part D -->
+            <div class="cute-card p-6 mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-blue-100 text-blue-600 font-bold px-3 py-1 rounded-full text-sm">Phần D</span>
+                    <h2 class="font-bold text-gray-700">Dịch thuật (翻译)</h2>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 mb-1">1. Mẹ tớ là người Việt Nam.</p>
+                        <textarea class="w-full p-3 rounded-lg bg-blue-50 border-none chinese-text focus:ring-2 focus:ring-blue-200" rows="2"></textarea>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 mb-1">2. Tôi thứ hai, tư, sáu đến Trung tâm tiếng Trung Nihao học tiếng Trung.</p>
+                        <textarea class="w-full p-3 rounded-lg bg-blue-50 border-none chinese-text focus:ring-2 focus:ring-blue-200" rows="2"></textarea>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 mb-1">3. Hôm qua là chủ nhật, ngân hàng không làm việc. Hôm nay là thứ hai, tôi đi ngân hàng rút tiền.</p>
+                        <textarea class="w-full p-3 rounded-lg bg-blue-50 border-none chinese-text focus:ring-2 focus:ring-blue-200" rows="2"></textarea>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 mb-1 chinese-text">4. <ruby>请<rt>qǐng</rt>喝<rt>hē</rt>茶<rt>chá</rt></ruby>! <ruby>你<rt>nǐ</rt>哥<rt>gē</rt>哥<rt>ge</rt>妹<rt>mèi</rt>妹<rt>mei</rt>好<rt>hǎo</rt>吗<rt>ma</rt></ruby>?</p>
+                        <textarea class="w-full p-3 rounded-lg bg-blue-50 border-none focus:ring-2 focus:ring-blue-200" rows="2" placeholder="Dịch sang tiếng Việt..."></textarea>
+                    </div>
+                     <div>
+                        <p class="text-sm font-semibold text-gray-600 mb-1 chinese-text">5. <ruby>王<rt>Wáng</rt>老<rt>lǎo</rt>师<rt>shī</rt></ruby>!<ruby>您<rt>nín</rt>好<rt>hǎo</rt></ruby>!<ruby>你<rt>nǐ</rt>工<rt>gōng</rt>作<rt>zuò</rt>忙<rt>máng</rt>吗<rt>ma</rt></ruby>?</p>
+                        <textarea class="w-full p-3 rounded-lg bg-blue-50 border-none focus:ring-2 focus:ring-blue-200" rows="2" placeholder="Dịch sang tiếng Việt..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+             <!-- Part E: Listening -->
+            <div class="cute-card p-6 mb-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-orange-100 text-orange-600 font-bold px-3 py-1 rounded-full text-sm">Phần E</span>
+                    <h2 class="font-bold text-gray-700">Nghe viết (写出你所听到的词语)</h2>
+                </div>
+                
+                <!-- Audio Player -->
+                <div class="audio-player-container mb-6">
+                    <p class="text-sm text-gray-600 font-bold mb-3">Nghe đoạn ghi âm và điền vào chỗ trống</p>
+                    
+                    <!-- Hidden Audio Element -->
+                    <audio id="examAudio">
+                        <source src="https://res.cloudinary.com/dylnm79id/video/upload/v1764074782/5428394134766_gigokf.mp4" type="video/mp4">
+                        Trình duyệt của bạn không hỗ trợ audio.
+                    </audio>
+
+                    <!-- Controls -->
+                    <div class="flex flex-col items-center justify-center">
+                        <button id="playBtn" class="play-btn" onclick="togglePlay()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </button>
+                        <div class="mt-3 text-sm text-pink-600 font-bold">
+                            Số lần nghe còn lại: <span id="playsLeft">2</span>
+                        </div>
+                        
+                        <!-- Progress Bar (No seeking allowed) -->
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div id="statusText" class="text-xs text-gray-400 mt-2 h-4"></div>
+                    </div>
+                </div>
+
+                <div class="chinese-text text-lg space-y-4 text-gray-700 pl-4">
+                     <div class="p-2 border-b border-dashed border-gray-300">
+                        1. A: <input type="text" class="input-line w-24"> 吗？<br>
+                        &nbsp;&nbsp;&nbsp;B: <input type="text" class="input-line w-24">
+                    </div>
+                     <div class="p-2 border-b border-dashed border-gray-300">
+                        2. A: 你 <input type="text" class="input-line w-24"> 汉语 <input type="text" class="input-line w-24"> 吗？<br>
+                        &nbsp;&nbsp;&nbsp;B: 不太 <input type="text" class="input-line w-24">
+                    </div>
+                     <div class="p-2 border-b border-dashed border-gray-300">
+                        3. A: 你 <input type="text" class="input-line w-24"> 英语吗？<br>
+                        &nbsp;&nbsp;&nbsp;B: 不，<input type="text" class="input-line w-24">
+                    </div>
+                     <div class="p-2 border-b border-dashed border-gray-300">
+                        4. A: 今天 <input type="text" class="input-line w-24"> ?<br>
+                        &nbsp;&nbsp;&nbsp;B: 今天 <input type="text" class="input-line w-24">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center mb-12">
+                <button id="submitBtn" onclick="submitExam()" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-4 px-12 rounded-full shadow-lg transform transition hover:scale-105 text-lg flex items-center gap-2 mx-auto">
+                    <span>Nộp bài & Xem kết quả</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+
+        <!-- Result Footer -->
+        <div id="resultFooter" class="hidden text-center p-6 bg-white rounded-xl shadow-xl border-2 border-teal-100">
+            <h3 class="text-2xl font-bold text-teal-600 mb-2">🎉 Đã hoàn thành!</h3>
+            <p class="text-gray-600 mb-4">Hãy chụp màn hình (Screenshot) toàn bộ trang này và gửi cho giáo viên nhé.</p>
+            <div class="inline-block bg-gray-100 p-3 rounded-lg text-left">
+                <p class="font-bold text-gray-700">Điểm phần B (Tự động): <span id="autoScore" class="text-pink-600 text-xl">0</span>/4</p>
+                <p class="text-xs text-gray-500">*Các phần khác giáo viên sẽ chấm sau khi nhận ảnh.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- PINYIN TOGGLE ---
+        function togglePinyin() {
+            const checkBox = document.getElementById("pinyinToggle");
+            if (checkBox.checked) {
+                document.body.classList.add("show-pinyin");
+            } else {
+                document.body.classList.remove("show-pinyin");
+            }
+        }
+
+        // --- AUDIO PLAYER LOGIC ---
+        const audio = document.getElementById('examAudio');
+        const playBtn = document.getElementById('playBtn');
+        const playsLeftSpan = document.getElementById('playsLeft');
+        const progressFill = document.getElementById('progressFill');
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+        
+        let playsLeft = 2;
+        let isPlaying = false;
+
+        function togglePlay() {
+            if (playsLeft <= 0) return;
+
+            if (!isPlaying) {
+                // Start playing
+                audio.play();
+                playBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="2"/>
+                    </svg>`; // Stop Icon styling (visual only, actually disables interaction usually in exams but here we let it play out)
+                
+                // Disable button while playing to force full listen? 
+                // UX decision: Let's disable the button while playing so they can't pause/resume to "cheat" the counter.
+                playBtn.disabled = true; 
+                playBtn.style.background = "#db2777";
+                
+                statusText.innerText = "Đang phát...";
+                progressBar.style.display = 'block';
+                isPlaying = true;
+            }
+        }
+
+        // Update progress bar
+        audio.ontimeupdate = function() {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = percent + "%";
+            }
+        };
+
+        // When audio ends
+        audio.onended = function() {
+            isPlaying = false;
+            playsLeft--;
+            playsLeftSpan.innerText = playsLeft;
+            
+            // Reset UI
+            playBtn.disabled = false;
+            playBtn.style.background = "#ec4899"; // Reset color
+            playBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>`;
+            statusText.innerText = "Đã phát xong.";
+            progressFill.style.width = "0%";
+            progressBar.style.display = 'none';
+
+            // Check limit
+            if (playsLeft <= 0) {
+                playBtn.disabled = true;
+                playBtn.style.background = "#9ca3af";
+                statusText.innerText = "Bạn đã hết lượt nghe.";
+                statusText.classList.add("text-red-500");
+            }
+        };
+
+        // --- TIMER & GRADING ---
+        let timeLeft = 45 * 60; 
+        const timerElement = document.getElementById('timer');
+        
+        const countdown = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            timerElement.textContent = `${minutes}:${seconds}`;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                alert("Hết giờ! Hệ thống sẽ tự động nộp bài.");
+                submitExam();
+            }
+            timeLeft--;
+        }, 1000);
+
+        function submitExam() {
+            clearInterval(countdown);
+            document.body.classList.add('review-mode');
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('resultFooter').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => input.setAttribute('readonly', true));
+
+            // Force show Pinyin on review? Optional. Let's keep user preference or force show?
+            // document.body.classList.add("show-pinyin"); // Uncomment to auto-show pinyin on result
+
+            let scoreB = 0;
+            const clean = (str) => str.replace(/[^\u4e00-\u9fa5]/g, ""); 
+            const answers = {
+                'q_b1': ['爸爸妈妈身体好吗', '妈妈爸爸身体好吗'],
+                'q_b2': ['我去邮局寄信'],
+                'q_b3': ['这是段老师'],
+                'q_b4': ['我在美国学习英语']
+            };
+
+            for (let id in answers) {
+                const el = document.getElementById(id);
+                const userVal = clean(el.value);
+                const correctVals = answers[id].map(v => clean(v));
+                if (correctVals.includes(userVal) && userVal !== "") {
+                    scoreB++;
+                    el.style.border = "2px solid #22c55e";
+                    el.style.backgroundColor = "#dcfce7";
+                    const check = document.createElement('span');
+                    check.innerHTML = "✅";
+                    check.className = "absolute right-3 top-10"; 
+                    el.parentElement.style.position = "relative";
+                    el.parentElement.appendChild(check);
+                } else {
+                    el.style.border = "2px solid #ef4444";
+                    el.style.backgroundColor = "#fee2e2";
+                    const cross = document.createElement('span');
+                    cross.innerHTML = "❌";
+                    cross.className = "absolute right-3 top-10"; 
+                    el.parentElement.style.position = "relative";
+                    el.parentElement.appendChild(cross);
+                }
+            }
+            document.getElementById('autoScore').textContent = scoreB;
+        }
+    </script>
+</body>
+</html>

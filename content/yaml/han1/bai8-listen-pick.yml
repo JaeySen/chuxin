@@ -1,0 +1,26 @@
+id: han1-bai8-listen-pick
+course: han1
+order: 8
+title: "Bài 8 — Nghe và chọn từ đúng"
+subtitle: "Nghe audio rồi chọn từ bạn vừa nghe"
+interactionType: listen-pick
+estimatedMinutes: 8
+tags: [listening, vocabulary]
+items:
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000001/hanai/nihao.mp3"
+    prompt: "Bạn vừa nghe được từ nào?"
+    options: ["你好", "再见", "谢谢", "对不起"]
+    correctIndex: 0
+    transcript: "你好"
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000002/hanai/xiexie.mp3"
+    options: ["请问", "谢谢", "没关系", "你好"]
+    correctIndex: 1
+    transcript: "谢谢"
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000003/hanai/zaijian.mp3"
+    options: ["再见", "再来", "在家", "见面"]
+    correctIndex: 0
+    transcript: "再见"
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000004/hanai/duibuqi.mp3"
+    options: ["不客气", "对不起", "没关系", "请问"]
+    correctIndex: 1
+    transcript: "对不起"

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuyển Dụng CTV KINH DOANH - HANAI LAB</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9', // Sky blue
+                            600: '#0284c7',
+                            700: '#0369a1', // Deep blue
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0284c7, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-700 bg-gray-50 antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 start-0 glass-effect border-b border-gray-200">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between px-4 py-3">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="https://res.cloudinary.com/dylnm79id/image/upload/v1769343424/Kho%CC%82ng_ne%CC%82%CC%80n_ev0wrm.png" class="h-12 md:h-16 object-contain" alt="HanAI Lab Logo">
+                <span class="self-center text-xl md:text-2xl font-bold whitespace-nowrap text-brand-700 tracking-tight hidden sm:block">HANAI LAB</span>
+            </a>
+            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                <a href="#apply" class="text-white bg-brand-600 hover:bg-brand-700 focus:ring-4 focus:outline-none focus:ring-brand-300 font-medium rounded-full text-sm px-6 py-2.5 text-center transition-all shadow-lg hover:shadow-brand-500/30">
+                    Ứng Tuyển Ngay
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-br from-brand-50 to-white overflow-hidden relative">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-brand-100 blur-3xl opacity-50"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-100 blur-3xl opacity-50"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
+            <span class="bg-brand-100 text-brand-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4 inline-block">Cơ hội Part-time Hot</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
+                Trở Thành Cộng Tác Viên <br/>
+                <span class="gradient-text">KINH DOANH Online</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                HanAI Lab tìm kiếm những cộng sự năng động, yêu thích giáo dục để cùng lan tỏa các khóa học tiếng Trung chất lượng. Làm việc từ xa - Thu nhập hấp dẫn.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#jd" class="text-brand-700 bg-white border border-brand-200 hover:bg-gray-50 hover:border-brand-300 font-medium rounded-lg text-lg px-8 py-3 transition-colors">
+                    Xem Chi Tiết
+                </a>
+                <a href="#apply" class="text-white bg-brand-600 hover:bg-brand-700 font-medium rounded-lg text-lg px-8 py-3 shadow-lg shadow-brand-500/30 transition-all transform hover:-translate-y-1">
+                    Gửi CV Ngay <i class="fa-solid fa-paper-plane ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Grid -->
+    <section id="jd" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <!-- Box 1 -->
+                <div class="bg-brand-50 rounded-2xl p-8 border border-brand-100 text-center card-hover">
+                    <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-brand-600 text-2xl">
+                        <i class="fa-solid fa-laptop-house"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Làm Việc Online 100%</h3>
+                    <p class="text-gray-600">Thời gian linh hoạt, làm việc từ xa. Không gò bó không gian.</p>
+                </div>
+                <!-- Box 2 -->
+                <div class="bg-brand-50 rounded-2xl p-8 border border-brand-100 text-center card-hover">
+                    <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-brand-600 text-2xl">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Đối Tượng Phù Hợp</h3>
+                    <p class="text-gray-600">Sinh viên ngoại ngữ, người có kinh nghiệm sales/telesales online.</p>
+                </div>
+                <!-- Box 3 -->
+                <div class="bg-brand-50 rounded-2xl p-8 border border-brand-100 text-center card-hover">
+                    <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-brand-600 text-2xl">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Cơ Hội Học Tập</h3>
+                    <p class="text-gray-600">Ưu đãi học phí các khóa học Tiếng Trung dành riêng cho nội bộ.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                <!-- Mô tả công việc -->
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                        <span class="w-2 h-8 bg-brand-500 rounded-full mr-3"></span>
+                        Mô Tả Công Việc
+                    </h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check-circle text-brand-500 mt-1 mr-3"></i>
+                            <span class="text-gray-600">Chủ động tìm kiếm và khai thác nguồn học viên mới trên các hội nhóm, mạng xã hội.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check-circle text-brand-500 mt-1 mr-3"></i>
+                            <span class="text-gray-600">Tư vấn lộ trình học, học phí, ưu đãi cho học viên tiềm năng.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check-circle text-brand-500 mt-1 mr-3"></i>
+                            <span class="text-gray-600">Hỗ trợ học viên hoàn tất thủ tục đăng ký và đóng học phí.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check-circle text-brand-500 mt-1 mr-3"></i>
+                            <span class="text-gray-600">Chăm sóc học viên cũ để gia tăng tỉ lệ tái đăng ký hoặc giới thiệu.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Yêu cầu -->
+                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                        <span class="w-2 h-8 bg-orange-400 rounded-full mr-3"></span>
+                        Yêu Cầu Ứng Viên
+                    </h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mr-3 mt-0.5">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Kỹ năng giao tiếp</h4>
+                                <p class="text-sm text-gray-600">Có khả năng thuyết phục và xử lý tình huống tốt.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mr-3 mt-0.5">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Thái độ</h4>
+                                <p class="text-sm text-gray-600">Nhiệt tình, trách nhiệm, phản hồi nhanh chóng.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mr-3 mt-0.5">
+                                <i class="fa-solid fa-language"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Kiến thức</h4>
+                                <p class="text-sm text-gray-600">Ưu tiên biết tiếng Trung hoặc hiểu về thị trường EdTech.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Commission Section -->
+    <section class="py-16 bg-brand-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Chế Độ Hoa Hồng & Quyền Lợi</h2>
+                <p class="text-brand-200 text-lg max-w-3xl mx-auto">
+                    Hoa hồng được tính dựa trên tổng số học viên <span class="text-white font-semibold">chốt khóa và hoàn thành học phí</span> trong 1 tháng.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
+                <!-- Level 1 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hover:bg-white/20 transition-all">
+                    <div class="text-lg font-medium text-brand-200 mb-2">Khởi động</div>
+                    <div class="text-4xl font-bold mb-2">5%</div>
+                    <div class="text-sm text-brand-100 mb-4">trên mỗi học viên</div>
+                    <div class="w-full h-px bg-white/20 mb-4"></div>
+                    <p class="font-semibold">5 học viên đầu tiên</p>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hover:bg-white/20 transition-all transform md:-translate-y-4 relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Phổ biến</div>
+                    <div class="text-lg font-medium text-brand-200 mb-2">Tăng tốc</div>
+                    <div class="text-4xl font-bold mb-2 text-yellow-400">7%</div>
+                    <div class="text-sm text-brand-100 mb-4">trên mỗi học viên</div>
+                    <div class="w-full h-px bg-white/20 mb-4"></div>
+                    <p class="font-semibold">Từ học viên thứ 6 - 10</p>
+                </div>
+
+                <!-- Level 3 -->
+                <div class="bg-gradient-to-b from-brand-600 to-brand-800 rounded-xl p-6 border-2 border-yellow-400 text-center shadow-2xl transform hover:scale-105 transition-all relative overflow-hidden">
+                     <div class="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">HOT</div>
+                    <div class="flex justify-center mb-2 text-yellow-400"><i class="fa-solid fa-crown text-2xl"></i></div>
+                    <div class="text-lg font-medium text-white mb-2">Bứt phá</div>
+                    <div class="text-5xl font-bold mb-2 text-yellow-400">10%</div>
+                    <div class="text-sm text-brand-100 mb-4">trên mỗi học viên</div>
+                    <div class="w-full h-px bg-white/20 mb-4"></div>
+                    <p class="font-bold text-white mb-3">Từ học viên thứ 10 trở lên</p>
+                    
+                    <div class="bg-white/10 rounded-lg p-2 border border-yellow-400/30">
+                        <div class="text-yellow-300 font-bold text-sm uppercase flex items-center justify-center gap-2">
+                             <i class="fa-solid fa-fire"></i> Thưởng nóng 500k
+                        </div>
+                        <div class="text-[11px] text-brand-100 mt-1">Khi đạt mốc 10 học viên/tháng</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Extra Benefits Grid -->
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                 <!-- Training -->
+                 <div class="bg-white/5 rounded-lg p-5 border border-white/10 hover:bg-white/10 transition-colors text-left">
+                    <div class="w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-book-open-reader text-brand-200"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 text-white">Đào Tạo Chuyên Sâu</h4>
+                    <p class="text-brand-200 text-sm leading-relaxed">Được hướng dẫn kỹ năng tư vấn, cung cấp kịch bản chốt sale và tài liệu chuyên nghiệp.</p>
+                 </div>
+                 
+                 <!-- Discount -->
+                 <div class="bg-white/5 rounded-lg p-5 border border-white/10 hover:bg-white/10 transition-colors text-left">
+                    <div class="w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-tags text-brand-200"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 text-white">Ưu Đãi Nội Bộ</h4>
+                    <p class="text-brand-200 text-sm leading-relaxed">Ưu tiên tham gia các khóa học tiếng Trung tại trung tâm với mức học phí ưu đãi đặc biệt.</p>
+                 </div>
+
+                 <!-- Career Path (New) -->
+                 <div class="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-lg p-5 border border-orange-500/30 hover:bg-white/10 transition-colors text-left relative">
+                    <div class="absolute top-3 right-3 text-orange-400 text-xs border border-orange-400 px-2 py-0.5 rounded-full">New</div>
+                    <div class="w-10 h-10 rounded-full bg-orange-900/50 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-chalkboard-user text-orange-400"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2 text-orange-200">Cơ Hội Giảng Dạy</h4>
+                    <p class="text-brand-200 text-sm leading-relaxed">Được đào tạo nghiệp vụ để tham gia đội ngũ giáo viên (dành cho SV tốt nghiệp ngành Ngôn ngữ Trung).</p>
+                 </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <p class="text-brand-300/80 text-sm italic inline-block border-b border-dashed border-brand-300/50 pb-1">
+                    * Lưu ý: Số lượng học viên tính hoa hồng sẽ được làm mới (reset) theo từng tháng. Thưởng thêm khi vượt chỉ tiêu hoặc có phản hồi xuất sắc.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact -->
+    <section id="apply" class="py-20 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Sẵn Sàng Gia Nhập HANAI LAB?</h2>
+            <p class="text-gray-600 mb-10">Hãy gửi CV ngay để bắt đầu hành trình mới cùng chúng tôi</p>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <!-- Facebook Button -->
+                <a href="https://www.facebook.com/HanAILab" target="_blank" class="group relative inline-flex items-center justify-center px-8 py-4 font-semibold text-white transition-all duration-200 bg-[#1877F2] rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 shadow-lg hover:shadow-blue-500/50">
+                    <i class="fa-brands fa-facebook-f mr-3 text-xl"></i>
+                    Liên hệ Facebook
+                </a>
+
+                <!-- Email Button -->
+                <a href="mailto:CSKH@hanailab.id.vn?subject=[CTV TƯ VẤN] - HỌ VÀ TÊN" class="group relative inline-flex items-center justify-center px-8 py-4 font-semibold text-white transition-all duration-200 bg-red-500 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-lg hover:shadow-red-500/50">
+                    <i class="fa-solid fa-envelope mr-3 text-xl"></i>
+                    Gửi CV Ứng Tuyển
+                </a>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-gray-200 text-gray-500 text-sm">
+                <p class="font-semibold text-gray-700 text-lg mb-2">Trung tâm Tiếng Trung HANAI LAB</p>
+                <p class="mb-1"><i class="fa-solid fa-phone mr-2"></i>Hotline/Zalo: 0938 065 101</p>
+                <p><i class="fa-solid fa-envelope mr-2"></i>Email: CSKH@hanailab.id.vn</p>
+                <p class="mt-8 text-xs text-gray-400">© 2024 HanAI Lab. All rights reserved.</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

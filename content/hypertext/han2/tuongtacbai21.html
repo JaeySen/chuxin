@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Viết Tiếng Trung: Một Ngày Của Tôi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .suggestion-card {
+            transition: all 0.3s ease-in-out;
+        }
+        .suggestion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .suggestion-content.open {
+            max-height: 1000px; /* Adjust as needed */
+        }
+        .vocab-btn {
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .vocab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .vocab-btn .pinyin, .vocab-btn .vietnamese {
+            display: none;
+        }
+        #vocab-container.show-pinyin .pinyin {
+            display: inline;
+        }
+        #vocab-container.show-vietnamese .vietnamese {
+            display: block;
+        }
+        .speaker-icon {
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .speaker-icon:hover {
+            opacity: 1;
+        }
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #14B8A6; /* teal-500 */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #14B8A6; /* teal-500 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-700">Luyện Viết: Một Ngày Của Tôi</h1>
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-600 mt-2">我的一天</h2>
+            <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Sử dụng khung soạn thảo bên dưới để viết một đoạn văn mô tả một ngày của bạn. Bạn có thể dùng các công cụ hỗ trợ để tham khảo từ vựng, cấu trúc câu và bài văn mẫu.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Writing Area -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-semibold mb-4 text-teal-600">Khung soạn thảo</h3>
+                <textarea id="writingArea" class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200" placeholder="Bắt đầu viết ở đây... (例如：我每天早上六点半起床...)"></textarea>
+                <div class="flex justify-between items-center mt-4">
+                    <button id="clearButton" class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition shadow-md">Xóa toàn bộ</button>
+                    <div id="charCounter" class="text-gray-500 font-medium">Số chữ: 0</div>
+                </div>
+            </div>
+
+            <!-- Suggestions Sidebar -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Vocabulary Suggestions -->
+                <div class="suggestion-card bg-white p-4 rounded-2xl shadow-lg">
+                    <button class="toggle-button w-full text-left font-bold text-lg text-teal-700 flex justify-between items-center">
+                        <span>💡 Gợi ý Từ vựng (词汇)</span>
+                        <span class="arrow text-2xl transform transition-transform">▼</span>
+                    </button>
+                    <div class="suggestion-content mt-4">
+                        <!-- Controls for Pinyin and Vietnamese -->
+                        <div class="flex justify-around items-center mb-4 p-2 bg-gray-100 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="mr-2 text-sm font-medium text-gray-700">Pinyin</span>
+                                <label for="pinyinToggle" class="flex items-center cursor-pointer">
+                                    <div class="relative">
+                                        <input type="checkbox" id="pinyinToggle" class="sr-only">
+                                        <div class="block bg-gray-300 w-10 h-6 rounded-full"></div>
+                                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                                    </div>
+                                </label>
+                            </div>
+                             <div class="flex items-center">
+                                <span class="mr-2 text-sm font-medium text-gray-700">Nghĩa Việt</span>
+                                <label for="vietnameseToggle" class="flex items-center cursor-pointer">
+                                    <div class="relative">
+                                        <input type="checkbox" id="vietnameseToggle" class="sr-only">
+                                        <div class="block bg-gray-300 w-10 h-6 rounded-full"></div>
+                                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="vocab-container" class="space-y-4">
+                            <!-- Vocab categories will be injected here by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sentence Patterns -->
+                <div class="suggestion-card bg-white p-4 rounded-2xl shadow-lg">
+                    <button class="toggle-button w-full text-left font-bold text-lg text-teal-700 flex justify-between items-center">
+                        <span>📚 Mẫu câu (句型)</span>
+                        <span class="arrow text-2xl transform transition-transform">▼</span>
+                    </button>
+                    <div class="suggestion-content mt-4">
+                        <ul id="sentence-patterns" class="list-disc list-inside space-y-3 text-gray-700">
+                           <!-- Sentence patterns will be injected here by JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample Text -->
+                <div class="suggestion-card bg-white p-4 rounded-2xl shadow-lg">
+                    <button class="toggle-button w-full text-left font-bold text-lg text-teal-700 flex justify-between items-center">
+                        <span>例文 Bài văn mẫu</span>
+                        <span class="arrow text-2xl transform transition-transform">▼</span>
+                    </button>
+                    <div class="suggestion-content mt-4">
+                        <div class="p-4 bg-gray-100 rounded-lg">
+                            <h4 class="font-bold mb-2">我的一天</h4>
+                            <p class="text-sm text-gray-700 leading-relaxed">
+                                我每天早上六点半起床，七点吃早饭。差十分八点去教室，八点上课。上午我们有四节课，十二点下课。中午我去食堂吃午饭。午饭以后，我常常去朋友哪儿聊天儿。下午没有课的时候，我去图书馆看书，或者跟中国朋友一起练习口语。有时候在宿舍看电影光盘。四点我去操场锻炼身体。五点回宿舍洗澡，洗衣服，六点半或者七点吃晚饭。晚上我做练习，写汉字，预习课文和生词，然后看看电视，听听音乐，十一点睡觉。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for suggestions
+        const vocabData = {
+            "☀️ Buổi sáng (早上)": [
+                { zh: "起床", pinyin: "qǐchuáng", vi: "Thức dậy" },
+                { zh: "刷牙", pinyin: "shuāyá", vi: "Đánh răng" },
+                { zh: "洗脸", pinyin: "xǐliǎn", vi: "Rửa mặt" },
+                { zh: "吃早饭", pinyin: "chī zǎofàn", vi: "Ăn sáng" },
+                { zh: "上课", pinyin: "shàngkè", vi: "Vào học" },
+                { zh: "上班", pinyin: "shàngbān", vi: "Đi làm" },
+                { zh: "教室", pinyin: "jiàoshì", vi: "Phòng học" },
+            ],
+            "🌤️ Buổi trưa & chiều (中午和下午)": [
+                { zh: "吃午饭", pinyin: "chī wǔfàn", vi: "Ăn trưa" },
+                { zh: "下课", pinyin: "xiàkè", vi: "Tan học" },
+                { zh: "下班", pinyin: "xiàbān", vi: "Tan làm" },
+                { zh: "休息", pinyin: "xiūxi", vi: "Nghỉ ngơi" },
+                { zh: "图书馆", pinyin: "túshūguǎn", vi: "Thư viện" },
+                { zh: "操场", pinyin: "cāochǎng", vi: "Sân vận động" },
+                { zh: "锻炼身体", pinyin: "duànliàn shēntǐ", vi: "Tập thể dục" },
+                { zh: "跑步", pinyin: "pǎobù", vi: "Chạy bộ" },
+            ],
+            "🌙 Buổi tối (晚上)": [
+                { zh: "吃晚饭", pinyin: "chī wǎnfàn", vi: "Ăn tối" },
+                { zh: "回宿舍", pinyin: "huí sùshè", vi: "Về ký túc xá" },
+                { zh: "洗澡", pinyin: "xǐ zǎo", vi: "Tắm" },
+                { zh: "洗衣服", pinyin: "xǐ yīfu", vi: "Giặt đồ" },
+                { zh: "做练习", pinyin: "zuò liànxí", vi: "Làm bài tập" },
+                { zh: "写汉字", pinyin: "xiě hànzì", vi: "Viết chữ Hán" },
+                { zh: "看电视", pinyin: "kàn diànshì", vi: "Xem TV" },
+                { zh: "听音乐", pinyin: "tīng yīnyuè", vi: "Nghe nhạc" },
+                { zh: "上网", pinyin: "shàng wǎng", vi: "Lên mạng" },
+                { zh: "睡觉", pinyin: "shuìjiào", vi: "Đi ngủ" },
+            ],
+            "⚙️ Động từ & Từ nối (动词和连词)": [
+                { zh: "去", pinyin: "qù", vi: "Đi" },
+                { zh: "来", pinyin: "lái", vi: "Đến" },
+                { zh: "在", pinyin: "zài", vi: "Ở" },
+                { zh: "做", pinyin: "zuò", vi: "Làm" },
+                { zh: "看", pinyin: "kàn", vi: "Xem, đọc" },
+                { zh: "跟...一起", pinyin: "gēn...yīqǐ", vi: "Cùng với..." },
+                { zh: "以后", pinyin: "yǐhòu", vi: "Sau khi" },
+                { zh: "的时候", pinyin: "de shíhòu", vi: "Khi..." },
+                { zh: "然后", pinyin: "ránhòu", vi: "Sau đó" },
+                { zh: "或者", pinyin: "huòzhě", vi: "Hoặc là" },
+                { zh: "常常", pinyin: "chángcháng", vi: "Thường xuyên" },
+                { zh: "有时候", pinyin: "yǒu shíhòu", vi: "Có lúc" },
+            ]
+        };
+
+        const sentencePatternsData = [
+            "<strong>Biểu đạt thời gian:</strong><br>我 [buổi] [giờ] [phút] [hành động].<br><i>(VD: 我早上六点半起床。)</i>",
+            "<strong>Tuần tự hành động (1):</strong><br>[Hành động 1] 以后, 我 [hành động 2].<br><i>(VD: 午饭以后, 我常常去朋友那儿聊天儿。)</i>",
+            "<strong>Tuần tự hành động (2):</strong><br>我先 [hành động 1], 然后 [hành động 2].<br><i>(VD: 我先洗澡, 然后睡觉。)</i>",
+            "<strong>Biểu đạt lựa chọn:</strong><br>我 [hành động 1] 或者 [hành động 2].<br><i>(VD: 我去图书馆看书, 或者跟朋友一起练习口语。)</i>",
+            "<strong>Thời gian kém:</strong><br>差 [số phút] [giờ] [hành động].<br><i>(VD: 差十分八点去教室。)</i>"
+        ];
+        
+        // DOM Elements
+        const writingArea = document.getElementById('writingArea');
+        const charCounter = document.getElementById('charCounter');
+        const clearButton = document.getElementById('clearButton');
+        const toggleButtons = document.querySelectorAll('.toggle-button');
+        const vocabContainer = document.getElementById('vocab-container');
+        const sentencePatternsContainer = document.getElementById('sentence-patterns');
+        const pinyinToggle = document.getElementById('pinyinToggle');
+        const vietnameseToggle = document.getElementById('vietnameseToggle');
+
+        // --- Functions ---
+
+        // Function to populate vocabulary
+        function populateVocabulary() {
+            vocabContainer.innerHTML = '';
+            for (const category in vocabData) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.innerHTML = `<h4 class="font-semibold text-gray-600 mb-2">${category}</h4>`;
+                
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'grid grid-cols-2 gap-2';
+                
+                vocabData[category].forEach(word => {
+                    const btn = document.createElement('div');
+                    btn.className = 'vocab-btn bg-teal-50 hover:bg-teal-100 text-teal-800 text-sm font-medium p-2 rounded-md shadow-sm cursor-pointer';
+                    btn.dataset.text = word.zh;
+                    
+                    btn.innerHTML = `
+                        <div class="flex-grow text-left">
+                            <span class="font-bold">${word.zh}</span>
+                            <span class="pinyin text-xs text-gray-500 ml-1">${word.pinyin}</span>
+                            <span class="vietnamese text-xs text-teal-600 italic">${word.vi}</span>
+                        </div>
+                        <span class="speaker-icon" data-text="${word.zh}" title="Nghe phát âm">🔊</span>
+                    `;
+                    buttonContainer.appendChild(btn);
+                });
+                
+                categoryDiv.appendChild(buttonContainer);
+                vocabContainer.appendChild(categoryDiv);
+            }
+        }
+
+        function populateSentencePatterns() {
+            sentencePatternsContainer.innerHTML = '';
+            sentencePatternsData.forEach(pattern => {
+                const li = document.createElement('li');
+                li.innerHTML = pattern;
+                sentencePatternsContainer.appendChild(li);
+            });
+        }
+
+        function insertAtCursor(myField, myValue) {
+            // Function implementation remains the same
+            if (document.selection) {
+                myField.focus();
+                sel = document.selection.createRange();
+                sel.text = myValue;
+            } else if (myField.selectionStart || myField.selectionStart == '0') {
+                var startPos = myField.selectionStart;
+                var endPos = myField.selectionEnd;
+                myField.value = myField.value.substring(0, startPos) +
+                    myValue +
+                    myField.value.substring(endPos, myField.value.length);
+                myField.selectionStart = startPos + myValue.length;
+                myField.selectionEnd = startPos + myValue.length;
+            } else {
+                myField.value += myValue;
+            }
+            myField.focus();
+            updateCharCount();
+        }
+
+        function updateCharCount() {
+            const count = writingArea.value.length;
+            charCounter.textContent = `Số chữ: ${count}`;
+        }
+
+        // Function to speak text
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN'; // Set language to Chinese
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Trình duyệt của bạn không hỗ trợ chức năng phát âm.');
+            }
+        }
+
+        // --- Event Listeners ---
+
+        writingArea.addEventListener('input', updateCharCount);
+
+        clearButton.addEventListener('click', () => {
+             // Use a custom modal in a real app, but confirm is fine for this context
+            if (window.confirm('Bạn có chắc muốn xóa toàn bộ nội dung?')) {
+                writingArea.value = '';
+                updateCharCount();
+            }
+        });
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const arrow = button.querySelector('.arrow');
+                content.classList.toggle('open');
+                arrow.classList.toggle('rotate-180');
+            });
+        });
+
+        // Event delegation for vocabulary buttons
+        vocabContainer.addEventListener('click', (e) => {
+            const speakerIcon = e.target.closest('.speaker-icon');
+            const vocabBtn = e.target.closest('.vocab-btn');
+
+            if (speakerIcon) {
+                e.stopPropagation(); // Prevent inserting text when clicking speaker
+                speak(speakerIcon.dataset.text);
+            } else if (vocabBtn) {
+                insertAtCursor(writingArea, vocabBtn.dataset.text);
+            }
+        });
+
+        // Toggle Pinyin visibility
+        pinyinToggle.addEventListener('change', (e) => {
+            vocabContainer.classList.toggle('show-pinyin', e.target.checked);
+            // Style the toggle
+            const dot = e.target.nextElementSibling.nextElementSibling;
+            if (e.target.checked) {
+                dot.style.transform = 'translateX(100%)';
+                e.target.nextElementSibling.style.backgroundColor = '#14B8A6';
+            } else {
+                dot.style.transform = 'translateX(0)';
+                e.target.nextElementSibling.style.backgroundColor = '';
+            }
+        });
+        
+        // Toggle Vietnamese meaning visibility
+        vietnameseToggle.addEventListener('change', (e) => {
+            vocabContainer.classList.toggle('show-vietnamese', e.target.checked);
+             // Style the toggle
+            const dot = e.target.nextElementSibling.nextElementSibling;
+            if (e.target.checked) {
+                dot.style.transform = 'translateX(100%)';
+                e.target.nextElementSibling.style.backgroundColor = '#14B8A6';
+            } else {
+                dot.style.transform = 'translateX(0)';
+                e.target.nextElementSibling.style.backgroundColor = '';
+            }
+        });
+
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populateVocabulary();
+            populateSentencePatterns();
+            updateCharCount();
+        });
+    </script>
+    <style>
+        /* Additional styles for the toggle switch */
+        input:checked ~ .dot {
+            transform: translateX(100%);
+            background-color: #fff;
+        }
+        input:checked ~ div:first-of-type {
+            background-color: #10B981; /* A slightly different green for checked state */
+        }
+    </style>
+</body>
+</html>

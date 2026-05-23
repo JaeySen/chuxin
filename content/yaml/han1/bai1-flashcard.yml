@@ -1,0 +1,43 @@
+id: han1-bai1-flashcard
+course: han1
+order: 1
+title: "Bài 1 — Flashcard chào hỏi"
+subtitle: "Học từ vựng cơ bản qua thẻ lật"
+interactionType: flashcard
+estimatedMinutes: 10
+tags: [vocabulary, greetings]
+cards:
+  - hanzi: "你好"
+    pinyin: "nǐ hǎo"
+    vi: "Xin chào"
+    example:
+      hanzi: "你好，老师！"
+      pinyin: "nǐ hǎo, lǎoshī!"
+      vi: "Chào cô/thầy!"
+  - hanzi: "谢谢"
+    pinyin: "xiè xie"
+    vi: "Cảm ơn"
+    example:
+      hanzi: "谢谢你！"
+      pinyin: "xiè xie nǐ!"
+      vi: "Cảm ơn bạn!"
+  - hanzi: "再见"
+    pinyin: "zài jiàn"
+    vi: "Tạm biệt"
+    example:
+      hanzi: "老师，再见！"
+      pinyin: "lǎoshī, zài jiàn!"
+      vi: "Tạm biệt thầy/cô!"
+  - hanzi: "对不起"
+    pinyin: "duì bu qǐ"
+    vi: "Xin lỗi"
+    example:
+      hanzi: "对不起，我迟到了。"
+      pinyin: "duì bu qǐ, wǒ chí dào le."
+      vi: "Xin lỗi, tôi đến muộn."
+  - hanzi: "没关系"
+    pinyin: "méi guān xi"
+    vi: "Không sao"
+  - hanzi: "请"
+    pinyin: "qǐng"
+    vi: "Mời / xin"

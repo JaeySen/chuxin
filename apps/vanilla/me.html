@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hanai Lab — Tiến độ học tập</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/styles.css" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+  <script src="/shared/firebase-config.js"></script>
+</head>
+<body>
+  <header id="hanai-header" class="hanai-header"></header>
+  <main class="lesson-shell">
+    <h1 style="color: var(--c-blue-dark);">Tiến độ học tập</h1>
+    <p class="muted">Tổng hợp các bài học bạn đã hoàn thành và điểm cao nhất.</p>
+    <div id="progress-host" class="lesson-list" style="margin-top:24px;"></div>
+  </main>
+
+  <script type="module">
+    import { auth, db, collection, getDocs, query, orderBy } from "/shared/firebase.js";
+    import { mountHeader, requireAuth, el } from "/shared/ui.js";
+
+    mountHeader();
+
+    requireAuth(async (user) => {
+      const host = document.getElementById("progress-host");
+      const snap = await getDocs(
+        query(collection(db, "users", user.uid, "progress"), orderBy("lastSeenAt", "desc")),
+      );
+      if (snap.empty) {
+        host.appendChild(el("div", { class: "feedback feedback-info" }, "Bạn chưa làm bài nào. Hãy chọn bài đầu tiên!"));
+        return;
+      }
+      snap.forEach((d) => {
+        const p = d.data();
+        const row = el("a", { class: "lesson-row", href: `/lesson.html?id=${d.id}` });
+        row.appendChild(el("div", {},
+          el("strong", {}, d.id),
+          el("div", { class: "muted", style: "font-size:13px;" },
+            `Số lần làm: ${p.attempts ?? 0} · Điểm cao nhất: ${p.bestScore ?? "—"}`),
+        ));
+        row.appendChild(el("span", { class: "badge" }, p.completed ? "✓ Hoàn thành" : "Đang học"));
+        host.appendChild(row);
+      });
+    });
+  </script>
+</body>
+</html>

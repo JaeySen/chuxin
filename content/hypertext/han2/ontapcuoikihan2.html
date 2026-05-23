@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập tiếng Trung vui</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh thêm để giao diện "dễ thương" hơn */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f4f8; /* Màu nền xanh nhạt */
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #2c5282; /* Xanh đậm */
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: #2b6cb0; /* Xanh vừa */
+            border-bottom: 2px solid #bee3f8; /* Xanh nhạt */
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        .exercise-block {
+            background-color: #fafffe;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-block:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .reading-passage, .dialogue {
+            background-color: #fdfdff;
+            border-left: 4px solid #63b3ed; /* Xanh dương */
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .question {
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .pinyin {
+            font-style: italic;
+            color: #718096;
+            font-weight: 400;
+            font-size: 0.95rem;
+        }
+
+        .options label {
+            display: block;
+            background-color: #fff;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .options label:hover {
+            background-color: #ebf8ff;
+            border-color: #90cdf4;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 0.75rem;
+        }
+
+        .check-btn {
+            background-color: #4299e1; /* Xanh dương */
+            color: white;
+            padding: 0.6rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .check-btn:hover {
+            background-color: #2b6cb0;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            display: none; /* Ẩn ban đầu */
+        }
+
+        .feedback-correct {
+            background-color: #c6f6d5; /* Xanh lá nhạt */
+            color: #2f855a; /* Xanh lá đậm */
+            display: block;
+        }
+
+        .feedback-reference {
+            background-color: #fffaf0; /* Vàng kem */
+            color: #c05621; /* Cam đậm */
+            display: block;
+        }
+
+        .fill-in-blank select {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e0;
+            margin: 0 0.25rem;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            background-color: #fdfdff;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="container">
+        <h1>Bài tập tiếng Trung vui 🐼</h1>
+
+        <!-- Nút Tắt/Mở Pinyin -->
+        <button id="togglePinyinBtn" class="check-btn" style="background-color: #38a169; margin-bottom: 1.5rem; display: block; margin-left: auto; margin-right: auto;">Ẩn Pinyin</button>
+
+        <!-- Phần I: Đọc đoạn văn -->
+        <section id="part1">
+            <h2>I. Đọc và trả lời câu hỏi</h2>
+            <div class="reading-passage">
+                <p>我的宿舍不太安静。所以下午我常去图书馆学习。我在那儿看书,看中文杂志,
+                    有时候还在那儿看中国电影和电视剧的DVD。现在我很少看英文的东西。有时
+                    候上网跟朋友聊天,收发Email。晚上,我常复习课文,预习生词,或者做练习,写汉
+                    字。星期六和星期日,我在宿舍休息,有时候跟朋友去公园玩儿,或者去超市买东
+                    西。</p>
+                <p class="pinyin">Wõ de sùshè bù tài ānjìng. Suoyi xiàwù wõ cháng qù túshū guăn xuéxí. Wõ zài nà'er kànshū, kàn
+                    zhòng wén zázhì, yòu shíhòu hái zài nàr kàn zhòng guó diànyĩng hé diànshìjù de DVD. Xiànzài wǒ
+                    hěn shǎo kàn yīngwén de dōngxī. You shíhòu shàngwăng gēn péngyǒu liáotiān, shōufā Email.
+                    Wănshàng, wõ cháng fùxí kèwén, yùxí shēngcí, huòzhě zuò liànxí, xiě hànzì. Xīngqiliù hé xīngqiri,
+                    wǒ zài sùshè xiūxí, yǒu shíhòu gēn péngyǒu qù gōngyuán wán er, huòzhě qù chãoshì mãi dōngxī.</p>
+            </div>
+
+            <div class="exercise-block">
+                <div class="question">
+                    <p class="question-text">1. 我的宿舍怎么样? <span class="pinyin">(Wo de sùshè zěnme yàng?)</span></p>
+                    <div class="options" id="q1-1">
+                        <label><input type="radio" name="q1-1" value="A"> A. 很吵 (Hěn chão)</label>
+                        <label><input type="radio" name="q1-1" value="B"> B. 很安静 (Hěn ānjìng)</label>
+                        <label><input type="radio" name="q1-1" value="C"> C. 不安静 (Bù ānjìng)</label>
+                        <label><input type="radio" name="q1-1" value="D"> D. 不太安静 (Bù tài ānjìng)</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q1-1', 'D', 'D. 不太安静')">Kiểm tra</button>
+                    <div id="feedback-q1-1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-block">
+                <div class="question">
+                    <p class="question-text">2. 晚上他不做什么? <span class="pinyin">(Wănshàng tã bù zuò shénme?)</span></p>
+                    <div class="options" id="q1-2">
+                        <label><input type="radio" name="q1-2" value="A"> A. 预习生词 (Yùxí shēngcí)</label>
+                        <label><input type="radio" name="q1-2" value="B"> B. 复习课文 (Fùxí kèwén)</label>
+                        <label><input type="radio" name="q1-2" value="C"> C. 写汉字 (Xiě hànzì)</label>
+                        <label><input type="radio" name="q1-2" value="D"> D. 看电视剧 (Kàn diànshìjù)</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q1-2', 'D', 'D. 看电视剧')">Kiểm tra</button>
+                    <div id="feedback-q1-2" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-block">
+                <div class="question">
+                    <p class="question-text">3. 周末他在宿舍做什么? <span class="pinyin">(Zhōumò tã zài sùshè zuò shénme?)</span></p>
+                    <div class="options" id="q1-3">
+                        <label><input type="radio" name="q1-3" value="A"> A. 休息 (Xiūxi)</label>
+                        <label><input type="radio" name="q1-3" value="B"> B. 玩儿 (Wánr)</label>
+                        <label><input type="radio" name="q1-3" value="C"> C. 上网 (Shàngwăng)</label>
+                        <label><input type="radio" name="q1-3" value="D"> D. 收发 Email (Shōufā Email)</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q1-3', 'A', 'A. 休息')">Kiểm tra</button>
+                    <div id="feedback-q1-3" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần II: Đọc hội thoại -->
+        <section id="part2">
+            <h2>II. Đọc hội thoại và trả lời câu hỏi</h2>
+
+            <div class="exercise-block">
+                <div class="dialogue">
+                    <p>男: 这件裙子你喜欢吗? (Zhè jiàn qúnzi nĩ xihuān ma?)</p>
+                    <p>女: 还好吧!那件红色的你觉得怎么样,漂亮不漂亮? (Hái hão ba! Nà jiàn hóngsè de ni juédé zěnme yàng, piàoliang bù piàoliang?)</p>
+                    <p>男: 那件太贵了吧,你别买那么贵的衣服。(Nà jiàn tài guìle ba, nǐ bié mãi nàme guì de yīfú.)</p>
+                    <p>女: 贵吗?四百块钱,就买那件吧! (Gui ma? Sìbăi kuài qián, jiù mãi nà jiàn ba!)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">1. 问: 女的想买什么? <span class="pinyin">(Nữ de xiăng mãi shénme?)</span></p>
+                    <div class="options" id="q2-1">
+                        <label><input type="radio" name="q2-1" value="A"> A. 红色的裙子</label>
+                        <label><input type="radio" name="q2-1" value="B"> B. 不贵的裙子</label>
+                        <label><input type="radio" name="q2-1" value="C"> C. 男的喜欢的裙子</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q2-1', 'A', 'A. 红色的裙子')">Kiểm tra</button>
+                    <div id="feedback-q2-1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-block">
+                <div class="dialogue">
+                    <p>男: 昨天下午我游泳的时候看见小李了,游完泳我们还一起去喝了杯咖啡。(Zuótiān xiàwù wǒ yóuyõng de shíhòu kànjiàn xião lile, yóu wán yǒng women yīqǐ qù hēle bēi kāfēi.)</p>
+                    <p>女: 是吗?很长时间了没看见他。他还好吗?找到工作了吗? (Shì ma? Hên cháng shíjiānle méi kànjiàn tã. Tã hái hão ma? Zhǎodào gōngzuòle ma?)</p>
+                    <p>男: 他很好。现在在一家大公司上班,还买了一辆汽车。(Tã hěn hão. Xiànzài zài yījiā dà gōngsī shàngbān, hái măile yī liàng qìchẽ.)</p>
+                    <p>女: 真好! (Zhēn hão!)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">2. 问: 女的认识小李吗? <span class="pinyin">(Nǚ de rènshí xiǎo lǐ ma?)</span></p>
+                    <div class="options" id="q2-2">
+                        <label><input type="radio" name="q2-2" value="A"> A. 认识</label>
+                        <label><input type="radio" name="q2-2" value="B"> B. 不认识</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q2-2', 'A', 'A. 认识')">Kiểm tra</button>
+                    <div id="feedback-q2-2" class="feedback"></div>
+                </div>
+            </div>
+
+             <div class="exercise-block">
+                <div class="dialogue">
+                    <p>男: 我再看一分钟,好吗? (Wǒ zài kàn yī fēnzhōng, hǎo ma?)</p>
+                    <p>女: 你已经说了三次了。(Nǐ yǐjīng shuōle sāncì le.)</p>
+                    <p>男: 电影快要看完了,你让我看完吧,看完后我就去洗衣服。(Diànyǐng kuàiyào kàn wánliǎo, nǐ ràng wǒ kàn wán ba, kàn wán hòu wǒ jiù qù xǐ yīfú.)</p>
+                    <p>女: 好吧!你快点儿啊。(Hǎo ba! Nǐ kuài diǎn er a.)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">3. 问: 男的在做什么? <span class="pinyin">(Nán de zài zuò shénme?)</span></p>
+                    <div class="options" id="q2-3">
+                        <label><input type="radio" name="q2-3" value="A"> A. 他在看电影</label>
+                        <label><input type="radio" name="q2-3" value="B"> B. 他在洗衣服</label>
+                        <label><input type="radio" name="q2-3" value="C"> C. 他在说谎</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q2-3', 'A', 'A. 他在看电影')">Kiểm tra</button>
+                    <div id="feedback-q2-3" class="feedback"></div>
+                </div>
+            </div>
+
+             <div class="exercise-block">
+                <div class="dialogue">
+                    <p>女: 是不是菜不好吃啊?要不要我再叫几个菜? (Shì bùshì cài bù hào chĩ a? Yào bùyào wǒ zài jiào jǐ gè cài?)</p>
+                    <p>男: 不要了,我不吃了。今天的菜都很好吃。(Bùyàole, wǒ bù chīle. Jīntiān de cài dōu hěn hào chĩ.)</p>
+                    <p>女: 那你怎么吃很少啊? (Nà nǐ zěnme chī hěn shǎo a?)</p>
+                    <p>男: 我觉得有点儿不舒服。(Wǒ juédé yǒudiǎn er bú shūfú.)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">4. 问: 他们现在在哪儿? <span class="pinyin">(Tāmen xiànzài zài nǎ'er?)</span></p>
+                    <div class="options" id="q2-4">
+                        <label><input type="radio" name="q2-4" value="A"> A. 在家</label>
+                        <label><input type="radio" name="q2-4" value="B"> B. 在饭馆</label>
+                        <label><input type="radio" name="q2-4" value="C"> C. 在医院</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q2-4', 'B', 'B. 在饭馆')">Kiểm tra</button>
+                    <div id="feedback-q2-4" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần III: Trả lời câu hỏi (PDF II) -->
+        <section id="part3">
+            <h2>III. Đọc và trả lời câu hỏi</h2>
+
+            <div class="exercise-block">
+                <div class="dialogue">
+                    <p>1. 下午我看见大卫手里拿着一件女式的衣服。他说是给妈妈买的衣服,明天是她的生日。(Xiàwù wǒ kànjiàn dà wèi shǒu lǐ názhe yī jiàn nǚ shì de yīfú. Tā shuō shì gěi māmā mǎi de yīfú, míngtiān shì tā de shēngrì.)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">问: 为什么大卫买衣服? <span class="pinyin">(Wèishéme dà wèi mǎi yīfú?)</span></p>
+                    <div class="options" id="q3-1">
+                        <label><input type="radio" name="q3-1" value="A"> A. 因为他喜欢女式衣服</label>
+                        <label><input type="radio" name="q3-1" value="B"> B. 因为明天是她妈妈的生日</label>
+                        <label><input type="radio" name="q3-1" value="C"> C. 因为他给女朋友买</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q3-1', 'B', 'B. 因为明天是她妈妈的生日')">Kiểm tra</button>
+                    <div id="feedback-q3-1" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-block">
+                <div class="dialogue">
+                    <p>2. 一个小时前我看见张老师开着车出去了。你要找他就打电话给他吧! (Yīgè xiǎoshí qián wǒ kànjiàn zhāng lǎoshī kāizhe chē chūqùle. Nǐ yào zhǎo tā jiù dǎ diànhuà gěi tā ba!)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">问: 张老师在家吗? <span class="pinyin">(Zhāng lǎoshī zàijiā ma?)</span></p>
+                    <div class="options" id="q3-2">
+                        <label><input type="radio" name="q3-2" value="A"> A. 在家</label>
+                        <label><input type="radio" name="q3-2" value="B"> B. 不在家, 他出去了</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q3-2', 'B', 'B. 不在家, 他出去了')">Kiểm tra</button>
+                    <div id="feedback-q3-2" class="feedback"></div>
+                </div>
+            </div>
+
+            <div class="exercise-block">
+                <div class="dialogue">
+                    <p>3. 下午三点你在学校门口等我。我们一起去打篮球。大卫也想跟我们一起去呢! (Xiàwù sān diǎn nǐ zài xuéxiào ménkǒu děng wǒ. Wǒmen yīqǐ qù dǎ lánqiú. Dà wèi yě xiǎng gēn wǒmen yīqǐ qù ne!)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">问: 下午几个人去打篮球? <span class="pinyin">(Xiàwù jǐ gè rén qù dǎ lánqiú?)</span></p>
+                    <div class="options" id="q3-3">
+                        <label><input type="radio" name="q3-3" value="A"> A. 两个人</label>
+                        <label><input type="radio" name="q3-3" value="B"> B. 三个人</label>
+                        <label><input type="radio" name="q3-3" value="C"> C. 一个人</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q3-3', 'B', 'B. 三个人')">Kiểm tra</button>
+                    <div id="feedback-q3-3" class="feedback"></div>
+                </div>
+            </div>
+
+             <div class="exercise-block">
+                <div class="dialogue">
+                    <p>4. 大卫不是学过一年汉语吗?怎么名字也不会写呢? (Dà wèi bùshì xuéguò yī nián hànyǔ ma? Zěnme míngzì yě bù huì xiě ne?)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">问: 大卫的汉语怎么样? <span class="pinyin">(Dà wèi de hànyǔ zěnme yàng?)</span></p>
+                    <div class="options" id="q3-4">
+                        <label><input type="radio" name="q3-4" value="A"> A. 很好</label>
+                        <label><input type="radio" name="q3-4" value="B"> B. 不太好</label>
+                        <label><input type="radio" name="q3-4" value="C"> C. 他没学过</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q3-4', 'B', 'B. 不太好')">Kiểm tra</button>
+                    <div id="feedback-q3-4" class="feedback"></div>
+                </div>
+            </div>
+
+             <div class="exercise-block">
+                <div class="dialogue">
+                    <p>5. 教室里面正在给学生上课是新来的马老师吗? (Jiàoshì lǐmiàn zhèngzài gěi xuéshēng shàngkè shì xīn lái de mǎ lǎoshī ma?)</p>
+                </div>
+                <div class="question">
+                    <p class="question-text">问: 正在上课的老师姓什么? <span class="pinyin">(Zhèngzài shàngkè de lǎoshī xìng shénme?)</span></p>
+                    <div class="options" id="q3-5">
+                        <label><input type="radio" name="q3-5" value="A"> A. 姓马</label>
+                        <label><input type="radio" name="q3-5" value="B"> B. 姓张</label>
+                        <label><input type="radio" name="q3-5" value="C"> C. 姓李</label>
+                    </div>
+                    <button class="check-btn" onclick="checkAnswer('q3-5', 'A', 'A. 姓马')">Kiểm tra</button>
+                    <div id="feedback-q3-5" class="feedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần IV: Điền từ (PDF V) -->
+        <section id="part4">
+            <h2>IV. Điền từ thích hợp vào chỗ trống</h2>
+            <div class="reading-passage" style="text-align: center; font-weight: 700; font-size: 1.2rem;">
+                等 / 进 / 过 / 生日 / 完
+            </div>
+
+            <div class="exercise-block fill-in-blank">
+                <p class="question-text">
+                    1. 请 (
+                    <select id="fill-1">
+                        <option value="">...</option>
+                        <option value="等">等</option>
+                        <option value="进">进</option>
+                        <option value="过">过</option>
+                        <option value="生日">生日</option>
+                        <option value="完">完</option>
+                    </select>
+                    ), 这就是我的房间。
+                    <span class="pinyin">(Qǐng ( ), zhè jiùshì wǒ de fángjiān.)</span>
+                </p>
+                <div id="feedback-fill-1" class="feedback"></div>
+
+                <p class="question-text" style="margin-top: 1.5rem;">
+                    2. 昨天的考试题太多,我没有做(
+                    <select id="fill-2">
+                        <option value="">...</option>
+                        <option value="等">等</option>
+                        <option value="进">进</option>
+                        <option value="过">过</option>
+                        <option value="生日">生日</option>
+                        <option value="完">完</option>
+                    </select>
+                    ).
+                    <span class="pinyin">(Zuótiān de kǎoshì tí tài duō, wǒ méiyǒu zuò ( ).)</span>
+                </p>
+                <div id="feedback-fill-2" class="feedback"></div>
+
+                <p class="question-text" style="margin-top: 1.5rem;">
+                    3. 我没吃(
+                    <select id="fill-3">
+                        <option value="">...</option>
+                        <option value="等">等</option>
+                        <option value="进">进</option>
+                        <option value="过">过</option>
+                        <option value="生日">生日</option>
+                        <option value="完">完</option>
+                    </select>
+                    )北京烤鸭,希望今年去中国的时候可以吃到北京烤鸭。
+                    <span class="pinyin">(Wǒ méi chī ( ) běijīng kǎoyā, xīwàng jīnnián qù zhōngguó de shíhòu kěyǐ chī dào běijīng kǎoyā.)</span>
+                </p>
+                <div id="feedback-fill-3" class="feedback"></div>
+
+                <p class="question-text" style="margin-top: 1.5rem;">
+                    4. 对不起,我不能和你一起过(
+                    <select id="fill-4">
+                        <option value="">...</option>
+                        <option value="等">等</option>
+                        <option value="进">进</option>
+                        <option value="过">过</option>
+                        <option value="生日">生日</option>
+                        <option value="完">完</option>
+                    </select>
+                    )了,明天我有事了。
+                    <span class="pinyin">(Duìbùqǐ, wǒ bùnéng hé nǐ yīqǐguò ( ) le, míngtiān wǒ yǒushì le.)</span>
+                </p>
+                <div id="feedback-fill-4" class="feedback"></div>
+
+                <p class="question-text" style="margin-top: 1.5rem;">
+                    5. 快点儿,大家都在(
+                    <select id="fill-5">
+                        <option value="">...</option>
+                        <option value="等">等</option>
+                        <option value="进">进</option>
+                        <option value="过">过</option>
+                        <option value="生日">生日</option>
+                        <option value="完">完</option>
+                    </select>
+                    )你吃饭呢。
+                    <span class="pinyin">(Kuài diǎn er, dàjiā dōu zài ( ) nǐ chīfàn ne.)</span>
+                </p>
+                <div id="feedback-fill-5" class="feedback"></div>
+
+                <button class="check-btn" style="background-color: #38a169; margin-top: 1.5rem;" onclick="checkFillIn()">Kiểm tra bài điền từ</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Hàm kiểm tra cho câu trắc nghiệm
+        function checkAnswer(questionId, correctAnswer, correctAnswerText) {
+            const options = document.getElementsByName(questionId);
+            const feedbackEl = document.getElementById('feedback-' + questionId);
+            let selectedValue = null;
+
+            for (const option of options) {
+                if (option.checked) {
+                    selectedValue = option.value;
+                    break;
+                }
+            }
+
+            if (selectedValue === correctAnswer) {
+                feedbackEl.innerHTML = '🎉 Tuyệt vời! Bạn làm đúng rồi!';
+                feedbackEl.className = 'feedback feedback-correct';
+            } else if (selectedValue) {
+                feedbackEl.innerHTML = `🤔 Hmm, xem lại chút nhé! Đáp án tham khảo là: <strong>${correctAnswerText}</strong>. Cố lên!`;
+                feedbackEl.className = 'feedback feedback-reference';
+            } else {
+                feedbackEl.innerHTML = 'Bạn ơi, chọn một đáp án nhé!';
+                feedbackEl.className = 'feedback feedback-reference';
+            }
+        }
+
+        // Hàm kiểm tra cho bài điền từ
+        function checkFillIn() {
+            const answers = {
+                'fill-1': '进',
+                'fill-2': '完',
+                'fill-3': '过',
+                'fill-4': '生日',
+                'fill-5': '等'
+            };
+
+            for (const id in answers) {
+                const selectEl = document.getElementById(id);
+                const feedbackEl = document.getElementById('feedback-' + id);
+                const correctAnswer = answers[id];
+
+                if (selectEl.value === correctAnswer) {
+                    feedbackEl.innerHTML = '🎉 答对了! (Làm đúng rồi!)';
+                    feedbackEl.className = 'feedback feedback-correct';
+                } else if (selectEl.value) {
+                    feedbackEl.innerHTML = `🤔 Hmm, đáp án tham khảo là: <strong>${correctAnswer}</strong>. Cố lên!`;
+                    feedbackEl.className = 'feedback feedback-reference';
+                } else {
+                    feedbackEl.innerHTML = 'Bạn chưa chọn từ nè!';
+                    feedbackEl.className = 'feedback feedback-reference';
+                }
+            }
+        }
+
+        // --- Thêm Script cho nút Pinyin ---
+        let pinyinVisible = true;
+        const togglePinyinBtn = document.getElementById('togglePinyinBtn');
+        togglePinyinBtn.addEventListener('click', () => {
+            const pinyinElements = document.querySelectorAll('.pinyin');
+            pinyinVisible = !pinyinVisible;
+            if (pinyinVisible) {
+                pinyinElements.forEach(el => el.classList.remove('hidden'));
+                togglePinyinBtn.textContent = 'Ẩn Pinyin';
+                togglePinyinBtn.style.backgroundColor = '#38a169'; // Green
+            } else {
+                pinyinElements.forEach(el => el.classList.add('hidden'));
+                togglePinyinBtn.textContent = 'Hiện Pinyin';
+                togglePinyinBtn.style.backgroundColor = '#4299e1'; // Blue
+            }
+        });
+    </script>
+
+</body>
+</html>
+

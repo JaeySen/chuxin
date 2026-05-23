@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Bổ ngữ Tình thái (得)</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Sử dụng font Inter cho toàn bộ trang */
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        /* Ẩn đáp án mặc định */
+        .answer-panel {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <!-- Tiêu đề chính -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-700">Ôn tập Bổ ngữ Tình thái (得)</h1>
+            <p class="text-lg text-gray-600 mt-2">Luyện tập các dạng bài tập về bổ ngữ trình độ</p>
+        </header>
+
+        <!-- Thanh Tabs để chọn dạng bài tập -->
+        <nav class="mb-6">
+            <div id="tabs-container" class="flex flex-wrap justify-center gap-2 md:gap-3">
+                <!-- Tabs sẽ được tạo bằng JavaScript -->
+            </div>
+        </nav>
+
+        <!-- Khu vực nội dung bài tập -->
+        <main id="content-container">
+            <!-- Nội dung bài tập sẽ được chèn vào đây bằng JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        // --- DỮ LIỆU BÀI TẬP ---
+        // Toàn bộ 70 câu hỏi được lưu trữ tại đây
+        const exerciseData = [
+            {
+                type: "Dạng 1: Điền từ",
+                description: "Chọn từ/cụm từ gợi ý thích hợp điền vào chỗ trống.",
+                questions: [
+                    { q: "他 汉语 说 得 ___ 。", hint: "流利, 慢, 漂亮", a: "流利" },
+                    { q: "这 个 汉字 他 写 得 ___ 。", hint: "好吃, 干净, 漂亮", a: "漂亮" },
+                    { q: "妈妈 菜 做 得 ___ 。", hint: "快, 好吃, 便宜", a: "好吃" },
+                    { q: "弟弟 跑 得 ___ 。", hint: "高, 胖, 快", a: "快" },
+                    { q: "她 唱歌 唱 得 ___ 。", hint: "好听, 好看, 好吃", a: "好听" },
+                    { q: "昨天 我 睡 得 很 ___ 。", hint: "早, 高兴, 晚", a: "晚" },
+                    { q: "他 高兴 得 ___ 。", hint: "跳起来, 吃饭, 学习", a: "跳起来" },
+                    { q: "老师 讲 课 讲 得 很 ___ 。", hint: "明白, 贵, 难", a: "明白" },
+                    { q: "房间 收拾 得 很 ___ 。", hint: "流利, 干净, 便宜", a: "干净" },
+                    { q: "他 累 得 话 都 ___ 。", hint: "不想说, 不想吃, 不想看", a: "不想说" }
+                ]
+            },
+            {
+                type: "Dạng 2: Sắp xếp",
+                description: "Sắp xếp các từ đã cho thành câu hoàn chỉnh.",
+                questions: [
+                    { q: "/ 跑 / 得 / 弟弟 / 快 / 很 / 。", a: "弟弟跑得很快。" },
+                    { q: "/ 歌 / 唱 / 她 / 得 / 好听 / 很 / 唱 / 。", a: "她唱歌唱得很好听。" },
+                    { q: "/ 汉字 / 得 / 写 / 漂亮 / 他 / 很 / 。", a: "他汉字写得很漂亮。" },
+                    { q: "/ 昨天 / 高兴 / 得 / 非常 / 玩儿 / 她们 / 。", a: "她们昨天玩儿得非常高兴。" },
+                    { q: "/ 不 / 他 / 汉语 / 得 / 流利 / 说 / 。", a: "他说汉语说得不流利。 / 他汉语说得不流利。" },
+                    { q: "/ 早 / 老师 / 来 / 得 / 今天 / 吗 / ？", a: "老师今天来得早吗？" },
+                    { q: "/ 饭 / 得 / 妈妈 / 做 / 怎么样 / ？", a: "妈妈做饭做得怎么样？ / 妈妈饭做得怎么样？" },
+                    { q: "/ 得 / 多 / 他 / 紧张 / 都 / 话 / 不 / 说 / 。", a: "他紧张得话都说不出来了。" },
+                    { q: "/ 你 / 游泳 / 游 / 得 / 快 / 快 / 不 / ？", a: "你游泳游得快不快？" },
+                    { q: "/ 作业 / 做 / 得 / 都 / 同学们 / 完 / 了 / 。", a: "同学们作业都做得完了。 / 同学们都做完作业了。" } // Câu 10 có thể có nhiều cách, nhưng tập trung vào '得'
+                ]
+            },
+            {
+                type: "Dạng 3: Chuyển đổi",
+                description: "Chuyển câu đã cho sang các dạng Phủ định, Nghi vấn (A-not-A) và Nghi vấn (吗).",
+                questions: [
+                    { 
+                        q: "他 跑 得 很快。", 
+                        a: {
+                            phuDinh: "他跑得不快。",
+                            chinhPhan: "他跑得快不快？",
+                            cauHoiMa: "他跑得很快吗？"
+                        }
+                    },
+                    { 
+                        q: "她 唱歌 唱 得 很好听。", 
+                        a: {
+                            phuDinh: "她唱歌唱得不好听。",
+                            chinhPhan: "她唱歌唱得好听不好听？",
+                            cauHoiMa: "她唱歌唱得很好听吗？"
+                        }
+                    },
+                    { 
+                        q: "他 汉字 写 得 很 漂亮。", 
+                        a: {
+                            phuDinh: "他汉字写得不漂亮。",
+                            chinhPhan: "他汉字写得漂亮不漂亮？",
+                            cauHoiMa: "他汉字写得很漂亮吗？"
+                        }
+                    },
+                    { 
+                        q: "老师 来 得 很 早。", 
+                        a: {
+                            phuDinh: "老师来得很不早。 / 老师来得不早。",
+                            chinhPhan: "老师来得早不早？",
+                            cauHoiMa: "老师来得很早吗？"
+                        }
+                    },
+                    { 
+                        q: "我 昨天 睡 得 很好。", 
+                        a: {
+                            phuDinh: "我昨天睡得不好。",
+                            chinhPhan: "我昨天睡得好不好？",
+                            cauHoiMa: "我昨天睡得很好吗？"
+                        }
+                    },
+                    { 
+                        q: "他 篮球 打 得 非常 棒。", 
+                        a: {
+                            phuDinh: "他篮球打得不棒。 / 他篮球打得非常不棒。",
+                            chinhPhan: "他篮球打得棒不棒？",
+                            cauHoiMa: "他篮球打得非常棒吗？"
+                        }
+                    },
+                    { 
+                        q: "弟弟 吃饭 吃 得 很 慢。", 
+                        a: {
+                            phuDinh: "弟弟吃饭吃得不慢。",
+                            chinhPhan: "弟弟吃饭吃得慢不慢？",
+                            cauHoiMa: "弟弟吃饭吃得很慢吗？"
+                        }
+                    },
+                    { 
+                        q: "这 篇 课文 他 念 得 很 熟练。", 
+                        a: {
+                            phuDinh: "这篇课文他念得不熟练。",
+                            chinhPhan: "这篇课文他念得熟练不熟练？",
+                            cauHoiMa: "这篇课文他念得很熟练吗？"
+                        }
+                    },
+                    { 
+                        q: "他 高兴 得 跳 了 起来。", 
+                        a: {
+                            phuDinh: "他高兴得没跳起来。 (Lưu ý: Phủ định của bổ ngữ tình thái này hơi đặc biệt, nhưng theo cấu trúc 'bất' thì là '他高兴得跳不起来' hoặc đơn giản '他不高兴'.)",
+                            chinhPhan: "他高兴得跳起来了没有？",
+                            cauHoiMa: "他高兴得跳起来了吗？"
+                        }
+                    },
+                    { 
+                        q: "他们 玩儿 得 很 开心。", 
+                        a: {
+                            phuDinh: "他们玩儿得不开心。",
+                            chinhPhan: "他们玩儿得开心不开心？",
+                            cauHoiMa: "他们玩儿得很开心吗？"
+                        }
+                    }
+                ]
+            },
+            {
+                type: "Dạng 4: Sửa lỗi",
+                description: "Tìm và sửa lỗi sai trong các câu sau.",
+                questions: [
+                    { q: "他 说 汉语 得 很流利。", a: "他说汉语说得很流利。 / 他汉语说得很流利。" },
+                    { q: "我 昨天 没 睡 得 好。", a: "我昨天睡得不好。 (Phủ định dùng '不')" },
+                    { q: "她 唱歌 得 很好听。", a: "她唱歌唱得很好听。 / 她歌唱得很好听。" },
+                    { q: "他 汉字 写 很 得 漂亮。", a: "他汉字写得很漂亮。" },
+                    { q: "你 觉得 他 怎么样 跑 得？", a: "你觉得他跑得怎么样？" },
+                    { q: "她 高兴 得 唱歌。", a: "她高兴地唱歌。 (Đây là lỗi dùng '得' thay '地')" },
+                    { q: "他 做 饭 做 不 得 好吃。", a: "他做饭做得不好吃。" },
+                    { q: "来 得 他 很 早。", a: "他来得很早。" },
+                    { q: "我 看 这 本 书 看 得 很 懂。", a: "我看这本书看得很懂。 / 我看懂这本书了。" },
+                    { q: "他 没 跑 得 快。", a: "他跑得不快。" }
+                ]
+            },
+            {
+                type: "Dạng 5: Viết câu",
+                description: "Sử dụng từ/cụm từ gợi ý để viết câu có chứa bổ ngữ '得'.",
+                questions: [
+                    { q: "用 '紧张' (jǐnzhāng) 写一个句子。", a: "Gợi ý: 他紧张得手心都出汗了。 / 他紧张得说不出话来。" },
+                    { q: "用 '累' (lèi) 写一个句子。", a: "Gợi ý: 我累得一步也不想走了。 / 我累得饭都不想吃了。" },
+                    { q: "用 '高兴' (gāoxìng) 写一个句子。", a: "Gợi ý: 听说要去旅游，他高兴得跳了起来。" },
+                    { q: "用 '多' (duō) (chỉ mức độ) 写一个句子。", a: "Gợi ý: 今天的作业多得我晚上12点还没做完。" },
+                    { q: "用 '漂亮' (piàoliang) 写一个句子。", a: "Gợi ý: 她汉字写得真漂亮！" },
+                    { q: "用 '早' (zǎo) 写一个句子。", a: "Gợi ý: 你今天怎么来得这么早？" },
+                    { q: "用 '慢' (màn) 写一个句子。", a: "Gợi ý: 他吃饭吃得太慢了。" },
+                    { q: "用 '生气' (shēngqì) 写一个句子。", a: "Gợi ý: 他生气得脸都红了。" },
+                    { q: "用 '好' (hǎo) (miêu tả động tác) 写一个句子。", a: "Gợi ý: 他足球踢得很好。" },
+                    { q: "用 '乱' (luàn) 写一个句子。", a: "Gợi ý: 他的房间乱得没法进人。" }
+                ]
+            },
+            {
+                type: "Dạng 6: Trả lời câu hỏi",
+                description: "Dùng cấu trúc '得' để trả lời các câu hỏi sau (tự do trả lời).",
+                questions: [
+                    { q: "你 昨晚 睡 得 怎么样？", a: "Gợi ý: 我昨晚睡得很好。 / 我昨晚睡得不太好。" },
+                    { q: "你 觉得 你 汉语 说 得 怎么样？", a: "Gợi ý: 我觉得我汉语说得还可以。 / ...说得不太流利。" },
+                    { q: "你 们 班 谁 汉字 写 得 最好？", a: "Gợi ý: (tên) 汉字写得最好。" },
+                    { q: "你 吃饭 吃 得 快不快？", a: "Gợi ý: 我吃饭吃得很快。 / ...吃得不快。" },
+                    { q: "你 歌 唱 得 好听 吗？", a: "Gợi ý: 我唱歌唱得很好听。 / ...唱得不好听。" },
+                    { q: "你 篮球 打 得 怎么样？", a: "Gợi ý: 我篮球打得不怎么样。 / ...打得还可以。" },
+                    { q: "你 预习 课文 预习 得 认真 吗？", a: "Gợi ý: 我预习课文预习得很认真。 / ...预习得不认真。" },
+                    { q: "你 觉得 老师 课 讲 得 明白 吗？", a: "Gợi ý: 我觉得老师课讲得很明白。" },
+                    { q: "你 早上 起 得 早 吗？", a: "Gợi ý: 我早上起得很早。 / ...起得不早。" },
+                    { q: "你 游泳 游 得 快 吗？", a: "Gợi ý: 我游泳游得很快。 / ...游得很慢。" }
+                ]
+            },
+            {
+                type: "Dạng 7: Dịch Việt - Trung",
+                description: "Dịch các câu sau sang tiếng Trung, sử dụng cấu trúc '得'.",
+                questions: [
+                    { q: "Anh ấy chạy rất nhanh.", a: "他跑得很快。" },
+                    { q: "Cô ấy hát tiếng Anh hát rất hay.", a: "她唱英文歌唱得很好听。 / 她英文歌唱得很好听。" },
+                    { q: "Em trai tôi ăn cơm (ăn) rất chậm.", a: "我弟弟吃饭吃得很慢。 / 我弟弟吃饭吃得很慢。" },
+                    { q: "Bạn chuẩn bị bài mới có tốt không?", a: "你预习课文预习得好不好？ / 你课文预习得好不好？" },
+                    { q: "Chữ Hán của anh ấy viết không đẹp lắm.", a: "他汉字写得不怎么漂亮。 / 他汉字写得不太好看。" },
+                    { q: "Hôm qua bọn họ chơi có vui không?", a: "他们昨天玩儿得开心吗？ / ...玩儿得高兴吗？" },
+                    { q: "Tôi mệt đến mức không muốn nói chuyện.", a: "我累得话都不想说了。" },
+                    { q: "Căn phòng của bạn dọn dẹp thật sạch sẽ!", a: "你的房间收拾得真干净！" },
+                    { q: "Anh ấy nói tiếng Trung có lưu loát không?", a: "他说汉语说得流利吗？ / 他汉语说得流利吗？" },
+                    { q: "Món ăn mẹ làm rất ngon.", a: "妈妈做的饭很好吃。 / 妈妈饭做得很好吃。" }
+                ]
+            }
+        ];
+
+        // --- KHỞI TẠO GIAO DIỆN ---
+
+        const tabsContainer = document.getElementById('tabs-container');
+        const contentContainer = document.getElementById('content-container');
+        let currentTab = 0;
+
+        // Hàm tạo các TABS
+        function createTabs() {
+            tabsContainer.innerHTML = ''; // Xóa tabs cũ
+            exerciseData.forEach((exercise, index) => {
+                const tabButton = document.createElement('button');
+                tabButton.innerText = exercise.type;
+                tabButton.className = `px-4 py-2 text-sm md:text-base font-medium rounded-lg transition-all duration-200 ${
+                    index === currentTab 
+                        ? 'bg-blue-600 text-white shadow-md' 
+                        : 'bg-white text-blue-600 hover:bg-blue-100'
+                }`;
+                tabButton.onclick = () => {
+                    currentTab = index;
+                    createTabs(); // Cập nhật lại giao diện TABS
+                    renderContent(); // Hiển thị nội dung tương ứng
+                };
+                tabsContainer.appendChild(tabButton);
+            });
+        }
+
+        // Hàm hiển thị nội dung bài tập
+        function renderContent() {
+            contentContainer.innerHTML = ''; // Xóa nội dung cũ
+            const exercise = exerciseData[currentTab];
+
+            // Thêm mô tả của dạng bài tập
+            const description = document.createElement('p');
+            description.className = 'text-lg text-gray-700 mb-6 text-center';
+            description.innerText = exercise.description;
+            contentContainer.appendChild(description);
+
+            // Vòng lặp tạo từng câu hỏi
+            exercise.questions.forEach((item, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-5 rounded-lg shadow-sm border border-gray-200 mb-4';
+
+                let questionHTML = '';
+                let inputHTML = '';
+                let answerHTML = '';
+
+                // Xử lý riêng cho Dạng 3 (Chuyển đổi) vì có 3 ô nhập
+                if (exercise.type === "Dạng 3: Chuyển đổi") {
+                    questionHTML = `<p class="text-lg font-medium text-gray-800 mb-3"><strong>Câu ${qIndex + 1}:</strong> ${item.q}</p>`;
+                    inputHTML = `
+                        <div class="space-y-2 mt-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600">Phủ định:</label>
+                                <input type="text" id="input-${currentTab}-${qIndex}-0" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600">Nghi vấn (A-not-A):</label>
+                                <input type="text" id="input-${currentTab}-${qIndex}-1" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600">Nghi vấn (吗):</label>
+                                <input type="text" id="input-${currentTab}-${qIndex}-2" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                    `;
+                    answerHTML = `
+                        <p><strong>Phủ định:</strong> ${item.a.phuDinh}</p>
+                        <p><strong>Chính phản:</strong> ${item.a.chinhPhan}</p>
+                        <p><strong>Câu hỏi (吗):</strong> ${item.a.cauHoiMa}</p>
+                    `;
+                } 
+                // Xử lý Dạng 1 (có gợi ý)
+                else if (exercise.type === "Dạng 1: Điền từ") {
+                    questionHTML = `<p class="text-lg font-medium text-gray-800 mb-3"><strong>Câu ${qIndex + 1}:</strong> ${item.q}</p>`;
+                    if (item.hint) {
+                        questionHTML += `<p class="text-sm text-blue-500 mb-3"><strong>Gợi ý:</strong> ${item.hint}</p>`;
+                    }
+                    inputHTML = `<input type="text" id="input-${currentTab}-${qIndex}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Nhập câu trả lời...">`;
+                    answerHTML = `<p>${item.a}</p>`;
+                }
+                // Các dạng còn lại
+                else {
+                    questionHTML = `<p class="text-lg font-medium text-gray-800 mb-3"><strong>Câu ${qIndex + 1}:</strong> ${item.q}</p>`;
+                    // Dạng 5 và 6 là câu hỏi mở, placeholder khác
+                    if (exercise.type === "Dạng 5: Viết câu" || exercise.type === "Dạng 6: Trả lời câu hỏi") {
+                        inputHTML = `<input type="text" id="input-${currentTab}-${qIndex}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Viết câu của bạn...">`;
+                        answerHTML = `<p class="text-green-700">${item.a}</p>`; // Đáp án gợi ý có màu xanh
+                    } else {
+                        inputHTML = `<input type="text" id="input-${currentTab}-${qIndex}" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Nhập câu trả lời...">`;
+                        answerHTML = `<p>${item.a}</p>`;
+                    }
+                }
+
+                // Nút bấm và khu vực đáp án
+                card.innerHTML = `
+                    ${questionHTML}
+                    ${inputHTML}
+                    <div class="mt-4">
+                        <button onclick="toggleAnswer(${currentTab}, ${qIndex})" class="toggle-btn px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm">Xem đáp án</button>
+                    </div>
+                    <div id="answer-${currentTab}-${qIndex}" class="answer-panel mt-4 p-3 bg-green-50 border border-green-200 rounded-md text-green-800 font-medium">
+                        ${answerHTML}
+                    </div>
+                `;
+                
+                contentContainer.appendChild(card);
+            });
+        }
+
+        // Hàm bật/tắt hiển thị đáp án
+        function toggleAnswer(typeIndex, qIndex) {
+            const answerPanel = document.getElementById(`answer-${typeIndex}-${qIndex}`);
+            const button = event.target;
+
+            if (answerPanel.style.display === 'block') {
+                answerPanel.style.display = 'none';
+                button.innerText = 'Xem đáp án';
+                button.classList.remove('bg-red-500', 'hover:bg-red-600');
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
+            } else {
+                answerPanel.style.display = 'block';
+                button.innerText = 'Ẩn đáp án';
+                button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                button.classList.add('bg-red-500', 'hover:bg-red-600');
+            }
+        }
+
+        // --- CHẠY LẦN ĐẦU ---
+        window.onload = () => {
+            createTabs();
+            renderContent();
+        };
+
+    </script>
+</body>
+</html>

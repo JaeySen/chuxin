@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Kiểm Tra Cuối Kỳ Tiếng Trung Cấp 1 - Cùng thử sức nào! 🎯</title>
+    <style>
+        /* --- CSS START --- */
+        :root {
+            --primary-color: #007bff; /* Xanh dương chủ đạo */
+            --secondary-color: #6c757d; /* Xám phụ */
+            --success-color: #198754; /* Xanh lá thành công */
+            --danger-color: #dc3545; /* Đỏ cảnh báo */
+            --warning-color: #ffc107; /* Vàng cảnh báo */
+            --info-color: #0dcaf0; /* Xanh lam nhạt thông tin */
+            --light-bg: #f8f9fa; /* Nền sáng */
+            --white-bg: #ffffff;
+            --text-color: #212529;
+            --border-radius: 0.375rem; /* Bo góc nhẹ */
+            --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 15px;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 800px; /* Giới hạn chiều rộng để dễ đọc */
+            margin: 20px auto; /* Căn giữa */
+            padding: 0 15px;
+        }
+
+        header, section {
+            background-color: var(--white-bg);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+         h2 {
+            color: var(--primary-color);
+            text-align: left;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex; /* Để căn chỉnh điểm */
+            justify-content: space-between; /* Đẩy điểm sang phải */
+            align-items: center;
+        }
+        .section-points {
+             font-size: 0.8em;
+             font-weight: normal;
+             color: var(--secondary-color);
+             background-color: #e9ecef;
+             padding: 3px 8px;
+             border-radius: 10px;
+        }
+
+
+        .instructions {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        #timer {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 500; /* Medium weight */
+            color: var(--danger-color);
+            margin-bottom: 20px;
+            background-color: #fdf0f1; /* Nền đỏ nhạt */
+            padding: 8px;
+            border-radius: var(--border-radius);
+            display: inline-block; /* Cho vừa với nội dung */
+            min-width: 150px;
+        }
+
+        #studentName {
+            display: block;
+            margin: 10px auto 20px auto;
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 400px;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+        }
+         label[for="studentName"] {
+             display: block;
+             text-align: center;
+             font-weight: 500;
+             margin-bottom: 5px;
+         }
+
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 5px;
+        }
+
+        .question p:first-child { /* Phần mô tả câu hỏi */
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        .question-points {
+             font-size: 0.9em;
+             color: var(--secondary-color);
+             font-weight: normal;
+             margin-left: 10px;
+        }
+
+
+        .hanzi {
+            font-size: 1.25em;
+            margin-right: 5px;
+            color: #000; /* Rõ ràng hơn */
+        }
+
+        /* --- Styling Pinyin được cải thiện --- */
+        .pinyin {
+            font-style: normal; /* Bỏ nghiêng */
+            color: #004085; /* Màu xanh dương đậm */
+            background-color: #cce5ff; /* Nền xanh dương rất nhạt */
+            border: 1px solid #b8daff; /* Viền xanh nhạt */
+            padding: 4px 8px; /* Padding lớn hơn chút */
+            border-radius: 4px;
+            font-size: 1em; /* Cỡ chữ bằng chữ thường */
+            display: inline-block;
+            margin-top: 8px; /* Khoảng cách với dòng trên */
+            margin-left: 5px;
+            line-height: 1.4; /* Tăng khoảng cách dòng nếu cần */
+            font-weight: 500; /* Hơi đậm hơn */
+        }
+
+        .pinyin-hidden {
+            display: none; /* Ẩn pinyin mặc định */
+        }
+        /* --- Kết thúc Styling Pinyin --- */
+
+
+        .toggle-pinyin {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em; /* To hơn chút */
+            padding: 0 5px;
+            color: var(--primary-color);
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+        .toggle-pinyin:hover {
+             opacity: 1;
+        }
+
+
+        input[type="text"], textarea {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            width: auto; /* Cho input text tự động co giãn */
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+         input[type="text"]:focus, textarea:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+         }
+
+
+         input[type="text"] {
+             margin: 0 5px;
+             line-height: 1.5;
+             min-width: 40px; /* Đảm bảo ô không quá nhỏ */
+             text-align: center; /* Căn giữa chữ trong ô */
+         }
+
+        textarea {
+            width: 95%; /* Chiều rộng ô dịch */
+            margin-top: 8px;
+            min-height: 50px; /* Chiều cao tối thiểu */
+            display: block; /* Để chiếm dòng riêng */
+        }
+
+        /* Styling cho các lựa chọn radio/checkbox */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 10px 15px; /* Tăng vùng nhấn */
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s ease;
+            border: 1px solid transparent; /* Thêm viền ẩn để không bị nhảy layout khi hover */
+        }
+         label:hover {
+             background-color: #e9ecef; /* Màu nền nhẹ khi hover */
+             border-color: #dee2e6;
+         }
+         label > input[type="radio"] {
+             margin-right: 10px;
+             vertical-align: middle; /* Căn giữa nút radio */
+         }
+         /* Highlight label khi input được chọn */
+         input[type="radio"]:checked + span, /* Nếu bạn có span bao text */
+         label:has(input[type="radio"]:checked) { /* Nếu không có span */
+            /* background-color: #cfe2ff; */ /* Nền xanh dương nhạt khi chọn */
+            /* border-color: #b6d4fe; */
+            /* font-weight: 500; */ /* In đậm nhẹ khi chọn */
+         }
+
+
+        /* Style for audio player */
+        audio {
+             width: 100%;
+             max-width: 600px; /* Rộng hơn chút */
+             margin: 10px auto 20px auto; /* Căn giữa và thêm khoảng cách */
+             display: block;
+             box-shadow: var(--box-shadow);
+             border-radius: var(--border-radius);
+        }
+
+        button {
+            padding: 12px 20px; /* Nút to hơn */
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.05em; /* Chữ to hơn */
+            font-weight: 500;
+            margin-top: 15px;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+         button:hover:not(:disabled) {
+             box-shadow: 0 3px 5px rgba(0,0,0,0.15);
+             transform: translateY(-1px); /* Hiệu ứng nhấc lên */
+         }
+         button:active:not(:disabled) {
+              transform: translateY(0px); /* Hiệu ứng nhấn xuống */
+              box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+         }
+
+         button:disabled {
+             background-color: #adb5bd; /* Màu xám đậm hơn khi bị vô hiệu hóa */
+             color: #f8f9fa;
+             cursor: not-allowed;
+             box-shadow: none;
+         }
+
+        #submitBtn {
+            background-color: var(--success-color);
+            color: white;
+        }
+        #submitBtn:hover:not(:disabled) {
+            background-color: #157347; /* Xanh lá đậm hơn */
+        }
+
+        #googleFormBtn {
+             background-color: var(--warning-color);
+             color: var(--text-color);
+        }
+        #googleFormBtn:hover:not(:disabled) {
+             background-color: #ffca2c; /* Vàng đậm hơn */
+        }
+
+
+        #results {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #d1e7dd; /* Nền xanh lá thành công nhạt */
+            border: 1px solid #badbcc;
+            border-radius: var(--border-radius);
+        }
+         #results h3 {
+             color: var(--success-color);
+             margin-top: 0;
+             text-align: center;
+             font-size: 1.3em;
+         }
+         #results p {
+             font-size: 1.1em;
+             margin-bottom: 8px;
+         }
+         .score-display {
+             font-weight: bold;
+         }
+
+
+        #googleFormReminder {
+            margin: 25px 0;
+            padding: 18px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 1.35em;
+            font-weight: bold;
+            color: #856404;
+            animation: blink 1.8s linear infinite; /* Chậm hơn chút */
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .cute-icon {
+            font-size: 1.2em;
+            display: inline-block;
+            margin-left: 5px;
+            vertical-align: middle; /* Căn giữa icon với text */
+        }
+
+        /* Spinner cho nút gửi */
+        .spinner {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em; /* Căn chỉnh vị trí spinner */
+            border: 0.15em solid currentColor; /* Độ dày viền */
+            border-right-color: transparent; /* Làm 1 cạnh trong suốt */
+            border-radius: 50%;
+            animation: spinner-border .75s linear infinite;
+            margin-left: 8px; /* Khoảng cách với chữ */
+        }
+
+        @keyframes spinner-border {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Đánh dấu câu trả lời đúng/sai */
+         .correct-answer {
+             /* color: var(--success-color) !important; */ /* Bỏ màu chữ để không ghi đè màu đỏ của sai */
+             font-weight: bold;
+             background-color: #d1e7dd !important; /* Chỉ đổi nền xanh */
+         }
+         .wrong-answer {
+              color: var(--danger-color) !important;
+              font-weight: bold;
+              background-color: #f8d7da !important; /* Nền đỏ nhạt */
+         }
+         /* Đánh dấu lựa chọn đúng/sai */
+         .correct-choice-label {
+             color: var(--success-color) !important;
+             font-weight: bold !important;
+             background-color: #d1e7dd !important; /* Nền xanh lá nhạt */
+             border-color: #badbcc !important;
+         }
+         .wrong-choice-label {
+              /* color: var(--danger-color) !important; */ /* Không cần đổi màu chữ đỏ */
+              background-color: #f8d7da !important; /* Nền đỏ nhạt cho lựa chọn sai */
+              border-color: #f5c2c7 !important;
+         }
+          .wrong-choice-label > span {
+              /* Thêm gạch ngang cho lựa chọn sai nếu muốn */
+              /* text-decoration: line-through; */
+              /* opacity: 0.7; */
+          }
+
+        /* --- CSS END --- */
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📝 Bài Kiểm Tra Cuối Kỳ Tiếng Trung Cấp 1 📝</h1>
+        <p class="instructions">Chào mừng các bạn iu dấu đến với bài kiểm tra cuối kỳ! ✨ Hãy bình tĩnh, đọc kỹ đề và làm bài thật tốt nhé. Chúc các bạn đạt kết quả cao! 💪</p>
+        <div style="text-align: center;"> <div id="timer">⏳ Thời gian: <span id="time">00:00</span></div> <br>
+            <label for="studentName">Tên của bạn là gì nè?</label>
+            <input type="text" id="studentName" name="studentName" required placeholder="Ví dụ: Nguyễn Thị Bông">
+        </div>
+    </header>
+
+    <form id="quizForm">
+        <section id="part1">
+            <h2>Phần I: Chọn từ đúng điền vào chỗ trống <span class="cute-icon">✍️</span><span class="section-points">Tổng 25 điểm</span></h2>
+            <p>Các từ cho sẵn: 朋友 (péngyou), 银行 (yínháng), 介绍 (jièshào), 留学生 (liúxuéshēng), 叫 (jiào), 都 (dōu)</p>
+            <div class="question">
+                <p style="line-height: 2.5;"> <span class="hanzi">你们好!我先</span>
+                    <input type="text" id="q1_1" data-answer="介绍" size="5">
+                    <span class="hanzi">一下儿,我</span>
+                    <input type="text" id="q1_2" data-answer="叫" size="3">
+                    <span class="hanzi">麦克,德国人,是</span>
+                    <input type="text" id="q1_3" data-answer="留学生" size="6">
+                    <span class="hanzi">。这位是我的</span>
+                    <input type="text" id="q1_4" data-answer="朋友" size="5">
+                    <span class="hanzi">,她是中国人,她也是留学生,我们</span>
+                    <input type="text" id="q1_5" data-answer="都" size="3">
+                    <span class="hanzi">学习汉语。我们今天去</span>
+                    <input type="text" id="q1_6" data-answer="银行" size="5">
+                    <span class="hanzi">换钱,我们要去北京旅行。</span>
+                </p>
+                <button type="button" class="toggle-pinyin" data-target="pinyin1">Ẩn/Hiện Pinyin Gợi ý 💡</button>
+                <p class="pinyin pinyin-hidden" id="pinyin1">Nǐmen hǎo! Wǒ xiān ... yí xiàr, wǒ ... Màikè, Déguó rén, shì ... . Zhè wèi shì wǒde ... , tā shì Zhōngguó rén, tā yě shì liúxuéshēng, wǒmen ... xuéxí Hànyǔ. Wǒmen jīntiān qù ... huànqián, wǒmen yào qù Běijīng lǚxíng.</p>
+            </div>
+        </section>
+
+        <section id="part2">
+             <h2>Phần II: Đọc đoạn văn và chọn đáp án đúng <span class="cute-icon">📖</span><span class="section-points">Tổng 25 điểm</span></h2>
+            <div class="reading-passage" style="margin-bottom: 20px; padding: 15px; background-color:#f8f9fa; border-radius: var(--border-radius);">
+                <p>
+                    <span class="hanzi">这是我的新朋友,她叫玛丽,是美国人。</span><button type="button" class="toggle-pinyin" data-target="pinyin2_1">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_1">Zhè shì wǒ de xīn péngyou, tā jiào Mǎlì, shì Měiguó rén.</span> <br>
+                    <span class="hanzi">她在北京语言大学学习汉语,也是我们的新同学。</span><button type="button" class="toggle-pinyin" data-target="pinyin2_2">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_2">Tā zài Běijīng Yǔyán Dàxué xuéxí Hànyǔ, yě shì wǒmen de xīn tóngxué.</span> <br>
+                    <span class="hanzi">她很喜欢吃饺子和包子,喝红茶。</span><button type="button" class="toggle-pinyin" data-target="pinyin2_3">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_3">Tā hěn xǐhuan chī jiǎozi hé bāozi, hē hóngchá.</span> <br>
+                    <span class="hanzi">这是玛丽的弟弟,他叫麦克,他不是在中国留学,他去中国旅行。</span><button type="button" class="toggle-pinyin" data-target="pinyin2_4">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_4">Zhè shì Mǎlì de dìdi, tā jiào Màikè, tā bú shì zài Zhōngguó liúxué, tā qù Zhōngguó lǚxíng.</span> <br>
+                    <span class="hanzi">他很喜欢中国的文化与历史。</span><button type="button" class="toggle-pinyin" data-target="pinyin2_5">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_5">Tā hěn xǐhuan Zhōngguó de wénhuà yǔ lìshǐ.</span> <br>
+                    <span class="hanzi">他们都很高兴认识你们。</span><button type="button" class="toggle-pinyin" data-target="pinyin2_6">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_6">Tāmen dōu hěn gāoxìng rènshi nǐmen.</span>
+                </p>
+            </div>
+             <div class="question">
+                <p>1. <span class="hanzi">玛丽是哪国人?</span> <span class="question-points">(5 điểm)</span> <button type="button" class="toggle-pinyin" data-target="pinyin2_q1">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_q1">Mǎlì shì nǎ guó rén?</span></p>
+                <label><input type="radio" name="q2_1" value="A"><span> A. 法国人 (Fǎguó rén)</span></label>
+                <label><input type="radio" name="q2_1" value="B" data-correct="true"><span> B. 美国人 (Měiguó rén)</span></label>
+                <label><input type="radio" name="q2_1" value="C"><span> C. 越南人 (Yuènán rén)</span></label>
+                <label><input type="radio" name="q2_1" value="D"><span> D. 中国人 (Zhōngguó rén)</span></label>
+            </div>
+             <div class="question">
+                <p>2. <span class="hanzi">谁在北京语言大学学习汉语?</span> <span class="question-points">(5 điểm)</span> <button type="button" class="toggle-pinyin" data-target="pinyin2_q2">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_q2">Shéi zài Běijīng Yǔyán Dàxué xuéxí Hànyǔ?</span></p>
+                <label><input type="radio" name="q2_2" value="A"><span> A. 张东 (Zhāng Dōng)</span></label>
+                <label><input type="radio" name="q2_2" value="B"><span> B. 麦克 (Mài Kè)</span></label>
+                <label><input type="radio" name="q2_2" value="C" data-correct="true"><span> C. 玛丽 (Mǎ Lì)</span></label>
+                <label><input type="radio" name="q2_2" value="D"><span> D. 田芳 (Tián Fāng)</span></label>
+            </div>
+             <div class="question">
+                <p>3. <span class="hanzi">玛丽喜欢吃什么?</span> <span class="question-points">(5 điểm)</span> <button type="button" class="toggle-pinyin" data-target="pinyin2_q3">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_q3">Mǎlì xǐhuan chī shénme?</span></p>
+                <label><input type="radio" name="q2_3" value="A"><span> A. 米饭和面包 (mǐfàn hé miànbāo)</span></label>
+                <label><input type="radio" name="q2_3" value="B"><span> B. 饺子和米饭 (jiǎozi hé mǐfàn)</span></label>
+                <label><input type="radio" name="q2_3" value="C"><span> C. 米饭和面包 (mǐfàn hé miànbāo)</span></label>
+                <label><input type="radio" name="q2_3" value="D" data-correct="true"><span> D. 饺子和包子 (jiǎozi hé bāozi)</span></label>
+            </div>
+             <div class="question">
+                <p>4. <span class="hanzi">麦克去中国做什么?</span> <span class="question-points">(5 điểm)</span> <button type="button" class="toggle-pinyin" data-target="pinyin2_q4">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_q4">Màikè qù Zhōngguó zuò shénme?</span></p>
+                <label><input type="radio" name="q2_4" value="A"><span> A. 留学 (liúxué)</span></label>
+                <label><input type="radio" name="q2_4" value="B"><span> B. 学汉语 (xué Hànyǔ)</span></label>
+                <label><input type="radio" name="q2_4" value="C" data-correct="true"><span> C. 旅行 (lǚxíng)</span></label>
+                <label><input type="radio" name="q2_4" value="D"><span> D. 找朋友 (zhǎo péngyou)</span></label>
+            </div>
+             <div class="question">
+                <p>5. <span class="hanzi">下面哪句是对的?</span> <span class="question-points">(5 điểm)</span> <button type="button" class="toggle-pinyin" data-target="pinyin2_q5">💡</button><span class="pinyin pinyin-hidden" id="pinyin2_q5">Xiàmiàn nǎ jù shì duì de?</span></p>
+                <label><input type="radio" name="q2_5" value="A"><span> A. 玛丽喜欢喝奶茶 (Mǎlì xǐhuan hē nǎichá)</span></label>
+                <label><input type="radio" name="q2_5" value="B"><span> B. 麦克喜欢吃包子 (Màikè xǐhuan chī bāozi)</span></label>
+                <label><input type="radio" name="q2_5" value="C"><span> C. 麦克是我们的新同学 (Màikè shì wǒmen de xīn tóngxué)</span></label>
+                <label><input type="radio" name="q2_5" value="D" data-correct="true"><span> D. 麦克是玛丽的弟弟 (Màikè shì Mǎlì de dìdi)</span></label>
+            </div>
+        </section>
+
+        <section id="part3">
+             <h2>Phần III: Thử tài dịch thuật nào <span class="cute-icon">🗣️</span><span class="section-points">Phần này chấm riêng</span></h2>
+             <div class="question">
+                 <p>1. <span class="hanzi">星期一、星期三、星期五,我和朋友去学校学汉语和英语。</span> <button type="button" class="toggle-pinyin" data-target="pinyin3_1">💡</button><span class="pinyin pinyin-hidden" id="pinyin3_1">Xīngqī yī, xīngqī sān, xīngqī wǔ, wǒ hé péngyou qù xuéxiào xué Hànyǔ hé Yīngyǔ.</span></p>
+                 <textarea id="q3_1" name="q3_1" rows="2" cols="50" placeholder="Nhập bản dịch của bạn vào đây..."></textarea>
+             </div>
+              <div class="question">
+                 <p>2. <span class="hanzi">你的手机号码是几号?我给你打电话。周末,我们去咖啡馆学习汉语吧。</span> <button type="button" class="toggle-pinyin" data-target="pinyin3_2">💡</button><span class="pinyin pinyin-hidden" id="pinyin3_2">Nǐ de shǒujī hàomǎ shì jǐ hào? Wǒ gěi nǐ dǎ diànhuà. Zhōumò, wǒmen qù kāfēi guǎn xuéxí Hànyǔ ba.</span></p>
+                 <textarea id="q3_2" name="q3_2" rows="2" cols="50" placeholder="Nhập bản dịch của bạn vào đây..."></textarea>
+             </div>
+              <div class="question">
+                 <p>3. <span class="hanzi">王老师今天不在办公室,他回家了。他家在18楼一门,房间号是101。</span> <button type="button" class="toggle-pinyin" data-target="pinyin3_3">💡</button><span class="pinyin pinyin-hidden" id="pinyin3_3">Wáng lǎoshī jīntiān bú zài bàngōngshì, tā huí jiā le. Tā jiā zài 18 lóu yī mén, fángjiān hào shì 101.</span></p>
+                 <textarea id="q3_3" name="q3_3" rows="2" cols="50" placeholder="Nhập bản dịch của bạn vào đây..."></textarea>
+             </div>
+             <div class="question">
+                 <p>4. <span class="hanzi">我最喜欢吃的水果是苹果、香蕉、草莓和西瓜。我不喜欢吃榴莲。</span> <button type="button" class="toggle-pinyin" data-target="pinyin3_4">💡</button><span class="pinyin pinyin-hidden" id="pinyin3_4">Wǒ zuì xǐhuan chī de shuǐguǒ shì píngguǒ, xiāngjiāo, cǎoméi hé xīguā. Wǒ bù xǐhuan chī liúlián.</span></p>
+                 <textarea id="q3_4" name="q3_4" rows="2" cols="50" placeholder="Nhập bản dịch của bạn vào đây..."></textarea>
+             </div>
+              <div class="question">
+                 <p>5. <span class="hanzi">马克不是中国人,他是英国人。他喜欢吃面条、喝鸡蛋汤。今天他去食堂买了两碗面条和两碗汤,一共八万九越南盾。</span> <button type="button" class="toggle-pinyin" data-target="pinyin3_5">💡</button><span class="pinyin pinyin-hidden" id="pinyin3_5">Mǎkè bú shì Zhōngguó rén, tā shì Yīngguó rén. Tā xǐhuan chī miàntiáo, hē jīdàn tāng. Jīntiān tā qù shítáng mǎi le liǎng wǎn miàntiáo hé liǎng wǎn tāng, yígòng bā wàn jiǔ qiān Yuènán dùn.</span></p>
+                 <textarea id="q3_5" name="q3_5" rows="3" cols="50" placeholder="Nhập bản dịch của bạn vào đây..."></textarea>
+             </div>
+        </section>
+
+        <section id="part4A">
+            <h2>Phần IV-A: Lắng nghe và chọn đáp án đúng <span class="cute-icon">🎧</span><span class="section-points">Tổng 25 điểm</span></h2>
+            <p class="instructions">Bấm nút Play ▶️ để nghe và chọn câu trả lời nha!</p>
+            <audio id="audioPlayer" controls src="https://res.cloudinary.com/dylnm79id/video/upload/v1745323589/nghe_Q1_11_iztnes.mp3">
+                Rất tiếc, trình duyệt này không hỗ trợ phát audio trực tiếp hoặc link audio chưa đúng. Bạn hãy thử trình duyệt khác hoặc báo giáo viên nhé!
+            </audio>
+
+            <div class="question">
+                <p>1. Câu hỏi 1: <span class="question-points">(5 điểm)</span></p>
+                <label><input type="radio" name="q4_1" value="A"><span> A. 去学校 (qù xuéxiào)</span></label>
+                <label><input type="radio" name="q4_1" value="B" data-correct="true"><span> B. 去银行 (qù yínháng)</span></label> <label><input type="radio" name="q4_1" value="C"><span> C. 去学校和银行 (qù xuéxiào hé yínháng)</span></label>
+                <label><input type="radio" name="q4_1" value="D"><span> D. 在家 (zàijiā)</span></label>
+            </div>
+            <div class="question">
+                <p>2. Câu hỏi 2: <span class="question-points">(5 điểm)</span></p>
+                <label><input type="radio" name="q4_2" value="A"><span> A. 日元 (rìyuán)</span></label>
+                <label><input type="radio" name="q4_2" value="B" data-correct="true"><span> B. 美元 (měiyuán)</span></label> <label><input type="radio" name="q4_2" value="C"><span> C. 人民币 (rénmínbì)</span></label>
+                <label><input type="radio" name="q4_2" value="D"><span> D. 什么都没有 (shénme dōu méiyǒu)</span></label>
+            </div>
+             <div class="question">
+                <p>3. Câu hỏi 3: <span class="question-points">(5 điểm)</span></p>
+                <label><input type="radio" name="q4_3" value="A"><span> A. 1200元人民币 (1200 yuán rénmínbì)</span></label>
+                <label><input type="radio" name="q4_3" value="B"><span> B. 1100元人民币 (1100 yuán rénmínbì)</span></label>
+                <label><input type="radio" name="q4_3" value="C"><span> C. 700欧元 (700 ōuyuán)</span></label>
+                <label><input type="radio" name="q4_3" value="D" data-correct="true"><span> D. 100欧元 (100 ōuyuán)</span></label> </div>
+             <div class="question">
+                <p>4. Câu hỏi 4: <span class="question-points">(5 điểm)</span></p>
+                <label><input type="radio" name="q4_4" value="A"><span> A. 在商店 (zài shāngdiàn)</span></label>
+                <label><input type="radio" name="q4_4" value="B"><span> B. 在饭店 (zài fàndiàn)</span></label>
+                <label><input type="radio" name="q4_4" value="C" data-correct="true"><span> C. 在银行 (zài yínháng)</span></label> <label><input type="radio" name="q4_4" value="D"><span> D. 在学校 (zài xuéxiào)</span></label>
+            </div>
+            <div class="question">
+                <p>5. Câu hỏi 5: <span class="question-points">(5 điểm)</span></p>
+                <label><input type="radio" name="q4_5" value="A"><span> A. 图书馆 (túshūguǎn)</span></label>
+                <label><input type="radio" name="q4_5" value="B"><span> B. 邮局 (yóujú)</span></label>
+                <label><input type="radio" name="q4_5" value="C" data-correct="true"><span> C. 银行 (yínháng)</span></label> <label><input type="radio" name="q4_5" value="D"><span> D. 回家 (huíjiā)</span></label>
+            </div>
+        </section>
+
+
+        <section id="submission" style="text-align: center;"> <h2>Hoàn thành xuất sắc! <span class="cute-icon">🎉</span></h2>
+            <div id="results" style="display: none; text-align: left;"> <h3>Kết quả của bạn nè:</h3>
+                <p>✅ Phần I (Điền từ): <span class="score-display" id="scorePart1">0</span> / 25 điểm</p>
+                <p>✅ Phần II (Đọc hiểu): <span class="score-display" id="scorePart2">0</span> / 25 điểm</p>
+                <p>✅ Phần IV-A (Nghe hiểu): <span class="score-display" id="scorePart4A">0</span> / 25 điểm</p>
+                <hr>
+                <p><strong>🏆 Tổng điểm (phần tự động chấm): <span class="score-display" id="totalScore">0</span> / 75 điểm</strong></p>
+                <p><i>(📝 Phần III dịch thuật sẽ được giáo viên chấm riêng nha)</i></p>
+            </div>
+            <div id="googleFormReminder" style="display: none;">
+                🚨 Bạn ơi! Nhớ ấn nút "Nộp Kết Quả Lên Google Form" để lưu bài làm nhé! 🚨
+            </div>
+            <button type="button" id="submitBtn"><span class="cute-icon">💯</span> Chấm điểm & Hiện nút Nộp Form</button>
+            <br> <button type="button" id="googleFormBtn" style="display: none;"><span class="cute-icon">🚀</span> Nộp Kết Quả Lên Google Form <span class="spinner" style="display: none;"></span></button>
+        </section>
+    </form>
+</div> <script>
+        // --- JAVASCRIPT START ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lấy các element cần thiết
+            const timeElement = document.getElementById('time');
+            const toggleButtons = document.querySelectorAll('.toggle-pinyin');
+            const submitBtn = document.getElementById('submitBtn');
+            const googleFormBtn = document.getElementById('googleFormBtn');
+            const quizForm = document.getElementById('quizForm');
+            const resultsDiv = document.getElementById('results');
+            const scorePart1Span = document.getElementById('scorePart1');
+            const scorePart2Span = document.getElementById('scorePart2');
+            const scorePart4ASpan = document.getElementById('scorePart4A');
+            const totalScoreSpan = document.getElementById('totalScore');
+            const studentNameInput = document.getElementById('studentName');
+            const googleFormReminder = document.getElementById('googleFormReminder');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const spinner = googleFormBtn.querySelector('.spinner');
+
+            let timerInterval;
+            let seconds = 0;
+            let quizSubmitted = false;
+
+            // --- Điểm cho mỗi câu ---
+            const pointsPerQPart1 = 25 / 6; // ~4.17 points
+            const pointsPerQPart2 = 5;      // 5 points
+            const pointsPerQPart4A = 5;     // 5 points
+
+            // --- Bộ đếm thời gian ---
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    timeElement.textContent =
+                        `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            // --- Chức năng ẩn/hiện Pinyin ---
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const pinyinElement = document.getElementById(targetId);
+                    if (pinyinElement) pinyinElement.classList.toggle('pinyin-hidden');
+                });
+            });
+
+             // --- Hàm đánh dấu đúng/sai cho input/label ---
+            function markInputCorrectness(inputElement, isCorrect) {
+                 inputElement.classList.remove('correct-answer', 'wrong-answer');
+                 inputElement.style.backgroundColor = ''; // Reset background
+                 if (isCorrect) {
+                     inputElement.classList.add('correct-answer');
+                     inputElement.style.backgroundColor = '#d1e7dd';
+                 } else {
+                     inputElement.classList.add('wrong-answer');
+                     inputElement.style.backgroundColor = '#f8d7da';
+                 }
+            }
+            function markChoiceCorrectness(selectedLabel, correctLabel) {
+                const groupName = selectedLabel?.querySelector('input')?.name || correctLabel?.querySelector('input')?.name;
+                 if (groupName) {
+                     document.querySelectorAll(`input[name="${groupName}"]`).forEach(radio => {
+                         radio.parentElement.classList.remove('correct-choice-label', 'wrong-choice-label');
+                     });
+                 }
+                 if (correctLabel) correctLabel.classList.add('correct-choice-label');
+                 if (selectedLabel && selectedLabel !== correctLabel) selectedLabel.classList.add('wrong-choice-label');
+            }
+
+            // --- Chức năng chấm điểm tự động ---
+            function calculateScore() {
+                let score1_raw = 0, score2_raw = 0, score4A_raw = 0;
+
+                // Chấm Phần I (đếm số câu đúng)
+                document.querySelectorAll('#part1 input[type="text"]').forEach(input => {
+                    const isCorrect = input.value.trim().toLowerCase() === input.getAttribute('data-answer').toLowerCase();
+                     if (input.value.trim() !== '') {
+                        markInputCorrectness(input, isCorrect);
+                         if (isCorrect) score1_raw++;
+                     } else {
+                         input.style.backgroundColor = '';
+                         input.classList.remove('correct-answer', 'wrong-answer');
+                     }
+                });
+
+                // Chấm Phần II (đếm số câu đúng)
+                document.querySelectorAll('#part2 .question').forEach((question, index) => {
+                     const name = `q2_${index+1}`;
+                     const selectedOption = question.querySelector(`input[name="${name}"]:checked`);
+                     const correctOption = question.querySelector(`input[name="${name}"][data-correct="true"]`);
+                     markChoiceCorrectness(selectedOption?.parentElement, correctOption?.parentElement);
+                     if (selectedOption && selectedOption.getAttribute('data-correct') === 'true') {
+                         score2_raw++;
+                     }
+                 });
+
+                // Chấm Phần IV-A (đếm số câu đúng)
+                document.querySelectorAll('#part4A .question').forEach((question, index) => {
+                     const name = `q4_${index+1}`;
+                     const selectedOption = question.querySelector(`input[name="${name}"]:checked`);
+                     const correctOption = question.querySelector(`input[name="${name}"][data-correct="true"]`);
+                     markChoiceCorrectness(selectedOption?.parentElement, correctOption?.parentElement);
+                     if (selectedOption && selectedOption.getAttribute('data-correct') === 'true') {
+                         score4A_raw++;
+                     }
+                 });
+
+                // Tính điểm cuối cùng theo thang 25 cho mỗi phần
+                let finalScore1 = (score1_raw * pointsPerQPart1);
+                let finalScore2 = score2_raw * pointsPerQPart2;
+                let finalScore4A = score4A_raw * pointsPerQPart4A;
+                let finalTotalScore = finalScore1 + finalScore2 + finalScore4A;
+
+
+                // Hiển thị điểm (làm tròn đến 1 chữ số thập phân)
+                scorePart1Span.textContent = finalScore1.toFixed(1);
+                scorePart2Span.textContent = finalScore2.toFixed(1);
+                scorePart4ASpan.textContent = finalScore4A.toFixed(1);
+                totalScoreSpan.textContent = finalTotalScore.toFixed(1);
+                resultsDiv.style.display = 'block';
+            }
+
+            // --- Xử lý khi nhấn nút "Chấm điểm" ---
+            submitBtn.addEventListener('click', () => {
+                if (quizSubmitted) return;
+
+                const studentName = studentNameInput.value.trim();
+                if (studentName === '') {
+                    alert('Bạn ơi, nhập tên của mình vào trước nhé! 😉');
+                    studentNameInput.focus();
+                    studentNameInput.style.borderColor = 'red';
+                    return;
+                }
+                studentNameInput.style.borderColor = '#ced4da';
+
+                clearInterval(timerInterval);
+                calculateScore(); // Tính và hiển thị điểm
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="cute-icon">✅</span> Đã chấm điểm!';
+                googleFormReminder.style.display = 'block';
+                googleFormBtn.style.display = 'inline-block';
+
+                // Vô hiệu hóa các input, textarea, button pinyin, audio
+                quizForm.querySelectorAll('input, textarea').forEach(el => {
+                    if (el.id !== 'studentName') el.disabled = true;
+                });
+                toggleButtons.forEach(button => button.disabled = true);
+                if (audioPlayer) {
+                    audioPlayer.pause();
+                }
+            });
+
+            // --- Xử lý khi nhấn nút "Nộp Kết Quả Lên Google Form" ---
+            googleFormBtn.addEventListener('click', async () => {
+                if (quizSubmitted) return;
+
+                 googleFormBtn.disabled = true;
+                 spinner.style.display = 'inline-block';
+                 googleFormBtn.childNodes[0].nodeValue = 'Đang gửi... ';
+
+
+                // Thu thập dữ liệu
+                const studentName = studentNameInput.value.trim();
+                // Lấy điểm đã tính (có thể làm tròn hoặc không tùy bạn muốn gửi đi thế nào)
+                const score1 = parseFloat(scorePart1Span.textContent);
+                const score2 = parseFloat(scorePart2Span.textContent);
+                const score4A = parseFloat(scorePart4ASpan.textContent);
+                const totalScore = parseFloat(totalScoreSpan.textContent);
+                const timeTaken = timeElement.textContent;
+
+                const answersPart1 = {}, answersPart2 = {}, answersPart3 = {}, answersPart4A = {};
+
+                document.querySelectorAll('#part1 input[type="text"]').forEach(input => { answersPart1[input.id] = input.value.trim(); });
+                document.querySelectorAll('#part2 input[type="radio"]').forEach(radio => { if (radio.checked) answersPart2[radio.name] = radio.value; });
+                document.querySelectorAll('#part3 textarea').forEach(textarea => { answersPart3[textarea.id] = textarea.value.trim(); });
+                document.querySelectorAll('#part4A input[type="radio"]').forEach(radio => { if (radio.checked) answersPart4A[radio.name] = radio.value; });
+
+                // Xử lý câu chưa trả lời trắc nghiệm
+                ["q2_1", "q2_2", "q2_3", "q2_4", "q2_5"].forEach(name => { if (!answersPart2[name]) answersPart2[name] = "Chưa trả lời"; });
+                ["q4_1", "q4_2", "q4_3", "q4_4", "q4_5"].forEach(name => { if (!answersPart4A[name]) answersPart4A[name] = "Chưa trả lời"; });
+
+
+                // --- CẬP NHẬT GOOGLE FORM URL VÀ ENTRY IDs ---
+                const googleFormURL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf6mAcWKwF_m6sR4ryOYTEcsKIpls65bfo3dH3dJLhcUX92RA/formResponse";
+                const entry_studentName = "entry.1184020286"; // họ tên học viên
+                const entry_time        = "entry.862194018";  // thời gian làm bài
+                const entry_score1      = "entry.274212057";  // Điểm phần 1
+                const entry_score2      = "entry.780880786";  // Điểm phần 2
+                const entry_score4A     = "entry.871166809";  // Điểm phần 4
+                const entry_totalScore  = "entry.1244463908"; // Tổng điểm (chưa tính phần 3)
+                const entry_q1_1 = "entry.216628170"; const entry_q1_2 = "entry.177368996"; const entry_q1_3 = "entry.694509259"; const entry_q1_4 = "entry.989213095"; const entry_q1_5 = "entry.1391839935"; const entry_q1_6 = "entry.1345612015";
+                const entry_q2_1 = "entry.988466836"; const entry_q2_2 = "entry.474337359"; const entry_q2_3 = "entry.670903786"; const entry_q2_4 = "entry.1640906194"; const entry_q2_5 = "entry.814796580";
+                const entry_q3_1 = "entry.1455569591"; const entry_q3_2 = "entry.1833874550"; const entry_q3_3 = "entry.108817839"; const entry_q3_4 = "entry.1315249645"; const entry_q3_5 = "entry.59100414";
+                const entry_q4_1 = "entry.434360502"; const entry_q4_2 = "entry.565386669"; const entry_q4_3 = "entry.889003072"; const entry_q4_4 = "entry.1855874281"; const entry_q4_5 = "entry.827165656";
+                // ---------------------------------------------------------------------
+
+                const formData = new FormData();
+                // Add data to FormData
+                formData.append(entry_studentName, studentName);
+                formData.append(entry_time, timeTaken);
+                formData.append(entry_score1, score1.toFixed(2)); // Gửi điểm làm tròn 2 chữ số
+                formData.append(entry_score2, score2.toFixed(2));
+                formData.append(entry_score4A, score4A.toFixed(2));
+                formData.append(entry_totalScore, totalScore.toFixed(2));
+                // Add detailed answers
+                formData.append(entry_q1_1, answersPart1['q1_1'] || ''); formData.append(entry_q1_2, answersPart1['q1_2'] || ''); formData.append(entry_q1_3, answersPart1['q1_3'] || ''); formData.append(entry_q1_4, answersPart1['q1_4'] || ''); formData.append(entry_q1_5, answersPart1['q1_5'] || ''); formData.append(entry_q1_6, answersPart1['q1_6'] || '');
+                formData.append(entry_q2_1, answersPart2['q2_1']); formData.append(entry_q2_2, answersPart2['q2_2']); formData.append(entry_q2_3, answersPart2['q2_3']); formData.append(entry_q2_4, answersPart2['q2_4']); formData.append(entry_q2_5, answersPart2['q2_5']);
+                formData.append(entry_q3_1, answersPart3['q3_1'] || ''); formData.append(entry_q3_2, answersPart3['q3_2'] || ''); formData.append(entry_q3_3, answersPart3['q3_3'] || ''); formData.append(entry_q3_4, answersPart3['q3_4'] || ''); formData.append(entry_q3_5, answersPart3['q3_5'] || '');
+                formData.append(entry_q4_1, answersPart4A['q4_1']); formData.append(entry_q4_2, answersPart4A['q4_2']); formData.append(entry_q4_3, answersPart4A['q4_3']); formData.append(entry_q4_4, answersPart4A['q4_4']); formData.append(entry_q4_5, answersPart4A['q4_5']);
+
+
+                // Gửi dữ liệu ẩn đi
+                try {
+                    await fetch(googleFormURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formData
+                    });
+                    spinner.style.display = 'none';
+                    googleFormBtn.innerHTML = '<span class="cute-icon">💖</span> Đã Nộp Thành Công!';
+                    quizSubmitted = true;
+                    googleFormReminder.style.display = 'none';
+                    alert(`Tuyệt vời ${studentName}! Bài của bạn đã được gửi đi thành công! Giờ thì chờ kết quả cuối cùng từ giáo viên nhé! 🥳`);
+
+                } catch (error) {
+                    console.error('Lỗi khi gửi Google Form:', error);
+                     spinner.style.display = 'none';
+                     googleFormBtn.disabled = false;
+                     googleFormBtn.innerHTML = '<span class="cute-icon">😥</span> Thử Nộp Lại';
+                    alert('Oops! Có lỗi xảy ra khi gửi bài. Bạn kiểm tra lại mạng rồi thử lại hoặc báo giáo viên nhé!');
+                }
+            });
+
+            // Bắt đầu đếm giờ
+            startTimer();
+        });
+        // --- JAVASCRIPT END ---
+    </script>
+
+</body>
+</html>

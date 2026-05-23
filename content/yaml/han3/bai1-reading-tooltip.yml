@@ -1,0 +1,30 @@
+id: han3-bai1-reading-tooltip
+course: han3
+order: 1
+title: "Bài 1 — Bài đọc «Mai Lan Phương» (tra từ)"
+subtitle: "Bấm vào từ Hán để xem pinyin và nghĩa"
+interactionType: reading-tooltip
+estimatedMinutes: 12
+tags: [reading, culture]
+passage: |
+  梅兰芳是中国非常有名的京剧演员。
+  他从小就开始学习京剧，他的表演艺术影响了很多人。
+  他不但在中国非常有名，在国外也很受欢迎。
+  他还把中国的京剧介绍到了美国和苏联。
+glossary:
+  - { token: "梅兰芳", pinyin: "Méi Lán Fāng", vi: "Mai Lan Phương (tên người)" }
+  - { token: "京剧", pinyin: "jīng jù", vi: "kinh kịch" }
+  - { token: "演员", pinyin: "yǎn yuán", vi: "diễn viên" }
+  - { token: "表演", pinyin: "biǎo yǎn", vi: "biểu diễn" }
+  - { token: "艺术", pinyin: "yì shù", vi: "nghệ thuật" }
+  - { token: "影响", pinyin: "yǐng xiǎng", vi: "ảnh hưởng" }
+  - { token: "受欢迎", pinyin: "shòu huān yíng", vi: "được hoan nghênh" }
+  - { token: "介绍", pinyin: "jiè shào", vi: "giới thiệu" }
+  - { token: "苏联", pinyin: "Sū lián", vi: "Liên Xô" }
+comprehension:
+  - prompt: "Mai Lan Phương là ai?"
+    options: ["Nhà văn", "Diễn viên kinh kịch", "Họa sĩ", "Nhạc sĩ"]
+    correctIndex: 1
+  - prompt: "Ông đã giới thiệu kinh kịch Trung Quốc đến đâu?"
+    options: ["Việt Nam và Nhật Bản", "Mỹ và Liên Xô", "Pháp và Đức", "Anh và Ý"]
+    correctIndex: 1

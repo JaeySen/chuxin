@@ -1,0 +1,32 @@
+id: han1-bai3-fill-blank
+course: han1
+order: 3
+title: "Bài 3 — Điền từ còn thiếu"
+subtitle: "Gõ từ tiếng Trung thích hợp vào chỗ trống"
+interactionType: fill-blank
+estimatedMinutes: 10
+toneSensitive: false
+tags: [practice, vocabulary]
+items:
+  - prompt: "___, 老师！(Chào cô/thầy!)"
+    blanks:
+      - answer: "你好"
+        alternatives: ["nǐ hǎo", "ni hao"]
+    hint: "Chào hỏi cơ bản"
+  - prompt: "___ 你！(Cảm ơn bạn!)"
+    blanks:
+      - answer: "谢谢"
+        alternatives: ["xiè xie", "xie xie"]
+  - prompt: "明天 ___！(Hẹn gặp lại ngày mai!)"
+    blanks:
+      - answer: "见"
+        alternatives: ["jiàn", "jian"]
+    hint: "再___"
+  - prompt: "___，我迟到了。(Xin lỗi, tôi đến muộn.)"
+    blanks:
+      - answer: "对不起"
+        alternatives: ["duì bu qǐ", "dui bu qi"]
+  - prompt: "___ 关系。(Không sao.)"
+    blanks:
+      - answer: "没"
+        alternatives: ["méi", "mei"]

@@ -1,0 +1,24 @@
+{
+  "name": "sotamhsk",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SotamHSK — Mandarin learning platform on Firebase",
+  "packageManager": "pnpm@9.12.0",
+  "scripts": {
+    "dev:vanilla": "firebase emulators:start --only hosting:vanilla,auth,firestore",
+    "dev:api": "pnpm --filter api dev",
+    "dev:react": "pnpm --filter react dev",
+    "build": "pnpm --filter react build",
+    "typecheck": "pnpm --filter shared typecheck && pnpm --filter react exec tsc --noEmit",
+    "sync": "pnpm --filter scripts sync",
+    "sync:emulator": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 pnpm --filter scripts sync",
+    "extract": "pnpm --filter scripts extract",
+    "emulators": "firebase emulators:start",
+    "deploy": "pnpm build && firebase deploy"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.20.2",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}

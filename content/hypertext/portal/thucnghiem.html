@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: 6 Bước Thực Nghiệm</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Sử dụng font Inter mặc định của Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6; /* Một màu nền xám-xanh nhạt */
+        }
+
+        /* Tùy chỉnh thanh cuộn (cho trình duyệt Webkit) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Lớp học cho hiệu ứng xuất hiện khi cuộn */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px); /* Bắt đầu từ bên dưới 20px */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Tạo đường "timeline" */
+        .timeline-container {
+            position: relative;
+            padding-left: 2.5rem; /* 40px */
+        }
+        
+        /* Đường kẻ dọc */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 18px; /* Căn giữa với icon */
+            top: 20px;
+            bottom: 20px;
+            width: 4px;
+            background-color: #cbd5e1; /* gray-300 */
+            border-radius: 2px;
+        }
+        
+        /* Chấm tròn trên timeline */
+        .timeline-dot {
+            position: absolute;
+            left: -8px; /* Dịch qua trái để nằm trên đường kẻ */
+            top: 1.25rem; /* 20px */
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border: 4px solid #3b82f6; /* blue-500 */
+            border-radius: 50%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-4 md:p-8 lg:p-12 max-w-4xl">
+        
+        <!-- Tiêu đề -->
+        <header class="text-center mb-10 md:mb-16">
+            <h1 class="text-3xl md:text-5xl font-bold text-blue-600 mb-4">
+                Quy Trình 6 Bước Thực Nghiệm
+            </h1>
+            <p class="text-lg md:text-xl text-gray-700">
+                Chào mừng bạn! Dưới đây là 6 bước đơn giản để tham gia buổi thực nghiệm nghe hiệu quả nhất.
+            </p>
+        </header>
+
+        <!-- Khối nội dung Timeline -->
+        <div class="relative">
+            <!-- Đường kẻ dọc cho timeline (chỉ hiển thị trên mobile) -->
+            <!-- <div class="absolute left-4 top-0 h-full w-0.5 bg-blue-200 md:hidden"></div> -->
+
+            <!-- Bước 1 -->
+            <section class="mb-8 fade-in-section timeline-container">
+                <div class="timeline-dot">1</div>
+                <div class="ml-4 md:ml-8 p-6 bg-white rounded-xl shadow-lg border-l-4 border-blue-500">
+                    <h2 class="text-2xl font-semibold text-blue-700 mb-3">
+                        LẦN NGHE 1 🎧: Tập Trung Nắm Ý Chính
+                    </h2>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Giáo viên sẽ phát bản thu âm lần đầu tiên.</li>
+                        <li>Hãy lắng nghe thật <strong>tập trung</strong> để nắm bắt nội dung tổng quan và các ý chính.</li>
+                        <li><em>Mẹo nhỏ: Đừng cố gắng ghi chép vội, hãy để bộ não của bạn "thấm" thông tin trước.</em></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Bước 2 -->
+            <section class="mb-8 fade-in-section timeline-container">
+                <div class="timeline-dot">2</div>
+                <div class="ml-4 md:ml-8 p-6 bg-white rounded-xl shadow-lg border-l-4 border-green-500">
+                    <h2 class="text-2xl font-semibold text-green-700 mb-3">
+                        LẦN NGHE 2 ✍️: Bắt Đầu Ghi Chép Tự Do
+                    </h2>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Giáo viên phát bản thu âm lần thứ hai.</li>
+                        <li>Bây giờ, hãy <strong>bắt đầu ghi chép</strong> (take notes).</li>
+                        <li>Ghi lại bất kỳ từ khoá, ý chính, hoặc thông tin nào bạn nghe được.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Bước 3 -->
+            <section class="mb-8 fade-in-section timeline-container">
+                <div class="timeline-dot">3</div>
+                <div class="ml-4 md:ml-8 p-6 bg-white rounded-xl shadow-lg border-l-4 border-yellow-500">
+                    <h2 class="text-2xl font-semibold text-yellow-700 mb-3">
+                        LẦN NGHE 3 🗒️: Hoàn Thiện Ghi Chép
+                    </h2>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Giáo viên phát bản thu âm lần cuối cùng.</li>
+                        <li>Sử dụng lần nghe này để <strong>bổ sung và hoàn thiện</strong> phần ghi chép của mình.</li>
+                        <li>Hãy cố gắng lấp đầy các "lỗ hổng" thông tin và kiểm tra lại các ý đã ghi.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Bước 4 -->
+            <section class="mb-8 fade-in-section timeline-container">
+                <div class="timeline-dot">4</div>
+                <div class="ml-4 md:ml-8 p-6 bg-white rounded-xl shadow-lg border-l-4 border-purple-500">
+                    <h2 class="text-2xl font-semibold text-purple-700 mb-3">
+                        THẢO LUẬN NHÓM 👥💬: Đối Chiếu & Thống Nhất
+                    </h2>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Làm việc cùng các thành viên trong nhóm của bạn.</li>
+                        <li><strong>So sánh ghi chép</strong> của mình với các bạn khác.</li>
+                        <li>Thảo luận để tìm ra nội dung/đáp án chính xác và thống nhất nhất.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Bước 5 -->
+            <section class="mb-8 fade-in-section timeline-container">
+                <div class="timeline-dot">5</div>
+                <div class="ml-4 md:ml-8 p-6 bg-white rounded-xl shadow-lg border-l-4 border-orange-500">
+                    <h2 class="text-2xl font-semibold text-orange-700 mb-3">
+                        TRÌNH BÀY & KIỂM TRA CHÉO 🧐: Chia Sẻ & Góp Ý
+                    </h2>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Một bạn (hoặc nhóm) <strong>chia sẻ/viết nội dung</strong> nghe được lên bảng.</li>
+                        <li>Một nhóm khác sẽ có nhiệm vụ <strong>kiểm tra, đối chiếu</strong> và đưa ra ý kiến phản hồi.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Bước 6 -->
+            <section class="mb-8 fade-in-section timeline-container">
+                <div class="timeline-dot">6</div>
+                <div class="ml-4 md:ml-8 p-6 bg-white rounded-xl shadow-lg border-l-4 border-red-500">
+                    <h2 class="text-2xl font-semibold text-red-700 mb-3">
+                        GIÁO VIÊN GIẢI ĐÁP 🧑‍🏫💡: Sửa Lỗi & Tổng Kết
+                    </h2>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>Đây là bước quan trọng nhất!</li>
+                        <li>Lắng nghe giáo viên <strong>chỉnh sửa lỗi sai</strong> và <strong>giải thích sâu</strong> về:</li>
+                        <li class="ml-6">Các cấu trúc câu quan trọng.</li>
+                        <li class="ml-6">Cấu trúc của bài văn nghị luận.</li>
+                        <li>Ghi lại các kiến thức mới để áp dụng cho lần sau.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+        
+        <!-- Lời kết -->
+        <footer class="text-center mt-12 fade-in-section">
+            <p class="text-xl font-semibold text-green-600">
+                Chúc bạn có một buổi học hiệu quả và thú vị! 🎉
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const sections = document.querySelectorAll('.fade-in-section');
+
+            // Tạo một IntersectionObserver
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    // Khi section đi vào viewport
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Dừng quan sát sau khi đã hiển thị
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, {
+                root: null, // Quan sát so với viewport
+                threshold: 0.1 // Kích hoạt khi 10% section hiển thị
+            });
+
+            // Yêu cầu observer quan sát mỗi section
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>

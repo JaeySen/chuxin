@@ -1,0 +1,25 @@
+id: han2-bai16-listen-tf
+course: han2
+order: 16
+title: "Bài 16 — Nghe và đánh dấu Đúng/Sai"
+subtitle: "Nghe audio và đánh dấu 对 (đúng) hoặc 错 (sai)"
+interactionType: listen-tf
+estimatedMinutes: 12
+tags: [listening, comprehension]
+items:
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000010/hanai/listen-tf-1.mp3"
+    statement: "Người nói đến từ Bắc Kinh."
+    correct: true
+    transcript: "我是北京人，我在河内学汉语。"
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000011/hanai/listen-tf-2.mp3"
+    statement: "Cô ấy có 4 người trong gia đình."
+    correct: false
+    transcript: "我家有五口人：爸爸，妈妈，哥哥，姐姐和我。"
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000012/hanai/listen-tf-3.mp3"
+    statement: "Anh ấy thích ăn cơm Trung Quốc."
+    correct: true
+    transcript: "我很喜欢吃中国菜。"
+  - audioUrl: "https://res.cloudinary.com/dypbxrnke/video/upload/v1700000013/hanai/listen-tf-4.mp3"
+    statement: "Hôm nay là Chủ Nhật."
+    correct: false
+    transcript: "今天星期六，我没有课。"

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 9: Tôi đổi Nhân dân tệ (我换人民币)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f3f4f6; }
+        .cn-text { font-family: 'Noto Sans SC', sans-serif; }
+        
+        /* Flip Card Styles */
+        .perspective-1000 { perspective: 1000px; }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .flip-card-front { background-color: white; border: 2px solid #e5e7eb; }
+        .flip-card-back { background-color: #dbeafe; transform: rotateY(180deg); border: 2px solid #3b82f6; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        
+        .highlight { color: #2563eb; font-weight: bold; background-color: #dbeafe; padding: 0 4px; rounded: 4px; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <h1 class="text-xl font-bold"><i class="fas fa-university mr-2"></i>Hán ngữ 1 - Bài 9</h1>
+            <div class="hidden md:flex space-x-4 text-sm font-medium">
+                <a href="#vocab" class="hover:text-blue-200 transition">Từ vựng</a>
+                <a href="#grammar" class="hover:text-blue-200 transition">Ngữ pháp & Số đếm</a>
+                <a href="#exchange" class="hover:text-blue-200 transition">Thực hành Đổi tiền</a>
+                <a href="#reading" class="hover:text-blue-200 transition">Đọc hiểu</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white py-12 text-center border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-blue-800 mb-2 cn-text">我换人民币</h2>
+            <h3 class="text-2xl text-gray-600 mb-4">Wǒ huàn Rénmínbì</h3>
+            <p class="text-gray-500 italic">Mục tiêu: Giao dịch ngân hàng, Đổi tiền & Số đếm hàng Vạn</p>
+        </div>
+    </header>
+
+    <!-- PHẦN 1: TỪ VỰNG (VOCABULARY) -->
+    <section id="vocab" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">1</div>
+                <h2 class="text-2xl font-bold text-gray-800">Từ vựng & Ngân hàng (Click để lật)</h2>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+                <button onclick="filterVocab('all')" class="px-4 py-2 rounded-full bg-blue-600 text-white text-sm hover:bg-blue-700 shadow transition">Tất cả</button>
+                <button onclick="filterVocab('money')" class="px-4 py-2 rounded-full bg-white text-blue-600 border border-blue-200 text-sm hover:bg-blue-50 shadow transition">Tiền tệ</button>
+                <button onclick="filterVocab('action')" class="px-4 py-2 rounded-full bg-white text-blue-600 border border-blue-200 text-sm hover:bg-blue-50 shadow transition">Hành động & Nhân vật</button>
+                <button onclick="filterVocab('place')" class="px-4 py-2 rounded-full bg-white text-blue-600 border border-blue-200 text-sm hover:bg-blue-50 shadow transition">Thời gian & Địa điểm</button>
+            </div>
+
+            <!-- Flashcards Container -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="flashcard-container">
+                <!-- Cards will be rendered here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 2: NGỮ PHÁP & SỐ ĐẾM -->
+    <section id="grammar" class="py-12 bg-white border-t border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">2</div>
+                <h2 class="text-2xl font-bold text-gray-800">Ngữ pháp & Số đếm lớn</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Grammar Point: Yào -->
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+                    <h3 class="text-xl font-bold text-blue-800 mb-4"><i class="fas fa-lightbulb mr-2"></i>Động từ năng nguyện "要" (Yào)</h3>
+                    <p class="mb-4 text-gray-700">Biểu thị mong muốn hoặc nhu cầu cần thiết phải làm gì đó.</p>
+                    <div class="bg-white p-4 rounded-lg border border-blue-200 mb-4">
+                        <p class="font-bold text-gray-800">Cấu trúc: S + 要 + V + O</p>
+                        <p class="text-sm text-gray-600 mt-2"><span class="cn-text text-lg text-blue-600">我要换钱。</span><br>Wǒ yào huàn qián.<br>(Tôi muốn/cần đổi tiền.)</p>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded text-sm text-yellow-800 border-l-4 border-yellow-400">
+                        <strong>Phân biệt:</strong> <br>
+                        - 我去银行 (Tôi đi ngân hàng - Chỉ hành động di chuyển).<br>
+                        - 我<strong>要</strong>去银行 (Tôi <strong>cần/muốn</strong> đi ngân hàng - Nhấn mạnh nguyện vọng).
+                    </div>
+                </div>
+
+                <!-- Number Counting: Wan -->
+                <div class="bg-green-50 p-6 rounded-xl border border-green-100 shadow-sm">
+                    <h3 class="text-xl font-bold text-green-800 mb-4"><i class="fas fa-calculator mr-2"></i>Số đếm hàng Vạn (万 - Wàn)</h3>
+                    <p class="mb-4 text-gray-700">Tiếng Trung đếm theo đơn vị 4 số 0 (Vạn), khác với tiếng Việt/Anh đếm theo 3 số 0 (Nghìn).</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center border-b border-green-200 pb-2">
+                            <span class="font-bold text-gray-600">10.000 (Mười nghìn)</span>
+                            <span class="cn-text text-xl text-green-600 font-bold">一万 (Yí wàn)</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-green-200 pb-2">
+                            <span class="font-bold text-gray-600">15.000 (Mười lăm nghìn)</span>
+                            <span class="cn-text text-xl text-green-600 font-bold">一万五 (Yí wàn wǔ)</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-green-200 pb-2">
+                            <span class="font-bold text-gray-600">100.000 (Một trăm nghìn)</span>
+                            <span class="cn-text text-xl text-green-600 font-bold">十万 (Shí wàn)</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2">
+                            <span class="font-bold text-red-500">1.000.000 (Một triệu)</span>
+                            <span class="cn-text text-xl text-red-600 font-bold">一百万 (Yì bǎi wàn)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <input type="number" id="vnd-input" placeholder="Nhập số VNĐ (VD: 50000)" class="p-2 border rounded w-1/2 text-center">
+                        <button onclick="convertToWan()" class="bg-green-600 text-white px-4 py-2 rounded ml-2 hover:bg-green-700">Đổi sang cách nói TQ</button>
+                        <p id="wan-result" class="mt-2 font-bold text-green-800 h-6"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 3: THỰC HÀNH ĐỔI TIỀN (SIMULATOR) -->
+    <section id="exchange" class="py-12 bg-blue-50 border-t border-blue-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">3</div>
+                <h2 class="text-2xl font-bold text-gray-800">Thực hành: Quầy đổi tiền (换钱)</h2>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Exchange Machine -->
+                <div class="w-full lg:w-1/2 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-center text-blue-800 mb-6 uppercase">Ngân hàng Trung Quốc (中国银行)</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Tôi có (Wǒ yǒu):</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="amount-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập số tiền">
+                            <select id="currency-from" class="border rounded px-3 py-2 bg-gray-50 cn-text font-bold text-gray-700">
+                                <option value="USD">美元 (Měiyuán)</option>
+                                <option value="EUR">欧元 (Ōuyuán)</option>
+                                <option value="JPY">日元 (Rìyuán)</option>
+                                <option value="HKD">港币 (Gǎngbì)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Tôi muốn đổi (Wǒ yào huàn):</label>
+                        <div class="w-full bg-gray-100 p-3 rounded border border-gray-300 flex justify-between items-center">
+                            <span class="cn-text font-bold text-xl text-red-600">人民币 (Rénmínbì)</span>
+                            <span class="text-xs text-gray-500">Tỷ giá tham khảo: 1 USD ≈ 7.2 RMB</span>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="calculateExchange()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg transition transform hover:scale-105">
+                            <i class="fas fa-exchange-alt mr-2"></i>Đổi ngay (Huàn)
+                        </button>
+                    </div>
+
+                    <!-- Receipt -->
+                    <div id="receipt" class="hidden mt-6 bg-yellow-50 p-4 rounded border border-yellow-200 text-sm font-mono relative">
+                        <h4 class="text-center font-bold border-b border-yellow-300 pb-2 mb-2">HÓA ĐƠN (单据)</h4>
+                        <p>Khách hàng: <span class="font-bold">Xiānsheng / Xiǎojie</span></p>
+                        <p>Đổi: <span id="rec-from" class="font-bold"></span></p>
+                        <p>Thành: <span id="rec-to" class="font-bold text-red-600 text-lg"></span></p>
+                        <p class="mt-2 text-center italic text-gray-500">Qǐng shǔ yī shǔ! (Vui lòng đếm lại)</p>
+                    </div>
+                </div>
+
+                <!-- Dialogue Guide -->
+                <div class="w-full lg:w-1/2 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-blue-800 mb-4">Mẫu câu giao dịch</h3>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-gray-50 rounded border-l-4 border-blue-500">
+                            <p class="font-bold text-gray-700">Nhân viên (Yíngyèyuán):</p>
+                            <p class="cn-text text-lg text-blue-700">先生/小姐，您换什么钱？</p>
+                            <p class="text-sm text-gray-500">Xiānsheng/Xiǎojie, nín huàn shénme qián?</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded border-l-4 border-green-500">
+                            <p class="font-bold text-gray-700">Khách (Gùkè):</p>
+                            <p class="cn-text text-lg text-green-700">我有一千美元，我要换人民币。</p>
+                            <p class="text-sm text-gray-500">Wǒ yǒu yìqiān Měiyuán, wǒ yào huàn Rénmínbì.</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded border-l-4 border-blue-500">
+                            <p class="font-bold text-gray-700">Nhân viên:</p>
+                            <p class="cn-text text-lg text-blue-700">给您七千二百块。请数一数。</p>
+                            <p class="text-sm text-gray-500">Gěi nín qīqiān èrbǎi kuài. Qǐng shǔ yī shǔ.</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded border-l-4 border-green-500">
+                            <p class="font-bold text-gray-700">Khách:</p>
+                            <p class="cn-text text-lg text-green-700">对了。谢谢！</p>
+                            <p class="text-sm text-gray-500">Duì le. Xièxie!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 4: ĐỌC HIỂU (READING) -->
+    <section id="reading" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-8">
+                <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">4</div>
+                <h2 class="text-2xl font-bold text-gray-800">Đọc hiểu & Tư duy</h2>
+            </div>
+
+            <div class="bg-indigo-50 p-8 rounded-2xl shadow-inner mb-8 relative border border-indigo-100">
+                <div class="absolute top-4 right-4">
+                    <label class="flex items-center cursor-pointer select-none">
+                        <span class="mr-2 text-sm font-medium text-indigo-700">Hiện Pinyin</span>
+                        <input type="checkbox" id="toggle-pinyin" class="sr-only" onchange="togglePinyin()">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full relative transition-colors duration-200 ease-in-out toggle-bg">
+                            <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition transform duration-200 ease-in-out"></div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="prose max-w-none text-lg leading-loose text-gray-800">
+                    <p class="mb-4">
+                        <span class="cn-text">今天下午，我不去图书馆，我要去银行换钱。</span>
+                        <span class="pinyin hidden block text-sm text-indigo-600 mb-2">Jīntiān xiàwǔ, wǒ bú qù túshūguǎn, wǒ yào qù yínháng huàn qián.</span>
+                        <span class="cn-text">明天我要去上海旅行，所以我需要人民币。</span>
+                        <span class="pinyin hidden block text-sm text-indigo-600 mb-2">Míngtiān wǒ yào qù Shànghǎi lǚxíng, suǒyǐ wǒ xūyào Rénmínbì.</span>
+                    </p>
+                    <p class="mb-4">
+                        <span class="cn-text">到了银行，人很多，我要等一会儿。</span>
+                        <span class="pinyin hidden block text-sm text-indigo-600 mb-2">Dào le yínháng, rén hěn duō, wǒ yào děng yíhuìr.</span>
+                    </p>
+                    <p class="mb-4">
+                        <span class="cn-text">营业员小姐问我：“先生，您换什么钱？”</span>
+                        <span class="pinyin hidden block text-sm text-indigo-600 mb-2">Yíngyèyuán xiǎojie wèn wǒ: "Xiānsheng, nín huàn shénme qián?"</span>
+                    </p>
+                    <p class="mb-4">
+                        <span class="cn-text">我说：“我有一千美元，我要换人民币。”</span>
+                        <span class="pinyin hidden block text-sm text-indigo-600 mb-2">Wǒ shuō: "Wǒ yǒu yìqiān Měiyuán, wǒ yào huàn Rénmínbì."</span>
+                    </p>
+                    <p>
+                        <span class="cn-text">营业员给我七千多块人民币。我数了数，正好。</span>
+                        <span class="pinyin hidden block text-sm text-indigo-600 mb-2">Yíngyèyuán gěi wǒ qīqiān duō kuài Rénmínbì. Wǒ shǔ le shǔ, zhènghǎo.</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-blue-800 mb-2">1. Suy luận (Inference)</h4>
+                    <p class="text-sm mb-3">Tại sao nhân vật "tôi" phải đợi (děng yíhuìr)?</p>
+                    <div class="space-y-2 text-sm">
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">A. Vì nhân viên đi vắng.</button>
+                        <button onclick="checkQuiz(this, true)" class="w-full text-left p-2 border rounded hover:bg-gray-50">B. Vì người ở ngân hàng rất đông.</button>
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">C. Vì anh ấy quên mang tiền.</button>
+                    </div>
+                </div>
+                <div class="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-blue-800 mb-2">2. Chi tiết (Literal)</h4>
+                    <p class="text-sm mb-3">Nhân vật "tôi" đổi bao nhiêu tiền?</p>
+                    <div class="space-y-2 text-sm">
+                        <button onclick="checkQuiz(this, true)" class="w-full text-left p-2 border rounded hover:bg-gray-50">A. 1000 Đô la Mỹ (Měiyuán).</button>
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">B. 1000 Euro (Ōuyuán).</button>
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">C. 7000 Đô la Mỹ.</button>
+                    </div>
+                </div>
+                <div class="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-blue-800 mb-2">3. Tư duy (Critical Thinking)</h4>
+                    <p class="text-sm mb-3">Hành động "Shǔ le shǔ" (Đếm lại tiền) tại quầy nói lên điều gì?</p>
+                    <div class="space-y-2 text-sm">
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">A. Anh ấy không tin tưởng nhân viên.</button>
+                        <button onclick="checkQuiz(this, true)" class="w-full text-left p-2 border rounded hover:bg-gray-50">B. Đây là nguyên tắc tài chính: "Tiền bạc phân minh".</button>
+                        <button onclick="checkQuiz(this, false)" class="w-full text-left p-2 border rounded hover:bg-gray-50">C. Anh ấy thích đếm tiền.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="font-bold mb-2 text-blue-400">Bài tập về nhà</h3>
+            <p class="text-sm mb-1">1. Quay video đóng vai đi đổi tiền tại Ngân hàng Trung Quốc.</p>
+            <p class="text-sm mb-4">2. Tìm hiểu xem tờ 100 Nhân dân tệ in hình ai và danh lam thắng cảnh nào?</p>
+            <div class="border-t border-gray-700 pt-4 mt-4">
+                <p class="text-xs text-gray-500">Giáo án điện tử Hán ngữ 1 - Bài 9</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* --- 1. VOCABULARY DATA --- */
+        const vocabList = [
+            // Tiền tệ
+            { 
+                h: '人民币', p: 'Rénmínbì', m: 'Nhân dân tệ', type: 'money', icon: '💴', 
+                ex: '我要换人民币。<br>Wǒ yào huàn Rénmínbì.<br>Tôi muốn đổi Nhân dân tệ.' 
+            },
+            { 
+                h: '美元', p: 'Měiyuán', m: 'Đô la Mỹ', type: 'money', icon: '💵', 
+                ex: '美元很值钱。<br>Měiyuán hěn zhíqián.<br>Đô la Mỹ rất có giá trị.' 
+            },
+            { 
+                h: '港币', p: 'Gǎngbì', m: 'Đô la Hồng Kông', type: 'money', icon: '🇭🇰', 
+                ex: '去香港用港币。<br>Qù Xiānggǎng yòng Gǎngbì.<br>Đi Hồng Kông dùng tiền Hồng Kông.' 
+            },
+            { 
+                h: '日元', p: 'Rìyuán', m: 'Yên Nhật', type: 'money', icon: '🇯🇵', 
+                ex: '日元的面值很大。<br>Rìyuán de miànzhí hěn dà.<br>Mệnh giá của Yên Nhật rất lớn.' 
+            },
+            { 
+                h: '欧元', p: 'Ōuyuán', m: 'Đồng Euro', type: 'money', icon: '💶', 
+                ex: '欧元是欧洲的钱。<br>Ōuyuán shì Ōuzhōu de qián.<br>Euro là tiền của Châu Âu.' 
+            },
+            
+            // Hành động & Nhân vật
+            { 
+                h: '换', p: 'Huàn', m: 'Đổi', type: 'action', icon: '💱', 
+                ex: '我要换钱。<br>Wǒ yào huàn qián.<br>Tôi muốn đổi tiền.' 
+            },
+            { 
+                h: '营业员', p: 'Yíngyèyuán', m: 'Nhân viên giao dịch', type: 'action', icon: '👩‍💼', 
+                ex: '营业员给我钱。<br>Yíngyèyuán gěi wǒ qián.<br>Nhân viên giao dịch đưa tiền cho tôi.' 
+            },
+            { 
+                h: '数', p: 'Shǔ', m: 'Đếm', type: 'action', icon: '🔢', 
+                ex: '请数一数。<br>Qǐng shǔ yī shǔ.<br>Xin hãy đếm lại một chút.' 
+            },
+            { 
+                h: '等', p: 'Děng', m: 'Đợi', type: 'action', icon: '⏳', 
+                ex: '请等一会儿。<br>Qǐng děng yíhuìr.<br>Xin đợi một lát.' 
+            },
+            { 
+                h: '先生', p: 'Xiānsheng', m: 'Ông/Ngài', type: 'action', icon: '👨', 
+                ex: '先生，您好！<br>Xiānsheng, nín hǎo!<br>Chào ông/ngài!' 
+            },
+            { 
+                h: '小姐', p: 'Xiǎojie', m: 'Cô/Tiểu thư', type: 'action', icon: '👩', 
+                ex: '小姐，请问...<br>Xiǎojie, qǐngwèn...<br>Thưa cô, xin hỏi...<br><br><span class="text-red-600 italic">Lưu ý văn hóa:</span> Ở một số vùng TQ hiện đại từ này có nghĩa nhạy cảm, nên dùng 美女 hoặc gọi chức danh, nhưng trong bối cảnh bài học sách giáo khoa thì vẫn dùng 小姐 để gọi nhân viên nữ.' 
+            },
+            
+            // Thời gian & Địa điểm
+            { 
+                h: '图书馆', p: 'Túshūguǎn', m: 'Thư viện', type: 'place', icon: '📚', 
+                ex: '我去图书馆看书。<br>Wǒ qù túshūguǎn kàn shū.<br>Tôi đi thư viện đọc sách.' 
+            },
+            { 
+                h: '银行', p: 'Yínháng', m: 'Ngân hàng', type: 'place', icon: '🏦', 
+                ex: '我去银行换钱。<br>Wǒ qù yínháng huàn qián.<br>Tôi đi ngân hàng đổi tiền.' 
+            },
+            { 
+                h: '上午', p: 'Shàngwǔ', m: 'Buổi sáng', type: 'place', icon: '🌅', 
+                ex: '上午我有课。<br>Shàngwǔ wǒ yǒu kè.<br>Buổi sáng tôi có tiết học.' 
+            },
+            { 
+                h: '下午', p: 'Xiàwǔ', m: 'Buổi chiều', type: 'place', icon: '🌇', 
+                ex: '下午我去银行。<br>Xiàwǔ wǒ qù yínháng.<br>Buổi chiều tôi đi ngân hàng.' 
+            },
+            { 
+                h: '一会儿', p: 'Yíhuìr', m: 'Một lát/chốc', type: 'place', icon: '⏱️', 
+                ex: '等一会儿。<br>Děng yíhuìr.<br>Đợi một lát.' 
+            },
+            { 
+                h: '万', p: 'Wàn', m: 'Vạn (10.000)', type: 'place', icon: '🔟', 
+                ex: '一万块钱。<br>Yí wàn kuài qián.<br>Mười nghìn đồng (1 vạn).' 
+            }
+        ];
+
+        function renderVocab(filter) {
+            const container = document.getElementById('flashcard-container');
+            container.innerHTML = '';
+            
+            vocabList.forEach(word => {
+                if (filter === 'all' || word.type === filter) {
+                    const card = document.createElement('div');
+                    card.className = 'flip-card h-64 cursor-pointer perspective-1000';
+                    card.innerHTML = `
+                        <div class="flip-card-inner shadow-lg rounded-xl">
+                            <div class="flip-card-front bg-white">
+                                <div class="text-5xl mb-3">${word.icon}</div>
+                                <div class="text-3xl font-bold text-blue-800 cn-text">${word.h}</div>
+                                <div class="text-md text-gray-500 font-medium mt-2">${word.p}</div>
+                                <div class="text-xs text-gray-400 mt-4 absolute bottom-2">(Click để lật)</div>
+                            </div>
+                            <div class="flip-card-back text-blue-900 flex flex-col justify-center">
+                                <div class="font-bold text-xl mb-3">${word.m}</div>
+                                <div class="text-sm bg-white/60 p-2 rounded w-11/12 mx-auto">
+                                    <p class="font-bold text-blue-800 text-xs mb-1">Ví dụ:</p>
+                                    <p class="text-gray-700 text-xs text-left">${word.ex}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    card.onclick = function() { this.classList.toggle('flipped'); };
+                    container.appendChild(card);
+                }
+            });
+        }
+        renderVocab('all'); // Init
+
+        function filterVocab(type) {
+            renderVocab(type);
+            // Highlight active button logic can be added here
+        }
+
+        /* --- 2. NUMBER CONVERTER (VND -> WAN) --- */
+        function convertToWan() {
+            const val = parseInt(document.getElementById('vnd-input').value);
+            const res = document.getElementById('wan-result');
+            
+            if (!val || val < 10000) {
+                res.innerText = "Hãy nhập số lớn hơn 10.000 (VD: 20000)";
+                res.className = "mt-2 font-bold text-red-600 h-6";
+                return;
+            }
+
+            // Logic: Chia 10000
+            const wan = Math.floor(val / 10000);
+            const remainder = val % 10000;
+            
+            let text = `${wan} 万 (Wàn)`;
+            if (remainder > 0) text += ` ${remainder}`;
+            
+            res.innerText = `${val} = ${text}`;
+            res.className = "mt-2 font-bold text-green-700 h-6";
+        }
+
+        /* --- 3. EXCHANGE SIMULATOR --- */
+        const rates = { 'USD': 7.2, 'EUR': 7.8, 'JPY': 0.05, 'HKD': 0.9 }; // Approx rates
+
+        function calculateExchange() {
+            const amount = parseFloat(document.getElementById('amount-input').value);
+            const currency = document.getElementById('currency-from').value;
+            
+            if (!amount || amount <= 0) {
+                alert("Vui lòng nhập số tiền hợp lệ!");
+                return;
+            }
+
+            const rate = rates[currency];
+            const result = (amount * rate).toFixed(2);
+            
+            // Show receipt
+            document.getElementById('receipt').classList.remove('hidden');
+            document.getElementById('rec-from').innerText = `${amount} ${currency}`;
+            document.getElementById('rec-to').innerText = `${result} 人民币`;
+        }
+
+        /* --- 4. READING INTERACTION --- */
+        function togglePinyin() {
+            const pinyins = document.querySelectorAll('.pinyin');
+            const check = document.getElementById('toggle-pinyin');
+            const toggleBg = document.querySelector('.toggle-bg');
+            const dot = document.querySelector('.dot');
+
+            pinyins.forEach(el => el.classList.toggle('hidden'));
+            
+            if(check.checked) {
+                toggleBg.classList.replace('bg-gray-200', 'bg-indigo-500');
+                dot.classList.add('translate-x-5');
+            } else {
+                toggleBg.classList.replace('bg-indigo-500', 'bg-gray-200');
+                dot.classList.remove('translate-x-5');
+            }
+        }
+
+        function checkQuiz(btn, isCorrect) {
+            // Reset styles
+            const parent = btn.parentElement;
+            Array.from(parent.children).forEach(child => {
+                child.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+                child.classList.add('hover:bg-gray-50');
+            });
+
+            if(isCorrect) {
+                btn.classList.add('bg-green-100', 'border-green-500');
+                btn.classList.remove('hover:bg-gray-50');
+                btn.innerHTML += ' <span class="text-green-600 float-right">✔</span>';
+            } else {
+                btn.classList.add('bg-red-100', 'border-red-500');
+                btn.classList.remove('hover:bg-gray-50');
+                btn.innerHTML += ' <span class="text-red-600 float-right">✘</span>';
+            }
+        }
+
+    </script>
+</body>
+</html>

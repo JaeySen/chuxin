@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game: Lên Kế Hoạch Du Lịch - Bài 18</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db; /* Peter River */
+            --secondary-color: #9b59b6; /* Amethyst */
+            --accent-color: #e67e22; /* Carrot */
+            --bg-color: #ecf0f1; /* Clouds */
+            --text-color: #34495e; /* Wet Asphalt */
+            --light-text-color: #fff;
+            --correct-color: #2ecc71; /* Emerald */
+            --incorrect-color: #e74c3c; /* Alizarin */
+            --font-family: 'Baloo 2', cursive;
+        }
+
+        /* --- General Styles --- */
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 95vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s ease;
+        }
+
+        /* --- Screens --- */
+        .screen {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- Start Screen --- */
+        #start-screen h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        #start-screen p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .start-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            color: var(--light-text-color);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Game Screen --- */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .game-header-item {
+            background: #eaf2f8; /* Light blue */
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        #timer { color: var(--accent-color); }
+        #score { color: var(--primary-color); }
+
+        .pinyin-toggle {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .pinyin-toggle-label { margin-right: 8px; font-weight: 700; }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; width: 20px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--secondary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        #question-container {
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .level-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-color);
+            line-height: 1.4;
+        }
+        .paragraph-question {
+            font-size: 1.2rem;
+            max-width: 90%;
+            line-height: 1.6;
+        }
+
+
+        .question-pinyin {
+            font-size: 1.5rem;
+            color: #888;
+            margin-bottom: 25px;
+            height: 2rem; /* Reserve space to prevent layout shift */
+            transition: opacity 0.3s;
+        }
+        .pinyin-hidden .question-pinyin { opacity: 0; }
+
+        .question-translation {
+             font-size: 1rem;
+             color: #666;
+             margin-bottom: 25px;
+        }
+
+        #options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .option-btn {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-color);
+        }
+        .option-btn.correct { background-color: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .option-btn.incorrect { background-color: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        
+        #text-input {
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            width: 100%;
+            max-width: 470px;
+            box-sizing: border-box;
+            text-align: center;
+            font-family: var(--font-family);
+        }
+        #text-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        #scramble-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            min-height: 50px;
+            margin-bottom: 20px;
+        }
+        .scramble-word {
+            padding: 10px 15px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+        }
+        .scramble-word.dragging { opacity: 0.5; }
+
+        .feedback {
+            font-size: 1.2rem;
+            font-weight: bold;
+            height: auto;
+            min-height: 30px;
+            margin-top: 15px;
+        }
+
+        .game-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .footer-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        #hint-btn { background-color: var(--accent-color); color: white; }
+        #hint-box {
+            background: #fef9e7;
+            border: 1px solid var(--accent-color);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            width: 90%;
+            max-width: 500px;
+            font-style: italic;
+        }
+        #skip-btn { background-color: #95a5a6; color: white; }
+        #submit-btn { background-color: var(--primary-color); color: white; font-size: 1.2rem; padding: 12px 30px; }
+        #submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* --- Summary Screen --- */
+        #summary-screen h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+        #summary-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+        .summary-item {
+            background: #eaf2f8;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .summary-item .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        #badge-container {
+            margin: 20px 0;
+        }
+        #badge-display {
+            font-size: 5rem;
+        }
+        #badge-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        #mistakes-log {
+            text-align: left;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+        #mistakes-log h3 { text-align: center; }
+        .mistake-item {
+            background: #fadbd8;
+            border: 1px solid var(--incorrect-color);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .sample-answer {
+            background: #e8f8f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 4px solid var(--correct-color);
+        }
+        #restart-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 15px;
+                min-height: 98vh;
+            }
+            .question-text { font-size: 2rem; }
+            .question-pinyin { font-size: 1.2rem; }
+            .game-header { flex-direction: column; gap: 10px; }
+            #options-container { grid-template-columns: 1fr; }
+            .option-btn { height: auto; min-height: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+
+        <!-- ===== Màn hình Bắt đầu ===== -->
+        <div id="start-screen" class="screen">
+            <h1>Lên Kế Hoạch Du Lịch ✈️</h1>
+            <p>Ôn tập Bài 18: "寒假你打算去哪儿旅行?" nào! <br> Cùng lên kế hoạch cho chuyến đi trong mơ của bạn nhé! 🗺️</p>
+            <button id="start-btn" class="start-btn">Bắt đầu!</button>
+        </div>
+
+        <!-- ===== Màn hình Chơi Game ===== -->
+        <div id="game-screen" class="screen hidden">
+            <!-- Header: Timer, Score, Pinyin Toggle -->
+            <div class="game-header">
+                <div id="timer" class="game-header-item">⏳ 00:00</div>
+                <div class="pinyin-toggle">
+                    <span class="pinyin-toggle-label">Pinyin</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pinyin-switch" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div id="score" class="game-header-item">Điểm: 0 ✨</div>
+            </div>
+
+            <!-- Khu vực câu hỏi -->
+            <div id="question-container">
+                <div id="level-title" class="level-title"></div>
+                <div id="question-text" class="question-text"></div>
+                <div id="question-pinyin" class="question-pinyin"></div>
+                <div id="question-translation" class="question-translation"></div>
+                
+                <!-- Container cho các loại câu trả lời -->
+                <div id="options-container"></div>
+                <input type="text" id="text-input" class="hidden" autocomplete="off">
+                <div id="scramble-container" class="hidden"></div>
+                <textarea id="expression-input" class="hidden" rows="6" style="width: 100%; max-width: 470px; font-size: 1.1rem; padding: 15px; border-radius: 12px; border: 2px solid #e0e0e0; font-family: var(--font-family);" placeholder="Viết câu/đoạn văn của bạn ở đây..."></textarea>
+                
+                <div id="feedback" class="feedback"></div>
+                <div id="hint-box" class="hidden"></div>
+            </div>
+
+            <!-- Footer: Hint, Skip, Submit buttons -->
+            <div class="game-footer">
+                <button id="hint-btn" class="footer-btn">💡 Gợi ý</button>
+                <button id="submit-btn" class="footer-btn">Kiểm tra</button>
+                <button id="skip-btn" class="footer-btn">Bỏ qua ⏭️</button>
+            </div>
+        </div>
+
+        <!-- ===== Màn hình Tổng kết ===== -->
+        <div id="summary-screen" class="screen hidden">
+            <h2>🎉 Hoàn thành! Bạn đúng là một nhà thám hiểm tài ba! 🎉</h2>
+            
+            <div id="badge-container">
+                <div id="badge-display"></div>
+                <div id="badge-text"></div>
+            </div>
+
+            <div id="summary-details">
+                <div class="summary-item">
+                    <div>Tổng thời gian</div>
+                    <div id="final-time" class="value"></div>
+                </div>
+                <div class="summary-item">
+                    <div>Tổng điểm</div>
+                    <div id="final-score" class="value"></div>
+                </div>
+                 <div class="summary-item">
+                    <div>Số câu đúng</div>
+                    <div id="correct-count" class="value" style="color: var(--correct-color);"></div>
+                </div>
+                 <div class="summary-item">
+                    <div>Số câu sai</div>
+                    <div id="incorrect-count" class="value" style="color: var(--incorrect-color);"></div>
+                </div>
+            </div>
+
+            <div id="mistakes-log">
+                <h3>Cùng xem lại các câu sai nhé:</h3>
+                <div id="mistakes-list"></div>
+            </div>
+            
+            <button id="restart-btn" class="start-btn footer-btn">Chơi lại</button>
+        </div>
+    </div>
+
+<script>
+// ===================================================================================
+// === DỮ LIỆU TRÒ CHƠI (Dựa trên Bài 18) ===
+// ===================================================================================
+const gameData = [
+    // --- Cấp 1: Từ vựng Du lịch ---
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: '寒假',
+        pinyin: 'hánjià',
+        options: ['Kỳ nghỉ hè', 'Kỳ nghỉ đông', 'Kỳ nghỉ Tết', 'Cuối tuần'],
+        answer: 'Kỳ nghỉ đông',
+        hint: 'Kỳ nghỉ vào mùa lạnh nhất trong năm.'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: 'Du lịch, tham quan',
+        pinyin: '',
+        options: ['计划', '路线', '游览', '考察'],
+        answer: '游览',
+        hint: 'Đồng nghĩa với "lǚxíng" (旅行).'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: '路线',
+        pinyin: 'lùxiàn',
+        options: ['Lộ trình, tuyến đường', 'Phong tục', 'Dân tộc', 'Kế hoạch'],
+        answer: 'Lộ trình, tuyến đường',
+        hint: 'Con đường bạn sẽ đi trong chuyến du lịch.'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: 'Thiên đường',
+        pinyin: '',
+        options: ['山水', '天下', '天堂', '外地'],
+        answer: '天堂',
+        hint: 'Nơi được cho là đẹp nhất, sung sướng nhất.'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: '少数民族',
+        pinyin: 'shǎoshù mínzú',
+        options: ['Dân tộc thiểu số', 'Phong tục tập quán', 'Người nước ngoài', 'Sinh viên'],
+        answer: 'Dân tộc thiểu số',
+        hint: 'Các dân tộc có số dân ít hơn dân tộc Kinh.'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: 'Nói đùa',
+        pinyin: '',
+        options: ['计划', '开玩笑', '考察', '报名'],
+        answer: '开玩笑',
+        hint: 'Hành động nói điều gì đó không thật để trêu chọc.'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: '零下',
+        pinyin: 'língxià',
+        options: ['Trên 0 độ', 'Âm độ', 'Bằng 0 độ', 'Nhiệt độ'],
+        answer: 'Âm độ',
+        hint: 'Nhiệt độ dưới 0.'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: 'Công phí',
+        pinyin: '',
+        options: ['免费', '自费', '公费', '学费'],
+        answer: '公费',
+        hint: 'Chi phí do công ty hoặc nhà nước chi trả.'
+    },
+    {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: '船',
+        pinyin: 'chuán',
+        options: ['Máy bay', 'Tàu hỏa', 'Xe đạp', 'Thuyền'],
+        answer: 'Thuyền',
+        hint: 'Phương tiện đi lại trên sông, trên biển.'
+    },
+     {
+        level: "Cấp 1: Hành trang lên đường 🎒",
+        type: 'mcq',
+        question: 'Đệ nhất',
+        pinyin: '',
+        options: ['好', '多', '甲', '美'],
+        answer: '甲',
+        hint: '桂林山水__天下。'
+    },
+
+    // --- Cấp 2: Cấu trúc câu ---
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'fill-blank',
+        question: '你____说什么____行。',
+        pinyin: 'nǐ ____ shuō shénme ____ xíng.',
+        answer: '想',
+        hint: 'Bạn muốn nói gì cũng được.'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'fill-blank',
+        question: '____好吃我们就吃____。',
+        pinyin: '____ hǎochī wǒmen jiù chī ____.',
+        answer: '什么',
+        hint: 'Cấu trúc đặc chỉ: ...gì...gì.'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'fill-blank',
+        question: '你是____冷去____啊。',
+        pinyin: 'nǐ shì ____ lěng qù ____ a.',
+        answer: '哪儿',
+        hint: 'Cấu trúc đặc chỉ: ...đâu...đâu.'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'fill-blank',
+        question: '我喜欢____听音乐，____看书。',
+        pinyin: 'wǒ xǐhuān ____ tīng yīnyuè, ____ kànshū.',
+        answer: '一边',
+        hint: 'Cấu trúc chỉ hai hành động diễn ra đồng thời.'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'fill-blank',
+        question: '我听____说过这件事。',
+        pinyin: 'wǒ tīng ____ shuōguò zhè jiàn shì.',
+        answer: '谁',
+        hint: 'Đại từ nghi vấn dùng để hư chỉ "một người nào đó".'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'fill-blank',
+        question: '我打算____去西安，____去重庆。',
+        pinyin: 'wǒ dǎsuàn ____ qù xī\'ān, ____ qù chóngqìng.',
+        answer: '先',
+        hint: 'Từ chỉ trình tự "trước tiên".'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'mcq',
+        question: 'Câu nào có nghĩa là "Ai cũng có thể đăng ký"?',
+        pinyin: '',
+        options: ['谁都可以报名。', '谁报名都可以。'],
+        answer: '谁都可以报名。',
+        hint: 'Đại từ nghi vấn chỉ bất kỳ thường đứng ở đầu câu hoặc trước động từ.'
+    },
+     {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'mcq',
+        question: '____骑自行车以外，怎么去都行。',
+        pinyin: '____ qí zìxíngchē yǐwài, zěnme qù dōu xíng.',
+        options: ['除了', '不但', '因为'],
+        answer: '除了',
+        hint: 'Cấu trúc "ngoại trừ..."'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'fill-blank',
+        question: '桂林山水甲____。',
+        pinyin: 'guìlín shānshuǐ jiǎ ____.',
+        answer: '天下',
+        hint: 'Cụm từ có nghĩa là "đệ nhất thiên hạ".'
+    },
+    {
+        level: "Cấp 2: Ngữ pháp vững chắc 🗺️",
+        type: 'mcq',
+        question: 'Câu nào dùng đại từ nghi vấn để hư chỉ?',
+        pinyin: '',
+        options: ['我好像在哪儿见过你。', '你在哪儿？'],
+        answer: '我好像在哪儿见过你。',
+        hint: 'Hư chỉ là chỉ một đối tượng không xác định.'
+    },
+
+
+    // --- Cấp 3: Sắp xếp câu ---
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['寒假', '你', '打算', '去哪儿', '旅行'],
+        answer: '寒假你打算去哪儿旅行',
+        hint: 'Đây là câu chủ đề của bài học.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['我', '又', '渴', '又', '饿'],
+        answer: '我又饿又渴',
+        hint: 'Cấu trúc "vừa...vừa..." chỉ trạng thái.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['什么', '就', '好吃', '吃', '什么'],
+        answer: '什么好吃就吃什么',
+        hint: 'Cấu trúc đặc chỉ về đồ ăn.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['谁', '报名', '都', '可以'],
+        answer: '谁都可以报名',
+        hint: 'Câu chỉ bất kỳ về việc đăng ký.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['你', '开玩笑', '又', '了'],
+        answer: '你又开玩笑了',
+        hint: 'Câu nói khi ai đó lại đùa.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['坐船', '长江三峡', '游览'],
+        answer: '坐船游览长江三峡',
+        hint: 'Một hoạt động du lịch ở Trùng Khánh.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['对', '我', '很感兴趣', '风俗', '少数民族的'],
+        answer: '我对少数民族的风俗很感兴趣',
+        hint: 'Câu nói về sự hứng thú với phong tục.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['一边', '旅行', '我', '一边', '考察'],
+        answer: '我一边旅行一边考察',
+        hint: 'Câu chỉ hai hành động đồng thời.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['下有苏杭', '上有天堂'],
+        answer: '上有天堂下有苏杭',
+        hint: 'Một câu thành ngữ nổi tiếng về Tô Châu và Hàng Châu.'
+    },
+    {
+        level: "Cấp 3: Xây dựng lịch trình 🗓️",
+        type: 'scramble',
+        words: ['原来', '啊', '你', '公费旅行', '是'],
+        answer: '原来你是公费旅行啊',
+        hint: 'Câu thể hiện sự ngạc nhiên khi biết ai đó đi du lịch bằng tiền công ty.'
+    },
+
+    
+    // --- Cấp 4: Chuyên gia Giao tiếp ---
+    {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Bạn đói và khát, hãy rủ bạn mình đi ăn.',
+        pinyin: 'yuē péngyou chīfàn.',
+        sampleAnswer: '我又饿又渴，咱们去饭馆吧。',
+        hint: 'Sử dụng cấu trúc "又...又..." và rủ rê bằng "...吧".'
+    },
+    {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Hỏi xem bạn mình có kế hoạch gì cho kỳ nghỉ đông.',
+        pinyin: 'wèn péngyou de hánjià jìhuà.',
+        sampleAnswer: '寒假你有什么打算吗？',
+        hint: 'Sử dụng "有什么打算吗？"'
+    },
+    {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Bạn muốn đi Cáp Nhĩ Tân, hãy nói lý do tại sao.',
+        pinyin: 'shuō qù hā\'ěrbīn de lǐyóu.',
+        sampleAnswer: '听说哈尔滨的冰灯很好看，我想去看看。',
+        hint: 'Bắt đầu bằng "听说..." và nói về điều bạn muốn xem.'
+    },
+    {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Sử dụng cấu trúc "A...就...A" để nói "Ở đâu vui thì đi ở đó".',
+        pinyin: 'shǐyòng zhǐdài jiégòu.',
+        sampleAnswer: '哪儿好玩儿就去哪儿。',
+        hint: 'Dùng đại từ nghi vấn lặp lại.'
+    },
+    {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Nói rằng bạn thích vừa đi du lịch vừa chụp ảnh.',
+        pinyin: 'shuō liǎng gè tóngshí jìnxíng de huódòng.',
+        sampleAnswer: '我喜欢一边旅行一边拍照。',
+        hint: 'Sử dụng cấu trúc "一边...一边...".'
+    },
+     {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Bạn của bạn muốn đi đến nơi rất lạnh, hãy nói một câu đùa về điều đó.',
+        pinyin: 'kāi wánxiào.',
+        sampleAnswer: '你是哪儿冷去哪儿啊！',
+        hint: 'Sử dụng cấu trúc đặc chỉ "哪儿...哪儿...".'
+    },
+     {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Sử dụng cấu trúc "除了...以外" để nói "Ngoài đi máy bay ra, đi thế nào cũng được."',
+        pinyin: 'shǐyòng "chúle...yǐwài".',
+        sampleAnswer: '除了坐飞机以外，怎么去都行。',
+        hint: 'Ngoại trừ một phương án, các phương án khác đều được.'
+    },
+     {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Nói về một địa điểm nổi tiếng của Trung Quốc bạn muốn đến (ví dụ: Vạn Lý Trường Thành).',
+        pinyin: 'shuō yī gè nǐ xiǎng qù de zhōngguó jǐngdiǎn.',
+        sampleAnswer: '我想去北京看长城。',
+        hint: 'Sử dụng cấu trúc "我想去...看...".'
+    },
+     {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Nói rằng bạn rất hứng thú với phong tục của dân tộc thiểu số.',
+        pinyin: 'biǎodá xìngqù.',
+        sampleAnswer: '我对少数民族的风俗很感兴趣。',
+        hint: 'Sử dụng cấu trúc "我对...很感兴趣".'
+    },
+     {
+        level: "Cấp 4: Hướng dẫn viên du lịch 🗺️",
+        type: 'expression',
+        question: 'Sắp xếp lịch trình của bạn: trước tiên đi Tây An, sau đó đi Trùng Khánh.',
+        pinyin: 'ānpái xíngchéng.',
+        sampleAnswer: '我打算先去西安，再去重庆。',
+        hint: 'Sử dụng "先...再...".'
+    },
+
+    // --- Cấp 5: Viết đoạn văn ---
+    {
+        level: "Cấp 5: Viết blog du lịch ✍️",
+        type: 'expression',
+        question: 'Hãy viết một đoạn văn ngắn (khoảng 3-5 câu) kể về kế hoạch du lịch kỳ nghỉ đông của bạn. Cố gắng sử dụng các từ như: 寒假, 打算, 路线, 先...再..., 然后, 最后.',
+        pinyin: 'Xiě nǐ de hánjià lǚxíng jìhuà.',
+        questionClasses: ['paragraph-question'],
+        sampleAnswer: '寒假我打算去中国旅行。我的路线是先去北京看长城，再去西安看兵马俑。然后坐船游览长江三峡。最后，我想去云南看看少数民族。',
+        hint: 'Bắt đầu với "寒假我打算...", sau đó liệt kê các địa điểm theo trình tự thời gian.'
+    }
+];
+
+
+// ===================================================================================
+// === LOGIC CỦA TRÒ CHƠI (Tái sử dụng) ===
+// ===================================================================================
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
+const summaryScreen = document.getElementById('summary-screen');
+const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
+const skipBtn = document.getElementById('skip-btn');
+const hintBtn = document.getElementById('hint-btn');
+const submitBtn = document.getElementById('submit-btn');
+
+const timerEl = document.getElementById('timer');
+const scoreEl = document.getElementById('score');
+const pinyinSwitch = document.getElementById('pinyin-switch');
+const levelTitleEl = document.getElementById('level-title');
+const questionTextEl = document.getElementById('question-text');
+const questionPinyinEl = document.getElementById('question-pinyin');
+const questionTranslationEl = document.getElementById('question-translation');
+const optionsContainer = document.getElementById('options-container');
+const textInput = document.getElementById('text-input');
+const scrambleContainer = document.getElementById('scramble-container');
+const expressionInput = document.getElementById('expression-input');
+const feedbackEl = document.getElementById('feedback');
+const hintBox = document.getElementById('hint-box');
+
+let gameState = {};
+let timerInterval;
+
+function initGameState() {
+    gameState = {
+        currentQuestionIndex: 0,
+        score: 0,
+        startTime: null,
+        elapsedSeconds: 0,
+        mistakes: [],
+        pinyinVisible: true,
+    };
+}
+
+function startGame() {
+    initGameState();
+    startScreen.classList.add('hidden');
+    summaryScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    gameState.startTime = new Date();
+    startTimer();
+    renderQuestion();
+    updateScore();
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        gameState.elapsedSeconds++;
+        const minutes = Math.floor(gameState.elapsedSeconds / 60).toString().padStart(2, '0');
+        const seconds = (gameState.elapsedSeconds % 60).toString().padStart(2, '0');
+        timerEl.textContent = `⏳ ${minutes}:${seconds}`;
+    }, 1000);
+}
+
+function renderQuestion() {
+    optionsContainer.innerHTML = '';
+    textInput.value = '';
+    textInput.classList.add('hidden');
+    scrambleContainer.innerHTML = '';
+    scrambleContainer.classList.add('hidden');
+    expressionInput.value = '';
+    expressionInput.classList.add('hidden');
+    feedbackEl.innerHTML = '';
+    hintBox.classList.add('hidden');
+    submitBtn.disabled = false;
+    submitBtn.style.display = 'block';
+    questionTranslationEl.textContent = '';
+    
+    questionTextEl.className = 'question-text'; // Reset classes
+
+    if (gameState.currentQuestionIndex >= gameData.length) {
+        endGame();
+        return;
+    }
+
+    const q = gameData[gameState.currentQuestionIndex];
+    levelTitleEl.textContent = q.level;
+    questionTextEl.textContent = q.question;
+    questionPinyinEl.textContent = q.pinyin || '';
+    if (q.translation) {
+        questionTranslationEl.textContent = `(${q.translation})`;
+    }
+    
+    if (q.questionClasses) {
+        q.questionClasses.forEach(cls => questionTextEl.classList.add(cls));
+    }
+
+
+    switch (q.type) {
+        case 'mcq':
+            submitBtn.style.display = 'none'; // Hide submit for MCQ, answer on click
+            q.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn');
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+            break;
+        case 'fill-blank':
+            submitBtn.textContent = 'Kiểm tra';
+            textInput.classList.remove('hidden');
+            textInput.focus();
+            break;
+        case 'scramble':
+            submitBtn.textContent = 'Kiểm tra';
+            scrambleContainer.classList.remove('hidden');
+            const shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
+            shuffledWords.forEach(word => {
+                const wordEl = document.createElement('div');
+                wordEl.textContent = word;
+                wordEl.classList.add('scramble-word');
+                wordEl.draggable = true;
+                wordEl.addEventListener('dragstart', handleDragStart);
+                scrambleContainer.appendChild(wordEl);
+            });
+            scrambleContainer.addEventListener('dragover', handleDragOver);
+            scrambleContainer.addEventListener('drop', handleDrop);
+            break;
+        case 'expression':
+            submitBtn.textContent = 'Hoàn thành';
+            expressionInput.classList.remove('hidden');
+            expressionInput.focus();
+            break;
+    }
+}
+let draggedItem = null;
+
+function handleDragStart(e) {
+    draggedItem = e.target;
+    e.target.style.opacity = '0.5';
+}
+function handleDragOver(e) { e.preventDefault(); }
+function handleDrop(e) {
+    e.preventDefault();
+    if(e.target.classList.contains('scramble-word')) {
+        const rect = e.target.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        if(offsetX > rect.width / 2) {
+             e.target.parentNode.insertBefore(draggedItem, e.target.nextSibling);
+        } else {
+             e.target.parentNode.insertBefore(draggedItem, e.target);
+        }
+    } else {
+         scrambleContainer.appendChild(draggedItem);
+    }
+    draggedItem.style.opacity = '1';
+    draggedItem = null;
+}
+
+function checkAnswer(selectedOption = null) {
+    if (submitBtn.disabled) return;
+
+    const q = gameData[gameState.currentQuestionIndex];
+    let isCorrect = false;
+    let userAnswerForLog = '';
+    
+    switch(q.type) {
+        case 'mcq':
+            isCorrect = selectedOption === q.answer;
+            userAnswerForLog = selectedOption;
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = true; // Disable buttons after selection
+                if (btn.textContent === q.answer) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selectedOption) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            break;
+        case 'fill-blank':
+            userAnswerForLog = textInput.value.trim();
+            isCorrect = userAnswerForLog.toLowerCase() === q.answer.toLowerCase();
+            break;
+        case 'scramble':
+            const words = [...scrambleContainer.querySelectorAll('.scramble-word')].map(el => el.textContent);
+            userAnswerForLog = words.join('');
+            isCorrect = userAnswerForLog === q.answer;
+            break;
+        case 'expression':
+            userAnswerForLog = expressionInput.value;
+            // For expression, we show feedback but always mark as correct for points
+            isCorrect = true; 
+            feedbackEl.innerHTML = `Tuyệt vời! Đây là một câu trả lời mẫu:<div class="sample-answer">${q.sampleAnswer}</div>`;
+            feedbackEl.style.color = 'var(--text-color)';
+            break;
+    }
+
+    if (q.type !== 'expression') {
+        if (isCorrect) {
+            feedbackEl.textContent = '🎉 Chính xác! Tuyệt vời!';
+            feedbackEl.style.color = 'var(--correct-color)';
+        } else {
+            feedbackEl.textContent = `🤔 Chưa đúng rồi! Đáp án là: "${q.answer}"`;
+            feedbackEl.style.color = 'var(--incorrect-color)';
+            gameState.mistakes.push({ ...q, userAnswer: userAnswerForLog });
+        }
+    }
+
+    if (isCorrect) {
+        gameState.score += 10;
+        updateScore();
+    }
+
+
+    submitBtn.disabled = true;
+    setTimeout(() => {
+        gameState.currentQuestionIndex++;
+        renderQuestion();
+    }, q.type === 'expression' ? 4000 : (q.type === 'mcq' ? 1500 : 2000));
+}
+
+function updateScore() {
+    scoreEl.textContent = `Điểm: ${gameState.score} ✨`;
+}
+
+function togglePinyin() {
+    gameState.pinyinVisible = pinyinSwitch.checked;
+    const container = document.getElementById('question-container');
+    if (gameState.pinyinVisible) {
+        container.classList.remove('pinyin-hidden');
+    } else {
+        container.classList.add('pinyin-hidden');
+    }
+}
+
+function showHint() {
+    const q = gameData[gameState.currentQuestionIndex];
+    hintBox.textContent = `💡 Gợi ý nè: ${q.hint}`;
+    hintBox.classList.remove('hidden');
+}
+
+function skipQuestion() {
+    const q = gameData[gameState.currentQuestionIndex];
+    if (q.type !== 'expression') {
+         gameState.mistakes.push({ ...q, userAnswer: "(bỏ qua)" });
+    }
+    feedbackEl.textContent = 'Bỏ qua câu này!';
+    feedbackEl.style.color = '#888';
+    setTimeout(() => {
+        gameState.currentQuestionIndex++;
+        renderQuestion();
+    }, 1000);
+}
+
+function endGame() {
+    clearInterval(timerInterval);
+    gameScreen.classList.add('hidden');
+    summaryScreen.classList.remove('hidden');
+
+    const totalQuestions = gameData.filter(q => q.type !== 'expression').length;
+    const minutes = Math.floor(gameState.elapsedSeconds / 60).toString().padStart(2, '0');
+    const seconds = (gameState.elapsedSeconds % 60).toString().padStart(2, '0');
+    const correctCount = totalQuestions - gameState.mistakes.length;
+
+    document.getElementById('final-time').textContent = `${minutes}:${seconds}`;
+    document.getElementById('final-score').textContent = gameState.score;
+    document.getElementById('correct-count').textContent = correctCount;
+    document.getElementById('incorrect-count').textContent = gameState.mistakes.length;
+    
+    const badgeDisplay = document.getElementById('badge-display');
+    const badgeText = document.getElementById('badge-text');
+    if (gameState.mistakes.length === 0) {
+        badgeDisplay.textContent = '🥇';
+        badgeText.textContent = 'Chuyên Gia Du Lịch';
+    } else if (gameState.mistakes.length <= 5) {
+        badgeDisplay.textContent = '🥈';
+        badgeText.textContent = 'Nhà Thám Hiểm Tài Ba';
+    } else {
+        badgeDisplay.textContent = '🥉';
+        badgeText.textContent = 'Khách Du Lịch Vui Vẻ';
+    }
+
+    const mistakesList = document.getElementById('mistakes-list');
+    mistakesList.innerHTML = '';
+    if (gameState.mistakes.length === 0) {
+        mistakesList.innerHTML = '<p style="text-align: center;">Bạn không sai câu nào cả! Quá đỉnh! 🥳</p>';
+    } else {
+        gameState.mistakes.forEach(mistake => {
+            const item = document.createElement('div');
+            item.classList.add('mistake-item');
+            item.innerHTML = `
+                <p><b>Câu hỏi:</b> ${mistake.question}</p>
+                <p><b>Bạn trả lời:</b> <span style="color: var(--incorrect-color);">${mistake.userAnswer}</span></p>
+                <p><b>Đáp án đúng:</b> <span style="color: var(--correct-color);">${mistake.answer || mistake.sampleAnswer}</span></p>
+            `;
+            mistakesList.appendChild(item);
+        });
+    }
+}
+
+// Event Listeners
+startBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', startGame);
+pinyinSwitch.addEventListener('change', togglePinyin);
+hintBtn.addEventListener('click', showHint);
+skipBtn.addEventListener('click', skipQuestion);
+submitBtn.addEventListener('click', () => checkAnswer());
+
+textInput.addEventListener('keyup', (event) => {
+    if (event.key === "Enter") {
+        checkAnswer();
+    }
+});
+</script>
+
+</body>
+</html>

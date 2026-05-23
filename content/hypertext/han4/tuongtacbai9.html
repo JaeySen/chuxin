@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>口语练习：世上无难事，只怕有心人</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: #f0f9ff; /* Light blue background */
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0c4a6e; /* Darker blue for titles */
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0f2fe;
+        }
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+        .btn {
+            background-color: #0ea5e9;
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0284c7;
+        }
+        .btn-secondary {
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .btn-secondary:hover {
+            background-color: #bae6fd;
+        }
+        .pinyin, .vietnamese {
+            color: #6b7280;
+            font-size: 0.9em;
+            margin-left: 8px;
+            display: inline-block;
+        }
+        .vietnamese-block {
+            color: #6b7280;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        .suggestion {
+            font-size: 0.9rem;
+            color: #38bdf8;
+            margin-top: 0.25rem;
+            margin-left: 1.5rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-8 p-6 bg-white rounded-xl shadow-lg">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">口语练习 (演讲)</h1>
+            <h2 class="text-2xl sm:text-3xl font-semibold text-sky-600 mt-2">世上无难事，只怕有心人</h2>
+            <p class="text-lg text-gray-600 mt-2 italic">
+                <span class="pinyin hidden">(shì shàng wú nán shì, zhǐ pà yǒu xīn rén)</span>
+                <span class="vietnamese hidden">"Không có việc gì khó, chỉ sợ lòng không bền"</span>
+            </p>
+        </header>
+
+        <main class="space-y-6">
+            <!-- Introduction Card -->
+            <div class="card p-6">
+                <p class="text-gray-700 leading-relaxed">
+                    根据第九课学过的内容和语法点，每位同学准备一个两三分钟的演讲，主题是<strong>一次克服困难的经历</strong>（学习上或生活上的都可以）。请分享你的经历和感受！
+                    <span class="vietnamese-block hidden">Dựa vào nội dung và các cấu trúc ngữ pháp đã học trong bài 9, mỗi bạn hãy chuẩn bị một bài nói ngắn (khoảng 2-3 phút) về <strong>một lần bạn vượt qua khó khăn</strong> trong học tập hoặc cuộc sống. Hãy chia sẻ trải nghiệm và cảm nhận của bạn nhé!</span>
+                </p>
+            </div>
+            
+            <!-- Display Options Card -->
+            <div class="card p-6">
+                <h3 class="card-header">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                    <span>显示选项 <span class="vietnamese hidden">/ Tùy chọn hiển thị</span></span>
+                </h3>
+                <div class="mt-4 flex flex-wrap gap-4">
+                    <button id="togglePinyinBtn" class="btn btn-secondary">显示拼音</button>
+                    <button id="toggleVietnameseBtn" class="btn btn-secondary">显示越南语翻译</button>
+                </div>
+            </div>
+
+            <!-- Vocabulary and Structures Card -->
+            <div class="card p-6">
+                <h3 class="card-header">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                    <span>词汇与结构建议 <span class="vietnamese hidden">/ Gợi ý Từ vựng & Cấu trúc</span></span>
+                </h3>
+                <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>坚持到底</strong><span class="pinyin hidden">(jiānchí dàodǐ)</span><span class="vietnamese hidden">: Kiên trì đến cùng</span></li>
+                    <li><strong>胜利</strong><span class="pinyin hidden">(shènglì)</span><span class="vietnamese hidden">: Thắng lợi</span></li>
+                    <li><strong>自信</strong><span class="pinyin hidden">(zìxìn)</span><span class="vietnamese hidden">: Tự tin</span></li>
+                    <li><strong>相信</strong><span class="pinyin hidden">(xiāngxìn)</span><span class="vietnamese hidden">: Tin tưởng</span></li>
+                    <li><strong>积极</strong><span class="pinyin hidden">(jījí)</span><span class="vietnamese hidden">: Tích cực</span></li>
+                    <li><strong>努力</strong><span class="pinyin hidden">(nǔlì)</span><span class="vietnamese hidden">: Nỗ lực, cố gắng</span></li>
+                    <li><strong>争取</strong><span class="pinyin hidden">(zhēngqǔ)</span><span class="vietnamese hidden">: Tranh thủ, cố gắng đạt được</span></li>
+                    <li><strong>困难</strong><span class="pinyin hidden">(kùnnan)</span><span class="vietnamese hidden">: Khó khăn</span></li>
+                    <li class="mt-2 pt-2 border-t">
+                        <strong>可能补语:</strong><span class="pinyin hidden">V + 得 / 不 + ...</span><span class="vietnamese hidden">/ Bổ ngữ khả năng</span>
+                        <ul class="list-['-_'] list-inside ml-6 mt-2 space-y-1 text-sky-700">
+                            <li>我 <strong>爬得上去</strong><span class="vietnamese hidden">(Tôi leo lên được)</span></li>
+                            <li>我 <strong>记不住</strong> 那么多生词<span class="vietnamese hidden">(Tôi không nhớ nổi nhiều từ mới như vậy)</span></li>
+                            <li>我担心自己 <strong>演不好</strong><span class="vietnamese hidden">(Tôi lo mình diễn không tốt)</span></li>
+                            <li>我相信我 <strong>学得好</strong><span class="vietnamese hidden">(Tôi tin mình học tốt được)</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Guiding Questions Card -->
+            <div class="card p-6">
+                <h3 class="card-header">
+                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                    <span>引导性问题 <span class="vietnamese hidden">/ Câu hỏi Định hướng</span></span>
+                </h3>
+                <ol class="mt-4 list-decimal list-inside space-y-4 text-gray-700">
+                    <li>
+                        你遇到过什么困难？<span class="pinyin hidden">(nǐ yùdàoguò shénme kùnnan?)</span><span class="vietnamese hidden">(Bạn đã từng gặp phải khó khăn gì?)</span>
+                        <div class="suggestion">
+                            比如：<span class="pinyin hidden">(bǐrú)</span><span class="vietnamese hidden">(Ví dụ:)</span> 学习汉语<span class="pinyin hidden">(xuéxí hànyǔ)</span><span class="vietnamese hidden">(học tiếng Trung)</span>, 准备HSK考试<span class="pinyin hidden">(zhǔnbèi HSK kǎoshì)</span><span class="vietnamese hidden">(chuẩn bị thi HSK)</span>, 学游泳<span class="pinyin hidden">(xué yóuyǒng)</span><span class="vietnamese hidden">(học bơi)</span>...
+                        </div>
+                    </li>
+                    <li>
+                        刚开始你感觉怎么样？你是不是觉得自己“做不了”或“做不好”？<span class="pinyin hidden">(gāng kāishǐ nǐ gǎnjué zěnmeyàng? nǐ shì bùshì juédé zìjǐ “zuòbuliǎo” huò “zuòbuhǎo”?)</span><span class="vietnamese hidden">(Lúc đầu, bạn cảm thấy thế nào? Bạn có nghĩ rằng mình "làm không nổi" hoặc "làm không tốt" không?)</span>
+                         <div class="suggestion">
+                            比如：<span class="pinyin hidden">(bǐrú)</span><span class="vietnamese hidden">(Ví dụ:)</span> 觉得很难<span class="pinyin hidden">(juéde hěn nán)</span><span class="vietnamese hidden">(cảm thấy rất khó)</span>, 没有自信<span class="pinyin hidden">(méiyǒu zìxìn)</span><span class="vietnamese hidden">(không tự tin)</span>, 想放弃<span class="pinyin hidden">(xiǎng fàngqì)</span><span class="vietnamese hidden">(muốn bỏ cuộc)</span>...
+                        </div>
+                    </li>
+                    <li>
+                        你是怎么克服这个困难的？<span class="pinyin hidden">(nǐ shì zěnme kèfú zhège kùnnan de?)</span><span class="vietnamese hidden">(Bạn đã làm gì để vượt qua khó khăn đó?)</span>
+                         <div class="suggestion">
+                            比如：<span class="pinyin hidden">(bǐrú)</span><span class="vietnamese hidden">(Ví dụ:)</span> 每天练习<span class="pinyin hidden">(měitiān liànxí)</span><span class="vietnamese hidden">(luyện tập mỗi ngày)</span>, 请老师帮助<span class="pinyin hidden">(qǐng lǎoshī bāngzhù)</span><span class="vietnamese hidden">(nhờ giáo viên giúp)</span>, 坚持到底<span class="pinyin hidden">(jiānchí dàodǐ)</span><span class="vietnamese hidden">(kiên trì đến cùng)</span>...
+                        </div>
+                    </li>
+                    <li>
+                        有人帮助你或者给你加油吗？<span class="pinyin hidden">(yǒurén bāngzhù nǐ huòzhě gěi nǐ jiāyóu ma?)</span><span class="vietnamese hidden">(Có ai đã giúp đỡ hay động viên bạn không?)</span>
+                         <div class="suggestion">
+                            比如：<span class="pinyin hidden">(bǐrú)</span><span class="vietnamese hidden">(Ví dụ:)</span> 老师<span class="pinyin hidden">(lǎoshī)</span><span class="vietnamese hidden">(giáo viên)</span>, 朋友<span class="pinyin hidden">(péngyou)</span><span class="vietnamese hidden">(bạn bè)</span>, 家人<span class="pinyin hidden">(jiārén)</span><span class="vietnamese hidden">(người nhà)</span>...
+                        </div>
+                    </li>
+                    <li>
+                        最后结果怎么样？你是不是更自信了？你从这个经历中学到了什么？<span class="pinyin hidden">(zuìhòu jiéguǒ zěnmeyàng? nǐ shì bùshì gèng zìxìnle? nǐ cóng zhège jīnglì zhōng xuédàole shénme?)</span><span class="vietnamese hidden">(Cuối cùng kết quả ra sao? Bạn có cảm thấy tự tin hơn không? Bạn học được điều gì từ trải nghiệm đó?)</span>
+                         <div class="suggestion">
+                            比如：<span class="pinyin hidden">(bǐrú)</span><span class="vietnamese hidden">(Ví dụ:)</span> 成功了<span class="pinyin hidden">(chénggōng le)</span><span class="vietnamese hidden">(thành công rồi)</span>, 取得了进步<span class="pinyin hidden">(qǔdéle jìnbù)</span><span class="vietnamese hidden">(đã có tiến bộ)</span>, 变得更自信<span class="pinyin hidden">(biànde gèng zìxìn)</span><span class="vietnamese hidden">(trở nên tự tin hơn)</span>...
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Example Card -->
+            <div class="card p-6">
+                <h3 class="card-header">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                    <span>参考示例 <span class="vietnamese hidden">/ Ví dụ Tham khảo</span></span>
+                </h3>
+                <div class="mt-4 text-center">
+                    <button id="toggleExampleBtn" class="btn">
+                        显示示例
+                    </button>
+                </div>
+                <div id="exampleText" class="hidden mt-4 p-4 bg-sky-50 rounded-lg border border-sky-200 text-gray-800 space-y-3">
+                    <p>大家好！今天我的演讲题目是“世上无难事，只怕有心人”。<span class="vietnamese-block hidden">Chào mọi người! Hôm nay chủ đề bài nói của tôi là “Không có việc gì khó, chỉ sợ lòng không bền”.</span></p>
+                    <p>刚开始学汉语的时候，我觉得汉字太难了，那么多笔画，我总是<strong>记不住</strong>。那时候，我真担心自己<strong>学不好</strong>。<span class="vietnamese-block hidden">Lúc mới bắt đầu học tiếng Hán, tôi thấy chữ Hán khó quá, nhiều nét như vậy, tôi toàn không nhớ nổi. Khi đó, tôi thật sự lo mình sẽ học không tốt.</span></p>
+                    <p>但是，我的老师很积极地帮助我，常常鼓励我说：“加油！只要努力，就一定<strong>学得好</strong>”。<span class="vietnamese-block hidden">Thế nhưng, giáo viên của tôi đã rất tích cực giúp đỡ tôi, thường xuyên động viên tôi rằng: “Cố lên! Chỉ cần nỗ lực, nhất định sẽ học tốt”.</span></p>
+                    <p>于是，我每天都努力练习写汉字，也常常跟中国朋友聊天。现在，虽然我的汉语还不是特别好，但是我相信，只要坚持下去，我一定能把汉语<strong>学好</strong>。谢谢大家！<span class="vietnamese-block hidden">Thế là, mỗi ngày tôi đều nỗ lực luyện viết chữ Hán, cũng thường xuyên trò chuyện với bạn bè Trung Quốc. Bây giờ, tuy tiếng Hán của tôi vẫn chưa đặc biệt tốt, nhưng tôi tin rằng, chỉ cần kiên trì, tôi nhất định có thể học tốt tiếng Hán. Cảm ơn mọi người!</span></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Toggle Example ---
+        const toggleExampleBtn = document.getElementById('toggleExampleBtn');
+        const exampleText = document.getElementById('exampleText');
+
+        toggleExampleBtn.addEventListener('click', () => {
+            const isHidden = exampleText.classList.contains('hidden');
+            if (isHidden) {
+                exampleText.classList.remove('hidden');
+                toggleExampleBtn.textContent = '隐藏示例';
+            } else {
+                exampleText.classList.add('hidden');
+                toggleExampleBtn.textContent = '显示示例';
+            }
+        });
+
+        // --- Toggle Pinyin and Vietnamese ---
+        const togglePinyinBtn = document.getElementById('togglePinyinBtn');
+        const toggleVietnameseBtn = document.getElementById('toggleVietnameseBtn');
+        
+        let pinyinVisible = false;
+        let vietnameseVisible = false;
+
+        togglePinyinBtn.addEventListener('click', () => {
+            pinyinVisible = !pinyinVisible;
+            const pinyinElements = document.querySelectorAll('.pinyin');
+            pinyinElements.forEach(el => {
+                el.classList.toggle('hidden', !pinyinVisible);
+            });
+            togglePinyinBtn.textContent = pinyinVisible ? '隐藏拼音' : '显示拼音';
+        });
+
+        toggleVietnameseBtn.addEventListener('click', () => {
+            vietnameseVisible = !vietnameseVisible;
+            const vietnameseElements = document.querySelectorAll('.vietnamese, .vietnamese-block');
+            vietnameseElements.forEach(el => {
+                el.classList.toggle('hidden', !vietnameseVisible);
+            });
+            toggleVietnameseBtn.textContent = vietnameseVisible ? '隐藏越南语翻译' : '显示越南语翻译';
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "projects": {
+    "default": "sotamhsk"
+  },
+  "targets": {
+    "sotamhsk": {
+      "hosting": {
+        "vanilla": ["sotamhsk-demo-vanilla"],
+        "app": ["sotamhsk"]
+      }
+    }
+  }
+}

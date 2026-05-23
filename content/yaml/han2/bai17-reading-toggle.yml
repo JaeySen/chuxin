@@ -1,0 +1,40 @@
+id: han2-bai17-reading-toggle
+course: han2
+order: 17
+title: "Bài 17 — Bài đọc «Một ngày của tôi»"
+subtitle: "Đọc đoạn văn; bấm để ẩn/hiện pinyin và nghĩa tiếng Việt"
+interactionType: reading-toggle
+estimatedMinutes: 12
+tags: [reading, daily-life]
+passage:
+  - hanzi: "我每天早上六点起床。"
+    pinyin: "wǒ měi tiān zǎo shang liù diǎn qǐ chuáng."
+    vi: "Mỗi sáng tôi thức dậy lúc 6 giờ."
+  - hanzi: "起床以后，我先刷牙，然后吃早饭。"
+    pinyin: "qǐ chuáng yǐ hòu, wǒ xiān shuā yá, rán hòu chī zǎo fàn."
+    vi: "Sau khi dậy, tôi đánh răng trước, rồi ăn sáng."
+  - hanzi: "我七点半骑自行车去学校。"
+    pinyin: "wǒ qī diǎn bàn qí zì xíng chē qù xué xiào."
+    vi: "Tôi đi xe đạp đến trường lúc 7 giờ rưỡi."
+  - hanzi: "下午五点我回家。"
+    pinyin: "xià wǔ wǔ diǎn wǒ huí jiā."
+    vi: "5 giờ chiều tôi về nhà."
+  - hanzi: "晚上我做作业，看电视，十一点睡觉。"
+    pinyin: "wǎn shang wǒ zuò zuò yè, kàn diàn shì, shí yī diǎn shuì jiào."
+    vi: "Tối tôi làm bài tập, xem TV, 11 giờ đi ngủ."
+vocab:
+  - { hanzi: "起床", pinyin: "qǐ chuáng", vi: "thức dậy" }
+  - { hanzi: "刷牙", pinyin: "shuā yá", vi: "đánh răng" }
+  - { hanzi: "早饭", pinyin: "zǎo fàn", vi: "bữa sáng" }
+  - { hanzi: "自行车", pinyin: "zì xíng chē", vi: "xe đạp" }
+  - { hanzi: "作业", pinyin: "zuò yè", vi: "bài tập" }
+comprehension:
+  - prompt: "Người nói thức dậy lúc mấy giờ?"
+    options: ["5 giờ", "6 giờ", "7 giờ", "7 giờ rưỡi"]
+    correctIndex: 1
+  - prompt: "Người nói đến trường bằng phương tiện gì?"
+    options: ["Đi bộ", "Xe buýt", "Xe đạp", "Tàu điện"]
+    correctIndex: 2
+  - prompt: "Buổi tối người nói đi ngủ lúc mấy giờ?"
+    options: ["10 giờ", "10 giờ rưỡi", "11 giờ", "12 giờ"]
+    correctIndex: 2

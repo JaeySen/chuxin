@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài ôn tập Toàn diện: 独生子女 (Gia đình một con)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .chinese-sentence { cursor: pointer; transition: all 0.2s; background-color: rgba(236, 252, 241, 0.6); border-bottom: 2px solid rgba(134, 239, 172, 0.8); }
+        .chinese-sentence:hover { background-color: #dcfce7; border-bottom-color: #86efac;}
+        #tooltip { position: absolute; display: none; background-color: #1f2937; color: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; text-align: center; font-size: 0.9rem; pointer-events: none; max-width: 350px; }
+        .tooltip-pinyin { font-weight: 600; color: #7dd3fc; }
+        .tooltip-viet { font-style: italic; }
+        .section-card { background-color: white; border-radius: 12px; padding: 2rem; margin-top: 2rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); border: 1px solid #e5e7eb; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background-color: #0ea5e9; color: white; }
+        .btn-primary:hover { background-color: #0284c7; }
+        .exercise-input { border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem 0.75rem; transition: all 0.2s; }
+        .exercise-input:focus { border-color: #0ea5e9; box-shadow: 0 0 0 2px #bae6fd; outline: none; }
+        .correct, .correct > p { background-color: #f0fdf4 !important; }
+        .correct td, .correct th { background-color: #f0fdf4 !important; }
+        .incorrect, .incorrect > p { background-color: #fef2f2 !important; }
+        .incorrect td, .incorrect th { background-color: #fef2f2 !important; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border: 1px solid #e5e7eb; }
+        th { background-color: #f9fafb; font-weight: 600; }
+        td { text-align: center; }
+        td:first-child { text-align: left; }
+        input[type="radio"], input[type="checkbox"] { margin-right: 8px; transform: scale(1.2); }
+        .sub-section { border-left: 3px solid #0ea5e9; padding-left: 1.5rem; margin-top: 2.5rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div id="tooltip"></div>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-600">Bài ôn tập: 独生子女 (Con một)</h1>
+            <p class="text-lg text-slate-500 mt-2">Tìm hiểu về các gia đình một con ở Trung Quốc</p>
+        </header>
+
+        <!-- Phần 1: Bài đọc -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">I. Bài đọc (课文)</h2>
+            
+            <article class="text-lg leading-loose space-y-4 mb-12">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">课文一: 421 家庭 (Bài 1: Gia đình 421)</h3>
+                <p><span class="chinese-sentence" data-pinyin="zhōngguó cóng 1978 nián kāishǐ shíxíng 'jìhuà shēngyù', yě jiùshì měi duì fūqī zhǐ shēng yīgè háizi" data-viet="Trung Quốc từ năm 1978 bắt đầu thực hiện 'kế hoạch hóa gia đình', tức là mỗi cặp vợ chồng chỉ sinh một con.">中国从1978年开始实行“计划生育”, 也就是每对夫妻只生一个孩子</span>。 <span class="chinese-sentence" data-pinyin="xiànzài 30 nián guòqùle, yǐjīng yǒu 1 yì duō bèi chēng wèi 'xiǎo huángdì' 'xiǎo gōngzhǔ' de dúshēngzǐ nǚ chūshēng" data-viet="Hiện nay 30 năm đã trôi qua, đã có hơn 100 triệu đứa trẻ con một được gọi là 'tiểu hoàng đế', 'tiểu công chúa' ra đời.">现在30年过去了,已经有1亿多被称为“小皇帝”“小公主”的独生子女出生</span>。 <span class="chinese-sentence" data-pinyin="qízhōng, dì yī dài dúshēngzǐ nǚ yǐjīng zhǎng dà chéngrén, hěnduō rén yǐjīng jiéhūn bìngqiě dāng shàng fùmǔle" data-viet="Trong số đó, thế hệ con một đầu tiên đã lớn khôn, nhiều người đã kết hôn và trở thành cha mẹ.">其中,第一代独生子女已经长大成人,很多人已经结婚并且当上父母了</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="zhè yīdài rén jiéhūn yǐhòu, yù dàole zuìdà de wèntí jiùshì zěnme shànyǎng lǎorén" data-viet="Sau khi thế hệ này kết hôn, vấn đề lớn nhất gặp phải là làm thế nào để phụng dưỡng người già.">这一代人结婚以后,遇到的最大问题就是怎么赡养老人</span>。 <span class="chinese-sentence" data-pinyin="jǐ nián zhīhòu, yībiān shì shuāngfāng de fùmǔ, yībiān shì niányòu de háizi" data-viet="Vài năm sau, một bên là cha mẹ hai bên, một bên là con nhỏ.">几年之后,一边是双方的父母,一边是年幼的孩子</span>。 <span class="chinese-sentence" data-pinyin="zhèyàng de jiātíng bèi jiào zuò '421' jiātíng, jí shuāngfāng fùmǔ 4 rén, xiǎo fūqī 2 rén yǐjí 1 gè háizi" data-viet="Những gia đình như vậy được gọi là gia đình '421', tức là 4 người là cha mẹ hai bên, 2 người là cặp vợ chồng trẻ và 1 đứa con.">这样的家庭被叫做“421”家庭,即双方父母4人、小夫妻2人以及1个孩子</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="yī wèi xìng lǐ de nǚshì shuō, wǒ juédé zǐnǚ duō háishì yǒu hǎochù de: yīgè shì háizi cóngxiǎo bù gūdú" data-viet="Một người phụ nữ họ Lý nói, tôi thấy đông con vẫn có cái lợi: một là con cái từ nhỏ không cô đơn.">一位姓李的女士说,我觉得子女多还是有好处的:一个是孩子从小不孤独</span>。 <span class="chinese-sentence" data-pinyin="érqiě, jiālǐ de lǎorén rúguǒ shēngbìng zhùyuàn shénme de, háizimen kěyǐ hùxiāng bāngzhù" data-viet="Hơn nữa, nếu người già trong nhà bị bệnh nhập viện gì đó, con cái có thể giúp đỡ lẫn nhau.">而且,家里的老人如果生病住院什么的,孩子们可以互相帮助</span>。 <span class="chinese-sentence" data-pinyin="wúlùn shì jīngjì shàng háishì jīngshén shàng, wǒ zhǐ xūyào fùchū sān fēn zhī yī, yālì bǐjiào xiǎo" data-viet="Bất kể là về kinh tế hay tinh thần, tôi chỉ cần bỏ ra một phần ba, áp lực tương đối nhỏ.">无论是经济上还是精神上,我只需要付出三分之一,压力比较小</span>。 <span class="chinese-sentence" data-pinyin="dúshēngzǐ nǚ yībiān yào zhàogù shuāngfāng de 4 wèi lǎorén, yībiān yào yǎngyù háizi, kěndìng huì yù dào bù shǎo kùnnán" data-viet="Con một một mặt phải chăm sóc 4 người già hai bên, một mặt phải nuôi dạy con cái, chắc chắn sẽ gặp không ít khó khăn.">独生子女一边要照顾双方的4位老人,一边要养育孩子,肯定会遇到不少困难</span>。 <span class="chinese-sentence" data-pinyin="jīngjì tiáojiàn hǎodiǎnr de, kěyǐ huā qián qǐng gè bǎomǔ; tiáojiàn bù hǎo de, zhēn bù zhīdào yǐhòu gāi zěnme bàn" data-viet="Điều kiện kinh tế tốt một chút thì có thể bỏ tiền thuê bảo mẫu; điều kiện không tốt thì thật không biết sau này phải làm sao.">经济条件好点儿的,可以花钱请个保姆;条件不好的,真不知道以后该怎么办</span>。</p>
+            </article>
+
+            <hr class="my-8 border-t-2 border-slate-200">
+
+            <article class="text-lg leading-loose space-y-4 mb-12">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">课文二: 独生父母 (Bài 2: Bố mẹ một)</h3>
+                <p><span class="chinese-sentence" data-pinyin="zhāng nǚshì zuìjìn zhēnshi yòu xǐ yòu yōu, xǐ de shì zìjǐ yī suì de bǎobǎo jiànkāng, cōngmíng, rén jiàn rén ài; yōu de shì fūqī shuāngfāng fùmǔ dōu xiǎng qīnzì lái zhàogù xiǎo bǎobǎo" data-viet="Bà Trương gần đây thật vừa mừng vừa lo, mừng là đứa con một tuổi của mình khỏe mạnh, thông minh, ai thấy cũng yêu; lo là cha mẹ hai bên vợ chồng đều muốn tự mình đến chăm sóc đứa bé.">张女士最近真是又喜又忧,喜的是自己一岁的宝宝健康、聪明,人见人爱;忧的是夫妻双方父母都想亲自来照顾小宝宝</span>。 <span class="chinese-sentence" data-pinyin="cóng huáiyùn dào háizi chūshēng, tóngshì hé péngyǒumen dōu tèbié xiànmù tā, yīnwèi tā hé zhàngfū dōu shì dúshēngzǐ nǚ, tāmen de háizi zìrán chéngle jiālǐ de zhōngxīn" data-viet="Từ lúc mang thai đến khi con ra đời, đồng nghiệp và bạn bè đều đặc biệt ngưỡng mộ cô, vì cô và chồng đều là con một, con của họ tự nhiên trở thành trung tâm của gia đình.">从怀孕到孩子出生,同事和朋友们都特别羡慕她,因为她和丈夫都是独生子女,他们的孩子自然成了家里的中心</span>。 <span class="chinese-sentence" data-pinyin="kě shéi yě méi xiǎngdào, děng tā shēng wán háizi shàngbān hòu, shuāngfāng fùmǔ jìngrán wèi shéi lái dài háizi de shì nào dé hěn bù yúkuài" data-viet="Nhưng không ai ngờ, sau khi cô sinh con xong đi làm, cha mẹ hai bên lại vì chuyện ai sẽ chăm sóc đứa trẻ mà xảy ra mâu thuẫn rất không vui.">可谁也没想到,等她生完孩子上班后,双方父母竟然为谁来带孩子的事闹得很不愉快</span>。 <span class="chinese-sentence" data-pinyin="xiǎo sūnzǐ shì jiāzhōng wéiyī de bǎobèi, shuāngfāng lǎorén dōu téng'ài dé bùdéliǎo, shéi dōu xiǎng qīnzì zhàogù, zhè ràng zhāng nǚshì hé zhàngfū gǎndào zuǒyòu wéinán" data-viet="Cháu trai nhỏ là báu vật duy nhất trong nhà, ông bà hai bên đều thương yêu hết mực, ai cũng muốn tự tay chăm sóc, điều này khiến bà Trương và chồng cảm thấy thật khó xử.">小孙子是家中唯一的宝贝,双方老人都疼爱得不得了,谁都想亲自照顾,这让张女士和丈夫感到左右为难</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="5 suì de yuèyuè cóng bà mā nàlǐ dédào de ài kě suàn bù shàng duō, yīnwèi fùmǔ hé tā yīyàng, yěshì jiālǐ de dúshēngzǐ nǚ" data-viet="Tình yêu mà Nguyệt Nguyệt 5 tuổi nhận được từ bố mẹ không thể coi là nhiều, vì bố mẹ cũng giống như cô bé, đều là con một trong nhà.">5岁的月月从爸妈那里得到的爱可算不上多,因为父母和她一样,也是家里的独生子女</span>。 <span class="chinese-sentence" data-pinyin="suīrán yǐjīng shì dàrénle, dàn tāmen lián zìjǐ yě zhàogù bù hǎo" data-viet="Mặc dù đã là người lớn, nhưng họ ngay cả bản thân mình cũng không chăm sóc tốt.">虽然已经是大人了,但他们连自己也照顾不好</span>。 <span class="chinese-sentence" data-pinyin="háizi shēng chūláile, zìjǐ dài, gēnběn bù zhīdào gāi cóng nǎ'er xiàshǒu; zhǎo biérén dài, yòu bù fàngxīn" data-viet="Con sinh ra rồi, tự mình chăm sóc thì hoàn toàn không biết bắt đầu từ đâu; tìm người khác chăm sóc thì lại không yên tâm.">孩子生出来了,自己带,根本不知道该从哪儿下手;找别人带,又不放心</span>。 <span class="chinese-sentence" data-pinyin="suǒyǐ, yǎngyù yuèyuè de shìqíng jiù luò dàole wàipó qián āyí shēnshang" data-viet="Vì vậy, việc nuôi dạy Nguyệt Nguyệt đã thuộc về bà ngoại, dì Tiền.">所以,养育月月的事情就落到了外婆钱阿姨身上</span>。 <span class="chinese-sentence" data-pinyin="cóng chīfàn chuān yī dào yòu'éryuán jiēsòng, jīhū dōu shì wàipó yīgè rén zài máng, hǎoxiàng shì yòu duōle yīgè 'xiǎo nǚ'ér'" data-viet="Từ ăn uống, mặc quần áo đến đưa đón ở nhà trẻ, hầu như đều do một mình bà ngoại bận rộn, giống như có thêm một 'cô con gái nhỏ'.">从吃饭穿衣到幼儿园接送,几乎都是外婆一个人在忙,好像是又多了一个“小女儿”</span>。 <span class="chinese-sentence" data-pinyin="jù diàochá, zài dà chéngshì lǐ, 3 suì yǐqián de háizi yóu mǔqīn dài de jǐn 20%, ér yóu lǎorén dài de zé yǒu 40%" data-viet="Theo điều tra, ở các thành phố lớn, trẻ em dưới 3 tuổi do mẹ chăm sóc chỉ chiếm 20%, trong khi do người già chăm sóc chiếm tới 40%.">据调查,在大城市里,3岁以前的孩子由母亲带的仅20%,而由老人带的则有40%</span>。</p>
+                 <p><span class="chinese-sentence" data-pinyin="xīn yīdài de 'dúshēng fùmǔ' běnshēn dōu shì zài sì gè lǎorén jiā shàng liǎng gè dàrén de zhàogù xià zhǎng dà de" data-viet="Thế hệ 'bố mẹ một' mới bản thân đều lớn lên dưới sự chăm sóc của bốn người già cộng thêm hai người lớn.">新一代的“独生父母”本身都是在四个老人加上两个大人的照顾下长大的</span>。 <span class="chinese-sentence" data-pinyin="tāmen yīzhí dōu shìguòzhe yī lái shēnshǒu, fàn lái zhāngkǒu de shēnghuó" data-viet="Họ luôn sống cuộc sống cơm bưng nước rót (quần áo đưa đến tận tay, cơm dâng đến tận miệng).">他们一直都是过着衣来伸手、饭来张口的生活</span>, <span class="chinese-sentence" data-pinyin="suǒyǐ zài chéngwéi fùmǔ hòu, hěnduō rén dōu bù zhīdào gāi zěnme bàn" data-viet="vì vậy sau khi trở thành cha mẹ, nhiều người không biết phải làm thế nào.">所以在成为父母后,很多人都不知道该怎么办</span>。 <span class="chinese-sentence" data-pinyin="érqiě, niánqīng rén dàdū máng yú gōngzuò, wǎngwǎng huì bǎ yǎngyù háizi de gōngzuò jiāo gěi lǎorén qù zuò" data-viet="Hơn nữa, người trẻ phần lớn bận rộn công việc, thường giao việc nuôi dạy con cái cho người già làm.">而且,年轻人大都忙于工作,往往会把养育孩子的工作交给老人去做</span>。</p>
+            </article>
+            
+            <hr class="my-8 border-t-2 border-slate-200">
+
+            <article class="text-lg leading-loose space-y-4">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">课文三: 去谁家过年 (Bài 3: Ăn Tết nhà ai)</h3>
+                <p><span class="chinese-sentence" data-pinyin="zhōngguó rén guònián zuì jiǎngjiù de jiùshì jiārén tuányuán, rè rènào nào de jù zài yīqǐ" data-viet="Người Trung Quốc đón Tết coi trọng nhất là gia đình đoàn viên, tụ họp lại với nhau thật náo nhiệt.">中国人过年最讲究的就是家人团圆,热热闹闹地聚在一起</span>。 <span class="chinese-sentence" data-pinyin="chūnjié dào shéi jiā guònián, chéngle dúshēngzǐ nǚ fūqī yù dào de yīgè nántí" data-viet="Tết đến về nhà ai ăn Tết đã trở thành một vấn đề nan giải mà các cặp vợ chồng con một gặp phải.">春节到谁家过年,成了独生子女夫妻遇到的一个难题</span>。 <span class="chinese-sentence" data-pinyin="qùle yījiā guònián, lìng yījiā de liǎng wèi lǎorén jiù huì juédé gūdú hé jìmò" data-viet="Đến một nhà ăn Tết thì hai vị trưởng bối nhà kia sẽ cảm thấy cô đơn và trống vắng.">去了一家过年,另一家的两位老人就会觉得孤独和寂寞</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="liú xiǎojiě shuō, tā hé zhàngfū dōu shì shàng shìjì 70 niándài mò chūshēng de dúshēngzǐ nǚ" data-viet="Cô Lưu nói, cô và chồng đều là con một sinh vào cuối những năm 70 của thế kỷ trước.">刘小姐说,她和丈夫都是上世纪70年代末出生的独生子女</span>。 <span class="chinese-sentence" data-pinyin="píngshí liǎng rén dōu hěn máng, hěn shǎo zài yīqǐ zuò fàn chī, dà duōshù shíjiān dōu shì zài shuāngfāng fùmǔ jiā chī, chūnjié tāmen zhǔnbèi hǎohǎo er péi péi shuāngfāng lǎorén" data-viet="Ngày thường hai người đều rất bận, rất ít khi cùng nhau nấu cơm ăn, phần lớn thời gian đều ăn ở nhà cha mẹ hai bên, Tết này họ chuẩn bị dành thời gian ở bên cạnh cha mẹ hai bên.">平时两人都很忙,很少在一起做饭吃,大多数时间都是在双方父母家吃,春节他们准备好好儿陪陪双方老人</span>。 <span class="chinese-sentence" data-pinyin="tāmen yǐjīng zài fàndiàn yùdìngle niányèfàn, dǎsuàn dà nián sānshí hé shuāngfāng lǎorén yīqǐguò" data-viet="Họ đã đặt trước bữa cơm tất niên ở nhà hàng, dự định sẽ đón đêm 30 cùng với cha mẹ hai bên.">他们已经在饭店预订了年夜饭,打算大年三十和双方老人一起过</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="xiǎo huáng hé xiǎo xú qùnián gāng jiéhūn, zhè liǎng tiān yě zhèng wèi 'shàng nǎ'er chī niányèfàn' fāchóu" data-viet="Tiểu Hoàng và Tiểu Từ mới cưới năm ngoái, hai ngày nay cũng đang đau đầu vì chuyện 'đi đâu ăn cơm tất niên'.">小黄和小徐去年刚结婚,这两天也正为“上哪儿吃年夜饭”发愁</span>。 <span class="chinese-sentence" data-pinyin="tāmen liǎ dōu shì dúshēngzǐ nǚ, xiǎo huáng de fùmǔ zǎo jiù shuō yào tāmen huí jiā chī niányèfàn, xiǎo xú de fùmǔ yě xīwàng nǚ'ér nǚxù huíqù chī dùn niányèfàn" data-viet="Cả hai đều là con một, bố mẹ Tiểu Hoàng đã sớm bảo họ về nhà ăn cơm tất niên, bố mẹ Tiểu Từ cũng mong con gái và con rể về ăn bữa cơm tất niên.">他们俩都是独生子女,小黄的父母早就说要他们回家吃年夜饭,小徐的父母也希望女儿女婿回去吃顿年夜饭</span>。 <span class="chinese-sentence" data-pinyin="xiǎo liǎngkǒu jiù pà qùle yījiā ràng lìng yījiā bù gāoxìng" data-viet="Cặp đôi trẻ sợ rằng đến nhà này sẽ làm nhà kia không vui.">小两口就怕去了一家让另一家不高兴</span>。 <span class="chinese-sentence" data-pinyin="yǎnkàn chúxì yè jiù yào dàole, liǎng rén shāngliáng lúnliú huí jiā chī niányèfàn: jīnnián qù xiǎo huáng jiā, míngnián dào xiǎo xú jiā" data-viet="Đêm giao thừa sắp đến, hai người bàn bạc thay phiên nhau về nhà ăn cơm tất niên: năm nay về nhà Tiểu Hoàng, năm sau đến nhà Tiểu Từ.">眼看除夕夜就要到了,两人商量轮流回家吃年夜饭:今年去小黄家,明年到小徐家</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="hé tāmen xiāng bǐ, sūn xiānshēng gèng nán" data-viet="So với họ, ông Tôn còn khó hơn.">和他们相比,孙先生更难</span>。 <span class="chinese-sentence" data-pinyin="tā hé qīzi de lǎojiā yīgè zài běifāng, yīgè zài nánfāng" data-viet="Quê của ông và vợ, một người ở miền Bắc, một người ở miền Nam.">他和妻子的老家一个在北方,一个在南方</span>。 <span class="chinese-sentence" data-pinyin="fūqī liǎ jiéhūn 5 niánlái, měinián chūnjié dōu zài liǎng dì pǎo lái pǎo qù" data-viet="Hai vợ chồng kết hôn 5 năm nay, mỗi dịp Tết đều chạy đi chạy lại giữa hai nơi.">夫妻俩结婚5年来,每年春节都在两地跑来跑去</span>。 <span class="chinese-sentence" data-pinyin="wǒ liǎ dǎsuàn, wǒ huí wǒ fùmǔ jiā guònián, tā huí tā fùmǔ jiā guònián" data-viet="Hai chúng tôi dự định, tôi về nhà bố mẹ tôi ăn Tết, cô ấy về nhà bố mẹ cô ấy ăn Tết.">我俩打算,我回我父母家过年,她回她父母家过年</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="fùmǔmen rènwéi, háizimen dào shéi jiā guò chūnjié dōu yīyàng" data-viet="Các bậc cha mẹ cho rằng, con cái đến nhà ai đón Tết cũng như nhau.">父母们认为,孩子们到谁家过春节都一样</span>。 <span class="chinese-sentence" data-pinyin="zuò fùmǔ de kàn zài yǎnlǐ, téng zài xīn shàng, bùnéng zài gěi tāmen tiān máfanle" data-viet="Làm cha mẹ thấy trong mắt, đau trong lòng, không thể gây thêm phiền phức cho chúng nữa.">做父母的看在眼里,疼在心上,不能再给他们添麻烦了</span>。 <span class="chinese-sentence" data-pinyin="wú dàyé de érzi hé érxí dōu zài guówài" data-viet="Con trai và con dâu của ông Ngô đều ở nước ngoài.">吴大爷的儿子和儿媳都在国外</span>。 <span class="chinese-sentence" data-pinyin="tā shuō, zhōngguó de fùmǔmen yīnggāi xuéhuì zìjǐ guònián, lǎonián rén yīnggāi xuéhuì zìjǐ xúnzhǎo shēnghuó zhōng de lèqù" data-viet="Ông nói, cha mẹ Trung Quốc nên học cách tự đón Tết, người già nên học cách tự tìm kiếm niềm vui trong cuộc sống.">他说,中国的父母们应该学会自己过年,老年人应该学会自己寻找生活中的乐趣</span>。</p>
+            </article>
+        </div>
+
+        <!-- Phần 2: Từ mới & Phân tích -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">II. Từ mới & Phân tích (词语解析)</h2>
+            <table>
+                 <thead><tr><th>Từ vựng</th><th>Pinyin</th><th>Nghĩa Tiếng Việt</th><th>Giải thích & Cách dùng</th></tr></thead>
+                <tbody>
+                    <tr><td>计划生育</td><td>jìhuà shēngyù</td><td>Kế hoạch hóa gia đình</td><td>Là chính sách kiểm soát dân số, mỗi cặp vợ chồng chỉ có một con.</td></tr>
+                    <tr><td>赡养</td><td>shànyǎng</td><td>Phụng dưỡng</td><td>(Động từ) Con cái chăm sóc, chu cấp cho cha mẹ già. VD: 赡养父母是子女的责任。(Phụng dưỡng cha mẹ là trách nhiệm của con cái).</td></tr>
+                    <tr><td>孤独</td><td>gūdú</td><td>Cô độc, cô đơn</td><td>(Tính từ) Trạng thái một mình, lẻ loi. VD: 他一个人生活，感到很孤独。(Anh ấy sống một mình, cảm thấy rất cô đơn).</td></tr>
+                    <tr><td>羡慕</td><td>xiànmù</td><td>Ngưỡng mộ</td><td>(Động từ) Thấy người khác có điều tốt và mong muốn có được. VD: 我很羡慕你的工作。(Tôi rất ngưỡng mộ công việc của bạn).</td></tr>
+                    <tr><td>唯一</td><td>wéiyī</td><td>Duy nhất</td><td>(Tính từ) Chỉ có một, không có cái thứ hai. VD: 他是家里唯一的孩子。(Cậu ấy là đứa con duy nhất trong nhà).</td></tr>
+                    <tr><td>左右为难</td><td>zuǒyòu wéinán</td><td>Tiến thoái lưỡng nan</td><td>(Thành ngữ) Ở vào tình thế khó xử, không biết nên chọn bên nào. VD: 这件事让我左右为难。(Chuyện này làm tôi thật khó xử).</td></tr>
+                    <tr><td>讲究</td><td>jiǎngjiu</td><td>Coi trọng, chú ý</td><td>(Động từ) Chú trọng đến một vấn đề nào đó. VD: 中国人过年最讲究团圆。(Người Trung Quốc đón Tết coi trọng nhất là sự đoàn viên).</td></tr>
+                    <tr><td>轮流</td><td>lúnliú</td><td>Luân phiên, thay phiên</td><td>(Phó từ) Lần lượt làm một việc gì đó. VD: 我们轮流做饭。(Chúng tôi thay phiên nhau nấu cơm).</td></tr>
+                    <tr><td>依赖</td><td>yīlài</td><td>Dựa dẫm, phụ thuộc</td><td>(Động từ) Dựa vào người hoặc vật khác. VD: 孩子不应该太依赖父母。(Con cái không nên quá phụ thuộc vào cha mẹ).</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phần 3: Luyện tập theo sách -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">III. Luyện tập (练习)</h2>
+            
+            <div class="sub-section">
+                <h3 class="text-xl font-semibold mb-4">Bài tập 课文一</h3>
+                <div id="ex1-1" class="mb-8">
+                    <h4>1. 判断对错 (Phán đoán Đúng/Sai)</h4>
+                    <div class="space-y-3 mt-2">
+                        <p data-answer="true">1. 计划生育是指一对夫妻只生一个孩子的政策。 <label><input type="radio" name="q1-1" value="true"> Đúng</label> <label><input type="radio" name="q1-1" value="false"> Sai</label></p>
+                        <p data-answer="false">2. 独生子女们被称为“小皇帝”“小公主”是因为他们长得很漂亮。 <label><input type="radio" name="q1-2" value="true"> Đúng</label> <label><input type="radio" name="q1-2" value="false"> Sai</label></p>
+                    </div>
+                    <button onclick="checkTrueFalse('#ex1-1')" class="btn btn-primary mt-4">Kiểm tra</button>
+                </div>
+            </div>
+
+             <div class="sub-section">
+                <h3 class="text-xl font-semibold mb-4">Bài tập 课文二</h3>
+                <div id="ex2-2" class="mb-8">
+                    <h4>1. 选择正确答案 (Chọn đáp án đúng)</h4>
+                    <div class="space-y-4 mt-2">
+                        <div data-answer="B">
+                            <p>1. 第1行“喜”的意思是:</p>
+                            <label><input type="radio" name="mc2-1" value="A"> A. 喜欢</label>
+                            <label><input type="radio" name="mc2-1" value="B"> B. 高兴</label>
+                            <label><input type="radio" name="mc2-1" value="C"> C. 发愁</label>
+                        </div>
+                        <div data-answer="B">
+                            <p>2. 第12行“疼爱得不得了”的意思是:</p>
+                             <label><input type="radio" name="mc2-2" value="A"> A. 不知道怎么疼爱</label>
+                             <label><input type="radio" name="mc2-2" value="B"> B. 非常疼爱</label>
+                             <label><input type="radio" name="mc2-2" value="C"> C. 疼爱得受不了</label>
+                        </div>
+                    </div>
+                    <button onclick="checkMultipleChoice('#ex2-2')" class="btn btn-primary mt-4">Kiểm tra</button>
+                </div>
+            </div>
+
+            <div class="sub-section">
+                <h3 class="text-xl font-semibold mb-4">Bài tập 课文三</h3>
+                <div id="ex3-1" class="mb-8">
+                    <h4>1. 连线 (Nối câu)</h4>
+                    <div class="grid grid-cols-2 gap-4 mt-2">
+                        <div class="space-y-2">
+                            <p>刘小姐夫妇</p>
+                            <p>小黄夫妇</p>
+                            <p>孙先生夫妇</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p><select class="exercise-input" data-answer="C"><option>Chọn đáp án</option><option value="A">A. 轮流去双方父母家过年</option><option value="B">B. 去国外过年</option><option value="C">C. 和双方父母在饭店一起过年</option><option value="D">D. 各自回自己的父母家过年</option></select></p>
+                            <p><select class="exercise-input" data-answer="A"><option>Chọn đáp án</option><option value="A">A. 轮流去双方父母家过年</option><option value="B">B. 去国外过年</option><option value="C">C. 和双方父母在饭店一起过年</option><option value="D">D. 各自回自己的父母家过年</option></select></p>
+                            <p><select class="exercise-input" data-answer="D"><option>Chọn đáp án</option><option value="A">A. 轮流去双方父母家过年</option><option value="B">B. 去国外过年</option><option value="C">C. 和双方父母在饭店一起过年</option><option value="D">D. 各自回自己的父母家过年</option></select></p>
+                        </div>
+                    </div>
+                    <button onclick="checkFillInBlank('#ex3-1')" class="btn btn-primary mt-4">Kiểm tra</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Phần 4: Đọc thêm -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">IV. Đọc thêm (补充阅读)</h2>
+            <article class="text-lg leading-loose space-y-4 mb-12">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">孤独和寂寞 (Cô đơn và Lẻ loi)</h3>
+                <p><span class="chinese-sentence" data-pinyin="suīrán dúshēngzǐ nǚmen dédàole fùmǔ gèng duō de ài, dàn tāmen què gèng róngyì gǎndào gūdú hé jìmò" data-viet="Mặc dù con một nhận được nhiều tình yêu thương hơn từ cha mẹ, nhưng chúng lại dễ cảm thấy cô đơn và lẻ loi hơn.">虽然独生子女们得到了父母更多的爱, 但他们却更容易感到孤独和寂寞</span>, <span class="chinese-sentence" data-pinyin="tāmen hěn xiànmù nà zhǒng fùmǔ xiōngdì jiěmèi shēnghuó zài yīqǐ de chuántǒng jiātíng" data-viet="Chúng rất ngưỡng mộ những gia đình truyền thống có cha mẹ, anh chị em sống cùng nhau.">他们很羡慕那种父母兄弟姐妹生活在一起的传统家庭</span>。 <span class="chinese-sentence" data-pinyin="zài nà yàng de jiātíng lǐ, yǒu xiōngdì jiěmèi péibànzhe, yīdiǎnr yě bù gūdú jìmò" data-viet="Trong những gia đình như vậy, có anh chị em bầu bạn, không hề cô đơn lẻ loi chút nào.">在那样的家庭里,有兄弟姐妹陪伴着, 一点儿也不孤独寂寞</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="jù diàochá, yǒu 66.9% de dúshēngzǐ nǚ xīwàng jiālǐ néng yǒu xiōngdì jiěmèi hé zìjǐ zuòbàn" data-viet="Theo điều tra, có 66.9% con một hy vọng trong nhà có anh chị em để bầu bạn với mình.">据调查,有66.9%的独生子女希望家里能有兄弟姐妹和自己做伴</span>。 <span class="chinese-sentence" data-pinyin="kěnéng zhèng shì yīnwèi zìjǐ duì gūdú shēn yǒu tǐhuì, 46.1% de rén biǎoshì, zìjǐ yǐhòu xiǎng shēng liǎng gè háizi" data-viet="Có lẽ chính vì bản thân có trải nghiệm sâu sắc về sự cô đơn, 46.1% người cho biết sau này họ muốn sinh hai con.">可能正是因为自己对孤独深有体会,46.1%的人表示,自己以后想生两个孩子</span>。 <span class="chinese-sentence" data-pinyin="yīgè nǚhái er shuō, zuòwéi háizi, yǒuxiē huà hé fùmǔ shì tán bù lái de, píngshí zìjǐ yǒu hěnduō xīnshì zhǐ néng fàng zài xīnlǐ, kuàilè hé yōushāng dōu shì zìjǐ yīgè rén qù tǐhuì" data-viet="Một cô gái nói, là con cái, có những lời không thể nói với cha mẹ, ngày thường bản thân có nhiều tâm sự chỉ có thể giữ trong lòng, niềm vui và nỗi buồn đều là một mình trải nghiệm.">一个女孩儿说,作为孩子,有些话和父母是谈不来的,平时自己有很多心事只能放在心里,快乐和忧伤都是自己一个人去体会</span>。 <span class="chinese-sentence" data-pinyin="yàoshi shēnbiān yǒu gè jiěmèi, jiù kěyǐ gēn tā qù jiāoliú, liǎng rén niánlíng chàbùduō, kěndìng huì yǒu tóngyàng de gǎnshòu, néng yǐnqǐ gòngmíng" data-viet="Nếu bên cạnh có một người chị em, thì có thể cùng cô ấy giao lưu, hai người tuổi tác tương đương, chắc chắn sẽ có những cảm nhận giống nhau, có thể tạo ra sự đồng cảm.">要是身边有个姐妹,就可以跟她去交流,两人年龄差不多,肯定会有同样的感受,能引起共鸣</span>。</p>
+                <p><span class="chinese-sentence" data-pinyin="zài xiàndài shèhuì, wǎngluò zhújiàn chéngwéi dúshēngzǐ nǚmen yǔ péngyǒu jiāoliú de zhòngyào fāngshì, tāmen huā dàliàng shíjiān zài wǎngshàng jiāoyǒu, liáotiān" data-viet="Trong xã hội hiện đại, internet dần trở thành phương thức giao tiếp quan trọng của con một với bạn bè, chúng dành nhiều thời gian để kết bạn, trò chuyện trên mạng.">在现代社会,网络逐渐成为独生子女们与朋友交流的重要方式,他们花大量时间在网上交友、聊天</span>。 <span class="chinese-sentence" data-pinyin="yīnggāi shuō, shì gūdú ràng tāmen zhèyàng de míliàn wǎngluò, tāmen xūyào zhǎo rén qīngsù, cóng tónglíng rén nàlǐ dédào xīnlíng shàng de lǐjiě" data-viet="Phải nói rằng, chính sự cô đơn đã khiến chúng mê mẩn internet như vậy, chúng cần tìm người để tâm sự, để nhận được sự thấu hiểu về mặt tinh thần từ những người bạn đồng trang lứa.">应该说,是孤独让他们这样地迷恋网络,他们需要找人倾诉,从同龄人那里得到心灵上的理解</span>。</p>
+            </article>
+
+            <hr class="my-8 border-t-2 border-slate-200">
+
+             <article class="text-lg leading-loose space-y-4">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">独生子女 - 优势大还是劣势大? (Con một - Ưu điểm hay nhược điểm nhiều hơn?)</h3>
+                <p><span class="chinese-sentence" data-pinyin="suízhe shèhuì de bùduàn fāzhǎn hé jìnbù, xiànzài zhōngguó 90% yǐshàng de jiātíng dōu shì dúshēngzǐ nǚ jiātíng" data-viet="Cùng với sự phát triển và tiến bộ không ngừng của xã hội, hiện nay hơn 90% gia đình ở Trung Quốc là gia đình một con.">随着社会的不断发展和进步,现在中国90%以上的家庭都是独生子女家庭</span>。 <span class="chinese-sentence" data-pinyin="rénmen yǒu liǎng zhǒng guāndiǎn, yī zhǒng rènwéi dúshēngzǐ nǚ yōushì míngxiǎn, yī zhǒng rènwéi dúshēngzǐ nǚ quēdiǎn chóngchóng, xiàmiàn fēnbié lái kàn liǎng fāng de shuōfǎ" data-viet="Mọi người có hai quan điểm, một cho rằng con một có ưu thế rõ rệt, một cho rằng con một có vô số khuyết điểm, dưới đây hãy cùng xem lập luận của hai bên:">人们有两种观点,一种认为独生子女优势明显,一种认为独生子女缺点重重,下面分别来看两方的说法:</span></p>
+                <p><strong>正方论点:独生子女优势明显 (Luận điểm ủng hộ: Con một có ưu thế rõ rệt)</strong><br><span class="chinese-sentence" data-pinyin="diàochá biǎomíng, yǔ duōshēng zǐnǚ xiāng bǐ, dúshēngzǐ nǚ jiātíng zhōng fùmǔ yǔ háizi de gǎnqíng gèng róngqià, háizi de shèjiāo nénglì, yǔwén nénglì, xuéxí nénglì dōu bǐjiào gāo" data-viet="Điều tra cho thấy, so với gia đình đông con, tình cảm giữa cha mẹ và con cái trong gia đình một con hòa hợp hơn, năng lực xã hội, năng lực ngôn ngữ, năng lực học tập của trẻ đều tương đối cao.">调查表明,与多生子女相比,独生子女家庭中父母与孩子的感情更融洽,孩子的社交能力、语文能力、学习能力都比较高</span>, <span class="chinese-sentence" data-pinyin="tāmen shìyìng shèhuì shēnghuó de shíjiān gèng duǎn" data-viet="thời gian để chúng thích nghi với cuộc sống xã hội ngắn hơn.">他们适应社会生活的时间更短</span>。 <span class="chinese-sentence" data-pinyin="cóng zhěngtǐ lái kàn, dúshēngzǐ nǚ méiyǒu quēfá zìxìn de qīngxiàng, tāmen gèng yuàn yǔ rén jiēchù bìng yǐnqǐ tārén de zhùyì" data-viet="Nhìn chung, con một không có xu hướng thiếu tự tin, chúng sẵn lòng tiếp xúc với người khác và thu hút sự chú ý của họ.">从整体来看,独生子女没有缺乏自信的倾向,他们更愿与人接触并引起他人的注意</span>。 <span class="chinese-sentence" data-pinyin="diàochá fāxiàn, dúshēngzǐ nǚ chūshēng 33 gè yuè hòu, jiù bǐ fēi dúshēngzǐ nǚ gèng néng xīyǐn tónglíng háizi de zhùyì" data-viet="Điều tra phát hiện, sau 33 tháng kể từ khi sinh, con một có khả năng thu hút sự chú ý của bạn bè đồng trang lứa hơn so với trẻ không phải con một.">调查发现,独生子女出生33个月后,就比非独生子女更能吸引同龄孩子的注意</span>。 <span class="chinese-sentence" data-pinyin="7~8 suì jiù xiǎnshì chū zài gǎnqíng hé lǐngdǎo nénglì fāngmiàn qiáng yú qítā értóng, shòudào zhòngduō háizi de xǐ'ài" data-viet="Đến 7-8 tuổi, chúng đã thể hiện sự vượt trội về mặt tình cảm và năng lực lãnh đạo so với các trẻ khác, được nhiều bạn bè yêu mến.">7~8岁就显示出在感情和领导能力方面强于其他儿童,受到众多孩子的喜爱</span>。 <span class="chinese-sentence" data-pinyin="dúshēngzǐ nǚ zài xuéxí, shēnghuó, xìngqù àihào fāngmiàn bǐ duōshēng zǐnǚ yǒu míngxiǎn de yōushì" data-viet="Con một có ưu thế rõ rệt so với trẻ đông con về mặt học tập, sinh hoạt, sở thích.">独生子女在学习、生活、兴趣爱好方面比多生子女有明显的优势</span>。 <span class="chinese-sentence" data-pinyin="yǔwén, shùxué liǎng mén gōngkè de píngjūn chéngjī, bǐ duōshēng zǐnǚ xuéshēng gāo chū hěnduō" data-viet="Điểm trung bình của hai môn Ngữ văn và Toán cao hơn nhiều so với học sinh có nhiều anh chị em.">语文、数学两门功课的平均成绩,比多生子女学生高出很多</span>。</p>
+                <p><strong>反方论点:独生子女性格缺失 (Luận điểm phản đối: Con một thiếu sót về tính cách)</strong><br><strong>(1)自私 (Ích kỷ)</strong><br><span class="chinese-sentence" data-pinyin="xíguànle dúzì zhànyǒu de huánjìng, quēfá fēnxiǎng de duìxiàng" data-viet="Quen với môi trường chiếm hữu một mình, thiếu đối tượng để chia sẻ.">习惯了独自占有的环境,缺乏分享的对象</span>。 <span class="chinese-sentence" data-pinyin="yóuyú méiyǒu xiōngdì jiěmèi, dúshēngzǐ nǚmen suǒqǔ de jīhuì yuǎn yuǎn duōyú fùchū de jīhuì" data-viet="Do không có anh chị em, cơ hội nhận được của con một nhiều hơn rất nhiều so với cơ hội cho đi.">由于没有兄弟姐妹,独生子女们索取的机会远远多于付出的机会</span>。 <span class="chinese-sentence" data-pinyin="dāng shǔyú zìjǐ de dōngxī shòudào qīnzhàn shí, tāmen zǒng shì shǒuxiān cóng zìshēn lìyì chūfā, yǐ fǎnkàng de fāngshì yìngduì" data-viet="Khi những thứ thuộc về mình bị xâm phạm, chúng luôn xuất phát từ lợi ích của bản thân trước tiên và đối phó bằng cách phản kháng.">当属于自己的东西受到侵占时,他们总是首先从自身利益出发,以反抗的方式应对</span>。<br><strong>(2)任性 (Tùy hứng)</strong><br><span class="chinese-sentence" data-pinyin="dúshēngzǐ nǚ de rènxìng sìhū wúkě bìmiǎn, jiāzhǎng de nì'ài shǐ tāmen zǎozǎo de xíguàn yú chéngwéi guānzhù de jiāodiǎn hé qiānjiù de duìxiàng" data-viet="Sự tùy hứng của con một dường như không thể tránh khỏi, sự nuông chiều của cha mẹ khiến chúng sớm quen với việc trở thành tâm điểm của sự chú ý và đối tượng được nhượng bộ.">独生子女的任性似乎无可避免,家长的溺爱使他们早早地习惯于成为关注的焦点和迁就的对象</span>。<br><strong>(3)孤独 (Cô đơn)</strong><br><span class="chinese-sentence" data-pinyin="zài chéngzhǎng de guòchéng zhōng, dúshēngzǐ nǚmen quēfá niánlíng xiāngjìn de qīnmì de xiōngdì jiěmèi fēnxiǎng nèixīn bēixǐ, tóngnián shí huò duō huò shǎo dōu yǒu zìjǐ yǔ zìjǐ duìhuà, wánshuǎ de jīnglì" data-viet="Trong quá trình trưởng thành, con một thiếu vắng anh chị em thân thiết gần tuổi để chia sẻ niềm vui nỗi buồn trong lòng, thời thơ ấu ít nhiều đều có trải nghiệm tự nói chuyện, tự chơi với chính mình.">在成长的过程中,独生子女们缺乏年龄相近的亲密的兄弟姐妹分享內心悲喜,童年时或多或少都有自己与自己对话、玩耍的经历</span>。</p>
+            </article>
+
+            <hr class="my-8 border-t-2 border-slate-200">
+            <div id="ex-supp-1" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Bài tập đọc thêm: Hoàn thành bảng</h3>
+                <p class="mb-4">根据课文内容完成下面的表格 (Dựa vào nội dung bài đọc để hoàn thành bảng dưới đây)</p>
+                <table id="comparison-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>独生子女 (Con một)</th>
+                            <th>多生子女 (Đông con)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-answer-d="true" data-answer-m="false"><td>父母与孩子的感情融洽 (Tình cảm cha mẹ-con cái hòa hợp)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                        <tr data-answer-d="true" data-answer-m="false"><td>愿意与别人交往 (Sẵn lòng giao tiếp với người khác)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                        <tr data-answer-d="true" data-answer-m="false"><td>学习成绩好 (Thành tích học tập tốt)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                        <tr data-answer-d="false" data-answer-m="true"><td>习惯与人分享 (Quen với việc chia sẻ)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                        <tr data-answer-d="true" data-answer-m="false"><td>容易引起别人注意 (Dễ thu hút sự chú ý của người khác)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                        <tr data-answer-d="true" data-answer-m="false"><td>学习环境好 (Môi trường học tập tốt)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                        <tr data-answer-d="true" data-answer-m="false"><td>领导能力强 (Năng lực lãnh đạo mạnh)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                        <tr data-answer-d="false" data-answer-m="true"><td>不任性 (Không tùy hứng)</td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+                    </tbody>
+                </table>
+                <button onclick="checkTable('#ex-supp-1')" class="btn btn-primary mt-4">Kiểm tra</button>
+            </div>
+        </div>
+
+
+        <!-- Phần 5: Luyện viết -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">V. Luyện viết (写作练习)</h2>
+            <p class="mb-4 text-slate-600"><strong>Chủ đề:</strong> 《我的家庭》(Gia đình của tôi). Viết một đoạn văn ngắn (khoảng 200 chữ) về gia đình bạn. Hãy cố gắng sử dụng ít nhất 5 từ hoặc cấu trúc đã học trong bài (ví dụ: 无论是...还是..., 羡慕, 疼爱, 孤独, 经济...).</p>
+            <textarea id="writing-area" class="w-full h-64 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-400" placeholder="Bắt đầu viết bài của bạn ở đây..."></textarea>
+            <div class="text-right mt-2 text-sm text-slate-500">Số chữ: <span id="char-count">0</span> / 200</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tooltip = document.getElementById('tooltip');
+            
+            document.body.addEventListener('click', function(event) {
+                let target = event.target;
+                if (target.classList.contains('chinese-sentence')) {
+                    event.stopPropagation();
+                    const pinyin = target.dataset.pinyin;
+                    const viet = target.dataset.viet;
+                    if (pinyin && viet) {
+                        tooltip.innerHTML = `<div class="tooltip-pinyin">${pinyin}</div><div class="tooltip-viet">${viet}</div>`;
+                        const rect = target.getBoundingClientRect();
+                        tooltip.style.display = 'block';
+                        tooltip.style.left = `${rect.left + window.scrollX + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+                        tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 8}px`;
+                    }
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            const writingArea = document.getElementById('writing-area');
+            const charCount = document.getElementById('char-count');
+            writingArea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count;
+                charCount.classList.toggle('text-red-600', count > 200);
+            });
+        });
+
+        function checkFillInBlank(selector) {
+            document.querySelectorAll(`${selector} .exercise-input, ${selector} select`).forEach(input => {
+                const answer = input.dataset.answer;
+                const value = input.value.trim();
+                input.classList.remove('correct', 'incorrect');
+                if (value) {
+                   input.classList.add(value === answer ? 'correct' : 'incorrect');
+                }
+            });
+        }
+        
+        function checkTrueFalse(selector) {
+            document.querySelectorAll(`${selector} p`).forEach(p => {
+                const radios = p.querySelectorAll('input[type="radio"]');
+                const correctAnswer = p.dataset.answer;
+                p.classList.remove('correct', 'incorrect');
+
+                let isChecked = false;
+                let userAnswer;
+                
+                radios.forEach(radio => {
+                    if (radio.checked) {
+                        isChecked = true;
+                        userAnswer = radio.value;
+                    }
+                });
+                
+                if(isChecked){
+                    if(userAnswer === correctAnswer){
+                        p.classList.add('correct');
+                    } else {
+                        p.classList.add('incorrect');
+                    }
+                }
+            });
+        }
+        
+        function checkMultipleChoice(selector) {
+            document.querySelectorAll(`${selector} > div`).forEach(div => {
+                const radios = div.querySelectorAll('input[type="radio"]');
+                const correctAnswer = div.dataset.answer;
+                div.classList.remove('correct', 'incorrect');
+
+                let isChecked = false;
+                let userAnswer;
+
+                radios.forEach(radio => {
+                    if (radio.checked) {
+                        isChecked = true;
+                        userAnswer = radio.value;
+                    }
+                });
+                
+                if(isChecked){
+                    if(userAnswer === correctAnswer){
+                        div.classList.add('correct');
+                    } else {
+                        div.classList.add('incorrect');
+                    }
+                }
+            });
+        }
+
+        function checkTable(selector) {
+            const table = document.querySelector(`${selector} table`);
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const checkboxes = row.querySelectorAll('input[type="checkbox"]');
+                const answerD = row.dataset.answerD === 'true'; // Correct answer for 'Dúshēngzǐnǚ'
+                const answerM = row.dataset.answerM === 'true'; // Correct answer for 'Duōshēngzǐnǚ'
+                
+                row.classList.remove('correct', 'incorrect');
+
+                const userD = checkboxes[0].checked;
+                const userM = checkboxes[1].checked;
+
+                if (userD === answerD && userM === answerM) {
+                    row.classList.add('correct');
+                } else {
+                    row.classList.add('incorrect');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập điền từ tương tác</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .word {
+            cursor: pointer;
+            border-bottom: 2px dotted #3b82f6;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+        }
+        .word:hover {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .exercise-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .answer-select {
+            border: 2px solid #9ca3af;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.5rem;
+            font-weight: bold;
+            transition: border-color 0.3s;
+        }
+        .answer-select.correct {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+        .answer-select.incorrect {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        #tooltip {
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .feedback-icon {
+            display: none;
+            margin-left: 8px;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-4 md:p-8">
+
+    <!-- Tooltip/Modal for word information -->
+    <div id="tooltip" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none z-50 p-4" onclick="hideTooltip()">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center transform scale-95" onclick="event.stopPropagation()">
+            <h3 id="tooltip-char" class="text-5xl font-bold text-blue-600 mb-2"></h3>
+            <p id="tooltip-pinyin" class="text-2xl text-gray-700 mb-4"></p>
+            <p id="tooltip-meaning" class="text-xl font-semibold text-gray-900"></p>
+            <button onclick="hideTooltip()" class="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg transition-colors">Đóng</button>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Bài tập điền từ tương tác</h1>
+            <p class="mt-2 text-lg text-gray-600">Nhấn vào một từ để xem pinyin và nghĩa tiếng Việt. Chọn từ đúng để điền vào chỗ trống.</p>
+        </header>
+
+        <!-- Exercise A -->
+        <div class="exercise-card">
+            <div class="flex items-center mb-6">
+                <span class="bg-blue-500 text-white rounded-full h-10 w-10 flex items-center justify-center text-xl font-bold mr-4">A</span>
+                <div>
+                    <h2 class="text-2xl font-semibold">Chọn từ đúng điền vào chỗ trống</h2>
+                    <p class="text-lg text-blue-600 font-bold mt-1">
+                        <span class="word" data-pinyin="néng" data-meaning="có thể (khả năng)">能</span>,
+                        <span class="word" data-pinyin="yào" data-meaning="muốn, cần">要</span>,
+                        <span class="word" data-pinyin="xiǎng" data-meaning="muốn, nghĩ">想</span>,
+                        <span class="word" data-pinyin="kěyǐ" data-meaning="có thể (xin phép)">可以</span>,
+                        <span class="word" data-pinyin="yìsi" data-meaning="ý nghĩa">意思</span>,
+                        <span class="word" data-pinyin="huì" data-meaning="biết (qua học tập)">会</span>
+                    </p>
+                </div>
+            </div>
+            
+            <ol class="list-decimal list-inside space-y-4 text-lg">
+                <li>
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <select class="answer-select" data-answer="会">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>
+                    <span class="word" data-pinyin="shuō" data-meaning="nói">说</span>
+                    <span class="word" data-pinyin="fǎyǔ" data-meaning="tiếng Pháp">法语</span>,
+                    <span class="word" data-pinyin="zhǐ" data-meaning="chỉ">只</span>
+                    <span class="word" data-pinyin="huì" data-meaning="biết">会</span>
+                    <span class="word" data-pinyin="shuō" data-meaning="nói">说</span>
+                    <span class="word" data-pinyin="yìdiǎnr" data-meaning="một chút">一点儿</span>
+                    <span class="word" data-pinyin="yīngyǔ" data-meaning="tiếng Anh">英语</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="mǎlì" data-meaning="Mary">玛丽</span>
+                    <select class="answer-select" data-answer="想">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>
+                    <span class="word" data-pinyin="xué" data-meaning="học">学</span>
+                    <span class="word" data-pinyin="tàijíquán" data-meaning="Thái Cực Quyền">太极拳</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="tā" data-meaning="anh ấy">他</span>
+                    <span class="word" data-pinyin="gǎnmào" data-meaning="cảm cúm">感冒</span>
+                    <span class="word" data-pinyin="le" data-meaning="rồi">了</span>,
+                    <span class="word" data-pinyin="jīntiān" data-meaning="hôm nay">今天</span>
+                    <span class="word" data-pinyin="xiàwǔ" data-meaning="buổi chiều">下午</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <select class="answer-select" data-answer="能">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>
+                    <span class="word" data-pinyin="lái" data-meaning="đến">来</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <span class="word" data-pinyin="hěn" data-meaning="rất">很</span>
+                    <select class="answer-select" data-answer="想">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>
+                    <span class="word" data-pinyin="xué" data-meaning="học">学</span>
+                    <span class="word" data-pinyin="jīngjù" data-meaning="Kinh kịch">京剧</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <span class="word" data-pinyin="xiànzài" data-meaning="bây giờ">现在</span>
+                    <span class="word" data-pinyin="hái" data-meaning="vẫn">还</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <select class="answer-select" data-answer="会">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>
+                    <span class="word" data-pinyin="kàn" data-meaning="đọc, xem">看</span>
+                    <span class="word" data-pinyin="zhōngwén" data-meaning="tiếng Trung">中文</span>
+                    <span class="word" data-pinyin="bào" data-meaning="báo">报</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="lǎoshī" data-meaning="giáo viên">老师</span>,
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <span class="word" data-pinyin="māmā" data-meaning="mẹ">妈妈</span>
+                    <span class="word" data-pinyin="jīntiān" data-meaning="hôm nay">今天</span>
+                    <span class="word" data-pinyin="lái" data-meaning="đến">来</span>
+                    <span class="word" data-pinyin="zhōngguó" data-meaning="Trung Quốc">中国</span>,
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <select class="answer-select" data-answer="想">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>
+                    <span class="word" data-pinyin="qǐngjià" data-meaning="xin nghỉ">请假</span>
+                    <span class="word" data-pinyin="qù" data-meaning="đi">去</span>
+                    <span class="word" data-pinyin="jiē" data-meaning="đón">接</span>
+                    <span class="word" data-pinyin="tā" data-meaning="cô ấy">她</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="zhège" data-meaning="cái này">这个</span>
+                    <span class="word" data-pinyin="cí" data-meaning="từ">词</span>
+                    <span class="word" data-pinyin="shì" data-meaning="là">是</span>
+                    <span class="word" data-pinyin="shénme" data-meaning="cái gì">什么</span>
+                    <select class="answer-select" data-answer="意思">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>?
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <select class="answer-select" data-answer="可以">
+                        <option value="">...</option><option value="能">能</option><option value="要">要</option><option value="想">想</option><option value="可以">可以</option><option value="意思">意思</option><option value="会">会</option>
+                    </select>
+                    <span class="word" data-pinyin="yòng" data-meaning="dùng">用</span>
+                    <span class="word" data-pinyin="nǐ" data-meaning="bạn">你</span>
+                    <span class="word" data-pinyin="de" data-meaning="của">的</span>
+                    <span class="word" data-pinyin="chē" data-meaning="xe">车</span>
+                    <span class="word" data-pinyin="ma" data-meaning="(trợ từ hỏi)">吗</span>?
+                    <span class="feedback-icon"></span>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Exercise B -->
+        <div class="exercise-card">
+            <div class="flex items-center mb-6">
+                <span class="bg-green-500 text-white rounded-full h-10 w-10 flex items-center justify-center text-xl font-bold mr-4">B</span>
+                <div>
+                    <h2 class="text-2xl font-semibold">Chọn từ đúng điền vào chỗ trống</h2>
+                    <p class="text-lg text-green-600 font-bold mt-1">
+                        <span class="word" data-pinyin="huì" data-meaning="biết (qua học tập)">会</span>,
+                        <span class="word" data-pinyin="néng" data-meaning="có thể (khả năng)">能</span>,
+                        <span class="word" data-pinyin="yào" data-meaning="muốn, cần">要</span>,
+                        <span class="word" data-pinyin="xiǎng" data-meaning="muốn, nghĩ">想</span>
+                    </p>
+                </div>
+            </div>
+            <ol class="list-decimal list-inside space-y-4 text-lg">
+                <li>
+                    <span class="word" data-pinyin="jīntiān" data-meaning="hôm nay">今天</span>
+                    <span class="word" data-pinyin="xiàwǔ" data-meaning="buổi chiều">下午</span>
+                    <span class="word" data-pinyin="nǐ" data-meaning="bạn">你</span>
+                    <select class="answer-select" data-answer="能">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="lái" data-meaning="đến">来</span>
+                    <span class="word" data-pinyin="ma" data-meaning="(trợ từ hỏi)">吗</span>?
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="lǎoshī" data-meaning="giáo viên">老师</span>,
+                    <span class="word" data-pinyin="mǎlì" data-meaning="Mary">玛丽</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <span class="word" data-pinyin="shūfu" data-meaning="khỏe, thoải mái">舒服</span>,
+                    <span class="word" data-pinyin="jīntiān" data-meaning="hôm nay">今天</span>
+                    <span class="word" data-pinyin="tā" data-meaning="cô ấy">她</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <select class="answer-select" data-answer="能">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="lái" data-meaning="đến">来</span>
+                    <span class="word" data-pinyin="shàngkè" data-meaning="lên lớp">上课</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <select class="answer-select" data-answer="想">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="xué" data-meaning="học">学</span>
+                    <span class="word" data-pinyin="tàijíquán" data-meaning="Thái Cực Quyền">太极拳</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="tā" data-meaning="anh ấy">他</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <span class="word" data-pinyin="xiǎng" data-meaning="muốn">想</span>
+                    <span class="word" data-pinyin="xué" data-meaning="học">学</span>
+                    <span class="word" data-pinyin="fǎyǔ" data-meaning="tiếng Pháp">法语</span>,
+                    <select class="answer-select" data-answer="想">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="xué" data-meaning="học">学</span>
+                    <span class="word" data-pinyin="yīngyǔ" data-meaning="tiếng Anh">英语</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="nǐ" data-meaning="bạn">你</span>
+                    <span class="word" data-pinyin="yī" data-meaning="một">一</span>
+                    <span class="word" data-pinyin="fēnzhōng" data-meaning="phút">分钟</span>
+                    <select class="answer-select" data-answer="能">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="xiě" data-meaning="viết">写</span>
+                    <span class="word" data-pinyin="duōshao" data-meaning="bao nhiêu">多少</span>
+                    <span class="word" data-pinyin="hànzì" data-meaning="chữ Hán">汉字</span>?
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="tā" data-meaning="anh ấy">他</span>
+                    <span class="word" data-pinyin="hē" data-meaning="uống">喝</span>
+                    <span class="word" data-pinyin="jiǔ" data-meaning="rượu">酒</span>
+                    <span class="word" data-pinyin="le" data-meaning="rồi">了</span>,
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <select class="answer-select" data-answer="能">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="kāichē" data-meaning="lái xe">开车</span>,
+                    <span class="word" data-pinyin="nǐ" data-meaning="bạn">你</span>
+                    <span class="word" data-pinyin="kāi" data-meaning="lái">开</span>
+                    <span class="word" data-pinyin="ba" data-meaning="đi (trợ từ)">吧</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                <li>
+                    <span class="word" data-pinyin="zhèr" data-meaning="ở đây">这儿</span>
+                    <span class="word" data-pinyin="bù" data-meaning="không">不</span>
+                    <select class="answer-select" data-answer="能">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="tíngchē" data-meaning="đỗ xe">停车</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+                 <li>
+                    <span class="word" data-pinyin="jīntiān" data-meaning="hôm nay">今天</span>
+                    <span class="word" data-pinyin="wǎnshang" data-meaning="buổi tối">晚上</span>
+                    <span class="word" data-pinyin="wǒ" data-meaning="tôi">我</span>
+                    <select class="answer-select" data-answer="想">
+                        <option value="">...</option><option value="会">会</option><option value="能">能</option><option value="要">要</option><option value="想">想</option>
+                    </select>
+                    <span class="word" data-pinyin="qù" data-meaning="đi">去</span>
+                    <span class="word" data-pinyin="kàn" data-meaning="xem">看</span>
+                    <span class="word" data-pinyin="diànyǐng" data-meaning="phim điện ảnh">电影</span>。
+                    <span class="feedback-icon"></span>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="text-center mt-8">
+            <button id="check-answers-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform transform hover:scale-105">Kiểm tra kết quả</button>
+        </div>
+
+    </div>
+
+    <script>
+        const tooltip = document.getElementById('tooltip');
+        const tooltipChar = document.getElementById('tooltip-char');
+        const tooltipPinyin = document.getElementById('tooltip-pinyin');
+        const tooltipMeaning = document.getElementById('tooltip-meaning');
+
+        // Gán sự kiện click cho tất cả các từ
+        document.querySelectorAll('.word').forEach(word => {
+            word.addEventListener('click', () => {
+                const char = word.textContent;
+                const pinyin = word.dataset.pinyin;
+                const meaning = word.dataset.meaning;
+                
+                tooltipChar.textContent = char;
+                tooltipPinyin.textContent = `[${pinyin}]`;
+                tooltipMeaning.textContent = meaning;
+
+                tooltip.classList.remove('opacity-0', 'pointer-events-none');
+                tooltip.querySelector('div').classList.remove('scale-95');
+            });
+        });
+
+        // Hàm ẩn tooltip
+        function hideTooltip() {
+            tooltip.classList.add('opacity-0', 'pointer-events-none');
+            tooltip.querySelector('div').classList.add('scale-95');
+        }
+
+        // Gán sự kiện cho nút kiểm tra
+        document.getElementById('check-answers-btn').addEventListener('click', () => {
+            document.querySelectorAll('.answer-select').forEach(select => {
+                const selectedValue = select.value;
+                const correctAnswer = select.dataset.answer;
+                const feedbackIcon = select.nextElementSibling;
+
+                select.classList.remove('correct', 'incorrect');
+                
+                if (selectedValue === "") {
+                    feedbackIcon.style.display = 'none';
+                    return;
+                }
+
+                if (selectedValue === correctAnswer) {
+                    select.classList.add('correct');
+                    feedbackIcon.innerHTML = '✔️';
+                    feedbackIcon.style.color = '#22c55e';
+                } else {
+                    select.classList.add('incorrect');
+                    feedbackIcon.innerHTML = '❌';
+                    feedbackIcon.style.color = '#ef4444';
+                }
+                feedbackIcon.style.display = 'inline';
+            });
+        });
+
+    </script>
+
+</body>
+</html>

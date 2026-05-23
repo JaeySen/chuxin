@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu bài tập tương tác bài 1</title>
+    <style>
+        /* CSS Styling - Giữ nguyên như phiên bản v2.1 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary-color: #4A90E2; /* Xanh dương nhẹ nhàng */
+            --secondary-color: #F5A623; /* Vàng cam ấm áp */
+            --success-color: #50E3C2; /* Xanh ngọc */
+            --danger-color: #E35050; /* Đỏ nhẹ */
+            --light-gray: #f7f8fc;
+            --medium-gray: #e8eaf1;
+            --dark-gray: #5A6978;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .hub-container {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            padding: 20px 40px 40px 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--medium-gray);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--dark-gray);
+            font-weight: 700;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-button {
+            padding: 12px 25px;
+            border: 2px solid transparent;
+            background-color: #f7f8fc;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--dark-gray);
+            border-radius: 99px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-button:hover {
+            background-color: var(--medium-gray);
+        }
+        
+        .tab-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .activity-content {
+            display: none;
+            padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+            animation: fadeIn 0.5s;
+        }
+
+        .activity-content.active { display: block; }
+
+        .activity-header { text-align: center; margin-bottom: 25px; font-size: 1.1em; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+
+        /* --- Hoạt động 1: Ghép nối --- */
+        .matching-game { display: flex; justify-content: space-around; min-height: 300px; }
+        .match-column { width: 48%; display: flex; flex-direction: column; gap: 10px; }
+        .match-item {
+            padding: 15px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1.5em;
+            transition: all 0.2s ease;
+        }
+        .match-item:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .match-item.selected { background-color: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+        .match-item.matched { background-color: var(--success-color); color: white; border-color: var(--success-color); cursor: default; opacity: 0.6; }
+        .match-item.shake { animation: shake 0.3s; border-color: var(--danger-color); }
+        .progress-bar-container { width: 100%; background-color: var(--medium-gray); border-radius: 99px; height: 10px; margin-top: 20px; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background-color: var(--success-color); border-radius: 99px; transition: width 0.5s ease; }
+        .completion-message { text-align: center; margin-top: 20px; font-size: 1.5em; color: var(--primary-color); font-weight: bold; }
+        
+        /* --- Hoạt động 2: Thẻ Ghi Nhớ --- */
+        .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+        .flashcard-container { perspective: 1000px; height: 180px; cursor: pointer; }
+        .flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s; }
+        .flashcard-container.flipped .flashcard { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center;
+            border: 2px solid var(--medium-gray); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .card-front { background-color: white; font-size: 2.5em; }
+        .card-back { background-color: #fcfdff; transform: rotateY(180deg); font-size: 1.2em; flex-direction: column; text-align: center; }
+        .card-back .pinyin { font-size: 1.2em; color: var(--primary-color); }
+        .card-back .meaning { font-size: 0.8em; color: var(--dark-gray); }
+
+        /* --- Hoạt động 3: Luyện Thanh Điệu --- */
+        .tone-quiz { text-align: center; }
+        .quiz-score { font-size: 1.2em; font-weight: 600; margin-bottom: 20px; }
+        #tone-question { font-size: 4em; margin: 20px 0; font-weight: bold; }
+        .tone-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .tone-option {
+            padding: 15px 30px; font-size: 1.2em; cursor: pointer; border: 2px solid var(--secondary-color);
+            border-radius: 12px; background: white; color: var(--secondary-color); font-weight: 600; transition: all 0.2s ease;
+        }
+        .tone-option:hover { background-color: var(--secondary-color); color: white; transform: translateY(-2px); }
+        .feedback-icon { margin-top: 25px; height: 40px; }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <svg width="0" height="0" class="hidden">
+      <symbol id="icon-match" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></symbol>
+      <symbol id="icon-flashcard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line></symbol>
+      <symbol id="icon-tone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></symbol>
+      <symbol id="icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
+      <symbol id="icon-fail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></symbol>
+    </svg>
+
+    <audio id="correct-sound" src="data:audio/mpeg;base64,UklGRkIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAAAAAD//v96/2j/c/9z/3f/eP95/3v/ff+B/4T/iP+L/47/k/+Y/5z/oP+l/6r/rv+x/7b/uv/A/8f/zP/T/9j/2v/c/+D/5v/q/+z/7//w//T/9v/5//r//P/+AAAAAA=="></audio>
+    <audio id="wrong-sound" src="data:audio/mpeg;base64,UklGRkIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAAAAAD//v+Z/5L/kv+U/5X/mP+b/5//ov+p/63/sP+3/7v/wP/G/8z/1P/Y/9v/3//j/+j/6//t/+7/8v/0//j/+v/9//8AAAAA"></audio>
+    <audio id="win-sound" src="data:audio/mpeg;base64,UklGRkIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAAAAAD//v9t/3H/ef+C/4n/k/+f/6n/t/+9/8T/zf/X/97/5f/s//H/9v/9//7//f/6//f/9v/x/+v/6f/j/9//3P/Z/9P/zP/J/8b/v/+5/7D/qv+m/6H/n/+Y/5D/jf+H/33/dv9v/2n/Yv9T/0v/Q/88/zL/Kv8f/w3++v7q/uf+3v7W/tL+0P7Q/tD+z/7O/s3+zP7M/sz+zP7M/sz+zP7M/sz+zP7M/s3+zP7M/sv+yv7J/sT+wv69/rr+uP61/rT+s/6x/rD+sf6v/qv+pv6k/qL+oP6d/pr+mP6X/pT+k/6R/pD+j/6N/o3+jP6M/oy+jL6Mvow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6MPow+jD6A"></audio>
+
+    <div class="hub-container">
+        <h1>Phiếu bài tập tương tác bài 1</h1>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="openActivity(event, 'matching')"><svg width="20" height="20"><use href="#icon-match"></use></svg> Ghép Nối</button>
+            <button class="tab-button" onclick="openActivity(event, 'flashcards')"><svg width="20" height="20"><use href="#icon-flashcard"></use></svg> Thẻ Nhớ</button>
+            <button class="tab-button" onclick="openActivity(event, 'tones')"><svg width="20" height="20"><use href="#icon-tone"></use></svg> Luyện Âm</button>
+        </div>
+
+        <div id="matching" class="activity-content active">
+            <div class="activity-header">Hãy ghép Chữ Hán với Pinyin & Nghĩa tương ứng!</div>
+            <div class="matching-game">
+                <div id="hanzi-column" class="match-column"></div>
+                <div id="pinyin-column" class="match-column"></div>
+            </div>
+            <div class="progress-bar-container"><div id="progress-bar" class="progress-bar"></div></div>
+            <div id="completion-message" class="completion-message hidden"></div>
+        </div>
+
+        <div id="flashcards" class="activity-content">
+            <div class="activity-header">Nhấn vào thẻ để lật xem nghĩa!</div>
+            <div id="flashcard-grid" class="flashcard-grid"></div>
+        </div>
+
+        <div id="tones" class="activity-content">
+            <div class="activity-header">Hãy chọn đúng tên cho thanh điệu này!</div>
+            <div class="tone-quiz">
+                <div class="quiz-score">Điểm: <span id="tone-score">0</span>/<span id="tone-total">0</span></div>
+                <div id="tone-question"></div>
+                <div class="tone-options">
+                    <button class="tone-option" onclick="checkTone(1)">Thanh 1</button>
+                    <button class="tone-option" onclick="checkTone(2)">Thanh 2</button>
+                    <button class="tone-option" onclick="checkTone(3)">Thanh 3</button>
+                    <button class="tone-option" onclick="checkTone(4)">Thanh 4</button>
+                </div>
+                <div class="feedback-icon" id="tone-feedback"></div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // JavaScript - Phần xử lý logic
+        const vocabulary = [
+            { id: 1, hanzi: '你', pinyin: 'nǐ', meaning: 'bạn', tone: 3 },
+            { id: 2, hanzi: '好', pinyin: 'hǎo', meaning: 'tốt, khỏe', tone: 3 },
+            { id: 3, hanzi: '我', pinyin: 'wǒ', meaning: 'tôi', tone: 3 },
+            { id: 4, hanzi: '爱', pinyin: 'ài', meaning: 'yêu', tone: 4 },
+            { id: 5, hanzi: '爸爸', pinyin: 'bàba', meaning: 'bố', tone: 4 },
+            { id: 6, hanzi: '妈妈', pinyin: 'māma', meaning: 'mẹ', tone: 1 },
+            { id: 7, hanzi: '山', pinyin: 'shān', meaning: 'núi', tone: 1 },
+            { id: 8, hanzi: '人', pinyin: 'rén', meaning: 'người', tone: 2 },
+            { id: 9, hanzi: '老师', pinyin: 'lǎoshī', meaning: 'giáo viên', tone: 3 },
+            { id: 10, hanzi: '学生', pinyin: 'xuéshēng', meaning: 'học sinh', tone: 2 },
+            { id: 11, hanzi: '再见', pinyin: 'zàijiàn', meaning: 'tạm biệt', tone: 4 },
+            { id: 12, hanzi: '谢谢', pinyin: 'xièxie', meaning: 'cảm ơn', tone: 4 }
+        ];
+
+        const correctSound = document.getElementById('correct-sound');
+        const wrongSound = document.getElementById('wrong-sound');
+        const winSound = document.getElementById('win-sound');
+
+        function openActivity(evt, activityName) {
+            document.querySelectorAll('.activity-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(activityName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        // --- Hoạt động 1: Ghép nối ---
+        let selectedHanzi = null;
+        let selectedPinyin = null;
+        let matchedCount = 0;
+
+        function initMatchingGame() {
+            const hanziCol = document.getElementById('hanzi-column');
+            const pinyinCol = document.getElementById('pinyin-column');
+            const completionMsg = document.getElementById('completion-message');
+            
+            hanziCol.innerHTML = '';
+            pinyinCol.innerHTML = '';
+            completionMsg.classList.add('hidden');
+            updateProgressBar(0);
+
+            let hanziItems = shuffle([...vocabulary]);
+            let pinyinItems = shuffle([...vocabulary]);
+
+            hanziItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.innerHTML = item.hanzi;
+                div.dataset.id = item.id;
+                div.onclick = () => selectItem(div, 'hanzi');
+                hanziCol.appendChild(div);
+            });
+
+            pinyinItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.innerHTML = `${item.pinyin}<br><small>${item.meaning}</small>`;
+                div.dataset.id = item.id;
+                div.onclick = () => selectItem(div, 'pinyin');
+                pinyinCol.appendChild(div);
+            });
+            
+            selectedHanzi = null;
+            selectedPinyin = null;
+            matchedCount = 0;
+        }
+
+        function selectItem(element, type) {
+            if (element.classList.contains('matched')) return;
+            
+            if (type === 'hanzi') {
+                if(selectedHanzi) selectedHanzi.classList.remove('selected');
+                selectedHanzi = element;
+                element.classList.add('selected');
+            } else {
+                 if(selectedPinyin) selectedPinyin.classList.remove('selected');
+                selectedPinyin = element;
+                element.classList.add('selected');
+            }
+            
+            if (selectedHanzi && selectedPinyin) checkMatch();
+        }
+
+        function checkMatch() {
+            const hanziEl = selectedHanzi;
+            const pinyinEl = selectedPinyin;
+            
+            if (hanziEl.dataset.id === pinyinEl.dataset.id) {
+                correctSound.play();
+                hanziEl.classList.add('matched');
+                pinyinEl.classList.add('matched');
+                matchedCount++;
+                updateProgressBar(matchedCount / vocabulary.length * 100);
+                if (matchedCount === vocabulary.length) winGame();
+            } else {
+                wrongSound.play();
+                hanziEl.classList.add('shake');
+                pinyinEl.classList.add('shake');
+                setTimeout(() => {
+                    hanziEl.classList.remove('shake');
+                    pinyinEl.classList.remove('shake');
+                }, 300);
+            }
+            
+            hanziEl.classList.remove('selected');
+            pinyinEl.classList.remove('selected');
+            selectedHanzi = null;
+            selectedPinyin = null;
+        }
+
+        function updateProgressBar(percentage) {
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+        }
+        
+        function winGame() {
+            winSound.play();
+            const completionMsg = document.getElementById('completion-message');
+            completionMsg.textContent = '太棒了! Hoàn thành xuất sắc!';
+            completionMsg.classList.remove('hidden');
+            confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+            setTimeout(initMatchingGame, 3000);
+        }
+
+        // --- Hoạt động 2: Thẻ Ghi Nhớ ---
+        function initFlashcards() {
+            const grid = document.getElementById('flashcard-grid');
+            grid.innerHTML = '';
+            shuffle([...vocabulary]).forEach(item => {
+                const container = document.createElement('div');
+                container.className = 'flashcard-container';
+                container.onclick = () => container.classList.toggle('flipped');
+                container.innerHTML = `
+                    <div class="flashcard">
+                        <div class="card-face card-front">${item.hanzi}</div>
+                        <div class="card-face card-back">
+                            <span class="pinyin">${item.pinyin}</span>
+                            <span class="meaning">${item.meaning}</span>
+                        </div>
+                    </div>`;
+                grid.appendChild(container);
+            });
+        }
+        
+        // --- Hoạt động 3: Luyện Thanh Điệu ---
+        let toneScore = 0;
+        let toneTotal = 0;
+        let currentToneQuestion;
+
+        function loadToneQuestion() {
+            toneTotal++;
+            currentToneQuestion = vocabulary[Math.floor(Math.random() * vocabulary.length)];
+            const questionEl = document.getElementById('tone-question');
+            
+            questionEl.textContent = currentToneQuestion.pinyin;
+
+            document.getElementById('tone-feedback').innerHTML = '';
+            document.getElementById('tone-score').textContent = toneScore;
+            document.getElementById('tone-total').textContent = toneTotal;
+        }
+
+        function checkTone(selectedTone) {
+            const feedbackEl = document.getElementById('tone-feedback');
+            const icon = (selectedTone === currentToneQuestion.tone) ? 'icon-success' : 'icon-fail';
+            const color = (selectedTone === currentToneQuestion.tone) ? 'var(--success-color)' : 'var(--danger-color)';
+            if(selectedTone === currentToneQuestion.tone) {
+                correctSound.play();
+                toneScore++;
+            } else {
+                wrongSound.play();
+            }
+            feedbackEl.innerHTML = `<svg width="40" height="40" style="color: ${color};"><use href="#${icon}"></use></svg>`;
+            setTimeout(loadToneQuestion, 1200);
+        }
+
+        // --- Khởi tạo các hoạt động khi trang được tải ---
+        window.onload = () => {
+            initMatchingGame();
+            initFlashcards();
+            loadToneQuestion();
+        };
+
+    </script>
+</body>
+</html>

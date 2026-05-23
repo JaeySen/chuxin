@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học tiếng Trung: Bài đọc "Xuân Vãn"</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh font chữ để hỗ trợ tiếng Trung và tiếng Việt tốt hơn */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        body {
+            font-family: 'Noto Sans', 'Noto Sans SC', sans-serif;
+            background-color: #f8f0e5; /* Màu nền ấm */
+        }
+
+        /* ----- Cài đặt cho phần Bật/Tắt Pinyin & Nghĩa ----- */
+
+        /* Ẩn Pinyin và Nghĩa tiếng Việt theo mặc định */
+        .pinyin, .vietnamese {
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Khi body có class 'show-pinyin', hiển thị pinyin */
+        body.show-pinyin .pinyin {
+            display: block;
+        }
+
+        /* Khi body có class 'show-viet', hiển thị nghĩa tiếng Việt */
+        body.show-viet .vietnamese {
+            display: block;
+        }
+
+        /* Định dạng cho cụm từ */
+        .phrase {
+            display: inline-block;
+            text-align: center;
+            margin: 0 4px 12px 4px;
+            padding: 8px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .phrase:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .chinese {
+            font-size: 1.8rem; /* 28px */
+            font-weight: 500;
+            color: #b91c1c; /* Màu đỏ đậm */
+            line-height: 1.3;
+        }
+
+        .pinyin {
+            font-size: 0.9rem; /* 14px */
+            color: #555;
+        }
+
+        .vietnamese {
+            font-size: 0.9rem; /* 14px */
+            color: #059669; /* Màu xanh lá */
+            font-style: italic;
+        }
+
+        /* ----- CSS CHO TAB ĐÃ BỊ XÓA ----- */
+        /* Không cần CSS cho tab nữa */
+        
+        /* ----- Cài đặt cho Bài tập ----- */
+        .quiz-option.correct {
+            background-color: #dcfce7; /* Green 100 */
+            border-color: #22c55e; /* Green 500 */
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2; /* Red 100 */
+            border-color: #ef4444; /* Red 500 */
+        }
+
+        /* Thêm style cho input điền vào chỗ trống */
+        input[type="text"].correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+        }
+         input[type="text"].incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        
+        .matching-select.correct {
+            border-color: #22c55e;
+            background-color: #dcfce7;
+        }
+        .matching-select.incorrect {
+            border-color: #ef4444;
+            background-color: #fee2e2;
+        }
+
+        /* Chú thích từ vựng */
+        .vocab-note {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Style cho phần luyện tập cấu trúc (Phần 6) */
+        .structure-example {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .structure-vi-zh {
+            background-color: #e0f2fe; /* blue-50 */
+            border: 1px solid #bae6fd; /* blue-200 */
+        }
+        .structure-vi-zh h5 {
+            color: #0369a1; /* blue-800 */
+        }
+        .structure-vi-zh .chinese-example {
+            color: #0284c7; /* blue-700 */
+            font-weight: 500;
+        }
+        
+        .structure-zh-vi {
+            background-color: #f0fdf4; /* green-50 */
+            border: 1px solid #bbf7d0; /* green-200 */
+        }
+        .structure-zh-vi h5 {
+            color: #166534; /* green-800 */
+        }
+         .structure-zh-vi .chinese-example {
+            color: #15803d; /* green-700 */
+            font-weight: 500;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container max-w-5xl mx-auto p-4 sm:p-8">
+        
+        <!-- TIÊU ĐỀ -->
+        <header class="text-center mb-8">
+            <img src="https://p3.img.cntv.cn/photoworkspace/contentimg/2025/01/29/2025012901105237226.jpg" 
+                 alt="Hình ảnh biểu ngữ Xem Xuân Vãn Đón Năm Rồng"
+                 class="w-full max-w-3xl mx-auto rounded-lg shadow-lg mb-4"
+                 onerror="this.onerror=null;this.src='https://placehold.co/800x300/c0392b/ffffff?text=看春晚+迎龙年';">
+            <h1 class="text-4xl md:text-5xl font-bold text-red-800">Bài đọc: 《春晚》 là gì?</h1>
+            <p class="text-lg text-gray-600 mt-2">Học tiếng Trung qua bài đọc về Gala Đêm Giao thừa</p>
+        </header>
+
+        <!-- KHU VỰC CHUYỂN TAB ĐÃ BỊ XÓA -->
+        <!-- <nav> ... </nav> -->
+
+        <!-- NỘI DUNG CHÍNH (hiển thị tất cả) -->
+        <main>
+            <!-- =================================== -->
+            <!-- PHẦN 1: BÀI ĐỌC -->
+            <!-- =================================== -->
+            <!-- Thêm mb-12 để tạo khoảng cách với phần 2 -->
+            <section id="bai-doc" class="mb-12">
+                
+                <!-- NÚT BẬT/TẮT -->
+                <div class="flex justify-center items-center flex-wrap gap-4 bg-white p-4 rounded-lg shadow-md mb-8 sticky top-4 z-10">
+                    <button id="togglePinyin" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                        Bật / Tắt Pinyin
+                    </button>
+                    <button id="toggleViet" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                        Bật / Tắt Nghĩa
+                    </button>
+                </div>
+
+                <!-- NỘI DUNG BÀI ĐỌC -->
+                <article class="bg-white p-6 sm:p-10 rounded-lg shadow-lg">
+                    
+                    <h2 class="text-3xl font-bold text-red-700 mb-6 text-center">《春晚》是什么？</h2>
+
+                    <!-- Đoạn 1 -->
+                    <p class="mb-6 text-justify leading-relaxed">
+                        <span class="phrase">
+                            <span class="chinese">春晚</span>
+                            <span class="pinyin">Chūnwǎn</span>
+                            <span class="vietnamese">Xuân Vãn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">全称</span>
+                            <span class="pinyin">quánchēng</span>
+                            <span class="vietnamese">tên đầy đủ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">叫</span>
+                            <span class="pinyin">jiào</span>
+                            <span class="vietnamese">gọi là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《中央广播电视总台</span>
+                            <span class="pinyin">Zhōngyāng Guǎngbō Diànshì Zǒngtái</span>
+                            <span class="vietnamese">Đài Phát thanh và Truyền hình Trung ương TQ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">春节联欢晚会》</span>
+                            <span class="pinyin">Chūnjié Liánhuān Wǎnhuì</span>
+                            <span class="vietnamese">Đêm hội Liên hoan Chào Xuân</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">(英文是: China Media Group Spring Festival Gala)，</span>
+                            <span class="pinyin">(yīngwén shì: ...)</span>
+                            <span class="vietnamese">(Tiếng Anh là: ...)</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">简称</span>
+                            <span class="pinyin">jiǎnchēng</span>
+                            <span class="vietnamese">gọi tắt</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">“春晚”</span>
+                            <span class="pinyin">"Chūnwǎn"</span>
+                            <span class="vietnamese">"Xuân Vãn"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，是</span>
+                            <span class="pinyin">, shì</span>
+                            <span class="vietnamese">, là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">中央广播电视总台</span>
+                            <span class="pinyin">Zhōngyāng Guǎngbō Diànshì Zǒngtái</span>
+                            <span class="vietnamese">Đài Phát thanh và Truyền hình Trung ương TQ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">在</span>
+                            <span class="pinyin">zài</span>
+                            <span class="vietnamese">vào</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">每年</span>
+                            <span class="pinyin">měinián</span>
+                            <span class="vietnamese">hàng năm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">除夕</span>
+                            <span class="pinyin">chúxī</span>
+                            <span class="vietnamese">đêm giao thừa</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">之夜</span>
+                            <span class="pinyin">zhī yè</span>
+                            <span class="vietnamese">buổi tối</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">为了</span>
+                            <span class="pinyin">wèile</span>
+                            <span class="vietnamese">để</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">庆祝</span>
+                            <span class="pinyin">qìngzhù</span>
+                            <span class="vietnamese">chào mừng / kỷ niệm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">农历新年</span>
+                            <span class="pinyin">nónglì xīnnián</span>
+                            <span class="vietnamese">Năm mới Âm lịch</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">而</span>
+                            <span class="pinyin">ér</span>
+                            <span class="vietnamese">mà</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">开办</span>
+                            <span class="pinyin">kāibàn</span>
+                            <span class="vietnamese">tổ chức / mở</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese">của</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">综合性</span>
+                            <span class="pinyin">zōnghéxìng</span>
+                            <span class="vietnamese">tính tổng hợp</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">文艺晚会</span>
+                            <span class="pinyin">wényì wǎnhuì</span>
+                            <span class="vietnamese">đêm hội văn nghệ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">晚会</span>
+                            <span class="pinyin">wǎnhuì</span>
+                            <span class="vietnamese">Đêm hội</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">在</span>
+                            <span class="pinyin">zài</span>
+                            <span class="vietnamese">vào</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">每年</span>
+                            <span class="pinyin">měinián</span>
+                            <span class="vietnamese">hàng năm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">除夕</span>
+                            <span class="pinyin">chúxī</span>
+                            <span class="vietnamese">đêm giao thừa</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">20:00</span>
+                            <span class="pinyin">20:00</span>
+                            <span class="vietnamese">20:00</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">在</span>
+                            <span class="pinyin">zài</span>
+                            <span class="vietnamese">trên</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">很多</span>
+                            <span class="pinyin">hěn duō</span>
+                            <span class="vietnamese">rất nhiều</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">频道</span>
+                            <span class="pinyin">píndào</span>
+                            <span class="vietnamese">kênh</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">直播</span>
+                            <span class="pinyin">zhíbō</span>
+                            <span class="vietnamese">phát sóng trực tiếp</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                    </p>
+
+                    <!-- Đoạn 2 -->
+                    <p class="mb-6 text-justify leading-relaxed">
+                        <span class="phrase">
+                            <span class="chinese">1983年</span>
+                            <span class="pinyin">1983 nián</span>
+                            <span class="vietnamese">Năm 1983</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，第1届</span>
+                            <span class="pinyin">dì 1 jiè</span>
+                            <span class="vietnamese">kỳ thứ 1</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《中央广播电视总台春节联欢晚会》</span>
+                            <span class="pinyin">...</span>
+                            <span class="vietnamese">...</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">正式</span>
+                            <span class="pinyin">zhèngshì</span>
+                            <span class="vietnamese">chính thức</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">开办</span>
+                            <span class="pinyin">kāibàn</span>
+                            <span class="vietnamese">tổ chức</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，2014年</span>
+                            <span class="pinyin">2014 nián</span>
+                            <span class="vietnamese">năm 2014</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">被</span>
+                            <span class="pinyin">bèi</span>
+                            <span class="vietnamese">bị / được</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">定位为</span>
+                            <span class="pinyin">dìngwèi wéi</span>
+                            <span class="vietnamese">xác định là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">国家项目</span>
+                            <span class="pinyin">guójiā xiàngmù</span>
+                            <span class="vietnamese">hạng mục quốc gia</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，到</span>
+                            <span class="pinyin">, dào</span>
+                            <span class="vietnamese">, đến</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">2024年</span>
+                            <span class="pinyin">2024 nián</span>
+                            <span class="vietnamese">năm 2024</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">已</span>
+                            <span class="pinyin">yǐ</span>
+                            <span class="vietnamese">đã</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">举办</span>
+                            <span class="pinyin">jǔbàn</span>
+                            <span class="vietnamese">tổ chức</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">42届</span>
+                            <span class="pinyin">42 jiè</span>
+                            <span class="vietnamese">42 kỳ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">晚会</span>
+                            <span class="pinyin">wǎnhuì</span>
+                            <span class="vietnamese">Đêm hội</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">包括</span>
+                            <span class="pinyin">bāokuò</span>
+                            <span class="vietnamese">bao gồm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">歌曲</span>
+                            <span class="pinyin">gēqǔ</span>
+                            <span class="vietnamese">ca khúc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">舞蹈</span>
+                            <span class="pinyin">wǔdǎo</span>
+                            <span class="vietnamese">vũ đạo / múa</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">相声</span>
+                            <span class="pinyin">xiàngsheng</span>
+                            <span class="vietnamese">tấu hài</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">小品</span>
+                            <span class="pinyin">xiǎopǐn</span>
+                            <span class="vietnamese">tiểu phẩm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">戏曲</span>
+                            <span class="pinyin">xìqǔ</span>
+                            <span class="vietnamese">hí kịch / kịch</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">武术</span>
+                            <span class="pinyin">wǔshù</span>
+                            <span class="vietnamese">võ thuật</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">魔术</span>
+                            <span class="pinyin">móshù</span>
+                            <span class="vietnamese">ảo thuật</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">杂技</span>
+                            <span class="pinyin">zájì</span>
+                            <span class="vietnamese">tạp kỹ / xiếc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">音乐剧</span>
+                            <span class="pinyin">yīnyuèjù</span>
+                            <span class="vietnamese">nhạc kịch</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">微电影</span>
+                            <span class="pinyin">wēi diànyǐng</span>
+                            <span class="vietnamese">phim ngắn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">等</span>
+                            <span class="pinyin">děng</span>
+                            <span class="vietnamese">vân vân</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">各类型</span>
+                            <span class="pinyin">gè lèixíng</span>
+                            <span class="vietnamese">các loại hình</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">节目</span>
+                            <span class="pinyin">jiémù</span>
+                            <span class="vietnamese">tiết mục</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                    </p>
+
+                    <!-- Đoạn 3 -->
+                    <p class="mb-6 text-justify leading-relaxed">
+                        <span class="phrase">
+                            <span class="chinese">《春晚》</span>
+                            <span class="pinyin">"Chūnwǎn"</span>
+                            <span class="vietnamese">"Xuân Vãn"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">每年</span>
+                            <span class="pinyin">měinián</span>
+                            <span class="vietnamese">hàng năm</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">都</span>
+                            <span class="pinyin">dōu</span>
+                            <span class="vietnamese">đều</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">不停地</span>
+                            <span class="pinyin">bùtíng de</span>
+                            <span class="vietnamese">không ngừng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">发展</span>
+                            <span class="pinyin">fāzhǎn</span>
+                            <span class="vietnamese">phát triển</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">和</span>
+                            <span class="pinyin">hé</span>
+                            <span class="vietnamese">và</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">改进</span>
+                            <span class="pinyin">gǎijìn</span>
+                            <span class="vietnamese">cải tiến</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，已经</span>
+                            <span class="pinyin">, yǐjīng</span>
+                            <span class="vietnamese">, đã</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">受</span>
+                            <span class="pinyin">shòu</span>
+                            <span class="vietnamese">nhận được</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">了</span>
+                            <span class="pinyin">le</span>
+                            <span class="vietnamese">rồi</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">很多</span>
+                            <span class="pinyin">hěn duō</span>
+                            <span class="vietnamese">rất nhiều</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">人</span>
+                            <span class="pinyin">rén</span>
+                            <span class="vietnamese">người</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese">của</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">欢迎</span>
+                            <span class="pinyin">huānyíng</span>
+                            <span class="vietnamese">sự yêu thích</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">《春晚》</span>
+                            <span class="pinyin">"Chūnwǎn"</span>
+                            <span class="vietnamese">"Xuân Vãn"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">目前</span>
+                            <span class="pinyin">mùqián</span>
+                            <span class="vietnamese">hiện nay</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">是</span>
+                            <span class="pinyin">shì</span>
+                            <span class="vietnamese">là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">世界</span>
+                            <span class="pinyin">shìjiè</span>
+                            <span class="vietnamese">thế giới</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">上</span>
+                            <span class="pinyin">shàng</span>
+                            <span class="vietnamese">trên</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">最</span>
+                            <span class="pinyin">zuì</span>
+                            <span class="vietnamese">nhất</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">多</span>
+                            <span class="pinyin">duō</span>
+                            <span class="vietnamese">nhiều</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">人</span>
+                            <span class="pinyin">rén</span>
+                            <span class="vietnamese">người</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">看</span>
+                            <span class="pinyin">kàn</span>
+                            <span class="vietnamese">xem</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese">của</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">节目</span>
+                            <span class="pinyin">jiémù</span>
+                            <span class="vietnamese">chương trình</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，因此</span>
+                            <span class="pinyin">, yīncǐ</span>
+                            <span class="vietnamese">, do đó</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，这个</span>
+                            <span class="pinyin">, zhège</span>
+                            <span class="vietnamese">, cái này</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">项目</span>
+                            <span class="pinyin">xiàngmù</span>
+                            <span class="vietnamese">hạng mục / chương trình</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">对</span>
+                            <span class="pinyin">duì</span>
+                            <span class="vietnamese">đối với</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">政治</span>
+                            <span class="pinyin">zhèngzhì</span>
+                            <span class="vietnamese">chính trị</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">经济</span>
+                            <span class="pinyin">jīngjì</span>
+                            <span class="vietnamese">kinh tế</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">道德</span>
+                            <span class="pinyin">dàodé</span>
+                            <span class="vietnamese">đạo đức</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">有</span>
+                            <span class="pinyin">yǒu</span>
+                            <span class="vietnamese">có</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">很大</span>
+                            <span class="pinyin">hěn dà</span>
+                            <span class="vietnamese">rất lớn</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese">của</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">影响</span>
+                            <span class="pinyin">yǐngxiǎng</span>
+                            <span class="vietnamese">ảnh hưởng</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">春节</span>
+                            <span class="pinyin">Chūnjié</span>
+                            <span class="vietnamese">Tết Nguyên Đán</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">是</span>
+                            <span class="pinyin">shì</span>
+                            <span class="vietnamese">là</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">中国</span>
+                            <span class="pinyin">Zhōngguó</span>
+                            <span class="vietnamese">Trung Quốc</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">家庭</span>
+                            <span class="pinyin">jiātíng</span>
+                            <span class="vietnamese">gia đình</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">团聚</span>
+                            <span class="pinyin">tuánjù</span>
+                            <span class="vietnamese">đoàn tụ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese">của</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">时间</span>
+                            <span class="pinyin">shíjiān</span>
+                            <span class="vietnamese">thời gian</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，他们</span>
+                            <span class="pinyin">, tāmen</span>
+                            <span class="vietnamese">, bọn họ</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">一边</span>
+                            <span class="pinyin">yìbiān</span>
+                            <span class="vietnamese">vừa...</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">包饺子</span>
+                            <span class="pinyin">bāo jiǎozi</span>
+                            <span class="vietnamese">gói sủi cảo</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，一边</span>
+                            <span class="pinyin">, yìbiān</span>
+                            <span class="vietnamese">, vừa...</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">看《春晚》</span>
+                            <span class="pinyin">kàn "Chūnwǎn"</span>
+                            <span class="vietnamese">xem "Xuân Vãn"</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">笑着</span>
+                            <span class="pinyin">xiàozhe</span>
+                            <span class="vietnamese">cười nói</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">、</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">聊着</span>
+                            <span class="pinyin">liáozhe</span>
+                            <span class="vietnamese">trò chuyện</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">生活</span>
+                            <span class="pinyin">shēnghuó</span>
+                            <span class="vietnamese">cuộc sống</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">的</span>
+                            <span class="pinyin">de</span>
+                            <span class="vietnamese">của</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">事情</span>
+                            <span class="pinyin">shìqing</span>
+                            <span class="vietnamese">sự việc / chuyện</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">，</span>
+                            <span class="pinyin">,</span>
+                            <span class="vietnamese">,</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">气氛</span>
+                            <span class="pinyin">qìfēn</span>
+                            <span class="vietnamese">không khí</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">很</span>
+                            <span class="pinyin">hěn</span>
+                            <span class="vietnamese">rất</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">热闹</span>
+                            <span class="pinyin">rènao</span>
+                            <span class="vietnamese">náo nhiệt</span>
+                        </span>
+                        <span class="phrase">
+                            <span class="chinese">。</span>
+                            <span class="pinyin">.</span>
+                            <span class="vietnamese">.</span>
+                        </span>
+                    </p>
+                    
+                    <!-- Chú thích từ vựng -->
+                    <div class="mt-10 border-t-2 border-red-100 pt-6">
+                        <h3 class="text-2xl font-bold text-red-700 mb-4">Chú thích từ vựng (từ PDF)</h3>
+                        <div class="space-y-3">
+                            <div class="vocab-note"><strong>1. 全称 (quánchēng) / 正式名称 (zhèngshì míngchēng):</strong> tên đầy đủ, cách gọi đầy đủ</div>
+                            <div class="vocab-note"><strong>2. 简称 (jiǎnchēng) / 简单名称 (jiǎndān míngchēng):</strong> gọi tắt</div>
+                            <div class="vocab-note"><strong>3. 除夕 (chúxī):</strong> đêm giao thừa (tối 30 Tết - 每年农历十二月的最后一天的晚上)</div>
+                            <div class="vocab-note"><strong>4. 举办 (jǔbàn):</strong> tổ chức</div>
+                            <div class="vocab-note"><strong>5. 频道 (píndào):</strong> Kênh truyền hình</div>
+                            <div class="vocab-note"><strong>6. 直播 (zhíbō):</strong> Phát sóng trực tiếp, livestream</div>
+                            <div class="vocab-note"><strong>7. 届 (jiè):</strong> Kỳ (dùng cho kỳ thi, trận đấu, hoặc niên khóa). VD: 第一届比赛、第一届高考.</div>
+                            <div class="vocab-note"><strong>8. 正式 (zhèngshì):</strong> Chính thức</div>
+                            <div class="vocab-note"><strong>9. 国家项目 (guójiā xiàngmù):</strong> Hạng mục, công trình quốc gia</div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- =================================== -->
+            <!-- PHẦN 2: BÀI LUYỆN TẬP -->
+            <!-- =================================== -->
+            <!-- Thêm mb-12 để tạo khoảng cách với phần 3 -->
+            <section id="bai-tap" class="mb-12">
+                <!-- Tiêu đề chính cho phần luyện tập -->
+                <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-8 text-center">✏️ Bài luyện tập</h2>
+                
+                <div class="space-y-10">
+
+                    <!-- BÀI 1: TRẮC NGHIỆM -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-red-700 mb-6 border-l-4 border-red-600 pl-4">Phần 1: Trắc nghiệm kiến thức</h3>
+                        <div id="quiz-mcq" class="space-y-6">
+                            <!-- Câu 1 -->
+                            <div class="quiz-question">
+                                <p class="text-lg font-semibold mb-3">1. 《春晚》 là viết tắt của cái gì?</p>
+                                <div class="space-y-2">
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q1" value="A"> A. 春节晚会
+                                    </label>
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q1" value="B"> B. 中央广播电视总台春节联欢晚会
+                                    </label>
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q1" value="C"> C. 中国春节晚会
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- Câu 2 -->
+                            <div class="quiz-question">
+                                <p class="text-lg font-semibold mb-3">2. 《春晚》 được phát sóng vào thời gian nào?</p>
+                                <div class="space-y-2">
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q2" value="A"> A. 每年春节20:00
+                                    </label>
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q2" value="B"> B. 每年除夕20:00
+                                    </label>
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q2" value="C"> C. 每年元旦20:00
+                                    </label>
+                                </div>
+                            </div>
+                             <!-- Câu 3 -->
+                            <div class="quiz-question">
+                                <p class="text-lg font-semibold mb-3">3. 《春晚》 kỳ đầu tiên được tổ chức năm nào?</p>
+                                <div class="space-y-2">
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q3" value="A"> A. 1983年
+                                    </label>
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q3" value="B"> B. 2014年
+                                    </label>
+                                    <label class="quiz-option block p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
+                                        <input type="radio" name="q3" value="C"> C. 2024年
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="checkMCQButton" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                            Kiểm tra Phần 1
+                        </button>
+                    </div>
+
+                    <!-- BÀI 2: ĐIỀN VÀO CHỖ TRỐNG -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-red-700 mb-6 border-l-4 border-red-600 pl-4">Phần 2: Điền vào chỗ trống</h3>
+                        <div id="quiz-fill-in" class="space-y-4 text-lg">
+                            <p>1. 《春晚》目前是世界上最
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="多">
+                                人
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="看">
+                                的
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="节目">
+                                。
+                            </p>
+                            <p>2. 春节是中国家庭
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="团聚">
+                                的时间，他们一边包
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="饺子">
+                                ，一边看《春晚》。
+                            </p>
+                            <p>3. 晚会
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="包括">
+                                歌曲、舞蹈、
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="相声">
+                                、
+                                <input type="text" class="border-b-2 border-gray-300 focus:border-blue-500 outline-none w-16 mx-1" data-answer="小品">
+                                等各类型节目。
+                            </p>
+                        </div>
+                        <button id="checkFillInButton" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                            Kiểm tra Phần 2
+                        </button>
+                    </div>
+                    
+                    <!-- BÀI 3: ĐÚNG / SAI -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-red-700 mb-6 border-l-4 border-red-600 pl-4">Phần 3: Đúng hay Sai?</h3>
+                        <div id="quiz-true-false" class="space-y-4">
+                            <!-- Câu 1 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">1. 《春晚》 là một chương trình văn nghệ tổng hợp. (综合性文艺晚会)</p>
+                                <label class="mr-4"><input type="radio" name="tf1" value="true"> Đúng</label>
+                                <label><input type="radio" name="tf1" value="false"> Sai</label>
+                            </div>
+                            <!-- Câu 2 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">2. 《春晚》 chỉ có các tiết mục ca múa nhạc và tiểu phẩm.</p>
+                                <label class="mr-4"><input type="radio" name="tf2" value="true"> Đúng</label>
+                                <label><input type="radio" name="tf2" value="false"> Sai</label>
+                            </div>
+                            <!-- Câu 3 -->
+                            <div class="quiz-option p-4 border-2 border-gray-200 rounded-lg">
+                                <p class="text-lg mb-2">3. Người Trung Quốc có thói quen vừa xem 《春晚》 vừa gói bánh chưng.</p>
+                                <label class="mr-4"><input type="radio" name="tf3" value="true"> Đúng</label>
+                                <label><input type="radio" name="tf3" value="false"> Sai</label>
+                            </div>
+                        </div>
+                        <button id="checkTrueFalseButton" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                            Kiểm tra Phần 3
+                        </button>
+                    </div>
+
+                    <!-- BÀI 4: NỐI TỪ -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-red-700 mb-6 border-l-4 border-red-600 pl-4">Phần 4: Nối từ vựng (Hán - Việt)</h3>
+                        <div id="quiz-matching" class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xl font-medium w-32">1. 举办</span>
+                                <select class="matching-select w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" data-answer="B">
+                                    <option value="">-- Chọn nghĩa --</option>
+                                    <option value="A">Phát sóng trực tiếp</option>
+                                    <option value="B">Tổ chức</option>
+                                    <option value="C">Kênh truyền hình</option>
+                                    <option value="D">Đoàn tụ</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xl font-medium w-32">2. 频道</span>
+                                <select class="matching-select w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" data-answer="C">
+                                    <option value="">-- Chọn nghĩa --</option>
+                                    <option value="A">Phát sóng trực tiếp</option>
+                                    <option value="B">Tổ chức</option>
+                                    <option value="C">Kênh truyền hình</option>
+                                    <option value="D">Đoàn tụ</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xl font-medium w-32">3. 直播</span>
+                                <select class="matching-select w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" data-answer="A">
+                                    <option value="">-- Chọn nghĩa --</option>
+                                    <option value="A">Phát sóng trực tiếp</option>
+                                    <option value="B">Tổ chức</option>
+                                    <option value="C">Kênh truyền hình</option>
+                                    <option value="D">Đoàn tụ</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-xl font-medium w-32">4. 团聚</span>
+                                <select class="matching-select w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" data-answer="D">
+                                    <option value="">-- Chọn nghĩa --</option>
+                                    <option value="A">Phát sóng trực tiếp</option>
+                                    <option value="B">Tổ chức</option>
+                                    <option value="C">Kênh truyền hình</option>
+                                    <option value="D">Đoàn tụ</option>
+                                </select>
+                            </div>
+                        </div>
+                         <button id="checkMatchingButton" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                            Kiểm tra Phần 4
+                        </button>
+                    </div>
+                    
+                    <!-- BÀI 5: DỊCH THUẬT -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-red-700 mb-6 border-l-4 border-red-600 pl-4">Phần 5: Luyện dịch (Từ bài đọc)</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-lg font-semibold mb-2">1. Dịch sang tiếng Việt:</p>
+                                <p class="text-xl font-medium text-red-700 mb-2">《春晚》每年都不停地发展和改进，已经受了很多人的欢迎。</p>
+                                <textarea class="w-full p-2 border-2 border-gray-300 rounded-lg" rows="2" placeholder="Viết bản dịch của bạn..."></textarea>
+                                <div class="translation-answer hidden mt-2 p-3 bg-gray-100 rounded-lg">
+                                    <strong>Gợi ý:</strong> "Xuân Vãn" hàng năm đều không ngừng phát triển và cải tiến, đã nhận được sự yêu thích của rất nhiều người.
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-semibold mb-2">2. Dịch sang tiếng Trung:</p>
+                                <p class="text-lg font-medium text-blue-700 mb-2">Không khí (气氛) Tết rất náo nhiệt (热闹).</p>
+                                <textarea class="w-full p-2 border-2 border-gray-300 rounded-lg" rows="2" placeholder="Viết bản dịch của bạn..."></textarea>
+                                <div class="translation-answer hidden mt-2 p-3 bg-gray-100 rounded-lg">
+                                    <strong>Gợi ý:</strong> 春节的气氛很热闹。
+                                </div>
+                            </div>
+                        </div>
+                        <button id="showTranslationButton" class="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                            Hiện gợi ý
+                        </button>
+                    </div>
+
+                    <!-- =================================== -->
+                    <!-- BÀI 6: LUYỆN TẬP CẤU TRÚC (MỚI) -->
+                    <!-- =================================== -->
+                    <div class="quiz-section bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-red-700 mb-6 border-l-4 border-red-600 pl-4">Phần 6: Luyện tập cấu trúc & dịch (Tương tác)</h3>
+                        
+                        <!-- Thêm ID để JavaScript có thể chọn đúng khu vực -->
+                        <div id="quiz-structure" class="space-y-8">
+
+                            <!-- Cấu trúc 1 -->
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800 mb-3">🧩 1. 被定位为 (bèi dìngwèi wéi) - được định vị là / được xem là</h4>
+                                <div class="space-y-4">
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Bắc Kinh được định vị là trung tâm văn hoá của Trung Quốc.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="北京被定位为中国的文化中心。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Cà phê này được định vị là sản phẩm cao cấp.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="这款咖啡被定位为高档产品。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI VÍ DỤ NÀY -->
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Trường tôi được định vị là trường trọng điểm của thành phố.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="我们学校被定位为市重点学校。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">上海被定位为国际金融城市。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Thượng Hải được định vị là thành phố tài chính quốc tế." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI 2 VÍ DỤ NÀY -->
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">这家餐厅被定位为家庭式餐厅。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Nhà hàng này được định vị là nhà hàng kiểu gia đình." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">这个品牌被定位为年轻人市场。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Thương hiệu này được định vị là hướng đến thị trường giới trẻ." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cấu trúc 2 -->
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800 mb-3">🎯 2. 为了……而 (wèile… ér) - vì… mà / để… mà…</h4>
+                                <div class="space-y-4">
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Để học tốt tiếng Trung, tôi mỗi ngày đều luyện nói.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="为了学好汉语，我每天都练习说话。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI 2 VÍ DỤ NÀY -->
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Để giúp bạn bè, cô ấy đã thức cả đêm.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="为了帮助朋友，她通宵没睡。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Để bảo vệ môi trường, chúng ta nên ít dùng túi nhựa.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="为了保护环境，我们应该少用塑料袋。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">为了健康，他每天都去跑步。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Vì sức khỏe, anh ấy chạy bộ mỗi ngày." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI 2 VÍ DỤ NÀY -->
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">为了赶火车，他早上六点就起床了。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Để kịp tàu, anh ấy đã dậy từ 6 giờ sáng." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">为了看演唱会，他们排了两个小时的队。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Để xem buổi hòa nhạc, họ đã xếp hàng hai tiếng đồng hồ." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cấu trúc 3 -->
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800 mb-3">🍎 3. Cấu trúc liệt kê: ...等 (...děng) - v.v.</h4>
+                                 <div class="space-y-4">
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Tôi thích đọc sách, nghe nhạc, xem phim v.v.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="我喜欢看书、听音乐、看电影等活动。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI 2 VÍ DỤ NÀY -->
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Trường tôi có nhiều câu lạc bộ như thể thao, âm nhạc, nhiếp ảnh v.v.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="我们学校有体育、音乐、摄影等社团。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Cửa hàng này bán quần áo, giày dép, túi xách v.v.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="这家店卖衣服、鞋子、包包等东西。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">我喜欢猫、狗、兔子等小动物。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Tôi thích mèo, chó, thỏ và các con vật nhỏ khác." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI 2 VÍ DỤ NÀY -->
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">超市里有水果、蔬菜、肉类等食品。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Trong siêu thị có trái cây, rau, thịt và các loại thực phẩm khác." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">我打算去北京、上海、广州等城市旅游。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Tôi dự định đi du lịch Bắc Kinh, Thượng Hải, Quảng Châu và các thành phố khác." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cấu trúc 4 -->
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800 mb-3">💬 4. 受……的欢迎 (shòu… de huānyíng) - được... yêu thích</h4>
+                                <div class="space-y-4">
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Món ăn này rất được học sinh yêu thích.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="这道菜很受学生的欢迎。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI 2 VÍ DỤ NÀY -->
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Bộ phim đó rất được khán giả chào đón.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="那部电影很受观众的欢迎。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-vi-zh p-3 rounded-md bg-blue-50">
+                                        <p class="mb-1">Các lớp học online rất được mọi người ưa chuộng.</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="网上课程很受大家的欢迎。" placeholder="Dịch sang tiếng Trung...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">这个歌手的音乐很受年轻人的欢迎。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Âm nhạc của ca sĩ này rất được giới trẻ yêu thích." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <!-- ĐÃ THÊM LẠI 2 VÍ DỤ NÀY -->
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">这本书很受老师们的欢迎。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Quyển sách này rất được các thầy cô giáo yêu thích." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                    <div class="structure-zh-vi p-3 rounded-md bg-green-50">
+                                        <p class="mb-1 chinese-example">他的中文课很受外国学生的欢迎。</p>
+                                        <input type="text" class="w-full p-2 border-2 border-gray-300 rounded-lg" data-answer="Lớp tiếng Trung của anh ấy rất được sinh viên nước ngoài yêu thích." placeholder="Dịch sang tiếng Việt...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nút kiểm tra cho Phần 6 -->
+                        <button id="checkStructureButton" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all shadow-sm">
+                            Kiểm tra Phần 6
+                        </button>
+                    </div>
+                    <!-- Hết Phần 6 -->
+
+                </div>
+            </section>
+
+            <!-- =================================== -->
+            <!-- PHẦN 3: BẠN CÓ BIẾT? -->
+            <!-- =================================== -->
+            <section id="ban-co-biet">
+                <!-- Tiêu đề đã có sẵn bên trong -->
+                <div class="bg-white p-6 sm:p-10 rounded-lg shadow-lg">
+                    <h2 class="text-3xl font-bold text-red-700 mb-6 text-center">💡 Bạn có biết?</h2>
+                    <ul class="space-y-6 list-disc list-outside pl-6 text-lg text-gray-800">
+                        <li>
+                            <strong>MC (主持人) là tâm điểm:</strong> Dàn MC của 《春晚》 luôn là chủ đề được bàn tán sôi nổi. Được chọn làm MC cho chương trình là một vinh dự rất lớn và cũng là áp lực không nhỏ.
+                        </li>
+                        <li>
+                            <strong>Lì xì (红包) kỹ thuật số:</strong> Trong những năm gần đây, 《春晚》 đã tích hợp với các ứng dụng thanh toán (như WeChat, Alipay) để phát hàng tỷ Nhân dân tệ tiền lì xì cho khán giả xem truyền hình. Đây là một hoạt động tương tác "cướp lì xì" (抢红包) thu hút hàng trăm triệu người tham gia.
+                        </li>
+                        <li>
+                            <strong>Bài hát kết thúc truyền thống:</strong> Gần như mọi chương trình 《春晚》 từ năm 1984 đều kết thúc bằng bài hát "Đêm nay khó quên" (《难忘今宵》). Giai điệu này đã trở thành một phần ký ức không thể thiếu của nhiều thế hệ người Trung Quốc.
+                        </li>
+                        <li>
+                            <strong>Nơi "tạo trend" (tạo xu hướng):</strong> Các tiết mục, đặc biệt là tiểu phẩm (小品), thường tạo ra những câu nói cửa miệng (流行语) hoặc xu hướng thời trang được lan truyền mạnh mẽ sau đêm Giao thừa.
+                        </li>
+                        <!-- NỘI DUNG MỚI ĐƯỢC THÊM VÀO -->
+                        <li>
+                            <strong>Kỷ lục Guinness (吉尼斯纪录):</strong> Chương trình đang giữ Kỷ lục Guinness Thế giới là "Chương trình truyền hình được xem nhiều nhất thế giới". Mỗi năm, nó thu hút hàng trăm triệu khán giả, không chỉ ở Trung Quốc mà còn trên toàn cầu.
+                        </li>
+                         <li>
+                            <strong>Linh vật (吉祥物):</strong> Bắt đầu từ năm 2015, mỗi năm 《春晚》 đều có một linh vật (吉祥物) riêng, thường dựa trên con giáp của năm đó. Ví dụ, linh vật của năm Thìn 2024 là "Long Thần" (龙辰).
+                        </li>
+                        <li>
+                            <strong>Phô diễn công nghệ (高科技):</strong> 《春晚》 là nơi Trung Quốc phô diễn những công nghệ truyền hình tiên tiến nhất. Những năm gần đây, chương trình đã sử dụng rộng rãi 8K, 5G, AI, và thực tế ảo (VR/AR) để tạo ra các sân khấu và hiệu ứng hình ảnh ngoạn mục.
+                        </li>
+                        <li>
+                            <strong>Khán giả tại trường quay (观众席):</strong> Việc có được một vé xem trực tiếp tại trường quay là vô cùng khó khăn. Hàng ghế khán giả thường có sự góp mặt của các nhân vật nổi tiếng, anh hùng lao động, các đại biểu ưu tú và đại diện từ nhiều ngành nghề.
+                        </li>
+                        <!-- KẾT THÚC NỘI DUNG MỚI -->
+                    </ul>
+                </div>
+            </section>
+        </main>
+        
+        <!-- FOOTER -->
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            Trang web học tập tương tác được tạo dựa trên tài liệu PDF.
+        </footer>
+    </div>
+
+    <script>
+        // Chạy toàn bộ mã JavaScript sau khi trang HTML đã được tải và phân tích xong.
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // ===================================
+            // A. SCRIPT: CHUYỂN TAB (ĐÃ BỊ XÓA)
+            // ===================================
+            // Không cần script chuyển tab nữa
+
+            // ===================================
+            // B. SCRIPT: GÁN EVENT LISTENERS (Phần Toggle)
+            // ===================================
+            const togglePinyinButton = document.getElementById('togglePinyin');
+            if (togglePinyinButton) {
+                togglePinyinButton.addEventListener('click', function() {
+                    document.body.classList.toggle('show-pinyin');
+                    // Cập nhật văn bản nút
+                    this.textContent = document.body.classList.contains('show-pinyin') ? 'Tắt Pinyin' : 'Bật Pinyin';
+                });
+            }
+
+            const toggleVietButton = document.getElementById('toggleViet');
+            if (toggleVietButton) {
+                toggleVietButton.addEventListener('click', function() {
+                    document.body.classList.toggle('show-viet');
+                    // Cập nhật văn bản nút
+                    this.textContent = document.body.classList.contains('show-viet') ? 'Tắt Nghĩa' : 'Bật Nghĩa';
+                });
+            }
+            
+            // ===================================
+            // C. SCRIPT: KIỂM TRA BÀI TẬP
+            // ===================================
+
+            // Phần 1: Trắc nghiệm
+            function checkMCQ() {
+                const answers = { q1: 'B', q2: 'B', q3: 'A' };
+                for (const q in answers) {
+                    const radios = document.getElementsByName(q);
+                    radios.forEach(radio => {
+                        const label = radio.closest('label');
+                        label.classList.remove('correct', 'incorrect');
+                        if (radio.checked) {
+                            if (radio.value === answers[q]) {
+                                label.classList.add('correct');
+                            } else {
+                                label.classList.add('incorrect');
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Phần 2: Điền vào chỗ trống
+            function checkFillIn() {
+                const inputs = document.querySelectorAll('#quiz-fill-in input');
+                inputs.forEach(input => {
+                    const answer = input.dataset.answer;
+                    input.classList.remove('correct', 'incorrect');
+                    // So sánh không phân biệt chữ hoa/thường và bỏ khoảng trắng
+                    if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+                        input.classList.add('correct');
+                    } else {
+                        input.classList.add('incorrect');
+                    }
+                });
+            }
+            
+            // Phần 3: Đúng / Sai
+            function checkTrueFalse() {
+                const answers = { tf1: 'true', tf2: 'false', tf3: 'false' }; // tf3 sai vì là 包饺子 (gói sủi cảo), không phải bánh chưng
+                for (const q in answers) {
+                    const radios = document.getElementsByName(q);
+                    const container = radios[0].closest('.quiz-option');
+                    container.classList.remove('correct', 'incorrect');
+                    
+                    let checkedValue = null;
+                    radios.forEach(radio => {
+                        if (radio.checked) {
+                            checkedValue = radio.value;
+                        }
+                    });
+
+                    if (checkedValue) {
+                        if (checkedValue === answers[q]) {
+                            container.classList.add('correct');
+                        } else {
+                            container.classList.add('incorrect');
+                        }
+                    }
+                }
+            }
+
+            // Phần 4: Nối từ
+            function checkMatching() {
+                const selects = document.querySelectorAll('#quiz-matching .matching-select');
+                selects.forEach(select => {
+                    const answer = select.dataset.answer;
+                    select.classList.remove('correct', 'incorrect');
+                    if (select.value === answer) {
+                        select.classList.add('correct');
+                    } else if (select.value !== "") {
+                        select.classList.add('incorrect');
+                    }
+                });
+            }
+            
+            // Phần 5: Dịch thuật
+            function showTranslationAnswers() {
+                const answers = document.querySelectorAll('.translation-answer');
+                answers.forEach(answer => {
+                    answer.classList.toggle('hidden');
+                });
+            }
+
+            // (MỚI) Phần 6: Luyện tập cấu trúc
+            function checkStructure() {
+                // Chọn tất cả input chỉ trong khu vực #quiz-structure
+                const inputs = document.querySelectorAll('#quiz-structure input[type="text"]');
+                inputs.forEach(input => {
+                    const answer = input.dataset.answer;
+                    input.classList.remove('correct', 'incorrect');
+                    
+                    // Xóa dấu câu, khoảng trắng và chuyển về chữ thường để so sánh linh hoạt hơn
+                    // (Đặc biệt hữu ích cho tiếng Việt)
+                    const userValue = input.value.trim().toLowerCase().replace(/[.,。]/g, '');
+                    const correctValue = answer.trim().toLowerCase().replace(/[.,。]/g, '');
+
+                    if (userValue === correctValue) {
+                        input.classList.add('correct');
+                    } else {
+                        input.classList.add('incorrect');
+                    }
+                });
+            }
+
+            // ===================================
+            const checkMCQBtn = document.getElementById('checkMCQButton');
+            if (checkMCQBtn) checkMCQBtn.addEventListener('click', checkMCQ);
+
+            const checkFillInBtn = document.getElementById('checkFillInButton');
+            if (checkFillInBtn) checkFillInBtn.addEventListener('click', checkFillIn);
+            
+            const checkTrueFalseBtn = document.getElementById('checkTrueFalseButton');
+            if (checkTrueFalseBtn) checkTrueFalseBtn.addEventListener('click', checkTrueFalse);
+
+            const checkMatchingBtn = document.getElementById('checkMatchingButton');
+            if (checkMatchingBtn) checkMatchingBtn.addEventListener('click', checkMatching);
+
+            const showTranslationBtn = document.getElementById('showTranslationButton');
+            if (showTranslationBtn) showTranslationBtn.addEventListener('click', showTranslationAnswers);
+        
+            // (MỚI) Gán listener cho nút kiểm tra Phần 6
+            const checkStructureBtn = document.getElementById('checkStructureButton');
+            if (checkStructureBtn) checkStructureBtn.addEventListener('click', checkStructure);
+
+        }); // Kết thúc DOMContentLoaded
+
+    </script>
+</body>
+</html>
+
+

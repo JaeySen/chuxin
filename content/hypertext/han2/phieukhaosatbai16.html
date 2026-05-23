@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Khảo sát Tương tác (Hoàn thiện)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db; /* Blue */
+            --secondary-color: #f1c40f; /* Yellow */
+            --bg-color: #ecf0f1;
+            --text-dark: #2c3e50;
+            --text-light: #8e9eab;
+            --border-color: #dfe6e9;
+            --font-chinese: 'Noto Sans SC', sans-serif;
+            --font-vietnamese: 'Be Vietnam Pro', sans-serif;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font-vietnamese);
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        .main-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1400px;
+            margin: auto;
+        }
+        .worksheet-container {
+            flex: 3;
+            min-width: 600px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        .helper-box {
+            flex: 1;
+            min-width: 300px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 30px;
+            align-self: flex-start;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header-title h1 {
+            font-family: var(--font-chinese);
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header-title p { font-size: 1.1em; color: var(--text-light); margin: 5px 0 0 0; }
+        .controls { display: flex; align-items: center; gap: 15px; }
+        .controls span { font-weight: 600; font-size: 1.1em; }
+        .pinyin-toggle { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .pinyin-toggle input { display: none; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc; transition: .4s; border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            font-family: var(--font-chinese);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 18px;
+            font-weight: 500;
+            vertical-align: top;
+        }
+        th:first-child { border-radius: 10px 0 0 10px; }
+        th:last-child { border-radius: 0 10px 10px 0; }
+
+        .th-content .hanzi { font-size: 1.5em; }
+        .th-content .pinyin {
+            display: none; /* Pinyin hidden by default */
+            font-size: 0.9em;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        .pinyin-visible .th-content .pinyin {
+            display: block; /* Pinyin shown as a block underneath */
+        }
+        
+        td { padding: 8px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+
+        .name-input, .text-input {
+            width: 100%; border: none; background: transparent; padding: 10px;
+            font-size: 1.2em; color: var(--text-dark); border-radius: 8px;
+        }
+        .name-input { font-family: var(--font-vietnamese); font-weight: 600; }
+        .text-input { font-family: var(--font-chinese); }
+        .name-input:focus, .text-input:focus { outline: 2px solid var(--primary-color); background-color: #f8f9fa; }
+        
+        .options-container { display: flex; justify-content: center; gap: 8px; }
+        .option-btn {
+            flex-grow: 1; padding: 15px 5px; border: 2px solid var(--border-color); border-radius: 8px;
+            background-color: #f8f9fa; cursor: pointer; transition: all 0.2s ease-in-out;
+            font-family: var(--font-chinese); font-size: 1.5em; font-weight: 500;
+        }
+        .option-btn:hover { border-color: var(--secondary-color); }
+        .option-btn.active {
+            background-color: var(--secondary-color); border-color: var(--secondary-color);
+            color: #443e02; transform: translateY(-2px); box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+        }
+
+        .footer-actions { margin-top: 30px; text-align: right; }
+        .export-btn {
+            background-color: var(--text-dark); color: white; border: none;
+            padding: 12px 25px; font-size: 1.1em; font-weight: 600;
+            border-radius: 8px; cursor: pointer; transition: all 0.3s;
+        }
+        .export-btn:hover { background-color: #000; transform: translateY(-2px); }
+
+        /* Helper Box Styles */
+        .helper-box h3 { color: var(--primary-color); font-size: 1.5em; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+        .helper-box h4 { font-size: 1.1em; color: var(--text-dark); margin: 25px 0 10px 0; }
+        .phrase {
+            background-color: var(--bg-color); padding: 12px; border-radius: 8px;
+            margin-bottom: 10px; text-align: left; border-left: 4px solid var(--secondary-color);
+        }
+        .phrase .chinese { font-family: var(--font-chinese); font-size: 1.2em; }
+        .phrase .vietnamese { font-size: 0.9em; color: var(--text-light); }
+        .phrase .pinyin { display: none; margin-left: 8px; font-style: italic; opacity: 0.8; }
+        .pinyin-visible .phrase .pinyin { display: inline; }
+
+        @media (max-width: 1200px) {
+            .main-layout { flex-direction: column; }
+            .helper-box { position: static; margin-top: 30px; }
+        }
+    </style>
+</head>
+<body id="main-body">
+
+    <div class="main-layout">
+        <div class="worksheet-container">
+            <header>
+                <div class="header-title">
+                    <h1>调查问卷</h1>
+                    <p>Thói quen hàng ngày (日常习惯)</p>
+                </div>
+                <div class="controls">
+                    <span>Pinyin</span>
+                    <label class="pinyin-toggle">
+                        <input type="checkbox" id="pinyin-switch">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </header>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th><div class="th-content"><div class="hanzi">同学的名字</div><div class="pinyin">Tóngxué de míngzì</div></div></th>
+                        <th><div class="th-content"><div class="hanzi">去图书馆</div><div class="pinyin">Qù túshūguǎn</div></div></th>
+                        <th><div class="th-content"><div class="hanzi">上网</div><div class="pinyin">Shàngwǎng</div></div></th>
+                        <th><div class="th-content"><div class="hanzi">看电影</div><div class="pinyin">Kàn diànyǐng</div></div></th>
+                        <th><div class="th-content"><div class="hanzi">周末的活动</div><div class="pinyin">Zhōumò de huódòng</div></div></th>
+                    </tr>
+                </thead>
+                <tbody id="survey-body">
+                    </tbody>
+            </table>
+            <div class="footer-actions">
+                <button class="export-btn" id="export-btn"><i class="fa-solid fa-file-export"></i> Xuất kết quả</button>
+            </div>
+        </div>
+
+        <aside class="helper-box">
+            <h3><i class="fa-solid fa-comments"></i> Gợi ý Giao tiếp</h3>
+            
+            <h4>Bắt đầu</h4>
+            <div class="phrase">
+                <div class="chinese">你好！<span class="pinyin">Nǐ hǎo!</span></div>
+                <div class="vietnamese">Chào bạn!</div>
+            </div>
+
+            <h4>Cách đặt câu hỏi</h4>
+            <div class="phrase">
+                <div class="chinese">你常去图书馆吗？<span class="pinyin">Nǐ cháng qù túshūguǎn ma?</span></div>
+                <div class="vietnamese">Bạn có thường đến thư viện không?</div>
+            </div>
+             <div class="phrase">
+                <div class="chinese">你常常做什么？<span class="pinyin">Nǐ chángcháng zuò shénme?</span></div>
+                <div class="vietnamese">Bạn thường làm gì?</div>
+            </div>
+            <div class="phrase">
+                <div class="chinese">你晚上常做什么？<span class="pinyin">Nǐ wǎnshang cháng zuò shénme?</span></div>
+                <div class="vietnamese">Buổi tối bạn thường làm gì?</div>
+            </div>
+
+            <h4>Cách trả lời</h4>
+            <div class="phrase">
+                <div class="chinese">我常去。<span class="pinyin">Wǒ cháng qù.</span></div>
+                <div class="vietnamese">Tôi thường đi.</div>
+            </div>
+             <div class="phrase">
+                <div class="chinese">我晚上常常复习课文。<span class="pinyin">Wǒ wǎnshang chángcháng fùxí kèwén.</span></div>
+                <div class="vietnamese">Buổi tối tôi thường ôn tập bài đọc.</div>
+            </div>
+             <div class="phrase">
+                <div class="chinese">我有时候休息，有时候去公园。<span class="pinyin">Wǒ yǒushíhòu xiūxi, yǒushíhòu qù gōngyuán.</span></div>
+                <div class="vietnamese">Tôi thỉnh thoảng nghỉ ngơi, thỉnh thoảng đi công viên.</div>
+            </div>
+
+            <h4>Kết thúc</h4>
+            <div class="phrase">
+                <div class="chinese">好的，谢谢你！<span class="pinyin">Hǎo de, xièxie nǐ!</span></div>
+                <div class="vietnamese">Ok, cảm ơn bạn nhé!</div>
+            </div>
+        </aside>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const pinyinSwitch = document.getElementById('pinyin-switch');
+    const mainBody = document.getElementById('main-body');
+    const surveyBody = document.getElementById('survey-body');
+    const exportBtn = document.getElementById('export-btn');
+
+    const frequencyOptions = [
+        { name: '总是', pinyin: 'zǒngshì' },
+        { name: '常', pinyin: 'cháng' },
+        { name: '有时候', pinyin: 'yǒushíhòu' },
+        { name: '很少', pinyin: 'hěn shǎo' }
+    ];
+
+    pinyinSwitch.addEventListener('change', () => {
+        mainBody.classList.toggle('pinyin-visible', pinyinSwitch.checked);
+    });
+
+    function createRow(rowNumber) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="name-input" placeholder="Tên bạn #${rowNumber}"></td>
+            <td>${createOptionsCellHTML()}</td>
+            <td>${createOptionsCellHTML()}</td>
+            <td>${createOptionsCellHTML()}</td>
+            <td><input type="text" class="text-input" placeholder="写活动..."></td>
+        `;
+        return tr;
+    }
+
+    function createOptionsCellHTML() {
+        let optionsHTML = '<div class="options-container">';
+        frequencyOptions.forEach(opt => {
+            optionsHTML += `<button class="option-btn" data-value="${opt.name}">${opt.name}</button>`;
+        });
+        optionsHTML += '</div>';
+        return optionsHTML;
+    }
+
+    surveyBody.addEventListener('click', (e) => {
+        const clickedBtn = e.target.closest('.option-btn');
+        if (clickedBtn) {
+            const container = clickedBtn.parentElement;
+            container.querySelectorAll('.option-btn').forEach(btn => {
+                if (btn !== clickedBtn) btn.classList.remove('active');
+            });
+            clickedBtn.classList.toggle('active');
+        }
+    });
+
+    exportBtn.addEventListener('click', () => {
+        const results = [];
+        const rows = surveyBody.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+            const name = row.querySelector('.name-input').value.trim();
+            if (name === "") return;
+
+            const getSelectedOption = (cellIndex) => {
+                const activeBtn = row.querySelectorAll('td')[cellIndex].querySelector('.option-btn.active');
+                return activeBtn ? activeBtn.dataset.value : 'N/A';
+            };
+            
+            results.push({
+                'STT': index + 1,
+                '同学的名字': name,
+                '去图书馆': getSelectedOption(1),
+                '上网': getSelectedOption(2),
+                '看电影': getSelectedOption(3),
+                '周末的活动': row.querySelector('.text-input').value.trim() || 'N/A'
+            });
+        });
+
+        if (results.length > 0) {
+            console.clear();
+            console.log("--- KẾT QUẢ KHẢO SÁT ---");
+            console.table(results);
+            alert(`Đã xuất ${results.length} kết quả vào Console của trình duyệt. (Nhấn F12 để xem)`);
+        } else {
+            alert("Chưa có dữ liệu nào được điền để xuất ra!");
+        }
+    });
+
+    for (let i = 1; i <= 4; i++) {
+        surveyBody.appendChild(createRow(i));
+    }
+});
+</script>
+</body>
+</html>

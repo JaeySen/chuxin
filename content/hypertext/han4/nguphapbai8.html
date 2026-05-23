@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Ngữ Pháp Tiếng Trung: Bổ Ngữ Khả Năng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-active {
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .correct {
+            color: #16a34a;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .option-button.correct {
+            background-color: #dcfce7 !important;
+            border-color: #16a34a !important;
+            color: #15803d !important;
+        }
+        .option-button.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #dc2626 !important;
+            color: #b91c1c !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Bài 15: 京剧我看得懂，但是听不懂</h1>
+            <p class="text-lg text-gray-600 mt-2">Chủ điểm ngữ pháp: Bổ Ngữ Khả Năng (可能补语)</p>
+        </header>
+
+        <!-- Tabs -->
+        <div class="border-b border-gray-200 mb-6">
+            <nav class="flex -mb-px space-x-6" aria-label="Tabs">
+                <button onclick="changeTab('ly-thuyet', this)" class="tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    📖 Lý Thuyết
+                </button>
+                <button onclick="changeTab('tu-vung', this)" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    📚 Từ Vựng
+                </button>
+                <button onclick="changeTab('bai-tap', this)" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    ✍️ Bài Tập
+                </button>
+            </nav>
+        </div>
+
+        <!-- Content Sections -->
+        <main>
+            <!-- Lý Thuyết Section -->
+            <section id="ly-thuyet" class="content-section active space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Học qua tình huống: Chuyến đi xem hòa nhạc  концерт</h3>
+                    <p class="text-gray-600 mb-6">Cùng theo dõi câu chuyện của Tiểu Minh và Tiểu Hồng để xem họ sử dụng Bổ ngữ khả năng như thế nào nhé!</p>
+            
+                    <div class="space-y-5">
+                        <!-- Tình huống 1 -->
+                        <div class="p-4 border border-blue-200 rounded-lg bg-blue-50">
+                            <h4 class="font-bold text-blue-800">Tình huống 1: Mua vé 🎟️</h4>
+                            <p class="mt-2 text-gray-700">Tiểu Hồng: "Ôi, vé buổi hòa nhạc bán chạy lắm! Chúng ta <span class="font-bold text-red-600">买得到买不到</span>啊？" (Ôi, vé buổi hòa nhạc bán chạy lắm! Chúng ta mua được không đây?)</p>
+                            <p class="mt-1 text-gray-700">Tiểu Minh: "Đừng lo, tớ vừa kiểm tra xong. Chắc chắn <span class="font-bold text-red-600">买得到</span>!" (Đừng lo, tớ vừa kiểm tra xong. Chắc chắn mua được!)</p>
+                            <div class="mt-3 pt-3 border-t border-blue-200">
+                                <p class="text-sm text-gray-600">💡 <b>Cấu trúc:</b> <code class="font-mono">V + 得/不 + 到</code> dùng để diễn tả khả năng đạt được mục đích của hành động.</p>
+                            </div>
+                        </div>
+            
+                        <!-- Tình huống 2 -->
+                        <div class="p-4 border border-green-200 rounded-lg bg-green-50">
+                            <h4 class="font-bold text-green-800">Tình huống 2: Lên xe buýt 🚌</h4>
+                            <p class="mt-2 text-gray-700">Tiểu Minh: "Trời ơi, xe buýt đông quá! Chúng ta <span class="font-bold text-red-600">上不去</span>了!" (Trời ơi, xe buýt đông quá! Chúng ta không lên được rồi!)</p>
+                            <p class="mt-1 text-gray-700">Tiểu Hồng: "Đúng vậy, đợi chuyến sau cũng không chắc <span class="font-bold text-red-600">上得去</span>. Hay là chúng ta bắt taxi đi?" (Đúng vậy, đợi chuyến sau cũng không chắc lên được. Hay là chúng ta bắt taxi đi?)</p>
+                             <div class="mt-3 pt-3 border-t border-green-200">
+                                <p class="text-sm text-gray-600">💡 <b>Cấu trúc:</b> <code class="font-mono">V + 得/不 + Bổ ngữ xu hướng (去/来)</code> diễn tả khả năng thực hiện một hành động có hướng di chuyển.</p>
+                            </div>
+                        </div>
+            
+                        <!-- Tình huống 3 -->
+                        <div class="p-4 border border-yellow-200 rounded-lg bg-yellow-50">
+                            <h4 class="font-bold text-yellow-800">Tình huống 3: Bài tập về nhà 📚</h4>
+                            <p class="mt-2 text-gray-700">Tiểu Minh: "Nhưng tớ còn nhiều bài tập quá, sợ rằng tối nay <span class="font-bold text-red-600">做不完</span>." (Nhưng tớ còn nhiều bài tập quá, sợ rằng tối nay không làm xong được.)</p>
+                            <p class="mt-1 text-gray-700">Tiểu Hồng: "Không sao đâu, bài tập không nhiều lắm, cậu chắc chắn <span class="font-bold text-red-600">做得完</span>." (Không sao đâu, bài tập không nhiều lắm, cậu chắc chắn làm xong được.)</p>
+                             <div class="mt-3 pt-3 border-t border-yellow-200">
+                                <p class="text-sm text-gray-600">💡 <b>Cấu trúc:</b> <code class="font-mono">V + 得/不 + 完</code> diễn tả khả năng hoàn thành một việc gì đó.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Tình huống 4 -->
+                        <div class="p-4 border border-purple-200 rounded-lg bg-purple-50">
+                            <h4 class="font-bold text-purple-800">Tình huống 4: Chiếc túi nhỏ 🎒</h4>
+                            <p class="mt-2 text-gray-700">Tiểu Minh: "Tớ muốn mang cái poster này đi, nhưng cái túi này nhỏ quá, <span class="font-bold text-red-600">装不下</span>." (Tớ muốn mang cái poster này đi, nhưng cái túi này nhỏ quá, không đựng vừa.)</p>
+                            <p class="mt-1 text-gray-700">Tiểu Hồng: "Cái túi của tớ to hơn, có lẽ <span class="font-bold text-red-600">装得下</span> đấy. Cậu thử xem!" (Cái túi của tớ to hơn, có lẽ đựng vừa đấy. Cậu thử xem!)</p>
+                             <div class="mt-3 pt-3 border-t border-purple-200">
+                                <p class="text-sm text-gray-600">💡 <b>Cấu trúc:</b> <code class="font-mono">V + 得/不 + 下</code> diễn tả không gian có đủ để chứa một vật gì đó hay không.</p>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Tóm tắt -->
+                    <div class="mt-8 bg-gray-100 p-4 rounded-lg">
+                         <h3 class="text-lg font-semibold text-gray-800 mb-3">Tổng kết nhanh</h3>
+                         <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><b>Khẳng định:</b> Động từ + <code class="bg-gray-200 px-1 rounded">得</code> + Bổ ngữ (VD: 看<b class="text-blue-600">得</b>懂, 吃<b class="text-blue-600">得</b>完)</li>
+                            <li><b>Phủ định:</b> Động từ + <code class="bg-gray-200 px-1 rounded">不</code> + Bổ ngữ (VD: 看<b class="text-red-600">不</b>懂, 吃<b class="text-red-600">不</b>完)</li>
+                            <li><b>Nghi vấn:</b> Dùng <code class="bg-gray-200 px-1 rounded">...吗?</code> hoặc dạng chính phản (VD: 你听得懂<b class="text-green-600">吗</b>?, 你听得懂听<b class="text-green-600">不</b>懂?)</li>
+                         </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Từ Vựng Section -->
+            <section id="tu-vung" class="content-section">
+                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Từ Vựng Bài 15</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Vocabulary items will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bài Tập Section -->
+            <section id="bai-tap" class="content-section space-y-6">
+                <!-- Exercise 1: Multiple Choice -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Bài 1: Chọn từ điền vào chỗ trống</h3>
+                    <div id="exercise1-container" class="space-y-5">
+                        <!-- Questions will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Exercise 2: Multiple Choice (Grammar) -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Bài 2: Chọn đáp án đúng</h3>
+                    <div id="exercise2-container" class="space-y-5">
+                        <!-- Questions will be inserted here -->
+                    </div>
+                </div>
+                 <!-- Exercise 3: Fill in the blank -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Bài 3: Dùng từ cho sẵn điền vào chỗ trống</h3>
+                    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex flex-wrap gap-2 text-blue-800">
+                        <span><b>Từ cho sẵn:</b></span>
+                        <code class="bg-blue-100 px-2 py-1 rounded">看不懂</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">看得完</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">拿不了</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">放不下</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">参加得了</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">买得到</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">坐不下</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">听不懂</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">出不去</code>
+                        <code class="bg-blue-100 px-2 py-1 rounded">起得来</code>
+                    </div>
+                    <div id="exercise3-container" class="space-y-4">
+                        <!-- Questions will be inserted here -->
+                    </div>
+                    <button onclick="checkFillInTheBlank()" class="mt-6 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">Kiểm tra đáp án</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Data from the provided documents
+        const vocabulary = [
+            { hanzi: "演出", pinyin: "yǎnchū", vietnamese: "diễn xuất, biểu diễn" },
+            { hanzi: "猜", pinyin: "cāi", vietnamese: "đoán" },
+            { hanzi: "演员", pinyin: "yǎnyuán", vietnamese: "diễn viên" },
+            { hanzi: "武打", pinyin: "wǔdǎ", vietnamese: "múa võ, đánh võ" },
+            { hanzi: "动作", pinyin: "dòngzuò", vietnamese: "động tác" },
+            { hanzi: "精彩", pinyin: "jīngcǎi", vietnamese: "đặc sắc" },
+            { hanzi: "脸谱", pinyin: "liǎnpǔ", vietnamese: "kiểu vẽ mặt" },
+            { hanzi: "表现", pinyin: "biǎoxiàn", vietnamese: "biểu hiện" },
+            { hanzi: "人物", pinyin: "rénwù", vietnamese: "nhân vật" },
+            { hanzi: "社会", pinyin: "shèhuì", vietnamese: "xã hội" },
+            { hanzi: "地位", pinyin: "dìwèi", vietnamese: "địa vị" },
+            { hanzi: "性格", pinyin: "xìnggé", vietnamese: "tính cách" },
+            { hanzi: "十分", pinyin: "shífēn", vietnamese: "rất, vô cùng" },
+            { hanzi: "有趣", pinyin: "yǒuqù", vietnamese: "thú vị, lý thú" },
+            { hanzi: "服装", pinyin: "fúzhuāng", vietnamese: "trang phục" },
+            { hanzi: "影响", pinyin: "yǐngxiǎng", vietnamese: "ảnh hưởng" },
+            { hanzi: "传统", pinyin: "chuántǒng", vietnamese: "truyền thống" },
+            { hanzi: "艺术", pinyin: "yìshù", vietnamese: "nghệ thuật" },
+            { hanzi: "了解", pinyin: "liǎojiě", vietnamese: "hiểu rõ, tìm hiểu" },
+            { hanzi: "的话", pinyin: "dehuà", vietnamese: "nếu... (trợ từ)" },
+            { hanzi: "约", pinyin: "yuē", vietnamese: "hẹn, mời" },
+            { hanzi: "了", pinyin: "liǎo", vietnamese: "xong, rồi (bổ ngữ)" },
+            { hanzi: "决定", pinyin: "juédìng", vietnamese: "quyết định" },
+            { hanzi: "上下班", pinyin: "shàngxiàbān", vietnamese: "đi làm và tan làm" },
+            { hanzi: "担心", pinyin: "dānxīn", vietnamese: "lo lắng" },
+            { hanzi: "肯定", pinyin: "kěndìng", vietnamese: "khẳng định" },
+            { hanzi: "排", pinyin: "pái", vietnamese: "hàng, loạt" },
+            { hanzi: "估计", pinyin: "gūjì", vietnamese: "áng chừng, phỏng đoán" },
+            { hanzi: "开演", pinyin: "kāiyǎn", vietnamese: "bắt đầu biểu diễn" },
+            { hanzi: "满", pinyin: "mǎn", vietnamese: "đầy" },
+            { hanzi: "说明书", pinyin: "shuōmíngshū", vietnamese: "bản thuyết minh" },
+            { hanzi: "古代", pinyin: "gǔdài", vietnamese: "cổ đại" },
+            { hanzi: "神话", pinyin: "shénhuà", vietnamese: "thần thoại" },
+            { hanzi: "天上", pinyin: "tiānshàng", vietnamese: "trên trời" },
+            { hanzi: "仙女", pinyin: "xiānnǚ", vietnamese: "tiên nữ" },
+            { hanzi: "羡慕", pinyin: "xiànmù", vietnamese: "ngưỡng mộ" },
+            { hanzi: "人间", pinyin: "rénjiān", vietnamese: "nhân gian" },
+            { hanzi: "偷偷", pinyin: "tōutōu", vietnamese: "lén lút, vụng trộm" },
+            { hanzi: "内容", pinyin: "nèiróng", vietnamese: "nội dung" }
+        ];
+
+        const exercise1 = [
+            { question: "我最喜欢看他演的...........片。", options: ["武打", "性格", "影响"], answer: "武打" },
+            { question: "我喜欢她那活泼开朗的...........。", options: ["内容", "性格", "艺术"], answer: "性格" },
+            { question: "你请假去旅行，老师...........不准。", options: ["肯定", "估计", "只是"], answer: "肯定" },
+            { question: "因为太晚了，没有公共汽车了，...........打的去。", options: ["担心", "只好", "影响"], answer: "只好" },
+            { question: "京剧是中国的传统...........,听说年轻人不太喜欢。", options: ["艺术", "武打", "内容"], answer: "艺术" },
+            { question: "她是受姐姐的............才来中国学汉语的。", options: ["性格", "影响", "担心"], answer: "影响" },
+            { question: "我.............对京剧感兴趣，但不会唱。", options: ["只是", "只好", "估计"], answer: "只是" },
+            { question: "她现在还不来，我............是遇到什么事了。", options: ["估计", "肯定", "影响"], answer: "估计" },
+            { question: "不用...............，妈妈的病很快就会好的。", options: ["担心", "影响", "内容"], answer: "担心" },
+            { question: "这本书的.............怎么样？", options: ["艺术", "性格", "内容"], answer: "内容" }
+        ];
+
+        const exercise2 = [
+             { question: "请代我...........你爸爸妈妈问好。", options: ["给", "把", "被", "向"], answer: "向" },
+             { question: "她现在不在办公室，她家里有电话，你把电话...........。", options: ["到她家里去打吧", "去她家里打吧", "打到她家里去吧", "打去她家里吧"], answer: "打到她家里去吧" },
+             { question: "我看这本杂志...........有一张照片，很像你。", options: ["里", "中", "上", "下"], answer: "上" },
+             { question: "昨天晚上我一直学习到很晚才睡，只...........。", options: ["睡觉了四五个小时", "四五个小时睡觉", "睡了四五个小时觉", "睡四个五个小时觉"], answer: "睡了四五个小时觉" },
+             { question: "这篇课文比较难，我...........。", options: ["看得不懂", "不看懂", "看得懂", "看不懂"], answer: "看不懂" },
+             { question: "A: 我现在能进去找他吗？ B: 对不起，他正在上课，现在还...........。", options: ["进不去", "不能进去", "进得去", "进得不去"], answer: "进不去" }
+        ];
+
+        const exercise3 = [
+            { id: "ex3-1", question: "这本书很好，我也想买一本，还...........吗？", answer: "买得到" },
+            { id: "ex3-2", question: "玛丽，明天晚上我们准备举行圣诞晚会，你...........吗？", answer: "参加得了" },
+            { id: "ex3-3", question: "我们明天早上六点出发，你...........吗？", answer: "起得来" },
+            { id: "ex3-4", question: "东西太多了，她一个人...........，你去帮帮她吧。", answer: "拿不了" },
+            { id: "ex3-5", question: "从这儿...........，我们走那个门吧。", answer: "出不去" },
+            { id: "ex3-6", question: "房间太小，...........那么多人。", answer: "坐不下" },
+            { id: "ex3-7", question: "书太多了，家里的书架已经...........了。", answer: "放不下" },
+            { id: "ex3-8", question: "老师的话我听得懂，但是还...........中文广播。", answer: "听不懂" },
+            { id: "ex3-9", question: "借了这么多的书，你一个月...........吗？", answer: "看得完" },
+            { id: "ex3-10", question: "我的汉语水平很低，还...........中文小说儿。", answer: "看不懂" }
+        ];
+
+
+        // --- Functions ---
+
+        function changeTab(tabId, element) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Deactivate all tabs
+            document.querySelectorAll('nav button').forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+            });
+
+            // Show the selected content section
+            document.getElementById(tabId).classList.add('active');
+            // Activate the selected tab
+            element.classList.add('tab-active');
+            element.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        }
+
+        function renderVocabulary() {
+            const container = document.querySelector('#tu-vung .grid');
+            let html = '';
+            vocabulary.forEach(word => {
+                html += `
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        <p class="text-lg font-semibold text-blue-800">${word.hanzi}</p>
+                        <p class="text-md text-gray-600">${word.pinyin}</p>
+                        <p class="text-md text-gray-700 font-medium">${word.vietnamese}</p>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        function renderMultipleChoice(exerciseData, containerId) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            exerciseData.forEach((item, index) => {
+                const optionsHtml = item.options.map(option => 
+                    `<button onclick="checkMCAnswer(this, '${item.answer}', ${index}, '${containerId}')" 
+                             class="option-button text-left w-full sm:w-auto flex-grow bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm transition duration-200">
+                        ${option}
+                    </button>`
+                ).join('');
+
+                html += `
+                    <div id="q-${containerId}-${index}">
+                        <p class="mb-3 font-medium">${index + 1}. ${item.question}</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${optionsHtml}
+                        </div>
+                        <p id="feedback-${containerId}-${index}" class="mt-2 text-sm"></p>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function checkMCAnswer(button, correctAnswer, index, containerId) {
+            const questionDiv = document.getElementById(`q-${containerId}-${index}`);
+            const feedbackP = document.getElementById(`feedback-${containerId}-${index}`);
+            const options = questionDiv.querySelectorAll('button');
+
+            // Disable all buttons for this question
+            options.forEach(opt => opt.disabled = true);
+
+            if (button.innerText === correctAnswer) {
+                button.classList.add('correct');
+                feedbackP.innerText = 'Chính xác!';
+                feedbackP.className = 'mt-2 text-sm correct';
+            } else {
+                button.classList.add('incorrect');
+                feedbackP.innerText = `Sai rồi! Đáp án đúng là: ${correctAnswer}`;
+                feedbackP.className = 'mt-2 text-sm incorrect';
+                // Highlight the correct answer
+                options.forEach(opt => {
+                    if (opt.innerText === correctAnswer) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        function renderFillInTheBlank() {
+            const container = document.getElementById('exercise3-container');
+            let html = '';
+            exercise3.forEach((item, index) => {
+                html += `
+                    <div class="flex flex-wrap items-center gap-2">
+                        <label for="${item.id}" class="font-medium">${index + 1}. ${item.question.split('...........')[0]}</label>
+                        <input type="text" id="${item.id}" data-answer="${item.answer}" class="w-40 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <label for="${item.id}">${item.question.split('...........')[1] || ''}</label>
+                        <span id="feedback-${item.id}" class="text-sm"></span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function checkFillInTheBlank() {
+            exercise3.forEach(item => {
+                const input = document.getElementById(item.id);
+                const feedback = document.getElementById(`feedback-${item.id}`);
+                const userAnswer = input.value.trim();
+                const correctAnswer = input.dataset.answer;
+
+                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                    feedback.textContent = '✓ Chính xác!';
+                    feedback.className = 'text-sm correct';
+                    input.classList.remove('border-red-500');
+                    input.classList.add('border-green-500');
+                } else {
+                    feedback.innerHTML = `✗ Sai rồi! Đáp án: <b class="text-blue-600">${correctAnswer}</b>`;
+                    feedback.className = 'text-sm incorrect';
+                    input.classList.remove('border-green-500');
+                    input.classList.add('border-red-500');
+                }
+            });
+        }
+
+
+        // Initial render on page load
+        window.onload = function() {
+            renderVocabulary();
+            renderMultipleChoice(exercise1, 'exercise1-container');
+            renderMultipleChoice(exercise2, 'exercise2-container');
+            renderFillInTheBlank();
+        };
+    </script>
+
+</body>
+</html>

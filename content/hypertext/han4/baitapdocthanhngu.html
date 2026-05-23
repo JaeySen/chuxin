@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài ôn tập Toàn diện: 开天辟地</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .chinese-char { cursor: pointer; position: relative; display: inline-block; padding: 2px 0; border-bottom: 2px dotted #9ca3af; transition: all 0.2s; }
+        .chinese-char:hover { background-color: #e0f2fe; border-bottom-color: #0ea5e9; }
+        .chinese-sentence { cursor: pointer; transition: all 0.2s; background-color: rgba(209, 250, 229, 0.3); border-bottom: 2px solid rgba(110, 231, 183, 0.6); }
+        .chinese-sentence:hover { background-color: #d1fae5; border-bottom-color: #6ee7b7;}
+        #tooltip { position: absolute; display: none; background-color: #1f2937; color: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; text-align: center; font-size: 0.9rem; pointer-events: none; max-width: 300px; }
+        .tooltip-pinyin { font-weight: 600; color: #7dd3fc; }
+        .tooltip-viet { font-style: italic; }
+        .section-card { background-color: white; border-radius: 12px; padding: 2rem; margin-top: 2rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); border: 1px solid #e5e7eb; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background-color: #0ea5e9; color: white; }
+        .btn-primary:hover { background-color: #0284c7; }
+        .exercise-input { border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem 0.75rem; transition: all 0.2s; }
+        .exercise-input:focus { border-color: #0ea5e9; box-shadow: 0 0 0 2px #bae6fd; outline: none; }
+        .correct { border-color: #16a34a; background-color: #f0fdf4; }
+        .incorrect { border-color: #dc2626; background-color: #fef2f2; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        th { background-color: #f9fafb; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div id="tooltip"></div>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-600">Bài ôn tập Toàn diện: 开天辟地</h1>
+            <p class="text-lg text-slate-500 mt-2">Thần thoại & Thành ngữ Trung Hoa</p>
+        </header>
+
+        <!-- Phần 1: Bài đọc & Hội thoại -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">I. Bài đọc & Hội thoại (课文与对话)</h2>
+            <div class="text-center mb-6"></div>
+            <article class="text-lg leading-loose space-y-4" id="reading-text-1">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">开天辟地 (Khai thiên tịch địa)</h3>
+                <p>
+                    <span class="chinese-sentence" data-pinyin="zhōngguó yǒu zhèyàng yīgè shénhuà chuánshuō" data-viet="Trung Quốc có một truyền thuyết thần thoại như thế này">中国有这样一个神话传说</span>: 
+                    <span class="chinese-sentence" data-pinyin="zài hěnjiǔ hěnjiǔ yǐqián, tiān hé dì dōu hái méiyǒu xíngchéng, tiāndì húnrán yītǐ, yàngzi hǎoxiàng yīgè jīdàn" data-viet="từ rất lâu về trước, trời và đất đều chưa hình thành, trời đất hòa làm một, trông giống như một quả trứng gà">在很久很久以前,天和地都还没有形成,天地浑然一体,样子好像一个鸡蛋</span>。
+                    <span class="chinese-sentence" data-pinyin="tiāndì de kāichuàng zhě pángǔ jiù zài zhège dàn lǐ" data-viet="Bàn Cổ, người sáng tạo ra trời đất, ở trong quả trứng này">天地的开创者盘古就在这个蛋里</span>。
+                    <span class="chinese-sentence" data-pinyin="guòle yī wàn bāqiān nián, pángǔ xǐng láile" data-viet="Trải qua mười tám nghìn năm, Bàn Cổ tỉnh dậy">过了一万八千年,盘古醒来了</span>。
+                    <span class="chinese-sentence" data-pinyin="tā fāxiàn yǎnqián qīhēi yītuán, jiù yòng fǔzi pī kāile zhège yuán dōngxi" data-viet="Ông phát hiện trước mắt tối đen như mực, liền dùng rìu bổ cái vật tròn này ra">他发现眼前漆黑一团,就用斧子劈开了这个圆东西</span>。
+                    <span class="chinese-sentence" data-pinyin="suízhe yīshēng jùxiǎng, yuán dōngxi lǐ de qīng de qì xiàngshàng shēng, biàn chéngle gāo gāo de lántiān; zhòng de qì xiàng xià chén, biàn chéngle guǎngkuò de dàdì" data-viet="Cùng với một tiếng nổ lớn, khí nhẹ trong vật tròn bay lên, biến thành trời xanh; khí nặng chìm xuống, biến thành đất rộng">随着一声巨响,圆东西里的轻的气向上升,变成了高高的蓝天;重的气向下沉,变成了广阔的大地</span>。
+                    <span class="chinese-sentence" data-pinyin="cóngcǐ, jiù yǒule tiān hé dì" data-viet="Từ đó, đã có trời và đất">从此,就有了天和地</span>。
+                    <span class="chinese-sentence" data-pinyin="pángǔ tóu dǐng lántiān, jiǎo tà dàdì, tǐnglì zài tiāndì zhī jiān, biàn chéngle dǐngtiānlìdì de jùrén, xiàng yī gēn zhùzi yīyàng chēngzhe tiān hé dì" data-viet="Bàn Cổ đầu đội trời, chân đạp đất, đứng sừng sững giữa trời đất, biến thành người khổng lồ đội trời đạp đất, giống như một cây cột chống đỡ trời và đất">盘古头顶蓝天,脚踏大地,挺立在天地之间,变成了顶天立地的巨人,像一根柱子一样撑着天和地</span>。
+                    <span class="chinese-sentence" data-pinyin="pángǔ zhèyàng dǐngtiānlìdì, yòuguòle yī wàn bāqiān nián" data-viet="Bàn Cổ cứ như vậy đội trời đạp đất, lại qua thêm mười tám nghìn năm nữa">盘古这样顶天立地,又过了一万八千年</span>。
+                    <span class="chinese-sentence" data-pinyin="zhōngyú, tiān hé dì zài yě bù huì hé zài yīqǐ, pángǔ zhè cái ānrán sǐqù" data-viet="Cuối cùng, trời và đất không bao giờ hợp lại với nhau nữa, Bàn Cổ lúc này mới yên lòng chết đi">终于,天和地再也不会合在一起,盘古这才安然死去</span>。
+                    <span class="chinese-sentence" data-pinyin="tā hūchū de qì, biànchéng fēng hé yún" data-viet="Hơi thở của ông biến thành gió và mây">他呼出的气,变成风和云</span>。
+                    <span class="chinese-sentence" data-pinyin="tā de shēngyīn, biànchéng léimíng" data-viet="Tiếng nói của ông biến thành sấm sét">他的声音,变成雷鸣</span>。
+                    <span class="chinese-sentence" data-pinyin="tā de yǎnjīng biànchéng tàiyáng hé yuèliàng" data-viet="Mắt của ông biến thành mặt trời và mặt trăng">他的眼睛变成太阳和月亮</span>。
+                    <span class="chinese-sentence" data-pinyin="tā de tóufǎ, biàn chéngle tiānshàng de xīngxīng" data-viet="Tóc của ông biến thành những ngôi sao trên trời">他的头发,变成了天上的星星</span>。
+                    <span class="chinese-sentence" data-pinyin="tā de xuèyè biànchéngle jiānghé" data-viet="Máu của ông biến thành sông ngòi">他的血液变成了江河</span>。
+                    <span class="chinese-sentence" data-pinyin="tā de pífū, máofà biànchéngle shùmù hé huācǎo" data-viet="Da và lông của ông biến thành cây cối và hoa cỏ">他的皮肤、毛发变成了树木和花草</span>。
+                    <span class="chinese-sentence" data-pinyin="pángǔ kāichuàngle shìjiè" data-viet="Bàn Cổ đã sáng tạo ra thế giới">盘古开创了世界</span>。
+                    <span class="chinese-sentence" data-pinyin="hòulái, rénmen jiù yòng 'kāitiānpìdì' lái bǐyù kāichuàng wěidà de shìyè, yě yòng lái biǎoshì qiánsuǒwèiyǒu de shìqíng, biǎoshì yǒushǐ yǐlái de dì yī cì" data-viet="Sau này, người ta dùng 'khai thiên tịch địa' để ví với việc mở ra sự nghiệp vĩ đại, cũng dùng để chỉ những việc chưa từng có, biểu thị lần đầu tiên trong lịch sử">后来,人们就用“开天辟地”来比喻开创伟大的事业,也用来表示前所未有的事情,表示有史以来的第一次</span>。
+                </p>
+                <hr class="my-8">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">对话 (Hội thoại)</h3>
+                <p><strong>裴娜：</strong><span class="chinese-sentence" data-pinyin="wǒ jīngcháng tīng zhōngguó rén shuō, zhōngguó de lìshǐ yǒu 'shàngxià wǔqiān nián'" data-viet="Tôi thường nghe người Trung Quốc nói, lịch sử Trung Quốc có 'năm nghìn năm trên dưới'">我经常听中国人说，中国的历史有“上下五千年”</span>。</p>
+                <p><strong>林晶：</strong><span class="chinese-sentence" data-pinyin="shì a, zhōngguó de lìshǐ fēicháng yōujiǔ" data-viet="Đúng vậy, lịch sử Trung Quốc rất lâu đời">是啊，中国的历史非常悠久</span>。 <span class="chinese-sentence" data-pinyin="cóng chuánshuō zhōng de huángdì dào xiànzài, dàyuē yǒu jìn wǔqiān nián de lìshǐ, suǒyǐ, zhōngguó de lìshǐ tōngcháng jiàozuò 'shàngxià wǔqiān nián'" data-viet="Từ Hoàng Đế trong truyền thuyết đến nay, có khoảng gần năm nghìn năm lịch sử, vì vậy, lịch sử Trung Quốc thường được gọi là 'năm nghìn năm trên dưới'">从传说中的黄帝到现在，大约有近五千年历史,所以,中国的历史通常叫做“上下五千年”</span>。</p>
+                <p><strong>裴娜：</strong><span class="chinese-sentence" data-pinyin="nà wǔqiān nián yǐqián, shì shénme yàng ne?" data-viet="Vậy trước năm nghìn năm thì như thế nào?">那五千年以前，是什么样呢？</span></p>
+                <p><strong>林晶：</strong><span class="chinese-sentence" data-pinyin="nà shì yuǎngǔ shíqí, nà shíhòu méiyǒu wénzì jìzǎi, dànshì yě liúchuánle yīxiē shénhuà hé chuánshuō" data-viet="Đó là thời kỳ cổ đại, lúc đó chưa có chữ viết ghi lại, nhưng cũng lưu truyền một số thần thoại và truyền thuyết">那是远古时期，那时候没有文字记载，但是也流传了一些神话和传说</span>。</p>
+                <p><strong>裴娜：</strong><span class="chinese-sentence" data-pinyin="ò, wǒ zhīdào yīgè zhōngguó de shénhuà chuánshuō, jiào 'kāitiānpìdì'" data-viet="Ồ, tôi biết một truyền thuyết thần thoại của Trung Quốc, gọi là 'khai thiên tịch địa'">哦，我知道一个中国的神话传说，叫“开天辟地”</span>。</p>
+                <p><strong>林晶：</strong><span class="chinese-sentence" data-pinyin="nǐ zhīdào de hái zhēn bù shǎo" data-viet="Bạn biết cũng không ít đâu">你知道的还真不少</span>。<span class="chinese-sentence" data-pinyin="zhōngguó rén hěn xǐhuān zhège shénhuà, yī tán qǐ lìshǐ, chángcháng yào cóng 'pángǔ kāitiānpìdì' shuō qǐ" data-viet="Người Trung Quốc rất thích thần thoại này, mỗi khi nói về lịch sử, thường bắt đầu từ 'Bàn Cổ khai thiên tịch địa'">中国人很喜欢这个神话,一谈起历史,常常要从“盘古开天辟地”说起</span>。</p>
+            </article>
+        </div>
+
+        <!-- Phần 2: Từ mới & Phân tích -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">II. Từ mới & Phân tích (词语解析)</h2>
+            <!-- Nội dung từ mới giữ nguyên -->
+             <table>
+                <thead><tr><th>Từ vựng</th><th>Pinyin</th><th>Nghĩa Tiếng Việt</th><th>Giải thích & Cách dùng</th></tr></thead>
+                <tbody>
+                    <tr><td>开创</td><td>kāichuàng</td><td>Sáng lập, mở ra</td><td>(Động từ) Bắt đầu một sự nghiệp, một thời đại mới. VD: 他开创了公司的新纪元 (Anh ấy đã mở ra một kỷ nguyên mới cho công ty).</td></tr>
+                    <tr><td>漆黑</td><td>qīhēi</td><td>Tối đen như mực</td><td>(Tính từ) Miêu tả trạng thái cực kỳ tối, không có ánh sáng. Thường dùng với 一团 (yītuán). VD: 屋子里漆黑一团 (Trong phòng tối đen như mực).</td></tr>
+                    <tr><td>比喻</td><td>bǐyù</td><td>Ví von, ẩn dụ</td><td>(Động từ) Dùng một sự vật để so sánh với một sự vật khác. VD: 人们用“开天辟地”来比喻伟大的事业 (Người ta dùng "khai thiên tịch địa" để ví với sự nghiệp vĩ đại).</td></tr>
+                    <tr><td>悠久</td><td>yōujiǔ</td><td>Lâu đời</td><td>(Tính từ) Dùng để miêu tả lịch sử, văn hóa, truyền thống... có từ rất lâu. VD: 中国有悠久的历史 (Trung Quốc có lịch sử lâu đời).</td></tr>
+                    <tr><td>流传</td><td>liúchuán</td><td>Lưu truyền</td><td>(Động từ) Truyền từ đời này sang đời khác, từ nơi này sang nơi khác. VD: 这个故事流传很广 (Câu chuyện này được lưu truyền rất rộng rãi).</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phần 3: Kho tàng Thành ngữ -->
+        <div class="section-card">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">III. Kho tàng Thành ngữ (成语宝库)</h2>
+            <div class="space-y-6">
+                <!-- All 15 idioms with detailed explanations and examples -->
+                <div><p><strong>1. 开天辟地 (kāi tiān pì dì):</strong> "Mở trời phá đất". Chỉ sự khởi đầu của lịch sử, hoặc một sự kiện mang tính đột phá, chưa từng có. <strong>VD:</strong> 他喝酒了？这可是开天辟地头一回呀。(Anh ta uống rượu á? Đây là lần đầu tiên trong đời đấy.)</p></div>
+                <div><p><strong>2. 浑然一体 (hún rán yī tǐ):</strong> "Hòa quyện làm một". Miêu tả sự vật kết hợp hoàn hảo, không thể tách rời. <strong>VD:</strong> 蓝天和大海浑然一体，构成一幅优美的图画。(Trời xanh và biển cả hòa làm một, tạo thành một bức tranh tuyệt đẹp.)</p></div>
+                <div><p><strong>3. 顶天立地 (dǐng tiān lì dì):</strong> "Đầu đội trời, chân đạp đất". Miêu tả người có khí phách hiên ngang, vĩ đại. <strong>VD:</strong> 他发誓要做一个顶天立地的男子汉。(Anh ấy thề sẽ làm một người nam tử hán đầu đội trời chân đạp đất.)</p></div>
+                <div><p><strong>4. 前所未有 (qián suǒ wèi yǒu):</strong> "Trước nay chưa từng có". <strong>VD:</strong> 那次会议很隆重，真是前所未有的规模。(Hội nghị lần đó rất long trọng, thật sự là một quy mô chưa từng có.)</p></div>
+                <div><p><strong>5. 天真烂漫 (tiān zhēn làn màn):</strong> "Ngây thơ trong sáng, hồn nhiên". <strong>VD:</strong> 那是一个天真烂漫的小女孩。(Đó là một cô bé ngây thơ trong sáng.)</p></div>
+                <div><p><strong>6. 博大精深 (bó dà jīng shēn):</strong> "Rộng lớn và sâu sắc" (thường nói về học vấn, văn hóa). <strong>VD:</strong> 中国哲学博大精深。(Triết học Trung Quốc uyên thâm sâu rộng.)</p></div>
+                <div><p><strong>7. 源远流长 (yuán yuǎn liú cháng):</strong> "Nguồn xa, dòng dài" (ví với lịch sử, văn hóa lâu đời). <strong>VD:</strong> 中国的历史源远流长。(Lịch sử Trung Quốc có nguồn gốc lâu đời.)</p></div>
+                <div><p><strong>8. 大刀阔斧 (dà dāo kuò fǔ):</strong> "Đao to búa lớn", ví với việc làm quyết đoán, mạnh mẽ. <strong>VD:</strong> 改革就应该大刀阔斧。(Cải cách thì nên quyết liệt và mạnh mẽ.)</p></div>
+                <div><p><strong>9. 大包大揽 (dà bāo dà lǎn):</strong> "Ôm đồm, nhận hết mọi việc về mình". <strong>VD:</strong> 你别大包大揽了，还是我自己做吧。(Bạn đừng ôm đồm nữa, cứ để tôi tự làm đi.)</p></div>
+                <div><p><strong>10. 大同小异 (dà tóng xiǎo yì):</strong> "Đại đồng tiểu dị", phần lớn giống nhau, chỉ khác biệt nhỏ. <strong>VD:</strong> 这两个汉字大同小异。(Hai chữ Hán này đại đồng tiểu dị.)</p></div>
+                <div><p><strong>11. 千方百计 (qiān fāng bǎi jì):</strong> "Trăm phương ngàn kế". <strong>VD:</strong> 妈妈千方百计想让儿子考上名牌大学。(Mẹ trăm phương ngàn kế muốn con trai thi đỗ đại học danh tiếng.)</p></div>
+                <div><p><strong>12. 千军万马 (qiān jūn wàn mǎ):</strong> "Nghìn quân vạn ngựa", chỉ khí thế hùng mạnh. <strong>VD:</strong> 他是一位将军，曾经指挥过千军万马。(Ông ấy là một vị tướng, đã từng chỉ huy nghìn quân vạn mã.)</p></div>
+                <div><p><strong>13. 万水千山 (wàn shuǐ qiān shān):</strong> "Vạn nước nghìn non", chỉ đường xá xa xôi, hiểm trở. <strong>VD:</strong> 我们走过了万水千山，终于到达了目的地。(Chúng tôi đã vượt qua muôn trùng sông núi, cuối cùng cũng đến được đích.)</p></div>
+                <div><p><strong>14. 成千上万 (chéng qiān shàng wàn):</strong> "Hàng nghìn hàng vạn", chỉ số lượng rất nhiều. <strong>VD:</strong> 广场上有成千上万的人。(Trên quảng trường có hàng nghìn hàng vạn người.)</p></div>
+                <div><p><strong>15. 郎才女貌 (láng cái nǚ mào):</strong> "Trai tài gái sắc". <strong>VD:</strong> 他们两个真是郎才女貌，特别般配。(Hai người họ đúng là trai tài gái sắc, đặc biệt xứng đôi.)</p></div>
+            </div>
+        </div>
+        
+        <!-- Phần 4: Luyện tập theo sách -->
+        <div class="section-card">
+            <!-- Giữ nguyên nội dung phần luyện tập -->
+             <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">IV. Luyện tập theo sách (课本练习)</h2>
+            <div id="exercise-1" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Bài 1: 成语扩展 (Điền từ vào chỗ trống)</h3>
+                <p>中华文化 ( <input id="ex1-1" class="exercise-input w-32" data-answer="博大精深"> ), 源远流长, 突出的 ( <input id="ex1-2" class="exercise-input w-32" data-answer="特点"> ) 就是不断发展不断更新的实践性。在上下五千年的悠久历史当中, 中华文化的传说故事 ( <input id="ex1-3" class="exercise-input w-32" data-answer="成千上万"> ), 表现出了中国人的美好 ( <input id="ex1-4" class="exercise-input w-32" data-answer="理想"> )。</p>
+                <p class="text-sm text-slate-500 mt-2">Lựa chọn: D. 博大精深 特点 成千上万 理想</p>
+                <button onclick="checkExercise1()" class="btn btn-primary mt-4">Kiểm tra</button>
+            </div>
+            <hr class="my-8">
+            <div id="exercise-2" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Bài 2: 根据意思写出成语 (Dựa vào nghĩa viết thành ngữ)</h3>
+                <div class="space-y-4">
+                    <p>1. 形容完整不可分割: <input class="exercise-input" data-answer="浑然一体"></p>
+                    <p>2. 历史上从来没有过: <input class="exercise-input" data-answer="前所未有"></p>
+                    <p>3. 比喻办事果断而且有魄力: <input class="exercise-input" data-answer="大刀阔斧"></p>
+                </div>
+                 <button onclick="checkGenericExercise('#exercise-2')" class="btn btn-primary mt-4">Kiểm tra</button>
+            </div>
+        </div>
+
+        <!-- Phần 5: Đọc thêm -->
+        <div class="section-card">
+             <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">V. Đọc thêm (补充阅读)</h2>
+             <article class="text-lg leading-loose space-y-4" id="reading-text-2">
+                <h3 class="text-xl font-bold text-center mt-4 mb-2">嫦娥奔月 (Hằng Nga bay lên cung trăng)</h3>
+                <p><span class="chinese-sentence" data-pinyin="xiāngchuán, yuǎngǔ shíhou yǒu yī nián, tiānshàng chūxiànle shí gè tàiyáng, rè dé bùdéliǎo, lǎobǎixìng wúfǎ shēnghuóle" data-viet="Tương truyền, thời xa xưa có một năm, trên trời xuất hiện mười mặt trời, nóng không chịu nổi, người dân không thể sống được">相传,远古时候有一年,天上出现了十个太阳,热得不得了,老百姓无法生活了</span>。 <span class="chinese-sentence" data-pinyin="yīgè míngjiào hòu yì de yīngxióng zhīdàole zhè jiàn shì, tā dēng shàng kūnlún shāndǐng, lā kāi shén gōng, yīkǒuqì shè xiàle jiǔ gè tàiyáng" data-viet="Một anh hùng tên là Hậu Nghệ biết được chuyện này, anh leo lên đỉnh núi Côn Luân, giương thần cung, một hơi bắn hạ chín mặt trời">一个名叫后羿的英雄知道了这件事,他登上昆仑山顶,拉开神弓,一口气射下了九个太阳</span>。 <span class="chinese-sentence" data-pinyin="hòu yì lì xià hěn dà de gōngláo, shòudào lǎobǎixìng de zūnjìng hé àidài" data-viet="Hậu Nghệ lập được công lao to lớn, được người dân kính trọng và yêu mến">后羿立下很大的功劳,受到老百姓的尊敬和爱戴</span>。 <span class="chinese-sentence" data-pinyin="bùjiǔ, hòu yì qǔle gè měilì shànliáng de qīzi, míngjiào cháng'é" data-viet="Không lâu sau, Hậu Nghệ cưới một người vợ xinh đẹp lương thiện, tên là Hằng Nga">不久,后羿娶了个美丽善良的妻子,名叫嫦娥</span>。 <span class="chinese-sentence" data-pinyin="tāmen liǎ hùxiāng shēn àizhe, shēnghuó shífēn xìngfú, rénmen dōu hěn xiànmù zhè duì lángcáinǚmào de ēn'ài fūqī" data-viet="Hai người họ yêu thương nhau sâu sắc, cuộc sống vô cùng hạnh phúc, mọi người đều rất ngưỡng mộ cặp vợ chồng ân ái trai tài gái sắc này">他们俩互相深爱着,生活十分幸福,人们都很羡慕这对郎才女貌的恩爱夫妻</span>。 <span class="chinese-sentence" data-pinyin="yītiān, yǒurén sòng gěi hòu yì yī zhǒng yào, jùshuō rén chīle yǐhòu, bù huì biàn lǎo, yě bù huì sǐqù" data-viet="Một hôm, có người tặng cho Hậu Nghệ một loại thuốc, nghe nói sau khi uống, người ta sẽ không già đi và cũng không chết">一天,有人送给后羿一种药,据说人吃了以后,不会变老,也不会死去</span>。 <span class="chinese-sentence" data-pinyin="yīnwèi hàoqí, cháng'é tōutōu chīle zhè zhǒng yào" data-viet="Vì tò mò, Hằng Nga đã lén uống loại thuốc này">因为好奇,嫦娥偷偷吃了这种药</span>。 <span class="chinese-sentence" data-pinyin="méi xiǎngdào, cháng'é yī chī xià yào, shēntǐ jiù biàn dé yuè lái yuè qīng, màn man yě líkāi dìmiàn, xiàng tiānshàng fēi qù" data-viet="Không ngờ, Hằng Nga vừa uống thuốc xong, cơ thể liền trở nên ngày càng nhẹ, từ từ rời khỏi mặt đất, bay lên trời">没想到,嫦娥一吃下药,身体就变得越来越轻,慢慢也离开地面,向天上飞去</span>。 <span class="chinese-sentence" data-pinyin="yóuyú cháng'é qiānguàzhe zhàngfū, biàn fēi luò dào lí rénjiān zuìjìn de yuèliàng shàng" data-viet="Vì Hằng Nga lo lắng cho chồng, nên đã bay đến mặt trăng gần nhân gian nhất">由于嫦娥牵挂着丈夫,便飞落到离人间最近的月亮上</span>。 <span class="chinese-sentence" data-pinyin="yuèliàng shàngmiàn lěng lěngqīngqīng, cháng'é zài yě huí bù dào rènào de rénjiān shìjiè le" data-viet="Trên mặt trăng lạnh lẽo, Hằng Nga không thể nào quay trở lại thế giới nhân gian náo nhiệt được nữa">月亮上面冷冷清清,嫦娥再也回不到热闹的人间世界了</span>。 <span class="chinese-sentence" data-pinyin="hòu yì yǎngwàngzhe yèkōng hūhuànzhe ài qī de míngzì" data-viet="Hậu Nghệ ngước nhìn trời đêm gọi tên người vợ yêu dấu">后羿仰望着夜空呼唤着爱妻的名字</span>。 <span class="chinese-sentence" data-pinyin="zhè shí tā jīngqí de fāxiàn, jīntiān de yuèliàng géwài míngliàng, érqiě yǒu gè shēnyǐng fēicháng xiàng cháng'é" data-viet="Lúc này, anh kinh ngạc phát hiện, mặt trăng hôm nay sáng lạ thường, và có một bóng hình rất giống Hằng Nga">这时他惊奇地发现,今天的月亮格外明亮,而且有个身影非常像嫦娥</span>。 <span class="chinese-sentence" data-pinyin="bǎixìngmen zhīdào cháng'é bēn yuè chéng xiān de xiāoxī hòu, fēnfēn zài yuè xià bǎishè xiāng'àn, xiàng shànliáng de cháng'é qíqiú jíxiáng píng'ān" data-viet="Sau khi người dân biết tin Hằng Nga bay lên mặt trăng thành tiên, họ lần lượt bày hương án dưới trăng, cầu xin Hằng Nga lương thiện ban cho điềm lành và bình an">百姓们知道嫦娥奔月成仙的消息后,纷纷在月下摆设香案,向善良的嫦娥祈求吉祥平安</span>。 <span class="chinese-sentence" data-pinyin="cóngcǐ, zhōngqiū jié bài yuè de fēngsú jiù zài mínjiān chuán kāile" data-viet="Từ đó, phong tục cúng trăng vào dịp Tết Trung thu liền được lưu truyền trong dân gian">从此,中秋节拜月的风俗就在民间传开了</span>。</p>
+             </article>
+        </div>
+
+        <!-- Phần 6: Luyện viết -->
+        <div class="section-card">
+            <!-- Giữ nguyên nội dung phần luyện viết -->
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-sky-500 pl-4">VI. Luyện viết (写作练习)</h2>
+            <p class="mb-4 text-slate-600"><strong>Chủ đề:</strong> Dựa vào nội dung đã học, hãy dùng lời văn của mình để kể lại câu chuyện "Bàn Cổ khai thiên tịch địa". Bạn cũng có thể chọn một câu chuyện thần thoại Trung Quốc khác mà bạn biết và tóm tắt lại. (Khoảng 400 - 500 chữ).</p>
+            <textarea id="writing-area" class="w-full h-64 p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-400" placeholder="Bắt đầu viết bài của bạn ở đây..."></textarea>
+            <div class="text-right mt-2 text-sm text-slate-500">Số chữ: <span id="char-count">0</span> / 500</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tooltip = document.getElementById('tooltip');
+            
+            document.body.addEventListener('click', function(event) {
+                let target = event.target;
+                if (target.classList.contains('chinese-char') || target.classList.contains('chinese-sentence')) {
+                    event.stopPropagation();
+                    const pinyin = target.dataset.pinyin;
+                    const viet = target.dataset.viet;
+                    if (pinyin && viet) {
+                        tooltip.innerHTML = `<div class="tooltip-pinyin">${pinyin}</div><div class="tooltip-viet">${viet}</div>`;
+                        const rect = target.getBoundingClientRect();
+                        tooltip.style.display = 'block';
+                        tooltip.style.left = `${rect.left + window.scrollX + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+                        tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 8}px`;
+                    }
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            const writingArea = document.getElementById('writing-area');
+            const charCount = document.getElementById('char-count');
+            writingArea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count;
+                charCount.classList.toggle('text-red-600', count > 500);
+            });
+        });
+
+        function checkGenericExercise(selector) {
+            document.querySelectorAll(`${selector} .exercise-input`).forEach(input => {
+                const answer = input.dataset.answer;
+                const value = input.value.trim();
+                input.classList.remove('correct', 'incorrect');
+                if (value) {
+                   input.classList.add(value === answer ? 'correct' : 'incorrect');
+                }
+            });
+        }
+        
+        function checkExercise1() {
+            checkGenericExercise('#exercise-1');
+        }
+    </script>
+</body>
+</html>
+

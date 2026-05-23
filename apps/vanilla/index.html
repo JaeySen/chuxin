@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hanai Lab — Lớp tiếng Trung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/styles.css" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+  <script src="/shared/firebase-config.js"></script>
+</head>
+<body>
+  <header id="hanai-header" class="hanai-header"></header>
+
+  <main class="container" style="padding: 36px 20px 80px;">
+    <h1 style="margin-top:0; color: var(--c-blue-dark);">Lớp học tiếng Trung trực tuyến</h1>
+    <p class="muted" style="font-size:18px; max-width:640px;">
+      Chọn một khoá học bên dưới để bắt đầu. Tiến độ và điểm số được lưu tự động khi bạn đăng nhập.
+    </p>
+
+    <h2 style="margin-top:36px; color: var(--c-blue);">Các khoá học</h2>
+    <div id="courses" class="course-grid"></div>
+
+    <h2 style="margin-top:48px; color: var(--c-blue);">Tất cả bài học</h2>
+    <div id="all-lessons" class="lesson-list"></div>
+  </main>
+
+  <script type="module">
+    import { fetchCourseLessons, auth, onAuthStateChanged } from "/shared/firebase.js";
+    import { mountHeader, el } from "/shared/ui.js";
+    import { fetchProgress } from "/shared/progress.js";
+
+    const COURSES = [
+      { id: "han1", title: "Hán ngữ 1", subtitle: "Khởi đầu", color: "#FF8C00" },
+      { id: "han2", title: "Hán ngữ 2", subtitle: "Tiếp nối", color: "#0EA5E9" },
+      { id: "han3", title: "Hán ngữ 3", subtitle: "Mở rộng", color: "#10B981" },
+      { id: "han4", title: "Hán ngữ 4", subtitle: "Đọc — Nói", color: "#8B5CF6" },
+    ];
+    const LABELS = {
+      flashcard: "Flashcard", mcq: "Trắc nghiệm", "fill-blank": "Điền từ",
+      translate: "Dịch câu", "match-pairs": "Ghép cặp",
+      "listen-pick": "Nghe & chọn", "listen-tf": "Nghe đúng/sai",
+      "reading-toggle": "Đọc (ẩn/hiện)", "reading-tooltip": "Đọc (tra từ)",
+      "counting-grid": "Đếm số", "lucky-draw": "Bốc thăm",
+      "role-play": "Đóng vai", debate: "Tranh luận",
+      worksheet: "Phiếu BT", dialogue: "Hội thoại",
+      "grammar-tabs": "Ngữ pháp",
+    };
+
+    mountHeader();
+
+    const grid = document.getElementById("courses");
+    for (const c of COURSES) {
+      const tile = el("a", { class: "course-tile", href: `/?course=${c.id}#all` });
+      tile.appendChild(el("h3", {}, c.title));
+      tile.appendChild(el("div", { class: "muted" }, c.subtitle));
+      const bar = el("div", { class: "tile-bar" });
+      bar.style.background = c.color;
+      tile.appendChild(bar);
+      grid.appendChild(tile);
+    }
+
+    async function renderAllLessons(filter) {
+      const list = document.getElementById("all-lessons");
+      list.innerHTML = "";
+      const all = [];
+      for (const c of COURSES) {
+        try {
+          const lessons = await fetchCourseLessons(c.id);
+          for (const l of lessons) all.push({ ...l, _color: c.color, _course: c.title });
+        } catch (e) {
+          console.warn("course fetch failed", c.id, e);
+        }
+      }
+      const filtered = filter ? all.filter((l) => l.course === filter) : all;
+      if (filtered.length === 0) {
+        list.appendChild(
+          el("div", { class: "feedback feedback-info" },
+            "Chưa có bài học nào trong Firestore. Hãy chạy `pnpm sync:emulator` để nạp dữ liệu mẫu."),
+        );
+        return;
+      }
+      for (const l of filtered) {
+        const row = el("a", { class: "lesson-row", href: `/lesson.html?id=${l.id}` });
+        row.appendChild(
+          el("div", {},
+            el("strong", {}, l.title),
+            el("div", { class: "muted", style: "font-size:13px;" },
+              `${l._course} · ~${l.estimatedMinutes ?? 10} phút`),
+          ),
+        );
+        const right = el("div", { class: "row gap" });
+        right.appendChild(el("span", { class: "badge" }, LABELS[l.interactionType] ?? l.interactionType));
+        if (auth.currentUser) {
+          fetchProgress(l.id).then((p) => {
+            if (p?.completed) right.appendChild(el("span", { class: "check" }, "✓"));
+          });
+        }
+        row.appendChild(right);
+        list.appendChild(row);
+      }
+    }
+
+    const params = new URLSearchParams(location.search);
+    renderAllLessons(params.get("course"));
+    onAuthStateChanged(auth, () => renderAllLessons(params.get("course")));
+  </script>
+</body>
+</html>

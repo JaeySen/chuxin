@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梅兰芳故事 - 中文阅读理解练习</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+JP&family=Noto+Sans+Vietnamese:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f9f5ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #7b5fe3 0%, #a28df0 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .language-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            background-color: white;
+            color: #7b5fe3;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn.active {
+            background-color: #5a4bcc;
+            color: white;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .text-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: #fefcff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #f0ebff;
+        }
+        
+        .exercises-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .section-title {
+            color: #7b5fe3;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #e8e0f7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.4rem;
+        }
+        
+        .text-line {
+            margin-bottom: 10px;
+        }
+        
+        .chinese-line {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .pinyin-line {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #666;
+            background-color: #f9f7ff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-family: 'Noto Sans SC', sans-serif;
+            display: none;
+        }
+        
+        .vietnamese-line {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #444;
+            background-color: #f0f7ff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-family: 'Noto Sans Vietnamese', sans-serif;
+            display: none;
+        }
+        
+        .exercise-section {
+            margin-bottom: 30px;
+            background-color: #fefcff;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #f0ebff;
+        }
+        
+        .exercise-title {
+            font-size: 1.4rem;
+            color: #5a4bcc;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .score-display {
+            font-size: 1rem;
+            background-color: #e8e3ff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #5a4bcc;
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+        
+        .question.correct {
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .question.incorrect {
+            border-left: 5px solid #F44336;
+        }
+        
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .question-number {
+            background-color: #7b5fe3;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .fill-blank-input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 2px solid #d5c8ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin: 0 5px;
+            transition: border-color 0.3s;
+        }
+        
+        .fill-blank-input:focus {
+            outline: none;
+            border-color: #7b5fe3;
+        }
+        
+        .multiple-choice {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .choice {
+            padding: 12px 15px;
+            border: 2px solid #e8e0f7;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .choice:hover {
+            background-color: #f5f1ff;
+            border-color: #c9bbf7;
+        }
+        
+        .choice.selected {
+            background-color: #e8e3ff;
+            border-color: #7b5fe3;
+        }
+        
+        .choice.correct-answer {
+            background-color: #e8f7f0;
+            border-color: #4CAF50;
+        }
+        
+        .choice.incorrect-answer {
+            background-color: #fdeaea;
+            border-color: #F44336;
+        }
+        
+        .choice-letter {
+            background-color: #d5c8ff;
+            color: #5a4bcc;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .open-answer {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #d5c8ff;
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            margin-top: 10px;
+            transition: border-color 0.3s;
+        }
+        
+        .open-answer:focus {
+            outline: none;
+            border-color: #7b5fe3;
+        }
+        
+        .answer-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .correct-feedback {
+            background-color: #e8f7f0;
+            color: #2e7d32;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .incorrect-feedback {
+            background-color: #fdeaea;
+            color: #c62828;
+            border-left: 4px solid #F44336;
+        }
+        
+        .reference-answer {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #e8f3ff;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+            display: none;
+        }
+        
+        .reference-answer-title {
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 5px;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto 10px;
+            padding: 12px;
+            background: linear-gradient(135deg, #7b5fe3 0%, #a28df0 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(123, 95, 227, 0.3);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(123, 95, 227, 0.4);
+        }
+        
+        .section-result {
+            text-align: center;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .section-result h4 {
+            color: #7b5fe3;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .section-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #7b5fe3;
+            margin: 10px 0;
+        }
+        
+        .hint {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .footer-note {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .text-section, .exercises-section {
+                min-width: 100%;
+            }
+            
+            .language-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 80%;
+                justify-content: center;
+            }
+            
+            .exercise-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> 梅兰芳故事 - 阅读理解练习</h1>
+            <p>本练习旨在帮助中文学习者理解课文内容，提高阅读能力。包含基础题、理解题和思考题三种题型。</p>
+            
+            <div class="language-controls">
+                <button id="chineseBtn" class="btn active">
+                    <i class="fas fa-font"></i> 只显示中文
+                </button>
+                <button id="pinyinBtn" class="btn">
+                    <i class="fas fa-language"></i> 显示拼音
+                </button>
+                <button id="vietnameseBtn" class="btn">
+                    <i class="fas fa-globe-asia"></i> 显示越南语
+                </button>
+            </div>
+        </header>
+        
+        <div class="content-wrapper">
+            <div class="text-section">
+                <h2 class="section-title"><i class="fas fa-file-alt"></i> 课文内容</h2>
+                
+                <div id="textContent">
+                    <!-- 中文课文，每行后面跟着拼音行和越南语行 -->
+                    <div class="text-line">
+                        <div class="chinese-line">梅兰芳是中国最有名的京剧演员。</div>
+                        <div class="pinyin-line">Méi Lánfāng shì Zhōngguó zuì yǒumíng de jīngjù yǎnyuán.</div>
+                        <div class="vietnamese-line">Mai Lan Phương là nghệ sĩ Kinh kịch nổi tiếng nhất Trung Quốc.</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">有一次，她在一家剧场表演，看戏的人们不停地叫好。</div>
+                        <div class="pinyin-line">Yǒu yīcì, tā zài yī jiā jùchǎng biǎoyǎn, kàn xì de rénmen bùtíng de jiàohǎo.</div>
+                        <div class="vietnamese-line">Một lần, cô biểu diễn tại một nhà hát, khán giả không ngừng khen ngợi.</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">忽然，剧场后面有一个老人喊了两声："不好！不好！"</div>
+                        <div class="pinyin-line">Hūrán, jùchǎng hòumiàn yǒu yīgè lǎorén hǎnle liǎng shēng: "Bù hǎo! Bù hǎo!"</div>
+                        <div class="vietnamese-line">Đột nhiên, phía sau nhà hát có một ông già hô to hai tiếng: "Không tốt! Không tốt!"</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">梅兰芳想：我演了这么多年戏，还没有人说过不好。</div>
+                        <div class="pinyin-line">Méi Lánfāng xiǎng: Wǒ yǎnle zhème duō nián xì, hái méiyǒu rén shuōguò bù hǎo.</div>
+                        <div class="vietnamese-line">Mai Lan Phương nghĩ: Tôi diễn nhiều năm như vậy, chưa từng có ai nói không tốt.</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">今天是怎么回事呢？</div>
+                        <div class="pinyin-line">Jīntiān shì zěnme huí shì ne?</div>
+                        <div class="vietnamese-line">Hôm nay là chuyện gì vậy?</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">表演结束以后，她叫人开着自己的车，请那个老人到了她的家里，客客气气地对老人说："给我提意见的人就是我老师。</div>
+                        <div class="pinyin-line">Biǎoyǎn jiéshù yǐhòu, tā jiào rén kāizhe zìjǐ de chē, qǐng nàgè lǎorén dàole tā de jiālǐ, kèkèqìqì de duì lǎorén shuō: "Gěi wǒ tí yìjiàn de rén jiùshì wǒ lǎoshī.</div>
+                        <div class="vietnamese-line">Sau khi buổi biểu diễn kết thúc, cô nhờ người lái xe của mình, mời ông già đó đến nhà cô, lịch sự nói với ông già: "Người cho tôi ý kiến chính là thầy của tôi.</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">您说我演得很不好，请您多帮助。"</div>
+                        <div class="pinyin-line">Nín shuō wǒ yǎn de hěn bù hǎo, qǐng nín duō bāngzhù."</div>
+                        <div class="vietnamese-line">Ông nói tôi diễn rất không tốt, xin ông giúp đỡ nhiều."</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">老先生看到梅兰芳这么客气，就说："表演上楼是七步，下楼是八步，你为什么都是八步呢？"</div>
+                        <div class="pinyin-line">Lǎo xiānshēng kàn dào Méi Lánfāng zhème kèqì, jiù shuō: "Biǎoyǎn shàng lóu shì qī bù, xià lóu shì bā bù, nǐ wèishéme dōu shì bā bù ne?"</div>
+                        <div class="vietnamese-line">Ông lão thấy Mai Lan Phương lịch sự như vậy, liền nói: "Biểu diễn lên lầu là bảy bước, xuống lầu là tám bước, tại sao cô đều là tám bước?"</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">梅兰芳一听，就知道自己表演错了，忙说："谢谢您了，谢谢您了。"</div>
+                        <div class="pinyin-line">Méi Lánfāng yī tīng, jiù zhīdào zìjǐ biǎoyǎn cuòle, máng shuō: "Xièxiè nínle, xièxiè nínle."</div>
+                        <div class="vietnamese-line">Mai Lan Phương nghe xong, liền biết mình diễn sai, vội nói: "Cảm ơn ông, cảm ơn ông."</div>
+                    </div>
+                    <div class="text-line">
+                        <div class="chinese-line">以后，梅兰芳只要去那个地方表演就请那位老先生去看她的戏，请他提意见。</div>
+                        <div class="pinyin-line">Yǐhòu, Méi Lánfāng zhǐyào qù nàgè dìfǎng biǎoyǎn jiù qǐng nà wèi lǎo xiānshēng qù kàn tā de xì, qǐng tā tí yìjiàn.</div>
+                        <div class="vietnamese-line">Sau này, hễ Mai Lan Phương đến nơi đó biểu diễn là mời ông lão đó đi xem vở kịch của cô, mời ông đưa ra ý kiến.</div>
+                    </div>
+                </div>
+                
+                <div class="hint">
+                    <p><i class="fas fa-lightbulb"></i> 提示：点击上方按钮切换课文显示模式，完成下方练习后可以提交查看答案。</p>
+                </div>
+            </div>
+            
+            <div class="exercises-section">
+                <h2 class="section-title"><i class="fas fa-pencil-alt"></i> 阅读理解练习</h2>
+                
+                <!-- 基础题部分 -->
+                <div class="exercise-section">
+                    <h3 class="exercise-title">
+                        <span><i class="fas fa-star"></i> 一、基础题（根据课文内容填空）</span>
+                        <span class="score-display">得分: <span id="basicScore">0</span>/14</span>
+                    </h3>
+                    
+                    <div class="question" id="q1">
+                        <div class="question-title">
+                            <span class="question-number">1</span>
+                            <span>梅兰芳是中国最有名的<span class="fill-blank-space"></span>演员。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="京剧" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>京剧</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q2">
+                        <div class="question-title">
+                            <span class="question-number">2</span>
+                            <span>有一次，梅兰芳在一家<span class="fill-blank-space"></span>表演。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="剧场" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>剧场</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q3">
+                        <div class="question-title">
+                            <span class="question-number">3</span>
+                            <span>看戏的人们不停地<span class="fill-blank-space"></span>。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="叫好" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>叫好</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q4">
+                        <div class="question-title">
+                            <span class="question-number">4</span>
+                            <span>忽然，剧场<span class="fill-blank-space"></span>有一个老人喊了两声。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="后面" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>后面</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q5">
+                        <div class="question-title">
+                            <span class="question-number">5</span>
+                            <span>老人喊的内容是："<span class="fill-blank-space"></span>！<span class="fill-blank-space"></span>！"</span>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <input type="text" class="fill-blank-input" data-answer="不好" placeholder="输入答案" style="width: 70px;">
+                            <input type="text" class="fill-blank-input" data-answer="不好" placeholder="输入答案" style="width: 70px;">
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>不好！不好！</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q6">
+                        <div class="question-title">
+                            <span class="question-number">6</span>
+                            <span>梅兰芳心里想：自己演了<span class="fill-blank-space"></span>多年戏，还没人说过不好。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="这么多" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>这么多</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q7">
+                        <div class="question-title">
+                            <span class="question-number">7</span>
+                            <span>表演结束后，梅兰芳叫人开着<span class="fill-blank-space"></span>的车去请老人。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="自己" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>自己</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q8">
+                        <div class="question-title">
+                            <span class="question-number">8</span>
+                            <span>梅兰芳把老人请到了自己的<span class="fill-blank-space"></span>里。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="家" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>家</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q9">
+                        <div class="question-title">
+                            <span class="question-number">9</span>
+                            <span>梅兰芳客客气气地说："<span class="fill-blank-space"></span>的人就是我老师。"</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="给我提意见" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>给我提意见</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q10">
+                        <div class="question-title">
+                            <span class="question-number">10</span>
+                            <span>老人指出，表演上楼是<span class="fill-blank-space"></span>步，下楼是<span class="fill-blank-space"></span>步。</span>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <input type="text" class="fill-blank-input" data-answer="七" placeholder="输入答案" style="width: 50px;">
+                            <input type="text" class="fill-blank-input" data-answer="八" placeholder="输入答案" style="width: 50px;">
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>七步，八步</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q11">
+                        <div class="question-title">
+                            <span class="question-number">11</span>
+                            <span>梅兰芳走成了上楼、下楼都是<span class="fill-blank-space"></span>步。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="八" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>八</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q12">
+                        <div class="question-title">
+                            <span class="question-number">12</span>
+                            <span>梅兰芳知道自己错了，连忙说："<span class="fill-blank-space"></span>您了，<span class="fill-blank-space"></span>您了。"</span>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <input type="text" class="fill-blank-input" data-answer="谢谢" placeholder="输入答案" style="width: 70px;">
+                            <input type="text" class="fill-blank-input" data-answer="谢谢" placeholder="输入答案" style="width: 70px;">
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>谢谢您了，谢谢您了</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q13">
+                        <div class="question-title">
+                            <span class="question-number">13</span>
+                            <span>以后，梅兰芳只要去那个地方表演，就请那位老先生看她的<span class="fill-blank-space"></span>。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="戏" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>戏</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q14">
+                        <div class="question-title">
+                            <span class="question-number">14</span>
+                            <span>梅兰芳请老先生看她的戏，是为了请他<span class="fill-blank-space"></span>。</span>
+                        </div>
+                        <input type="text" class="fill-blank-input" data-answer="提意见" placeholder="输入答案">
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>提意见</div>
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn basic-submit">
+                        <i class="fas fa-check-circle"></i> 提交基础题答案
+                    </button>
+                    
+                    <div class="section-result" id="basicResult">
+                        <h4>基础题结果</h4>
+                        <div class="section-score" id="basicScoreResult">0/14</div>
+                        <p id="basicResultText"></p>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">点击题目下方的"参考答案"查看正确答案。</p>
+                    </div>
+                </div>
+                
+                <!-- 理解题部分 -->
+                <div class="exercise-section">
+                    <h3 class="exercise-title">
+                        <span><i class="fas fa-check-circle"></i> 二、理解题（选择题）</span>
+                        <span class="score-display">得分: <span id="comprehensionScore">0</span>/12</span>
+                    </h3>
+                    
+                    <div class="question" id="q15">
+                        <div class="question-title">
+                            <span class="question-number">1</span>
+                            <span>老人为什么在剧场喊 "不好！不好！"？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>觉得梅兰芳长得不好看</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>发现梅兰芳的表演有错误</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>故意捣乱</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 发现梅兰芳的表演有错误</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q16">
+                        <div class="question-title">
+                            <span class="question-number">2</span>
+                            <span>梅兰芳请老人到家里的原因是？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>想让老人道歉</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>想向老人请教、请老人提意见</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>想炫耀自己的家</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 想向老人请教、请老人提意见</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q17">
+                        <div class="question-title">
+                            <span class="question-number">3</span>
+                            <span>文中 "给我提意见的人就是我老师" 这句话说明梅兰芳？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="A">
+                                <span class="choice-letter">A</span>
+                                <span>尊重提意见的人</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="A">
+                                <span class="choice-letter">B</span>
+                                <span>想拜老人为学校老师</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="A">
+                                <span class="choice-letter">C</span>
+                                <span>觉得自己没有老师</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>A. 尊重提意见的人</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q18">
+                        <div class="question-title">
+                            <span class="question-number">4</span>
+                            <span>老人指出的具体错误是？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>唱戏跑调了</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>上楼和下楼的步数都错了</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>服装穿错了</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 上楼和下楼的步数都错了</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q19">
+                        <div class="question-title">
+                            <span class="question-number">5</span>
+                            <span>梅兰芳听到老人的话后，第一反应是？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>生气</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>疑惑</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>开心</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 疑惑</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q20">
+                        <div class="question-title">
+                            <span class="question-number">6</span>
+                            <span>从梅兰芳 "客客气气" 对待老人的表现，可以看出她？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="A">
+                                <span class="choice-letter">A</span>
+                                <span>很有礼貌</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="A">
+                                <span class="choice-letter">B</span>
+                                <span>害怕老人</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="A">
+                                <span class="choice-letter">C</span>
+                                <span>想讨好老人</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>A. 很有礼貌</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q21">
+                        <div class="question-title">
+                            <span class="question-number">7</span>
+                            <span>文中的 "老师" 指的是？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>学校里教知识的老师</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>给梅兰芳提意见的老人</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>梅兰芳的京剧师傅</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 给梅兰芳提意见的老人</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q22">
+                        <div class="question-title">
+                            <span class="question-number">8</span>
+                            <span>梅兰芳后来每次去那个地方表演，都请老先生来看戏，是因为？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>想让老先生表扬自己</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>想让老先生继续给自己提意见</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>想请老先生吃饭</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 想让老先生继续给自己提意见</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q23">
+                        <div class="question-title">
+                            <span class="question-number">9</span>
+                            <span>下列哪一项不是梅兰芳的特点？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>谦虚好学</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>骄傲自满</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>尊重他人</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 骄傲自满</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q24">
+                        <div class="question-title">
+                            <span class="question-number">10</span>
+                            <span>老人愿意给梅兰芳提意见，是因为？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="A">
+                                <span class="choice-letter">A</span>
+                                <span>梅兰芳很客气、很真诚</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="A">
+                                <span class="choice-letter">B</span>
+                                <span>老人想出名</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="A">
+                                <span class="choice-letter">C</span>
+                                <span>老人被强迫的</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>A. 梅兰芳很客气、很真诚</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q25">
+                        <div class="question-title">
+                            <span class="question-number">11</span>
+                            <span>梅兰芳表演结束后，是怎么请老人的？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>走路去请</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>叫人开自己的车去请</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>让别人传话请</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. 叫人开自己的车去请</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q26">
+                        <div class="question-title">
+                            <span class="question-number">12</span>
+                            <span>梅兰芳知道自己表演错误后，说了什么？（ ）</span>
+                        </div>
+                        <div class="multiple-choice">
+                            <div class="choice" data-choice="A" data-answer="B">
+                                <span class="choice-letter">A</span>
+                                <span>"你胡说！"</span>
+                            </div>
+                            <div class="choice" data-choice="B" data-answer="B">
+                                <span class="choice-letter">B</span>
+                                <span>"谢谢您了，谢谢您了。"</span>
+                            </div>
+                            <div class="choice" data-choice="C" data-answer="B">
+                                <span class="choice-letter">C</span>
+                                <span>"我没错！"</span>
+                            </div>
+                        </div>
+                        <div class="answer-feedback"></div>
+                        <div class="reference-answer">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>B. "谢谢您了，谢谢您了。"</div>
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn comprehension-submit">
+                        <i class="fas fa-check-circle"></i> 提交理解题答案
+                    </button>
+                    
+                    <div class="section-result" id="comprehensionResult">
+                        <h4>理解题结果</h4>
+                        <div class="section-score" id="comprehensionScoreResult">0/12</div>
+                        <p id="comprehensionResultText"></p>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">点击题目下方的"参考答案"查看正确答案。</p>
+                    </div>
+                </div>
+                
+                <!-- 思考题部分 -->
+                <div class="exercise-section">
+                    <h3 class="exercise-title">
+                        <span><i class="fas fa-brain"></i> 三、思考题（开放性回答）</span>
+                        <span class="score-display">提交后可查看参考答案</span>
+                    </h3>
+                    
+                    <div class="question" id="q27">
+                        <div class="question-title">
+                            <span class="question-number">1</span>
+                            <span>为什么梅兰芳说 "给我提意见的人就是我老师"？结合课文内容说说你的理解。</span>
+                        </div>
+                        <textarea class="open-answer" placeholder="请在这里输入你的回答..."></textarea>
+                        <div class="reference-answer" id="refAnswer27">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>因为梅兰芳认为能够发现她表演中错误并给她提出意见的人，可以帮助她提高表演水平，就像老师一样教导她。这体现了梅兰芳谦虚好学、尊重他人意见的品质。在课文中，老人指出了梅兰芳表演中的错误（上楼和下楼的步数不对），梅兰芳立即虚心接受并感谢老人，把提意见的人当作老师。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q28">
+                        <div class="question-title">
+                            <span class="question-number">2</span>
+                            <span>当老人喊 "不好" 时，梅兰芳心里会想些什么？请你想象一下她的心理活动。</span>
+                        </div>
+                        <textarea class="open-answer" placeholder="请在这里输入你的回答..."></textarea>
+                        <div class="reference-answer" id="refAnswer28">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>梅兰芳可能会想："我演了这么多年戏，观众一直都很喜欢，从来没有人在表演时喊'不好'。今天这位老人为什么这么说呢？难道是我的表演真的有错误？还是老人有什么特别的理解？我应该去问问他，看看他有什么意见，这样我才能知道自己的不足，提高表演水平。"</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q29">
+                        <div class="question-title">
+                            <span class="question-number">3</span>
+                            <span>如果你是剧场里的其他观众，听到老人喊 "不好"，你会怎么想？</span>
+                        </div>
+                        <textarea class="open-answer" placeholder="请在这里输入你的回答..."></textarea>
+                        <div class="reference-answer" id="refAnswer29">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>如果我是在场的其他观众，我可能会想："这位老人为什么喊'不好'呢？梅兰芳的表演明明很精彩啊。也许老人是个懂戏的人，看出了什么我们没看出来的问题。或者他是在故意捣乱？不过梅兰芳是这么有名的演员，她一定会处理好的。"</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q30">
+                        <div class="question-title">
+                            <span class="question-number">4</span>
+                            <span>老人指出梅兰芳的错误后，梅兰芳的表现让你学到了什么？</span>
+                        </div>
+                        <textarea class="open-answer" placeholder="请在这里输入你的回答..."></textarea>
+                        <div class="reference-answer" id="refAnswer30">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>从梅兰芳的表现中，我学到了：1) 要谦虚接受别人的批评和建议；2) 尊重那些给我们提意见的人，因为他们可以帮助我们发现自己的不足；3) 即使是有成就的人，也要保持学习的态度，不断改进自己；4) 对待批评要有礼貌，要感谢那些愿意指出我们错误的人。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q31">
+                        <div class="question-title">
+                            <span class="question-number">5</span>
+                            <span>生活中，你有没有遇到过给你提意见的人？你是怎么对待的？</span>
+                        </div>
+                        <textarea class="open-answer" placeholder="请在这里输入你的回答...（请根据个人经历回答）"></textarea>
+                        <div class="reference-answer" id="refAnswer31">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>（此题无标准答案，以下为示例）在生活中，我的老师/父母/朋友曾经给我提过意见。例如，我的老师说我写字不够认真，我当时不太高兴，但后来按照老师的建议练习写字，现在字写得比以前好多了。从这件事中我学到了，接受别人的意见可以帮助自己进步。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question" id="q32">
+                        <div class="question-title">
+                            <span class="question-number">6</span>
+                            <span>为什么梅兰芳后来每次去那个地方表演都要请老先生？这体现了她的什么品质？</span>
+                        </div>
+                        <textarea class="open-answer" placeholder="请在这里输入你的回答..."></textarea>
+                        <div class="reference-answer" id="refAnswer32">
+                            <div class="reference-answer-title">参考答案：</div>
+                            <div>梅兰芳每次去那个地方表演都请老先生，是因为：1) 她希望老先生继续监督她的表演，确保不再犯同样的错误；2) 她希望从老先生那里获得更多宝贵的意见，不断提高自己的表演水平。这体现了梅兰芳谦虚好学、追求完美、尊重长辈、持续改进的优秀品质。</div>
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn thinking-submit">
+                        <i class="fas fa-check-circle"></i> 提交思考题并查看参考答案
+                    </button>
+                    
+                    <div class="section-result" id="thinkingResult">
+                        <h4>思考题提交完成</h4>
+                        <p>已显示所有思考题的参考答案。请对照参考答案思考自己的回答是否全面。</p>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">思考题没有标准答案，参考答案仅作为理解课文的参考。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            <p>© 2023 中文国际教育练习 | 设计用于中文学习者的阅读理解练习</p>
+        </div>
+    </div>
+
+    <script>
+        // 语言切换功能
+        document.getElementById('chineseBtn').addEventListener('click', function() {
+            setActiveButton('chineseBtn');
+            showText('chinese');
+        });
+        
+        document.getElementById('pinyinBtn').addEventListener('click', function() {
+            setActiveButton('pinyinBtn');
+            showText('pinyin');
+        });
+        
+        document.getElementById('vietnameseBtn').addEventListener('click', function() {
+            setActiveButton('vietnameseBtn');
+            showText('vietnamese');
+        });
+        
+        function setActiveButton(activeId) {
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(activeId).classList.add('active');
+        }
+        
+        function showText(mode) {
+            const textLines = document.querySelectorAll('.text-line');
+            
+            textLines.forEach(line => {
+                const chineseLine = line.querySelector('.chinese-line');
+                const pinyinLine = line.querySelector('.pinyin-line');
+                const vietnameseLine = line.querySelector('.vietnamese-line');
+                
+                // 先全部隐藏
+                chineseLine.style.display = 'block';
+                pinyinLine.style.display = 'none';
+                vietnameseLine.style.display = 'none';
+                
+                // 根据模式显示
+                if (mode === 'pinyin') {
+                    pinyinLine.style.display = 'block';
+                } else if (mode === 'vietnamese') {
+                    vietnameseLine.style.display = 'block';
+                }
+                // 中文模式已经默认显示
+            });
+        }
+        
+        // 初始化显示中文
+        showText('chinese');
+        
+        // 选择题交互
+        const choices = document.querySelectorAll('.choice');
+        choices.forEach(choice => {
+            choice.addEventListener('click', function() {
+                // 清除同问题的其他选择
+                const parentQuestion = this.closest('.question');
+                const allChoicesInQuestion = parentQuestion.querySelectorAll('.choice');
+                allChoicesInQuestion.forEach(c => {
+                    c.classList.remove('selected');
+                });
+                
+                // 选中当前选择
+                this.classList.add('selected');
+            });
+        });
+        
+        // 基础题提交功能
+        document.querySelector('.basic-submit').addEventListener('click', function() {
+            let correctCount = 0;
+            const totalQuestions = 14;
+            
+            // 检查所有基础题
+            const basicQuestions = document.querySelectorAll('.exercise-section:nth-child(2) .question');
+            basicQuestions.forEach((question, index) => {
+                let questionCorrect = true;
+                
+                // 获取该问题中的所有填空输入
+                const inputs = question.querySelectorAll('.fill-blank-input');
+                
+                inputs.forEach(input => {
+                    const correctAnswer = input.getAttribute('data-answer');
+                    const userAnswer = input.value.trim();
+                    
+                    if (userAnswer === correctAnswer) {
+                        input.style.borderColor = '#4CAF50';
+                        input.style.backgroundColor = '#f0fff0';
+                    } else {
+                        input.style.borderColor = '#F44336';
+                        input.style.backgroundColor = '#fff0f0';
+                        questionCorrect = false;
+                    }
+                });
+                
+                // 更新问题状态
+                if (questionCorrect && inputs.length > 0) {
+                    question.classList.add('correct');
+                    question.classList.remove('incorrect');
+                    correctCount++;
+                    
+                    // 显示正确反馈
+                    const feedback = question.querySelector('.answer-feedback');
+                    feedback.innerHTML = '<i class="fas fa-check-circle"></i> 回答正确！';
+                    feedback.className = 'answer-feedback correct-feedback';
+                    feedback.style.display = 'block';
+                } else if (inputs.length > 0) {
+                    question.classList.add('incorrect');
+                    question.classList.remove('correct');
+                    
+                    // 显示错误反馈
+                    const feedback = question.querySelector('.answer-feedback');
+                    feedback.innerHTML = '<i class="fas fa-times-circle"></i> 回答不正确，请查看参考答案。';
+                    feedback.className = 'answer-feedback incorrect-feedback';
+                    feedback.style.display = 'block';
+                }
+                
+                // 显示参考答案
+                const referenceAnswer = question.querySelector('.reference-answer');
+                if (referenceAnswer) {
+                    referenceAnswer.style.display = 'block';
+                }
+            });
+            
+            // 更新分数显示
+            document.getElementById('basicScore').textContent = correctCount;
+            
+            // 显示结果区域
+            const resultDiv = document.getElementById('basicResult');
+            const scoreResult = document.getElementById('basicScoreResult');
+            const resultText = document.getElementById('basicResultText');
+            
+            scoreResult.textContent = `${correctCount}/${totalQuestions}`;
+            
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            if (percentage >= 90) {
+                resultText.textContent = '优秀！你对课文细节掌握得非常好。';
+            } else if (percentage >= 70) {
+                resultText.textContent = '良好！你对课文有较好的理解。';
+            } else if (percentage >= 50) {
+                resultText.textContent = '及格！建议再仔细阅读课文。';
+            } else {
+                resultText.textContent = '需要努力！请重新阅读课文并完成练习。';
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        
+        // 理解题提交功能
+        document.querySelector('.comprehension-submit').addEventListener('click', function() {
+            let correctCount = 0;
+            const totalQuestions = 12;
+            
+            // 检查所有理解题
+            const comprehensionQuestions = document.querySelectorAll('.exercise-section:nth-child(3) .question');
+            comprehensionQuestions.forEach((question, index) => {
+                const selectedChoice = question.querySelector('.choice.selected');
+                const correctChoice = question.querySelector('.choice[data-answer]');
+                const correctAnswer = correctChoice ? correctChoice.getAttribute('data-answer') : null;
+                
+                // 显示参考答案
+                const referenceAnswer = question.querySelector('.reference-answer');
+                if (referenceAnswer) {
+                    referenceAnswer.style.display = 'block';
+                }
+                
+                if (selectedChoice) {
+                    const userChoice = selectedChoice.getAttribute('data-choice');
+                    
+                    if (userChoice === correctAnswer) {
+                        question.classList.add('correct');
+                        question.classList.remove('incorrect');
+                        correctCount++;
+                        
+                        // 标记正确选择
+                        selectedChoice.classList.add('correct-answer');
+                        selectedChoice.classList.remove('incorrect-answer');
+                        
+                        // 显示正确反馈
+                        const feedback = question.querySelector('.answer-feedback');
+                        feedback.innerHTML = '<i class="fas fa-check-circle"></i> 回答正确！';
+                        feedback.className = 'answer-feedback correct-feedback';
+                        feedback.style.display = 'block';
+                    } else {
+                        question.classList.add('incorrect');
+                        question.classList.remove('correct');
+                        
+                        // 标记错误选择
+                        selectedChoice.classList.add('incorrect-answer');
+                        selectedChoice.classList.remove('correct-answer');
+                        
+                        // 标记正确答案
+                        const correctElement = question.querySelector(`.choice[data-choice="${correctAnswer}"]`);
+                        if (correctElement) {
+                            correctElement.classList.add('correct-answer');
+                        }
+                        
+                        // 显示错误反馈
+                        const feedback = question.querySelector('.answer-feedback');
+                        feedback.innerHTML = '<i class="fas fa-times-circle"></i> 回答不正确，请查看参考答案。';
+                        feedback.className = 'answer-feedback incorrect-feedback';
+                        feedback.style.display = 'block';
+                    }
+                } else {
+                    question.classList.add('incorrect');
+                    question.classList.remove('correct');
+                    
+                    // 标记正确答案
+                    const correctElement = question.querySelector(`.choice[data-choice="${correctAnswer}"]`);
+                    if (correctElement) {
+                        correctElement.classList.add('correct-answer');
+                    }
+                    
+                    // 显示未选择反馈
+                    const feedback = question.querySelector('.answer-feedback');
+                    feedback.innerHTML = '<i class="fas fa-exclamation-circle"></i> 未选择答案，请查看参考答案。';
+                    feedback.className = 'answer-feedback incorrect-feedback';
+                    feedback.style.display = 'block';
+                }
+            });
+            
+            // 更新分数显示
+            document.getElementById('comprehensionScore').textContent = correctCount;
+            
+            // 显示结果区域
+            const resultDiv = document.getElementById('comprehensionResult');
+            const scoreResult = document.getElementById('comprehensionScoreResult');
+            const resultText = document.getElementById('comprehensionResultText');
+            
+            scoreResult.textContent = `${correctCount}/${totalQuestions}`;
+            
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            if (percentage >= 90) {
+                resultText.textContent = '优秀！你对课文理解得非常透彻。';
+            } else if (percentage >= 70) {
+                resultText.textContent = '良好！你对课文有较好的理解。';
+            } else if (percentage >= 50) {
+                resultText.textContent = '及格！建议再仔细阅读课文。';
+            } else {
+                resultText.textContent = '需要努力！请重新阅读课文并完成练习。';
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        
+        // 思考题提交功能
+        document.querySelector('.thinking-submit').addEventListener('click', function() {
+            // 显示所有思考题的参考答案
+            const thinkingQuestions = document.querySelectorAll('.exercise-section:nth-child(4) .question');
+            thinkingQuestions.forEach((question, index) => {
+                const referenceAnswer = question.querySelector('.reference-answer');
+                if (referenceAnswer) {
+                    referenceAnswer.style.display = 'block';
+                }
+                
+                // 标记已回答的问题
+                const textarea = question.querySelector('.open-answer');
+                if (textarea.value.trim() !== '') {
+                    textarea.style.borderColor = '#4CAF50';
+                    textarea.style.backgroundColor = '#f0fff0';
+                }
+            });
+            
+            // 显示结果区域
+            const resultDiv = document.getElementById('thinkingResult');
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>

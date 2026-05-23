@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài học: 真父亲假父亲 (Tóm tắt)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .lesson-section {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .hanzi {
+            font-family: "KaiTi", "SimKai", serif; /* Font chữ Hán dễ đọc */
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #1e293b;
+            line-height: 2;
+        }
+        .pinyin {
+            color: #64748b;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .translation {
+            color: #475569;
+            font-style: italic;
+        }
+        .toggle-button {
+            cursor: pointer;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        .toggle-button:hover {
+            background-color: #2563eb;
+        }
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .flashcard {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .card-back {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 1rem;
+        }
+        /* Style cho phần tóm tắt đoạn văn */
+        .summary-container {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .summary-header {
+            background-color: #f1f5f9;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .summary-content {
+            padding: 1.5rem;
+        }
+        .text-block {
+            margin-bottom: 1.5rem;
+        }
+        .highlight {
+            color: #dc2626; /* Màu đỏ cho từ trọng tâm */
+            font-weight: bold;
+        }
+        .auxiliary-text {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: none; /* Ẩn mặc định */
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px dashed #cbd5e1;
+        }
+        .answer {
+            display: none;
+            background-color: #eef2ff;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800">课文二：真父亲假父亲</h1>
+        <p class="text-xl text-slate-600 mt-2">Người cha thật, người cha giả</p>
+    </header>
+
+    <main>
+        <!-- Phần 1: Từ vựng (Flashcards) -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">I. Từ vựng trọng tâm (生词)</h2>
+            <div class="flashcard-container">
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">企鹅</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>qǐ'é</b> (n.)</p><p class="translation">Chim cánh cụt</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">雌</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>cí</b> (adj.)</p><p class="translation">Giống cái (mái)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">孵</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>fū</b> (v.)</p><p class="translation">Ấp (trứng)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">相反</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>xiāngfǎn</b> (adj.)</p><p class="translation">Ngược lại, trái lại</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">假装</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>jiǎzhuāng</b> (v.)</p><p class="translation">Giả vờ, giả bộ</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">细心</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>xìxīn</b> (adj.)</p><p class="translation">Tỉ mỉ, cẩn thận</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">可怜</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>kělián</b> (adj.)</p><p class="translation">Đáng thương</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">实在</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>shízài</b> (adv.)</p><p class="translation">Thực sự, quả thực</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">捡</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>jiǎn</b> (v.)</p><p class="translation">Nhặt, lượm</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 2: Tóm tắt nội dung bài khóa (Đoạn văn tiếng Trung) -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">II. Tóm tắt nội dung bài khóa (内容梗概)</h2>
+            <p class="mb-4 text-gray-600">Đọc đoạn văn tóm tắt dưới đây để nắm bắt nội dung chính:</p>
+            
+            <div class="summary-container">
+                <div class="summary-header">中文段落 (Đoạn văn tiếng Trung)</div>
+                <div class="summary-content">
+                    <p class="hanzi text-justify">
+                        一般来说，鸟儿都<span class="highlight">由</span>雌鸟孵蛋，但企鹅却正<span class="highlight">相反</span>，由雄企鹅孵蛋。不过，<span class="highlight">并不是</span>每只雄企鹅都有蛋。那些没有蛋的雄企鹅会把石头放进“口袋”里，<span class="highlight">假装</span>在孵蛋，而且照顾得很<span class="highlight">细心</span>。如果一只企鹅不小心把真蛋掉在地上，旁边的“假父亲”就会迅速扔掉石头，把真蛋偷过来。可怜的“真父亲”<span class="highlight">实在</span>找不到蛋，只好<span class="highlight">捡</span>起石头，变成了“假父亲”。
+                    </p>
+                    
+                    <button class="text-blue-600 font-semibold mt-4 hover:underline flex items-center" onclick="toggleAuxiliary(this)">
+                        <span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa
+                    </button>
+
+                    <div class="auxiliary-text">
+                        <p class="mb-4"><strong>Pinyin:</strong><br>
+                        Yībān lái shuō, niǎor dōu <b>yóu</b> cí niǎo fū dàn, dàn qǐ'é què zhèng <b>xiāngfǎn</b>, yóu xióng qǐ'é fū dàn. Bùguò, <b>bìng búshì</b> měi zhī xióng qǐ'é dōu yǒu dàn. Nàxiē méiyǒu dàn de xióng qǐ'é huì bǎ shítou fàng jìn “kǒudài” lǐ, <b>jiǎzhuāng</b> zài fū dàn, érqiě zhàogù de hěn <b>xìxīn</b>. Rúguǒ yī zhī qǐ'é bù xiǎoxīn bǎ zhēn dàn diào zài dìshàng, pángbiān de “jiǎ fùqīn” jiù huì xùnsù rēng diào shítou, bǎ zhēn dàn tōu guòlái. Kělián de “zhēn fùqīn” <b>shízài</b> zhǎo bù dào dàn, zhǐhǎo <b>jiǎn</b> qǐ shítou, biàn chéngle “jiǎ fùqīn”.</p>
+                        
+                        <p><strong>Dịch nghĩa:</strong><br>
+                        Nói chung, các loài chim thường do chim mái ấp trứng, nhưng chim cánh cụt thì hoàn toàn <b>ngược lại</b>, do chim trống đảm nhiệm. Tuy nhiên, <b>không phải</b> con chim trống nào cũng có trứng. Những con không có trứng sẽ nhặt đá bỏ vào "túi", <b>giả vờ</b> đang ấp trứng và chăm sóc rất <b>tỉ mỉ</b>. Nếu một con chim cánh cụt vô tình làm rơi trứng thật xuống đất, "người cha giả" bên cạnh sẽ nhanh chóng vứt hòn đá đi, trộm lấy trứng thật. "Người cha thật" đáng thương tìm mãi <b>thực sự</b> không thấy trứng, đành phải <b>nhặt</b> hòn đá lên, trở thành "người cha giả".</p>
+                    </div>
+                </div>
+            </div>
+
+             <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="font-bold text-blue-800 mb-2">🤔 Câu hỏi thảo luận:</h3>
+                <p>Theo bạn, tại sao những con chim cánh cụt không có trứng lại khao khát được ấp trứng đến vậy?</p>
+            </div>
+        </section>
+
+        <!-- Phần 3: Ngữ pháp trọng điểm -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">III. Ngữ pháp trọng điểm (语法)</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">1. 由…… (Yóu...)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Do (ai đó đảm nhiệm/thực hiện). Dùng để nhấn mạnh đối tượng thực hiện hành động.</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 鸟儿们都是<b>由</b>雌鸟孵蛋。</p>
+                    <p class="text-gray-600">(Các loài chim đều là do chim mái ấp trứng.)</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">2. 并不是…… (Bìng búshì...)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Hoàn toàn không phải là... (Dùng để phủ định mạnh mẽ một quan điểm).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 但<b>并不是</b>每只雄企鹅都能得到蛋。</p>
+                    <p class="text-gray-600">(Nhưng hoàn toàn không phải chú chim trống nào cũng có được trứng.)</p>
+                </div>
+            </div>
+             <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">3. 连……都…… (Lián... dōu...)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Ngay cả... cũng... (Biểu thị mức độ cao, nhấn mạnh).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 它们<b>连</b>走路<b>都</b>是慢慢的。</p>
+                    <p class="text-gray-600">(Chúng ngay cả đi đường cũng đi chầm chậm.)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 4: Bài tập vận dụng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">IV. Bài tập vận dụng (练习)</h2>
+            
+            <div class="space-y-4">
+                <p class="font-semibold">Dịch các câu sau sang tiếng Trung:</p>
+                
+                <div>
+                    <p>1. Công việc này do tôi phụ trách (负责 - fùzé).</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans1')">Xem đáp án</button>
+                    <div id="ans1" class="answer">这项工作由我负责。</div>
+                </div>
+
+                <div>
+                    <p>2. Anh ấy hoàn toàn không phải là không thích bạn.</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans2')">Xem đáp án</button>
+                    <div id="ans2" class="answer">他并不是不喜欢你。</div>
+                </div>
+
+                <div>
+                    <p>3. Bài toán này quá khó, ngay cả giáo viên cũng không làm được.</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans3')">Xem đáp án</button>
+                    <div id="ans3" class="answer">这道题太难了，连老师也不会做。</div>
+                </div>
+                
+                 <div>
+                    <p>4. Con mèo đó trông thật đáng thương.</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans4')">Xem đáp án</button>
+                    <div id="ans4" class="answer">那只猫看上去真可怜。</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function toggleCard(btn) {
+            const cardBack = btn.nextElementSibling;
+            if (cardBack.style.display === 'none' || cardBack.style.display === '') {
+                cardBack.style.display = 'block';
+                btn.textContent = 'Ẩn nghĩa';
+            } else {
+                cardBack.style.display = 'none';
+                btn.textContent = 'Xem nghĩa';
+            }
+        }
+
+        function toggleAnswer(id) {
+            const ans = document.getElementById(id);
+            if (ans.style.display === 'none' || ans.style.display === '') {
+                ans.style.display = 'block';
+            } else {
+                ans.style.display = 'none';
+            }
+        }
+
+        function toggleAuxiliary(btn) {
+            const auxText = btn.nextElementSibling;
+            if (auxText.style.display === 'none' || auxText.style.display === '') {
+                auxText.style.display = 'block';
+                btn.innerHTML = '<span class="mr-1">🙈</span> Ẩn Pinyin & Dịch nghĩa';
+            } else {
+                auxText.style.display = 'none';
+                btn.innerHTML = '<span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa';
+            }
+        }
+    </script>
+</body>
+</html>

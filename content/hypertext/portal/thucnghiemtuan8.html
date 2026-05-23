@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Tiếng Trung - Bài Học Về Tình Yêu Thương</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary: #FFB7B2; /* Hồng pastel */
+            --secondary: #B5EAD7; /* Xanh bạc hà */
+            --accent: #E2F0CB; /* Vàng chanh nhạt */
+            --text: #FF9AA2; /* Hồng đậm hơn cho tiêu đề */
+            --dark-text: #66545e;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #FFF5F7;
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-image: radial-gradient(#FFB7B2 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--white);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            color: var(--text);
+            font-size: 2.2rem;
+            margin: 0;
+            padding: 0 10px;
+        }
+
+        header p {
+            color: #888;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .decoration-icon {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.2;
+            color: var(--primary);
+        }
+
+        .d-1 { top: 10px; left: 10px; transform: rotate(-20deg); }
+        .d-2 { bottom: 10px; right: 10px; transform: rotate(20deg); }
+
+        /* Sections */
+        section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+            transition: transform 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+
+        h2 {
+            color: var(--primary);
+            font-family: 'ZCOOL KuaiLe', cursive;
+            border-bottom: 3px dashed var(--secondary);
+            padding-bottom: 10px;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Vocabulary Cards */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .vocab-card {
+            background: var(--accent);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            perspective: 1000px;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vocab-card:hover {
+            box-shadow: 0 5px 15px rgba(181, 234, 215, 0.6);
+        }
+
+        .vocab-content {
+            width: 100%;
+        }
+
+        .word {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark-text);
+            display: block;
+        }
+
+        .pinyin {
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .meaning, .example {
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .vocab-card.active {
+            background: var(--secondary);
+        }
+
+        .vocab-card.active .meaning,
+        .vocab-card.active .example {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .vocab-card.active .example {
+            margin-top: 8px;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: #444;
+            background: rgba(255,255,255,0.5);
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hint-text {
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Summary Section */
+        .summary-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .summary-box {
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .cn-summary {
+            background-color: #E0F7FA;
+            border-left: 5px solid #26C6DA;
+        }
+
+        .vn-summary {
+            background-color: #FFF3E0;
+            border-left: 5px solid #FFB74D;
+        }
+
+        .highlight-word {
+            color: #E91E63;
+            font-weight: bold;
+            background: rgba(233, 30, 99, 0.1);
+            padding: 0 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .highlight-word:hover {
+            background: rgba(233, 30, 99, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Grammar Section */
+        .grammar-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .grammar-title {
+            font-weight: bold;
+            color: #FF6F91;
+            font-size: 1.1rem;
+        }
+
+        .grammar-example {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            margin-top: 10px;
+        }
+
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 10px 15px;
+            border: 2px solid var(--primary);
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .option-btn.correct {
+            background: #81C784;
+            border-color: #81C784;
+            color: white;
+        }
+
+        .option-btn.wrong {
+            background: #E57373;
+            border-color: #E57373;
+            color: white;
+            animation: shake 0.5s;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .summary-container {
+                flex-direction: row;
+            }
+            .summary-box {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <i class="fas fa-gift decoration-icon d-1"></i>
+        <i class="fas fa-heart decoration-icon d-2"></i>
+        <h1>Bài Ôn Tập: Món Quà Của Tình Yêu</h1>
+        <p>Câu chuyện cảm động về tình mẫu tử</p>
+    </header>
+
+    <!-- Vocabulary Section -->
+    <section id="vocabulary">
+        <h2><i class="fas fa-book-open"></i> Từ Mới (生词)</h2>
+        <p class="hint-text">(Chạm vào thẻ để xem nghĩa và ví dụ)</p>
+        <div class="vocab-grid" id="vocab-grid">
+            <!-- Vocab cards generated by JS -->
+        </div>
+    </section>
+
+    <!-- Summary Section -->
+    <section id="summary">
+        <h2><i class="fas fa-file-alt"></i> Tóm Tắt Bài Học</h2>
+        <div class="summary-container">
+            <div class="summary-box cn-summary">
+                <h3>🇨🇳 Tóm tắt Tiếng Trung</h3>
+                <p>
+                    一个中年人想给 <span class="highlight-word" onclick="highlightVocab(0)">故乡</span> 的母亲订花。
+                    他遇到一个小女孩买不起 <span class="highlight-word" onclick="highlightVocab(1)">玫瑰花</span> 送给妈妈，就帮她买了花并送她回家。
+                    没想到小女孩的妈妈已经 <span class="highlight-word" onclick="highlightVocab(2)">去世</span> 了，住在 <span class="highlight-word" onclick="highlightVocab(3)">墓园</span> 里。
+                    中年人很 <span class="highlight-word" onclick="highlightVocab(4)">心疼</span>，决定 <span class="highlight-word" onclick="highlightVocab(5)">亲手</span> 把花送给自己的母亲。
+                </p>
+            </div>
+            <div class="summary-box vn-summary">
+                <h3>🇻🇳 Giải thích nội dung</h3>
+                <p>
+                    Một người đàn ông định đặt hoa tặng mẹ ở quê. Ông gặp một cô bé đang khóc vì không đủ tiền mua hoa hồng cho mẹ. Ông giúp cô bé mua hoa và chở về, nhưng bất ngờ thay, họ đến một nghĩa trang.
+                    Hóa ra mẹ cô bé đã mất. Xúc động trước tấm lòng hiếu thảo của cô bé, người đàn ông hủy đơn đặt hoa và tự mình lái xe 5 tiếng về quê để tận tay trao hoa cho mẹ mình.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grammar Section -->
+    <section id="grammar">
+        <h2><i class="fas fa-pen-fancy"></i> Ngữ Pháp (语法)</h2>
+        
+        <div class="grammar-item">
+            <div class="grammar-title">1. Cấu trúc: 正要……时…… (Zhèng yào... shí...)</div>
+            <p><strong>Nghĩa:</strong> Đang định (làm gì đó) ... thì ...</p>
+            <p>Diễn tả một hành động sắp xảy ra thì có một hành động khác xen vào.</p>
+            <div class="grammar-example">
+                Ví dụ: 他<strong>正要</strong>走进店<strong>时</strong>，发现有个小女孩儿坐在路上哭。<br>
+                (Anh ấy đang định bước vào cửa hàng thì phát hiện một cô bé ngồi khóc bên đường.)
+            </div>
+        </div>
+
+        <div class="grammar-item">
+            <div class="grammar-title">2. Giới từ: 为了…… (Wèile...)</div>
+            <p><strong>Nghĩa:</strong> Để... / Vì... (Chỉ mục đích)</p>
+            <p>Thường đặt ở đầu câu hoặc phân câu đầu tiên.</p>
+            <div class="grammar-example">
+                Ví dụ: <strong>为了</strong>给妈妈送上一朵玫瑰花，她要走很远的路。<br>
+                (Để tặng mẹ một đóa hồng, cô bé phải đi một quãng đường rất xa.)
+            </div>
+        </div>
+
+         <div class="grammar-item">
+            <div class="grammar-title">3. Phó từ: 竟然 (Jìngrán)</div>
+            <p><strong>Nghĩa:</strong> Mà lại / Lại / Vậy mà (Biểu thị sự ngạc nhiên, bất ngờ)</p>
+            <div class="grammar-example">
+                Ví dụ: 最后<strong>竟然</strong>来到了墓园。<br>
+                (Cuối cùng vậy mà lại đi đến nghĩa trang.)
+            </div>
+        </div>
+    </section>
+
+    <!-- Practice Section -->
+    <section id="practice">
+        <h2><i class="fas fa-gamepad"></i> Luyện Tập (练习)</h2>
+        <div class="quiz-container" id="quiz-area">
+            <!-- Quiz items generated by JS -->
+        </div>
+    </section>
+
+    <footer>
+        <p>Hãy yêu thương cha mẹ khi còn có thể! ❤️</p>
+    </footer>
+</div>
+
+<script>
+    // DATA CONFIGURATION
+    
+    const vocabularyList = [
+        {
+            word: "故乡",
+            pinyin: "Gùxiāng",
+            meaning: "Quê hương",
+            example: "虽然在国外生活，但我很想念故乡。(Tuy sống ở nước ngoài nhưng tôi rất nhớ quê hương.)"
+        },
+        {
+            word: "玫瑰花",
+            pinyin: "Méiguīhuā",
+            meaning: "Hoa hồng",
+            example: "我想买一朵玫瑰花送给妈妈。(Con muốn mua một bông hồng tặng mẹ.)"
+        },
+        {
+            word: "去世",
+            pinyin: "Qùshì",
+            meaning: "Qua đời, mất",
+            example: "他的爷爷上个月去世了。(Ông của anh ấy đã qua đời tháng trước.)"
+        },
+        {
+            word: "墓园",
+            pinyin: "Mùyuán",
+            meaning: "Nghĩa trang, khu mộ",
+            example: "清明节我们去墓园扫墓。(Tết Thanh minh chúng tôi đi tảo mộ ở nghĩa trang.)"
+        },
+        {
+            word: "心疼",
+            pinyin: "Xīnténg",
+            meaning: "Đau lòng, thương xót",
+            example: "看着孩子哭，我很心疼。(Nhìn đứa bé khóc, tôi rất đau lòng.)"
+        },
+        {
+            word: "亲手",
+            pinyin: "Qīnshǒu",
+            meaning: "Tự tay, tận tay",
+            example: "这是我亲手做的蛋糕。(Đây là chiếc bánh tôi tự tay làm.)"
+        }
+    ];
+
+    const quizData = [
+        {
+            question: "Người đàn ông ban đầu định làm gì?",
+            options: ["Đi thăm bạn bè", "Đặt hoa gửi về cho mẹ", "Đi mua ô tô mới"],
+            correct: 1 
+        },
+        {
+            question: "Tại sao cô bé lại khóc?",
+            options: ["Bị lạc đường", "Không đủ tiền mua hoa hồng", "Bị ngã đau"],
+            correct: 1
+        },
+        {
+            question: "Điền từ thích hợp: 为了给母亲送花，她走了___路。",
+            options: ["很短的", "很远的", "很容易的"],
+            correct: 1
+        },
+        {
+            question: "Từ nào có nghĩa là 'Qua đời'?",
+            options: ["故乡 (Gùxiāng)", "去世 (Qùshì)", "心疼 (Xīnténg)"],
+            correct: 1
+        },
+        {
+            question: "Cuối cùng, người đàn ông đã quyết định làm gì?",
+            options: ["Về nhà ngủ", "Gửi tiền cho mẹ", "Tự lái xe về quê tặng hoa cho mẹ"],
+            correct: 2
+        }
+    ];
+
+    // RENDER VOCABULARY
+    const vocabGrid = document.getElementById('vocab-grid');
+    
+    vocabularyList.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'vocab-card';
+        // Add ID for specific targeting if needed
+        card.id = `vocab-${index}`;
+        card.innerHTML = `
+            <div class="vocab-content">
+                <span class="word">${item.word}</span>
+                <span class="pinyin">${item.pinyin}</span>
+                <div class="meaning">${item.meaning}</div>
+                <div class="example">${item.example}</div>
+            </div>
+        `;
+        
+        // Toggle card flip/expand effect
+        card.addEventListener('click', () => {
+            // Close other cards
+            document.querySelectorAll('.vocab-card').forEach(c => {
+                if(c !== card) c.classList.remove('active');
+            });
+            card.classList.toggle('active');
+        });
+
+        vocabGrid.appendChild(card);
+    });
+
+    // Function to highlight vocab from summary text
+    window.highlightVocab = function(index) {
+        const targetCard = document.getElementById(`vocab-${index}`);
+        if(targetCard) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Close others
+            document.querySelectorAll('.vocab-card').forEach(c => c.classList.remove('active'));
+            
+            // Open this one with a slight delay for visual effect
+            setTimeout(() => {
+                targetCard.classList.add('active');
+                // Optional: Add a temporary flash effect
+                targetCard.style.transform = "scale(1.05)";
+                setTimeout(() => targetCard.style.transform = "scale(1)", 300);
+            }, 500);
+        }
+    }
+
+    // RENDER QUIZ
+    const quizArea = document.getElementById('quiz-area');
+
+    quizData.forEach((q, qIndex) => {
+        const qContainer = document.createElement('div');
+        qContainer.style.marginBottom = '20px';
+        qContainer.style.background = '#fff';
+        qContainer.style.padding = '15px';
+        qContainer.style.borderRadius = '10px';
+        qContainer.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+        
+        const qTitle = document.createElement('div');
+        qTitle.className = 'question';
+        qTitle.textContent = `Câu ${qIndex + 1}: ${q.question}`;
+        
+        const optsDiv = document.createElement('div');
+        optsDiv.className = 'options';
+        
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+        feedback.id = `feedback-${qIndex}`;
+
+        q.options.forEach((opt, oIndex) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            
+            btn.addEventListener('click', function() {
+                // Disable all buttons in this question
+                const allBtns = optsDiv.querySelectorAll('.option-btn');
+                allBtns.forEach(b => b.disabled = true);
+
+                if (oIndex === q.correct) {
+                    this.classList.add('correct');
+                    feedback.textContent = "🎉 Chính xác! Bạn hiểu bài rất tốt!";
+                    feedback.style.color = "#4CAF50";
+                } else {
+                    this.classList.add('wrong');
+                    // Highlight correct answer
+                    allBtns[q.correct].classList.add('correct');
+                    feedback.textContent = "😅 Tiếc quá! Đáp án đúng là màu xanh nhé.";
+                    feedback.style.color = "#F44336";
+                }
+            });
+            
+            optsDiv.appendChild(btn);
+        });
+
+        qContainer.appendChild(qTitle);
+        qContainer.appendChild(optsDiv);
+        qContainer.appendChild(feedback);
+        quizArea.appendChild(qContainer);
+    });
+
+</script>
+
+</body>
+</html>

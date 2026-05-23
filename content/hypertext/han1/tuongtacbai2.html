@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực Hành Hội Thoại Tiếng Trung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff;
+        }
+        .hanzi {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        .pinyin {
+            font-size: 1.25rem;
+            color: #1d4ed8;
+        }
+        .vietnamese {
+            font-size: 1.1rem;
+            color: #64748b;
+            font-style: italic;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+            min-height: 350px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: white;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #2563eb;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        .btn-secondary {
+            background-color: #4ade80;
+        }
+        .btn-secondary:hover {
+            background-color: #22c55e;
+        }
+        .topic-btn {
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+            border: 1px solid #bae6fd;
+        }
+        .topic-btn.active {
+            background-color: #0369a1;
+            color: white;
+            border-color: #0369a1;
+        }
+        .dialogue-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .dialogue-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-800">Bài 2: 汉语不太难</h1>
+            <p class="text-lg text-slate-600 mt-2">Phiếu Luyện Tập Hội Thoại Tương Tác</p>
+        </header>
+
+        <!-- Topic Selection -->
+        <div id="topic-selector" class="flex flex-wrap justify-center gap-3 mb-8">
+            <!-- Topic buttons will be inserted here by JS -->
+        </div>
+
+        <!-- Dialogue Practice Area -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Student A Panel -->
+            <div class="card flex flex-col justify-between items-center text-center">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4">Học sinh A (Người hỏi)</h2>
+                <div id="student-a-content" class="flex-grow flex flex-col justify-center items-center">
+                    <!-- Content for Student A will be inserted here -->
+                </div>
+                <button id="ask-btn" class="btn btn-primary mt-6">Bắt đầu hỏi</button>
+            </div>
+
+            <!-- Student B Panel -->
+            <div class="card flex flex-col justify-between items-center text-center">
+                <h2 class="text-2xl font-bold text-green-700 mb-4">Học sinh B (Người trả lời)</h2>
+                <div id="student-b-content" class="flex-grow flex flex-col justify-center items-center">
+                    <!-- Content for Student B will be inserted here -->
+                </div>
+                <div id="answer-options" class="mt-6 flex flex-wrap justify-center gap-3">
+                    <!-- Answer buttons will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Dữ liệu hội thoại dựa trên bài giảng ---
+        const dialogues = [
+            {
+                topic: "Hỏi thăm chung",
+                studentA: {
+                    hanzi: "你忙吗？",
+                    pinyin: "Nǐ máng ma?",
+                    vietnamese: "Bạn có bận không?"
+                },
+                studentB: [
+                    { hanzi: "我很忙。", pinyin: "Wǒ hěn máng.", vietnamese: "Tôi rất bận." },
+                    { hanzi: "我不忙。", pinyin: "Wǒ bù máng.", vietnamese: "Tôi không bận." },
+                    { hanzi: "不太忙。", pinyin: "Bú tài máng.", vietnamese: "Tôi không bận lắm." }
+                ]
+            },
+            {
+                topic: "Độ khó tiếng Hán",
+                studentA: {
+                    hanzi: "汉语难吗？",
+                    pinyin: "Hànyǔ nán ma?",
+                    vietnamese: "Tiếng Hán có khó không?"
+                },
+                studentB: [
+                    { hanzi: "不太难。", pinyin: "Bú tài nán.", vietnamese: "Không khó lắm." },
+                    { hanzi: "很难。", pinyin: "Hěn nán.", vietnamese: "Rất khó." },
+                    { hanzi: "不难。", pinyin: "Bù nán.", vietnamese: "Không khó." }
+                ]
+            },
+             {
+                topic: "Hỏi thăm sức khỏe",
+                studentA: {
+                    hanzi: "你累吗？",
+                    pinyin: "Nǐ lèi ma?",
+                    vietnamese: "Bạn có mệt không?"
+                },
+                studentB: [
+                    { hanzi: "我很累。", pinyin: "Wǒ hěn lèi.", vietnamese: "Tôi rất mệt." },
+                    { hanzi: "我不累。", pinyin: "Wǒ bù lèi.", vietnamese: "Tôi không mệt." },
+                    { hanzi: "不太累。", pinyin: "Bú tài lèi.", vietnamese: "Tôi không mệt lắm." }
+                ]
+            },
+            {
+                topic: "Hỏi về anh chị em",
+                studentA: {
+                    hanzi: "你有哥哥吗？",
+                    pinyin: "Nǐ yǒu gēge ma?",
+                    vietnamese: "Bạn có anh trai không?"
+                },
+                studentB: [
+                    { hanzi: "我有哥哥。", pinyin: "Wǒ yǒu gēge.", vietnamese: "Tôi có anh trai." },
+                    { hanzi: "我没有哥哥。", pinyin: "Wǒ méiyǒu gēge.", vietnamese: "Tôi không có anh trai." }
+                ]
+            },
+            {
+                topic: "Hỏi về ba mẹ",
+                studentA: {
+                    hanzi: "你有爸爸妈妈吗？",
+                    pinyin: "Nǐ yǒu bàba māma ma?",
+                    vietnamese: "Bạn có ba mẹ không?"
+                },
+                studentB: [
+                    { hanzi: "我有。", pinyin: "Wǒ yǒu.", vietnamese: "Tôi có." },
+                    { hanzi: "我没有。", pinyin: "Wǒ méiyǒu.", vietnamese: "Tôi không có." }
+                ]
+            },
+            {
+                topic: "Tình hình của ba",
+                studentA: {
+                    hanzi: "你爸爸好吗？",
+                    pinyin: "Nǐ bàba hǎo ma?",
+                    vietnamese: "Ba của bạn khỏe không?"
+                },
+                studentB: [
+                    { hanzi: "他很好。", pinyin: "Tā hěn hǎo.", vietnamese: "Ông ấy rất khỏe." },
+                    { hanzi: "他不太好。", pinyin: "Tā bú tài hǎo.", vietnamese: "Ông ấy không khỏe lắm." }
+                ]
+            },
+            {
+                topic: "Tình hình của mẹ",
+                studentA: {
+                    hanzi: "你妈妈忙吗？",
+                    pinyin: "Nǐ māma máng ma?",
+                    vietnamese: "Mẹ của bạn có bận không?"
+                },
+                studentB: [
+                    { hanzi: "她很忙。", pinyin: "Tā hěn máng.", vietnamese: "Bà ấy rất bận." },
+                    { hanzi: "她不忙。", pinyin: "Tā bù máng.", vietnamese: "Bà ấy không bận." }
+                ]
+            }
+        ];
+
+        // --- Lấy các phần tử DOM ---
+        const studentAContent = document.getElementById('student-a-content');
+        const studentBContent = document.getElementById('student-b-content');
+        const askBtn = document.getElementById('ask-btn');
+        const answerOptions = document.getElementById('answer-options');
+        const topicSelector = document.getElementById('topic-selector');
+
+        let currentTopicIndex = 0;
+
+        // --- Hàm để hiển thị nội dung ---
+        function displayContent(element, { hanzi, pinyin, vietnamese }) {
+            element.innerHTML = `
+                <div class="dialogue-content">
+                    <p class="hanzi">${hanzi}</p>
+                    <p class="pinyin">${pinyin}</p>
+                    <p class="vietnamese">${vietnamese}</p>
+                </div>
+            `;
+            // Trigger animation
+            setTimeout(() => {
+                const content = element.querySelector('.dialogue-content');
+                if (content) {
+                    content.classList.add('visible');
+                }
+            }, 50);
+        }
+        
+        // --- Hàm để reset màn hình ---
+        function resetBoard() {
+            studentAContent.innerHTML = '<p class="text-slate-400">Nhấn nút "Bắt đầu hỏi" để hiển thị câu hỏi.</p>';
+            studentBContent.innerHTML = '<p class="text-slate-400">Câu trả lời sẽ hiện ở đây.</p>';
+            answerOptions.innerHTML = '';
+            askBtn.disabled = false;
+        }
+
+        // --- Hàm để tải một chủ đề hội thoại ---
+        function loadTopic(topicIndex) {
+            currentTopicIndex = topicIndex;
+            resetBoard();
+            
+            // Cập nhật trạng thái active cho nút chủ đề
+            document.querySelectorAll('.topic-btn').forEach((btn, index) => {
+                if (index === topicIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // --- Xử lý sự kiện ---
+
+        // Sự kiện khi nhấn nút "Bắt đầu hỏi"
+        askBtn.addEventListener('click', () => {
+            const dialogue = dialogues[currentTopicIndex];
+            displayContent(studentAContent, dialogue.studentA);
+            
+            // Xóa các nút trả lời cũ và tạo nút mới
+            answerOptions.innerHTML = '';
+            dialogue.studentB.forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-secondary';
+                btn.textContent = answer.hanzi;
+                btn.onclick = () => {
+                    displayContent(studentBContent, answer);
+                };
+                answerOptions.appendChild(btn);
+            });
+            askBtn.disabled = true; // Vô hiệu hóa nút sau khi hỏi
+        });
+
+        // --- Khởi tạo ---
+        function initialize() {
+            // Tạo các nút chọn chủ đề
+            dialogues.forEach((dialogue, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn topic-btn';
+                btn.textContent = dialogue.topic;
+                btn.onclick = () => loadTopic(index);
+                topicSelector.appendChild(btn);
+            });
+
+            // Tải chủ đề đầu tiên
+            loadTopic(0);
+        }
+
+        // Chạy hàm khởi tạo khi trang được tải xong
+        document.addEventListener('DOMContentLoaded', initialize);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Quét Mặt</title>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; background: #222; color: white; font-family: sans-serif; }
+        video { border: 3px solid #0f0; border-radius: 10px; margin-top: 20px; }
+        #message { font-size: 24px; margin-top: 10px; color: yellow; }
+    </style>
+</head>
+<body>
+
+    <h2>Hệ thống Bảo mật</h2>
+    <div id="message">Đang khởi động camera...</div>
+    <video id="video" width="640" height="480" autoplay muted></video>
+
+    <script>
+        // --- QUAN TRỌNG: DÁN LINK APP SCRIPT CỦA BẠN VÀO DƯỚI ĐÂY ---
+        const API_URL = 'https://script.google.com/macros/s/AKfycbw0UuBeAYAEUcmx81DU6S1MxpJBm_VOutbkBvTGzl__bV2FvEPAtllTcBpn0gizsWEa/exec'; 
+        const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+        
+        const video = document.getElementById('video');
+        const msg = document.getElementById('message');
+        let labeledDescriptors = [];
+
+        // 1. Tải Model và Dữ liệu cùng lúc
+        Promise.all([
+            faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
+            faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+            faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+            fetch(API_URL).then(res => res.json()) // Lấy dữ liệu từ Sheet
+        ]).then(values => {
+            const users = values[3]; // Dữ liệu người dùng từ Sheet
+            
+            // Chuyển dữ liệu Sheet thành định dạng AI hiểu
+            labeledDescriptors = users.map(user => {
+                return new faceapi.LabeledFaceDescriptors(user.name, [new Float32Array(user.descriptor)]);
+            });
+
+            msg.innerText = "Đã tải dữ liệu xong. Đang bật Camera...";
+            startVideo();
+        }).catch(err => {
+            console.error(err);
+            msg.innerText = "Lỗi: Không tải được dữ liệu hoặc Model.";
+        });
+
+        function startVideo() {
+            navigator.mediaDevices.getUserMedia({ video: {} })
+                .then(stream => { video.srcObject = stream; })
+                .catch(err => console.error(err));
+        }
+
+        // Khi Camera chạy thì bắt đầu quét
+        video.addEventListener('play', () => {
+            const canvas = faceapi.createCanvasFromMedia(video);
+            document.body.append(canvas);
+            const displaySize = { width: video.width, height: video.height };
+            faceapi.matchDimensions(canvas, displaySize);
+            
+            // Tạo bộ so sánh
+            const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.6);
+
+            setInterval(async () => {
+                const detections = await faceapi.detectAllFaces(video).withFaceLandmarks().withFaceDescriptors();
+                const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+
+                resizedDetections.forEach(detection => {
+                    const bestMatch = faceMatcher.findBestMatch(detection.descriptor);
+                    
+                    // Vẽ khung
+                    const box = detection.detection.box;
+                    const drawBox = new faceapi.draw.DrawBox(box, { label: bestMatch.toString() });
+                    drawBox.draw(canvas);
+
+                    if(bestMatch.label !== 'unknown') {
+                        msg.innerText = "Xin chào: " + bestMatch.label;
+                        msg.style.color = "#0f0";
+                        // MỞ KHÓA TẠI ĐÂY (Ví dụ chuyển trang)
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

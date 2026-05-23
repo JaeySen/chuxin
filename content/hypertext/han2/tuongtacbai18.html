@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập phân vai sáng tạo - Tiếng Trung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .card:hover:not(.no-hover) {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .btn {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-primary { background-color: #3b82f6; color: white; }
+        .btn-primary:hover { background-color: #2563eb; }
+        .btn-secondary { background-color: #6b7280; color: white; }
+        .btn-secondary:hover { background-color: #4b5563; }
+        
+        .suggestion-item { background-color: #f9fafb; border-left: 4px solid #9ca3af; }
+        .keyword { color: #ef4444; font-weight: bold; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div id="app-container" class="max-w-4xl mx-auto">
+
+        <!-- Màn hình 1: Chọn Tình Huống -->
+        <div id="scenario-selection" class="card p-8 no-hover">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Chọn Tình Huống Giao Tiếp</h1>
+            <p class="text-center text-gray-500 mb-8">Hãy chọn một trong các kịch bản dưới đây để bắt đầu.</p>
+            <div id="scenario-list" class="grid md:grid-cols-3 gap-6"></div>
+        </div>
+
+        <!-- Màn hình 2: Chọn Vai Diễn -->
+        <div id="role-selection" class="card p-8 hidden no-hover">
+            <h1 id="role-selection-title" class="text-3xl font-bold text-center text-gray-800 mb-2"></h1>
+            <p class="text-center text-gray-500 mb-4">Mỗi học viên hãy chọn một vai diễn.</p>
+            <div class="flex justify-center items-center space-x-4 mb-8">
+                 <span class="font-semibold text-gray-700">Số người tham gia:</span>
+                 <button onclick="setPlayerCount(2)" id="player-count-2" class="btn bg-gray-200">2 người</button>
+                 <button onclick="setPlayerCount(3)" id="player-count-3" class="btn bg-gray-200">3 người</button>
+            </div>
+            <div id="role-list" class="flex justify-center gap-4"></div>
+             <div class="text-center mt-8">
+                <button onclick="showScreen('scenario-selection')" class="btn btn-secondary">Quay lại</button>
+            </div>
+        </div>
+
+        <!-- Màn hình 3: Giao Diện Nhập Vai Sáng Tạo -->
+        <div id="role-play-view" class="card p-6 md:p-8 hidden no-hover">
+            <div class="flex flex-col md:flex-row justify-between md:items-center mb-4 border-b pb-4">
+                <div>
+                    <h1 id="rp-scenario-title" class="text-2xl md:text-3xl font-bold text-gray-800"></h1>
+                    <p id="rp-your-role" class="text-lg font-semibold text-blue-600 mt-1"></p>
+                </div>
+                <button onclick="goBackToRoleSelection()" class="btn btn-secondary mt-4 md:mt-0">Đổi vai</button>
+            </div>
+            
+            <div>
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <h3 class="font-bold text-gray-700 mb-2">Bối cảnh:</h3>
+                    <p id="rp-scenario-context" class="text-sm text-gray-600"></p>
+                </div>
+                <h3 class="font-bold text-gray-700 mb-2">Gợi ý cho vai của bạn (句式建议):</h3>
+                <div id="rp-suggestions" class="space-y-3">
+                    <!-- Các gợi ý sẽ được thêm vào đây -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scenarios = {
+            s1: {
+                title: "Nhờ vả ở Ký túc xá",
+                context: "Tiểu Minh chuẩn bị ra ngoài đi siêu thị. Tiểu Lan và Tiểu Vương thấy vậy liền nhờ mua đồ và gửi giúp bưu kiện.",
+                characters: {
+                    A: { name: "小明 (Tiểu Minh)", desc: "Người đi siêu thị" },
+                    B: { name: "小兰 (Tiểu Lan)", desc: "Người nhờ gửi bưu kiện" },
+                    C: { name: "小王 (Tiểu Vương)", desc: "Người vừa đi du lịch về" },
+                },
+                suggestions: {
+                    A: [
+                        { hanzi: '我要出门，去...', pinyin: 'Wǒ yào chūmén, qù...', vietnamese: 'Tớ sắp ra ngoài, đi...' },
+                        { hanzi: '你需要我买什么吗？', pinyin: 'Nǐ xūyào wǒ mǎi shénme ma?', vietnamese: 'Cậu cần tớ mua gì không?' },
+                        { hanzi: '东西有点儿多，我记一下。', pinyin: 'Dōngxi yǒudiǎnr duō, wǒ jì yíxià.', vietnamese: 'Hơi nhiều đồ, để tớ ghi lại.' },
+                        { hanzi: '没问题 / 当然可以。', pinyin: 'Méi wèntí / Dāngrán kěyǐ.', vietnamese: 'Không vấn đề / Đương nhiên là được.' },
+                        { hanzi: '大家<span class="keyword">不用</span>客气。', pinyin: 'Dàjiā búyòng kèqi.', vietnamese: 'Mọi người không cần khách sáo.' },
+                    ],
+                    B: [
+                        { hanzi: '等一下！你<span class="keyword">顺便</span>能<span class="keyword">替</span>我...吗？', pinyin: 'Děng yíxià! Nǐ shùnbiàn néng tì wǒ... ma?', vietnamese: 'Đợi chút! Cậu nhân tiện có thể làm giúp tớ... không?' },
+                        { hanzi: '你<span class="keyword">替</span>我寄一下这个<span class="keyword">包裹</span>。', pinyin: 'Nǐ tì wǒ jì yíxià zhège bāoguǒ.', vietnamese: 'Cậu gửi giúp tớ cái bưu kiện này.' },
+                        { hanzi: '再帮我买...', pinyin: 'Zài bāng wǒ mǎi...', vietnamese: 'Mua giúp tớ thêm...' },
+                        { hanzi: '这是<span class="keyword">包裹</span>和钱。', pinyin: 'Zhè shì bāoguǒ hé qián.', vietnamese: 'Đây là bưu kiện và tiền.' },
+                    ],
+                    C: [
+                        { hanzi: '正好！你<span class="keyword">顺便</span>帮我<span class="keyword">拿</span>...', pinyin: 'Zhènghǎo! Nǐ shùnbiàn bāng wǒ ná...', vietnamese: 'Đúng lúc quá! Cậu nhân tiện lấy giúp tớ...' },
+                        { hanzi: '我刚从<span class="keyword">上海</span><span class="keyword">旅行</span>回来。', pinyin: 'Wǒ gāng cóng Shànghǎi lǚxíng huílái.', vietnamese: 'Tớ vừa đi du lịch Thượng Hải về.' },
+                        { hanzi: '我的钱回来再给你。', pinyin: 'Wǒ de qián huílái zài gěi nǐ.', vietnamese: 'Tiền của tớ lúc về sẽ đưa cậu.' },
+                        { hanzi: '多谢啦！/ 太麻烦你了！', pinyin: 'Duōxiè la! / Tài máfan nǐ le!', vietnamese: 'Cảm ơn nhiều! / Làm phiền cậu quá!' },
+                    ]
+                }
+            },
+            s2: {
+                title: "Lên kế hoạch du lịch",
+                context: "Tiểu Lan và Tiểu Vương đang muốn đi du lịch Thượng Hải. Họ hỏi Tiểu Minh, người đã từng đến đó, để xin kinh nghiệm.",
+                suggestions: {
+                    A: [
+                        { hanzi: '我去年刚去过，可以给你们一些建议。', pinyin: 'Wǒ qùnián gāng qù guo, kěyǐ gěi nǐmen yīxiē jiànyì.', vietnamese: 'Tớ mới đi năm ngoái, có thể cho các cậu vài lời khuyên.' },
+                        { hanzi: '我建议你们...', pinyin: 'Wǒ jiànyì nǐmen...', vietnamese: 'Tớ khuyên các cậu...' },
+                        { hanzi: '你们一定要尝尝...', pinyin: 'Nǐmen yídìng yào chángchang...', vietnamese: 'Các cậu nhất định phải thử...' },
+                        { hanzi: '至于玩的，...值得一去。', pinyin: 'Zhìyú wán de, ...zhíde yí qù.', vietnamese: 'Về chỗ chơi, ... rất đáng để đi.' },
+                        { hanzi: '<span class="keyword">不用</span>担心，...很方便。', pinyin: 'Búyòng dānxīn, ...hěn fāngbiàn.', vietnamese: 'Không cần lo lắng, ... rất tiện lợi.' },
+                    ],
+                    B: [
+                        { hanzi: '我们去<span class="keyword">旅行</span>怎么样？', pinyin: 'Wǒmen qù lǚxíng zěnmeyàng?', vietnamese: 'Chúng mình đi du lịch nhé?' },
+                        { hanzi: '我们应该怎么计划呢？', pinyin: 'Wǒmen yīnggāi zěnme jìhuà ne?', vietnamese: 'Chúng ta nên lên kế hoạch thế nào đây?' },
+                        { hanzi: '我们最应该注意什么？', pinyin: 'Wǒmen zuì yīnggāi zhùyì shénme?', vietnamese: 'Bọn tớ nên chú ý điều gì nhất?' },
+                        { hanzi: '你的建议太棒了！', pinyin: 'Nǐ de jiànyì tài bàng le!', vietnamese: 'Lời khuyên của cậu tuyệt quá!' },
+                    ],
+                    C: [
+                        { hanzi: '好主意！我想去<span class="keyword">上海</span>。', pinyin: 'Hǎo zhǔyi! Wǒ xiǎng qù Shànghǎi.', vietnamese: 'Ý hay đó! Tớ muốn đi Thượng Hải.' },
+                        { hanzi: '那吃的和玩儿的呢？', pinyin: 'Nà chī de hé wánr de ne?', vietnamese: 'Thế còn ăn uống và vui chơi thì sao?' },
+                        { hanzi: '我们记下了。', pinyin: 'Wǒmen jì xià le.', vietnamese: 'Bọn tớ ghi lại rồi.' },
+                        { hanzi: '谢谢你的建议。', pinyin: 'Xièxie nǐ de jiànyì.', vietnamese: 'Cảm ơn lời khuyên của cậu.' },
+                    ]
+                },
+                characters: {
+                     A: { name: "小明 (Tiểu Minh)", desc: "Người đã đi Thượng Hải" },
+                     B: { name: "小兰 (Tiểu Lan)", desc: "Người muốn đi du lịch" },
+                     C: { name: "小王 (Tiểu Vương)", desc: "Bạn của Tiểu Lan" },
+                },
+            },
+            s3: {
+                title: "Tại Bưu điện",
+                context: "Tiểu Lan và Tiểu Vương đang ở bưu điện. Tiểu Lan muốn gửi một bưu kiện đi Thượng Hải, còn Tiểu Vương muốn mua tem và báo.",
+                suggestions: {
+                    A: [
+                        { hanzi: '您好，请问有什么可以帮您？', pinyin: 'Nínhǎo, qǐngwèn yǒu shénme kěyǐ bāng nín?', vietnamese: 'Xin chào, xin hỏi tôi có thể giúp gì cho quý khách?' },
+                        { hanzi: '我建议您...', pinyin: 'Wǒ jiànyì nín...', vietnamese: 'Tôi khuyên anh/chị nên...' },
+                        { hanzi: '您寄到哪里？', pinyin: 'Nín jì dào nǎlǐ?', vietnamese: 'Anh/chị gửi đi đâu ạ?' },
+                        { hanzi: '普通快递...天到，加急的...天到。', pinyin: 'Pǔtōng kuàidì...tiān dào, jiājí de...tiān dào.', vietnamese: 'Chuyển phát thường...ngày tới, chuyển phát nhanh...ngày tới.' },
+                        { hanzi: '这是您的东西。', pinyin: 'Zhè shì nín de dōngxi.', vietnamese: 'Đây là đồ của anh/chị.' },
+                    ],
+                    B: [
+                        { hanzi: '你好，我想寄这个<span class="keyword">包裹</span>。', pinyin: 'Nǐhǎo, wǒ xiǎng jì zhège bāoguǒ.', vietnamese: 'Chào bạn, tôi muốn gửi cái bưu kiện này.' },
+                        { hanzi: '寄到<span class="keyword">上海</span>。', pinyin: 'Jì dào Shànghǎi.', vietnamese: 'Gửi đến Thượng Hải.' },
+                        { hanzi: '里面是...', pinyin: 'Lǐmiàn shì...', vietnamese: 'Bên trong là...' },
+                        { hanzi: '选普通的/加急的就行。', pinyin: 'Xuǎn pǔtōng de/jiājí de jiù xíng.', vietnamese: 'Chọn loại thường/nhanh là được rồi.' },
+                    ],
+                    C: [
+                        { hanzi: '我能<span class="keyword">顺便</span>买点东西吗？', pinyin: 'Wǒ néng shùnbiàn mǎi diǎn dōngxi ma?', vietnamese: 'Tôi có thể nhân tiện mua ít đồ được không?' },
+                        { hanzi: '我想买几张纪念<span class="keyword">邮票</span>。', pinyin: 'Wǒ xiǎng mǎi jǐ zhāng jìniàn yóupiào.', vietnamese: 'Tôi muốn mua vài con tem kỷ niệm.' },
+                        { hanzi: '你们有今天的《<span class="keyword">青年报</span>》吗？', pinyin: 'Nǐmen yǒu jīntiān de "Qīngnián Bào" ma?', vietnamese: 'Các bạn có "Báo Thanh Niên" hôm nay không?' },
+                        { hanzi: '我想<span class="keyword">替</span>我朋友<span class="keyword">拿</span>一份。', pinyin: 'Wǒ xiǎng tì wǒ péngyou ná yí fèn.', vietnamese: 'Tôi muốn lấy một tờ giúp bạn tôi.' },
+                    ]
+                },
+                 characters: {
+                    A: { name: "职员 (Nhân viên)", desc: "Nhân viên bưu điện" },
+                    B: { name: "小兰 (Tiểu Lan)", desc: "Khách hàng gửi bưu kiện" },
+                    C: { name: "小王 (Tiểu Vương)", desc: "Khách hàng mua tem" },
+                },
+            }
+        };
+
+        let state = {
+            currentScreen: 'scenario-selection',
+            selectedScenario: null,
+            playerCount: 0,
+            selectedRole: null,
+        };
+
+        function showScreen(screenName) {
+            document.querySelectorAll('#app-container > div').forEach(el => el.classList.add('hidden'));
+            document.getElementById(screenName).classList.remove('hidden');
+            state.currentScreen = screenName;
+        }
+
+        function selectScenario(scenarioId) {
+            state.selectedScenario = scenarioId;
+            state.playerCount = 0;
+            document.getElementById('role-selection-title').textContent = scenarios[scenarioId].title;
+            document.getElementById('player-count-2').className = 'btn bg-gray-200';
+            document.getElementById('player-count-3').className = 'btn bg-gray-200';
+            document.getElementById('role-list').innerHTML = '';
+            showScreen('role-selection');
+        }
+
+        function setPlayerCount(count) {
+            state.playerCount = count;
+            document.getElementById('player-count-2').className = count === 2 ? 'btn btn-primary' : 'btn bg-gray-200';
+            document.getElementById('player-count-3').className = count === 3 ? 'btn btn-primary' : 'btn bg-gray-200';
+            renderRoleSelection();
+        }
+
+        function renderRoleSelection() {
+            const roleList = document.getElementById('role-list');
+            roleList.innerHTML = '';
+            const scenario = scenarios[state.selectedScenario];
+            const characters = Object.keys(scenario.characters);
+            for (let i = 0; i < state.playerCount; i++) {
+                const charKey = characters[i];
+                const char = scenario.characters[charKey];
+                const button = document.createElement('button');
+                button.className = 'btn btn-primary text-center';
+                button.innerHTML = `<span class="block text-lg">${char.name}</span><span class="block text-xs font-normal">${char.desc}</span>`;
+                button.onclick = () => selectRole(charKey);
+                roleList.appendChild(button);
+            }
+        }
+
+        function selectRole(roleId) {
+            state.selectedRole = roleId;
+            renderRolePlayView();
+            showScreen('role-play-view');
+        }
+        
+        function goBackToRoleSelection() {
+            state.selectedRole = null;
+            showScreen('role-selection');
+        }
+
+        function renderRolePlayView() {
+            const scenario = scenarios[state.selectedScenario];
+            const role = scenario.characters[state.selectedRole];
+
+            document.getElementById('rp-scenario-title').textContent = scenario.title;
+            document.getElementById('rp-your-role').textContent = `Vai của bạn: ${role.name}`;
+            document.getElementById('rp-scenario-context').textContent = scenario.context;
+            
+            const suggestionsContainer = document.getElementById('rp-suggestions');
+            suggestionsContainer.innerHTML = '';
+            // Render suggestions for the selected role
+            if (scenario.suggestions && scenario.suggestions[state.selectedRole]) {
+                scenario.suggestions[state.selectedRole].forEach(sugg => {
+                    const suggDiv = document.createElement('div');
+                    suggDiv.className = 'suggestion-item p-3 rounded-md';
+                    suggDiv.innerHTML = `
+                        <p class="font-semibold text-sm">${sugg.hanzi}</p>
+                        <p class="text-xs text-gray-500">${sugg.pinyin}</p>
+                        <p class="text-xs text-gray-500 italic">"${sugg.vietnamese}"</p>
+                    `;
+                    suggestionsContainer.appendChild(suggDiv);
+                });
+            }
+        }
+
+        function init() {
+            const scenarioList = document.getElementById('scenario-list');
+            for (const id in scenarios) {
+                const scenario = scenarios[id];
+                const card = document.createElement('div');
+                card.className = 'card p-6 text-center cursor-pointer';
+                card.onclick = () => selectScenario(id);
+                card.innerHTML = `<h2 class="text-xl font-bold text-gray-800 mb-2">${scenario.title}</h2><p class="text-gray-500 text-sm">${scenario.context}</p>`;
+                scenarioList.appendChild(card);
+            }
+            showScreen('scenario-selection');
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+id: han2-bai19-dialogue
+course: han2
+order: 19
+title: "Bài 19 — Hội thoại «Đi chợ mua trái cây»"
+subtitle: "Phân vai và đọc đoạn hội thoại"
+interactionType: dialogue
+estimatedMinutes: 10
+tags: [dialogue, market]
+roles: ["Khách hàng (顾客)", "Người bán (售货员)"]
+lines:
+  - speaker: "Khách hàng (顾客)"
+    hanzi: "你好，苹果多少钱一斤？"
+    pinyin: "nǐ hǎo, píng guǒ duō shao qián yì jīn?"
+    vi: "Chào, táo bao nhiêu một cân?"
+  - speaker: "Người bán (售货员)"
+    hanzi: "苹果十块钱一斤。"
+    pinyin: "píng guǒ shí kuài qián yì jīn."
+    vi: "Táo 10 tệ một cân."
+  - speaker: "Khách hàng (顾客)"
+    hanzi: "我要两斤，再给我一斤香蕉。"
+    pinyin: "wǒ yào liǎng jīn, zài gěi wǒ yì jīn xiāng jiāo."
+    vi: "Tôi lấy 2 cân, thêm 1 cân chuối nữa."
+  - speaker: "Người bán (售货员)"
+    hanzi: "好的，一共三十块。"
+    pinyin: "hǎo de, yí gòng sān shí kuài."
+    vi: "Vâng, tổng cộng 30 tệ."
+  - speaker: "Khách hàng (顾客)"
+    hanzi: "给你五十块，请找钱。"
+    pinyin: "gěi nǐ wǔ shí kuài, qǐng zhǎo qián."
+    vi: "Đây 50 tệ, làm ơn trả tiền thừa."
+  - speaker: "Người bán (售货员)"
+    hanzi: "找你二十块，谢谢！"
+    pinyin: "zhǎo nǐ èr shí kuài, xiè xie!"
+    vi: "Trả lại bạn 20 tệ, cảm ơn!"

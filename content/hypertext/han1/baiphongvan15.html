@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thẻ Thông Tin Gia Đình | 家庭信息卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Màu nền xám nhạt */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem; /* Bo góc lớn hơn */
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .input-field {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6; /* Màu xanh dương khi focus */
+            box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+        }
+        .label-text {
+            color: #4b5563; /* Màu chữ xám đậm */
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .member-card {
+            background-color: #f9fafb; /* Nền xám rất nhạt cho thẻ thành viên */
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+        .pinyin {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- TIÊU ĐỀ -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">家庭信息卡</h1>
+            <p class="text-lg text-gray-500">Thẻ Thông Tin Gia Đình</p>
+        </header>
+
+        <!-- THẺ THÔNG TIN CHÍNH -->
+        <main id="info-card" class="card">
+
+            <!-- PHẦN THÔNG TIN CƠ BẢN -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-200">
+                <!-- Tên bạn học -->
+                <div>
+                    <label for="studentName" class="label-text">
+                        朋友的名字 <span class="pinyin">(Péngyǒu de míngzì)</span>
+                        <span class="font-normal text-gray-500">- Tên bạn học</span>
+                    </label>
+                    <input type="text" id="studentName" class="input-field" placeholder="请输入名字... (Vd: 小月)">
+                </div>
+                <!-- Số người trong gia đình -->
+                <div>
+                    <label for="familyCount" class="label-text">
+                        你家有几口人? <span class="pinyin">(Nǐ jiā yǒu jǐ kǒu rén?)</span>
+                        <span class="font-normal text-gray-500">- Nhà bạn có mấy người?</span>
+                    </label>
+                    <input type="text" id="familyCount" class="input-field" placeholder="我家有 ______ 口人。">
+                </div>
+            </section>
+
+            <!-- PHẦN THÔNG TIN CÁC THÀNH VIÊN -->
+            <section>
+                <h2 class="text-2xl font-bold text-gray-700 mb-6 text-center">家庭成员 <span class="pinyin">(Jiātíng chéngyuán)</span> - Thành viên gia đình</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- THẺ THÔNG TIN BỐ -->
+                    <div class="member-card">
+                        <h3 class="text-xl font-bold mb-4 text-blue-600">爸爸 <span class="pinyin">(Bàba)</span></h3>
+                        <div>
+                            <label for="fatherJob" class="label-text">工作 <span class="pinyin">(Gōngzuò)</span> - Nghề nghiệp</label>
+                            <input type="text" id="fatherJob" class="input-field" placeholder="他是做什么工作的? (Vd: 医生)">
+                        </div>
+                        <div class="mt-4">
+                            <label for="fatherWorkplace" class="label-text">在哪儿工作 <span class="pinyin">(Zài nǎ'er gōngzuò)</span> - Nơi làm việc</label>
+                            <input type="text" id="fatherWorkplace" class="input-field" placeholder="他在哪儿工作? (Vd: 在医院)">
+                        </div>
+                    </div>
+
+                    <!-- THẺ THÔNG TIN MẸ -->
+                    <div class="member-card">
+                        <h3 class="text-xl font-bold mb-4 text-pink-600">妈妈 <span class="pinyin">(Māmā)</span></h3>
+                        <div>
+                            <label for="motherJob" class="label-text">工作 <span class="pinyin">(Gōngzuò)</span> - Nghề nghiệp</label>
+                            <input type="text" id="motherJob" class="input-field" placeholder="她是做什么工作的?">
+                        </div>
+                        <div class="mt-4">
+                            <label for="motherWorkplace" class="label-text">在哪儿工作 <span class="pinyin">(Zài nǎ'er gōngzuò)</span> - Nơi làm việc</label>
+                            <input type="text" id="motherWorkplace" class="input-field" placeholder="她在哪儿工作?">
+                        </div>
+                    </div>
+
+                    <!-- THẺ THÔNG TIN ANH/CHỊ/EM 1 -->
+                    <div class="member-card">
+                        <h3 class="text-xl font-bold mb-4 text-green-600">哥哥/姐姐/弟弟/妹妹</h3>
+                        <div>
+                            <label for="sibling1Job" class="label-text">工作 <span class="pinyin">(Gōngzuò)</span> - Nghề nghiệp</label>
+                            <input type="text" id="sibling1Job" class="input-field" placeholder="他/她做什么工作?">
+                        </div>
+                        <div class="mt-4">
+                            <label for="sibling1Workplace" class="label-text">在哪儿工作 <span class="pinyin">(Zài nǎ'er gōngzuò)</span> - Nơi làm việc</label>
+                            <input type="text" id="sibling1Workplace" class="input-field" placeholder="他/她在哪儿工作?">
+                        </div>
+                    </div>
+
+                    <!-- THẺ THÔNG TIN ANH/CHỊ/EM 2 (Nếu có) -->
+                    <div class="member-card">
+                        <h3 class="text-xl font-bold mb-4 text-yellow-600">哥哥/姐姐/弟弟/妹妹</h3>
+                        <div>
+                            <label for="sibling2Job" class="label-text">工作 <span class="pinyin">(Gōngzuò)</span> - Nghề nghiệp</label>
+                            <input type="text" id="sibling2Job" class="input-field" placeholder="他/她做什么工作?">
+                        </div>
+                        <div class="mt-4">
+                            <label for="sibling2Workplace" class="label-text">在哪儿工作 <span class="pinyin">(Zài nǎ'er gōngzuò)</span> - Nơi làm việc</label>
+                            <input type="text" id="sibling2Workplace" class="input-field" placeholder="他/她在哪儿工作?">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PHẦN NÚT BẤM -->
+            <footer class="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-4">
+                <button onclick="clearForm()" class="btn btn-secondary">
+                    清除信息 (Xóa thông tin)
+                </button>
+                <button onclick="alert('Đã lưu thông tin!')" class="btn btn-primary">
+                    保存信息 (Lưu thông tin)
+                </button>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        // Hàm JavaScript đơn giản để xóa tất cả thông tin trong các ô input
+        function clearForm() {
+            // Lấy tất cả các thẻ input trong form
+            const inputs = document.querySelectorAll('#info-card input[type="text"]');
+            // Lặp qua từng thẻ và đặt giá trị của nó về rỗng
+            inputs.forEach(input => {
+                input.value = '';
+            });
+            // Thông báo cho người dùng (có thể tùy chỉnh)
+            alert('Đã xóa toàn bộ thông tin!');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Học Tập Ngữ Pháp: Chữ 的</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        [x-cloak] { display: none !important; }
+        .draggable {
+            touch-action: none;
+            cursor: grab;
+            user-select: none;
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .drag-over {
+            background-color: #e0f2fe;
+            border-color: #3b82f6;
+        }
+        .slot-button {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.375rem;
+            margin: 0 0.25rem;
+            transition: all 0.2s ease-in-out;
+            border: 2px dashed #d1d5db;
+        }
+        .slot-button:hover {
+            background-color: #e5e7eb;
+            border-style: solid;
+        }
+        .slot-button.active {
+            background-color: #fecaca;
+            border-color: #f87171;
+            border-style: solid;
+        }
+        .pinyin {
+            transition: opacity 0.3s ease-in-out;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: -0.25rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+            <!-- Header -->
+            <header class="text-center mb-8 border-b pb-6">
+                <h1 class="text-3xl md:text-4xl font-bold text-blue-600">Phiếu Học Tập: Ngữ pháp chữ "的"</h1>
+                <p class="text-gray-600 mt-2 text-lg">Cùng tìm hiểu và luyện tập cách dùng trợ từ kết cấu "的" nhé!</p>
+            </header>
+
+            <!-- ======================================================= -->
+            <!-- PHẦN 1: HỌC VÀ TƯƠNG TÁC -->
+            <!-- ======================================================= -->
+            <section id="part1" class="mb-12">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-book-reader text-blue-500 mr-3"></i>Phần 1: Học và Tương Tác</h2>
+                 <div x-data="{ open: 'rule1' }" class="space-y-3">
+                    <!-- Rule 1 -->
+                    <div class="border rounded-lg overflow-hidden">
+                        <button @click="open = (open === 'rule1' ? '' : 'rule1')" class="w-full p-4 text-left bg-gray-50 hover:bg-gray-100 focus:outline-none">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-semibold text-lg text-gray-800"><i class="fas fa-user-friends text-indigo-500 mr-2"></i>Quy tắc 1: Biểu thị sự sở hữu</h4>
+                                <i class="fas" :class="open === 'rule1' ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                            </div>
+                        </button>
+                        <div x-show="open === 'rule1'" x-collapse x-cloak>
+                            <div class="p-4 border-t">
+                                <p class="mb-3">Khi danh từ hoặc đại từ làm định ngữ để biểu thị quan hệ sở hữu, hạn chế, ta phải thêm "的".</p>
+                                <ul class="list-disc list-inside space-y-2 bg-gray-50 p-3 rounded-md">
+                                    <li>我 <strong class="text-red-600">的</strong> 书 (Sách của tôi)</li>
+                                    <li>老师 <strong class="text-red-600">的</strong> 本子 (Vở của giáo viên)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Rule 2 -->
+                    <div class="border rounded-lg overflow-hidden">
+                        <button @click="open = (open === 'rule2' ? '' : 'rule2')" class="w-full p-4 text-left bg-gray-50 hover:bg-gray-100 focus:outline-none">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-semibold text-lg text-gray-800"><i class="fas fa-star text-yellow-500 mr-2"></i>Quy tắc 2: Tính từ bổ nghĩa</h4>
+                                <i class="fas" :class="open === 'rule2' ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                            </div>
+                        </button>
+                        <div x-show="open === 'rule2'" x-collapse x-cloak>
+                            <div class="p-4 border-t">
+                                <p class="mb-3">Khi cụm tính từ (thường là "很 + Tính từ") làm định ngữ, ta phải thêm "的" vào trước trung tâm ngữ.</p>
+                                <ul class="list-disc list-inside space-y-2 bg-gray-50 p-3 rounded-md">
+                                    <li>很好 <strong class="text-red-600">的</strong> 同学 (Bạn học rất tốt)</li>
+                                    <li>很新 <strong class="text-red-600">的</strong> 本子 (Quyển vở rất mới)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================= -->
+            <!-- PHẦN 2: LUYỆN TẬP SẮP XẾP -->
+            <!-- ======================================================= -->
+            <section id="part2" x-data="deExercise()" x-init="init()" class="mb-12">
+                 <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-puzzle-piece text-green-500 mr-3"></i>Phần 2: Luyện tập sắp xếp</h2>
+                 <p class="text-gray-700 mb-6">Kéo và thả các thẻ từ vào đúng vị trí để tạo thành cụm từ hoàn chỉnh.</p>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-3 text-center text-gray-700">Ngân hàng từ</h3>
+                    <div id="source-container" class="flex flex-wrap justify-center items-center gap-3 min-h-[58px]">
+                        <template x-for="word in currentQuestion.words" :key="word.id">
+                            <div :id="word.id" class="draggable text-white font-semibold text-lg px-6 py-3 rounded-lg shadow-md transition-transform transform hover:scale-105" :class="word.color" draggable="true" @dragstart="dragStart($event)" x-text="word.text"></div>
+                        </template>
+                    </div>
+                </div>
+                <div class="text-center mt-6">
+                    <h3 class="font-semibold text-lg mb-3 text-gray-700">Câu của bạn</h3>
+                    <div id="drop-zone" @dragover.prevent="dragOver($event)" @dragleave="dragLeave($event)" @drop.prevent="drop($event)" class="drop-zone min-h-[80px] w-full bg-white rounded-lg p-4 flex justify-center items-center flex-wrap gap-3"></div>
+                </div>
+                <div class="flex justify-center items-center gap-4 pt-6">
+                    <button @click="resetCurrentQuestion" class="px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition"><i class="fas fa-undo mr-2"></i>Làm lại</button>
+                    <button @click="checkAnswer" class="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition transform hover:scale-105"><i class="fas fa-check mr-2"></i>Kiểm Tra</button>
+                </div>
+                <div x-show="feedback.show" x-cloak class="feedback mt-6 p-4 rounded-lg text-center" :class="{ 'bg-green-100 text-green-800 border border-green-300': feedback.isCorrect, 'bg-red-100 text-red-800 border border-red-300': !feedback.isCorrect }" x-transition>
+                    <h4 class="font-bold text-lg" x-text="feedback.title"></h4>
+                    <p x-html="feedback.message"></p>
+                    <button x-show="feedback.isCorrect && currentQuestionIndex < questions.length - 1" @click="nextQuestion" class="mt-3 px-5 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition">Câu tiếp theo <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </section>
+            
+            <!-- ======================================================= -->
+            <!-- PHẦN 3: ĐIỀN "的" VÀO VỊ TRÍ THÍCH HỢP (FINAL) -->
+            <!-- ======================================================= -->
+            <section id="part3" x-data="fillInTheBlankExercise()" x-init="init()">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center"><i class="fas fa-edit text-purple-500 mr-3"></i>Phần 3: Điền "的" vào đúng chỗ</h2>
+                    <button @click="showPinyin = !showPinyin" 
+                            class="px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition"
+                            :class="showPinyin ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'">
+                        <i class="fas fa-language"></i> Pinyin
+                    </button>
+                </div>
+                <p class="text-gray-700 mb-6">Đọc các câu sau và nhấn vào khoảng trống giữa các từ để chèn chữ "的". Mỗi câu chỉ được chèn một lần. Sau đó nhấn "Kiểm tra đáp án".</p>
+                
+                <div class="space-y-2">
+                    <template x-for="(q, qIndex) in questions" :key="qIndex">
+                        <div class="bg-white p-4 border rounded-lg">
+                            <div x-show="showPinyin" class="pinyin flex flex-row flex-wrap" x-transition>
+                                 <template x-for="(pinyinPart, pIndex) in q.pinyin_parts" :key="pIndex">
+                                    <div class="flex items-center">
+                                        <span class="text-center" :style="{ width: q.char_widths[pIndex] + 'px' }" x-text="pinyinPart"></span>
+                                        <div x-show="pIndex < q.pinyin_parts.length - 1" class="w-8 mx-1"></div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="flex flex-row items-center flex-wrap">
+                                <template x-for="(part, pIndex) in q.parts">
+                                    <div class="flex items-center">
+                                        <span class="text-lg" x-text="part" :id="`q${qIndex}p${pIndex}`"></span>
+                                        <template x-if="pIndex < q.parts.length - 1">
+                                            <button @click="placeDe(qIndex, pIndex)"
+                                                    class="slot-button inline-block align-baseline text-center"
+                                                    :class="{ 'active': q.userChoiceIndex === pIndex }">
+                                                <span x-show="q.userChoiceIndex === pIndex" class="text-red-500 font-bold text-xl">的</span>
+                                            </button>
+                                        </template>
+                                    </div>
+                                </template>
+                                <div class="w-8 h-8 ml-4 flex-shrink-0">
+                                    <i x-show="q.isCorrect === true" class="fas fa-check-circle text-green-500 text-2xl" x-transition></i>
+                                    <i x-show="q.isCorrect === false" class="fas fa-times-circle text-red-500 text-2xl" x-transition></i>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                 <!-- Check Button for Part 3 -->
+                <div class="text-center mt-6">
+                    <button @click="checkAnswers()" class="px-8 py-3 bg-purple-600 text-white font-bold rounded-lg shadow-lg hover:bg-purple-700 transition transform hover:scale-105">
+                        <i class="fas fa-tasks mr-2"></i>Kiểm tra tất cả
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+<script>
+    function deExercise() { /* Part 2 Logic */
+        return {
+            init() { this.questions.forEach(q => q.words.sort(() => Math.random() - 0.5)); },
+            questions: [
+                { words: [ { id: 'q1-1', text: '我', color: 'bg-indigo-500' }, { id: 'q1-2', text: '的', color: 'bg-red-500' }, { id: 'q1-3', text: '老师', color: 'bg-emerald-500' } ], correctAnswer: '我的老师', explanation: 'Dùng "của" để chỉ sự sở hữu: <strong>giáo viên CỦA tôi</strong>.' },
+                { words: [ { id: 'q2-1', text: '很好', color: 'bg-indigo-500' }, { id: 'q2-2', text: '的', color: 'bg-red-500' }, { id: 'q2-3', text: '同学', color: 'bg-emerald-500' } ], correctAnswer: '很好的同学', explanation: 'Dùng "rất tốt" để mô tả cho "bạn học": <strong>bạn học RẤT TỐT</strong>.' }
+            ],
+            currentQuestionIndex: 0,
+            get currentQuestion() { return this.questions[this.currentQuestionIndex]; },
+            feedback: { show: false, isCorrect: false, title: '', message: '' },
+            draggedElement: null,
+            dragStart(e) {
+                this.draggedElement = e.target;
+                e.dataTransfer.setData('text/plain', e.target.id);
+                e.target.classList.add('opacity-50');
+            },
+            dragOver(e) { e.preventDefault(); e.target.closest('.drop-zone').classList.add('drag-over'); },
+            dragLeave(e) { e.target.closest('.drop-zone').classList.remove('drag-over'); },
+            drop(e) {
+                e.preventDefault();
+                const dropZone = e.target.closest('.drop-zone');
+                dropZone.classList.remove('drag-over');
+                const id = e.dataTransfer.getData('text/plain');
+                const draggableElement = document.getElementById(id);
+                draggableElement.classList.remove('opacity-50');
+                if (e.target.classList.contains('draggable')) { dropZone.insertBefore(draggableElement, e.target); } 
+                else { dropZone.appendChild(draggableElement); }
+            },
+            checkAnswer() {
+                const dropZone = document.getElementById('drop-zone');
+                if (dropZone.children.length !== this.currentQuestion.words.length) {
+                    this.feedback = { show: true, isCorrect: false, title: 'Chưa hoàn thành!', message: 'Bạn cần sử dụng hết các từ đã cho.' };
+                    return;
+                }
+                const userAnswer = Array.from(dropZone.children).map(el => el.textContent).join('');
+                if (userAnswer === this.currentQuestion.correctAnswer) {
+                    this.feedback = { show: true, isCorrect: true, title: '🎉 Chính xác! (正确!)', message: `<strong>${this.currentQuestion.correctAnswer}</strong>. ${this.currentQuestion.explanation}` };
+                } else {
+                    this.feedback = { show: true, isCorrect: false, title: 'Chưa đúng! (不对!)', message: `Đáp án của bạn: "${userAnswer}". Hãy thử lại nhé!` };
+                }
+            },
+            resetCurrentQuestion() {
+                this.feedback.show = false;
+                const dropZone = document.getElementById('drop-zone');
+                const sourceContainer = document.getElementById('source-container');
+                const wordsToReset = Array.from(dropZone.children);
+                wordsToReset.forEach(word => { sourceContainer.appendChild(word); });
+                this.currentQuestion.words.sort(() => Math.random() - 0.5);
+            },
+            nextQuestion() {
+                if (this.currentQuestionIndex < this.questions.length - 1) {
+                    this.currentQuestionIndex++;
+                    this.feedback.show = false;
+                    this.$nextTick(() => { this.resetCurrentQuestion(); });
+                }
+            }
+        }
+    }
+
+    // Alpine.js data for Part 3
+    function fillInTheBlankExercise() {
+        return {
+            showPinyin: false,
+            questions: [
+                { parts: ['这是', '谁', '汉语书？'], pinyin_parts: ['zhèshì', 'shuí', 'hànyǔ shū?'], char_widths: [], correctIndex: 1, userChoiceIndex: null, isCorrect: null },
+                { parts: ['这是', '我妈妈', '书。'], pinyin_parts: ['zhèshì', 'wǒ māma', 'shū.'], char_widths: [], correctIndex: 1, userChoiceIndex: null, isCorrect: null },
+                { parts: ['你', '是', '哪个大学', '学生？'], pinyin_parts: ['nǐ', 'shì', 'nǎge dàxué', 'xuésheng?'], char_widths: [], correctIndex: 2, userChoiceIndex: null, isCorrect: null },
+                { parts: ['他们', '都', '是', '很好', '人。'], pinyin_parts: ['tāmen', 'dōu', 'shì', 'hěnhǎo', 'rén.'], char_widths: [], correctIndex: 3, userChoiceIndex: null, isCorrect: null },
+                { parts: ['玛丽', '老师', '是', '王老师。'], pinyin_parts: ['Mǎlì', 'lǎoshī', 'shì', 'Wáng lǎoshī.'], char_widths: [], correctIndex: 0, userChoiceIndex: null, isCorrect: null },
+                { parts: ['这是', '我爸爸', '汉语', '词典。'], pinyin_parts: ['zhèshì', 'wǒ bàba', 'hànyǔ', 'cídiǎn.'], char_widths: [], correctIndex: 1, userChoiceIndex: null, isCorrect: null }
+            ],
+            init() {
+                this.$nextTick(() => {
+                    this.questions.forEach((q, qIndex) => {
+                        q.parts.forEach((part, pIndex) => {
+                            const el = document.getElementById(`q${qIndex}p${pIndex}`);
+                            if (el) {
+                                q.char_widths[pIndex] = el.offsetWidth;
+                            }
+                        });
+                    });
+                });
+            },
+            placeDe(questionIndex, positionIndex) {
+                if (this.questions[questionIndex].userChoiceIndex === positionIndex) {
+                    this.questions[questionIndex].userChoiceIndex = null;
+                } else {
+                    this.questions[questionIndex].userChoiceIndex = positionIndex;
+                }
+                this.questions[questionIndex].isCorrect = null;
+            },
+            checkAnswers() {
+                this.questions.forEach(q => {
+                    // Check if user has made a choice. If not, don't mark as incorrect.
+                    if (q.userChoiceIndex !== null) {
+                         q.isCorrect = (q.userChoiceIndex === q.correctIndex);
+                    } else {
+                        q.isCorrect = false; // Mark as incorrect if no choice is made
+                    }
+                });
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

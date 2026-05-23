@@ -1,0 +1,33 @@
+id: han1-bai4-translate
+course: han1
+order: 4
+title: "Bài 4 — Dịch Trung → Việt"
+subtitle: "Đọc câu tiếng Trung và gõ bản dịch tiếng Việt"
+interactionType: translate
+direction: zh-vi
+estimatedMinutes: 15
+tags: [translation]
+pairs:
+  - zh: "你好！我叫小明。"
+    pinyin: "nǐ hǎo! wǒ jiào xiǎo míng."
+    vi: "Xin chào! Tôi tên là Tiểu Minh."
+    alternatives:
+      - "Xin chào! Mình tên là Tiểu Minh."
+      - "Chào! Tôi tên là Tiểu Minh."
+  - zh: "你叫什么名字？"
+    pinyin: "nǐ jiào shén me míng zì?"
+    vi: "Bạn tên là gì?"
+    alternatives: ["Bạn tên gì?", "Bạn tên là gì ?"]
+  - zh: "我是越南人。"
+    pinyin: "wǒ shì yuè nán rén."
+    vi: "Tôi là người Việt Nam."
+  - zh: "认识你很高兴。"
+    pinyin: "rèn shi nǐ hěn gāo xìng."
+    vi: "Rất vui được làm quen với bạn."
+    alternatives:
+      - "Rất vui được biết bạn."
+      - "Rất hân hạnh được làm quen với bạn."
+  - zh: "明天见！"
+    pinyin: "míng tiān jiàn!"
+    vi: "Hẹn gặp lại ngày mai!"
+    alternatives: ["Mai gặp lại!", "Ngày mai gặp!"]

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Ôn Tập Tiếng Trung - Bài 13: 这是不是中药？</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2; /* Màu xanh dương hiện đại */
+            --secondary-color: #50E3C2; /* Màu xanh ngọc lam */
+            --success-color: #7ED321; /* Xanh lá cây tươi sáng */
+            --warning-color: #F5A623; /* Vàng cam */
+            --danger-color: #D0021B; /* Đỏ */
+            --light-color: #FDFDFD;
+            --dark-color: #4A4A4A;
+            --font-family: 'Helvetica Neue', Arial, sans-serif;
+            --cute-yellow: #FFFACD; /* Lemon Chiffon */
+            --cute-green: #98FB98; /* PaleGreen */
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #F4F7F6; /* Nền xám rất nhạt */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--dark-color);
+            line-height: 1.7; /* Tăng line-height cho dễ đọc */
+        }
+
+        .game-container {
+            background-color: var(--light-color);
+            padding: 25px 35px;
+            border-radius: 16px; /* Bo tròn nhiều hơn */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Bóng đổ mềm mại hơn */
+            width: 100%;
+            max-width: 950px; /* Rộng hơn cho nhiều nội dung */
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInGame 0.6s ease-out forwards 0.2s; /* Delay animation một chút */
+        }
+
+        @keyframes fadeInGame {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            font-weight: 600; /* Chữ đậm vừa phải */
+        }
+        h1 { color: var(--primary-color); font-size: 2.1em; margin-bottom: 15px; }
+        h2 { color: var(--secondary-color); font-size: 1.7em; margin-top: 35px; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; }
+        h3 { color: var(--dark-color); font-size: 1.4em; margin-top: 25px; margin-bottom: 15px; }
+
+        .game-section {
+            margin-bottom: 35px;
+            padding: 20px;
+            border: 1px solid #EAEAEA;
+            border-radius: 12px;
+            background-color: #FFFFFF; /* Nền trắng cho các section */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .game-section.hidden { display: none; }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-around; /* Cách đều các item */
+            align-items: center;
+            padding: 12px 15px;
+            background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color)); /* Gradient background */
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.15em;
+            box-shadow: 0 4px 10px rgba(74,144,226,0.3);
+        }
+        #timer, #score-display { font-weight: bold; }
+
+        .instruction-text {
+            font-size: 1.05em;
+            color: #555;
+            margin-bottom: 15px;
+            background-color: var(--cute-yellow);
+            padding: 12px 18px;
+            border-radius: 8px;
+            border-left: 5px solid var(--warning-color);
+        }
+        .instruction-text i { margin-right: 7px; font-style: normal; }
+
+        /* Phần 1: Nối chữ Hán */
+        .matching-game table {
+            width: 100%;
+            border-collapse: separate; 
+            border-spacing: 0 5px; 
+        }
+        .matching-game th, .matching-game td {
+            border: 1px solid #E0E0E0;
+            padding: 10px 12px; 
+            text-align: left;
+            vertical-align: middle;
+        }
+        .matching-game th {
+            background-color: #F5F5F5;
+            font-weight: 600;
+        }
+        .matching-game td:first-child { border-top-left-radius: 6px; border-bottom-left-radius: 6px;}
+        .matching-game td:last-child { border-top-right-radius: 6px; border-bottom-right-radius: 6px;}
+
+        .matching-game select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #CCC;
+            width: 95%;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .pinyin-column .pinyin-text { display: none; } /* Ẩn pinyin ban đầu */
+        .pinyin-column .pinyin-text.visible { display: inline; background-color: var(--cute-yellow); padding: 2px 4px; border-radius: 3px;} /* Hiện khi có class visible */
+
+
+        /* Phần 2: Từ vựng và Lượng từ */
+        .image-vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Responsive grid */
+            gap: 20px;
+        }
+        .image-vocab-item { 
+            margin-bottom: 15px; text-align: center;
+            padding: 10px; border: 1px solid #eee; border-radius: 8px;
+        }
+        .image-vocab-item img { max-width: 120px; max-height: 90px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 8px; display: block; margin-left:auto; margin-right:auto;}
+        .image-vocab-item input[type="text"] { width: 150px; text-align: center; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom:5px;}
+        .image-vocab-item .pinyin-hint { font-size: 0.9em; color: #777; display: none; } 
+        .image-vocab-item .pinyin-hint.visible { display: block; margin-top: 5px; background-color: var(--cute-yellow); padding: 2px; border-radius: 3px;}
+
+
+        .quantifier-fill-item { margin-bottom: 10px; display: flex; align-items: center; flex-wrap: wrap; gap: 5px;}
+        .quantifier-fill-item input[type="text"], .quantifier-fill-item select {
+            width: 70px; text-align: center; margin: 0 5px; padding: 6px;
+            border: 1px solid #ccc; border-radius: 5px;
+        }
+        .quantifier-fill-item span { white-space: nowrap;}
+
+
+        /* Phần 3: Mẫu câu */
+        .sentence-fill-item { margin-bottom: 20px; }
+        .sentence-fill-item p { margin-bottom: 10px; }
+        .sentence-fill-item .options-inline button {
+            margin: 0 5px 5px 0; padding: 6px 10px; font-size: 0.95em;
+            border: 1px solid var(--primary-color); background-color: white; color: var(--primary-color);
+            border-radius: 15px; cursor: pointer;
+        }
+        .sentence-fill-item .options-inline button.selected { background-color: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+        .sentence-fill-item .blank {
+            display: inline-block; width: 80px; 
+            border-bottom: 2px solid var(--primary-color); margin: 0 5px;
+            text-align: center; font-weight: bold; color: var(--danger-color);
+            min-height: 20px; /* ensure height even if empty */
+            padding: 2px 0;
+        }
+        .qna-item textarea { width: 95%; min-height: 40px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+        .youmeiyou-item { margin-bottom: 10px; }
+        .youmeiyou-item input[type="text"] { width: 60px; text-align: center; margin: 0 5px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;}
+
+
+        /* Phần 4: Đọc hiểu */
+        .reading-comprehension .passage {
+            background-color: #F9F9F9; padding: 15px; border-radius: 8px;
+            margin-bottom: 15px; line-height: 1.8;
+        }
+        .reading-comprehension .question-item textarea { width: 95%; min-height: 30px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+
+        /* Phần 5: Miêu tả */
+        .describe-luggage-item { display: grid; grid-template-columns: auto 1fr; gap: 8px 10px; margin-bottom: 10px; align-items: center; }
+        .describe-luggage-item label { text-align: right; font-weight: 500;}
+        .describe-luggage-item input[type="text"] { flex-grow: 1; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+
+
+        /* Chung */
+        .feedback { margin-top: 8px; font-style: italic; font-size: 0.95em; }
+        .feedback.correct { color: var(--success-color); }
+        .feedback.incorrect { color: var(--danger-color); }
+
+        .action-button, .toggle-pinyin-btn {
+            padding: 12px 28px; 
+            font-size: 1.15em; 
+            color: white;
+            border: none;
+            border-radius: 28px; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 25px auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .action-button { background-image: linear-gradient(to right, var(--success-color), #5CB85C); }
+        .toggle-pinyin-btn {
+            background-image: linear-gradient(to right, var(--warning-color), #f0ad4e);
+            font-size: 0.95em; padding: 10px 20px; margin-top: 10px;
+        }
+
+        .action-button:hover, .toggle-pinyin-btn:hover {
+            transform: translateY(-3px) scale(1.03); 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        .action-button:active, .toggle-pinyin-btn:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+        .action-button.next-section-btn { background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color)); }
+
+
+        #final-summary {
+            padding: 25px;
+            background-color: var(--light-color);
+            border: 3px solid var(--secondary-color); 
+            border-radius: 12px;
+            margin-top: 35px;
+        }
+        #final-summary h2 { color: var(--primary-color); }
+        #final-summary ul { list-style-type: none; padding-left: 0; }
+        #final-summary li { margin-bottom: 10px; padding: 8px 12px; border-radius: 6px; font-size: 1.05em; }
+        #final-summary li.correct-ans { background-color: #E9F7EF; color: #1D6F42; border-left: 4px solid var(--success-color); }
+        #final-summary li.incorrect-ans { background-color: #FDEDED; color: #A94442; border-left: 4px solid var(--danger-color); }
+        #final-summary li.incorrect-ans .user-answer { text-decoration: line-through; margin-right: 8px;}
+        #final-summary li .correct-value { font-weight: bold; color: #333; }
+
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>你好! Chào mừng em đến với Trò Chơi Ôn Tập Bài 13: 这是不是中药？ 💊</h1>
+        <p style="text-align:center; font-size: 1.1em; color: var(--secondary-color);">
+            老师 đã chuẩn bị các thử thách thú vị để giúp em ôn lại kiến thức bài này. Cố gắng lên nhé! 加油! 💪
+        </p>
+
+        <div class="status-bar">
+            <div id="timer">⏳ Thời gian: 00:00:00</div>
+            <div id="score-display">Điểm: 0</div>
+        </div>
+
+        <div id="section-hanzi" class="game-section">
+            <h2>I. 认汉字 (Rèn Hànzì - Nhận biết chữ Hán)</h2>
+            <div id="hanzi-matching">
+                <h3>1. 把汉字和拼音连起来 (Nối chữ Hán và phiên âm):</h3>
+                <p class="instruction-text">💡 Hãy chọn phiên âm (Pinyin) chính xác cho mỗi chữ Hán trong bảng dưới đây. Nhấn nút "💡 Hiện/Ẩn Pinyin" để xem hoặc ẩn gợi ý Pinyin (đáp án) cho các chữ Hán nhé!</p>
+                <button class="toggle-pinyin-btn" onclick="togglePinyinVisibility('hanzi-matching-body', 'pinyin-text')">💡 Hiện/Ẩn Pinyin Đáp Án</button>
+                <table class="matching-game">
+                    <thead><tr><th>汉字 & Pinyin (ẩn)</th><th class="pinyin-column">Chọn Pīnyīn</th><th>Kết quả</th></tr></thead>
+                    <tbody id="hanzi-matching-body"></tbody>
+                </table>
+                <button onclick="checkHanziMatching_B13()" class="action-button" style="background-image: linear-gradient(to right, var(--warning-color), #F0AD4E); margin-top:15px;">Kiểm tra Nối Từ</button>
+            </div>
+            </div>
+
+        <div id="section-vocab-quantifier" class="game-section hidden">
+            <h2>II. 生词和量词 (Shēngcí hé Liàngcí - Từ vựng và Lượng từ)</h2>
+            <div id="image-vocab-writing">
+                <h3>1. 看图写词语 (Nhìn hình viết từ):</h3>
+                <p class="instruction-text">🖼️ (老师 sẽ sớm thêm hình ảnh minh họa nhé!) Hãy viết từ tiếng Trung (Hán tự) tương ứng với gợi ý Pinyin bên dưới. Nhấn "💡 Hiện/Ẩn Pinyin Gợi Ý" nếu cần!</p>
+                <button class="toggle-pinyin-btn" onclick="togglePinyinVisibility('image-vocab-writing', 'pinyin-hint')">💡 Hiện/Ẩn Pinyin Gợi Ý</button>
+                <div class="image-vocab-grid">
+                    </div>
+            </div>
+            <div id="quantifier-fill" style="margin-top: 25px;">
+                <h3>2. 用正确的量词填空 (Dùng lượng từ đúng điền vào chỗ trống):</h3>
+                <p class="instruction-text">📏 Chọn hoặc điền lượng từ (measure word) phù hợp vào mỗi chỗ trống.</p>
+                </div>
+        </div>
+
+        <div id="section-sentence-practice" class="game-section hidden">
+            <h2>III. 句型练习 (Jùxíng Liànxí - Luyện tập mẫu câu)</h2>
+            <div id="sentence-fill-blanks">
+                <h3>1. 选择合适的词语填空 (Chọn từ thích hợp điền vào chỗ trống):</h3>
+                <p class="instruction-text">🤔 Hãy chọn từ đúng trong các lựa chọn để hoàn thành các câu sau.</p>
+                </div>
+            <div id="sentence-qna" style="margin-top: 25px;">
+                <h3>2. 回答问题 (Trả lời câu hỏi):</h3>
+                <p class="instruction-text">💬 Dùng kiến thức đã học để trả lời các câu hỏi này bằng tiếng Trung nhé! (Phần này 老师 sẽ nhận xét sau nha 😊)</p>
+                </div>
+            <div id="sentence-completion-youmeiyou" style="margin-top: 25px;">
+                <h3>3. 用 "有" 或 "没有" 完成句子 (Dùng "có" hoặc "không có" hoàn thành câu):</h3>
+                <p class="instruction-text">✍️ Hoàn thành các câu sau bằng cách điền "有 (yǒu)" hoặc "没有 (méiyǒu)".</p>
+                </div>
+        </div>
+
+        <div id="section-reading" class="game-section hidden">
+            <h2>IV. 阅读理解 (Yuèdú Lǐjiě - Đọc hiểu)</h2>
+            <div class="reading-comprehension">
+                <h3>课文 (Kèwén):</h3>
+                <div class="passage">
+                    A: 你没有箱子吗？<br>
+                    B: 有啊。我的在这儿呢。<br>
+                    A: 我的很重，你的重不重？<br>
+                    B: 这个黑的很重，那个红的比较轻。<br>
+                    A: 你的箱子很新，我的很旧。<br>
+                    B: 那个新的是朋友的。这个旧的是我的。
+                </div>
+                <h3>根据课文回答问题 (Dựa vào đoạn văn trả lời câu hỏi):</h3>
+                <p class="instruction-text">📖 Đọc kỹ đoạn hội thoại và trả lời các câu hỏi bằng tiếng Trung. (Phần này 老师 sẽ xem và góp ý cho em sau nhé!)</p>
+                <div id="reading-questions-container">
+                    </div>
+            </div>
+        </div>
+
+        <div id="section-describe-luggage" class="game-section hidden">
+            <h2>V. 描述你的行李 (Miáoshù nǐ de xínglǐ - Miêu tả hành lý của bạn)</h2>
+            <p class="instruction-text">🎒 Nếu đi du lịch, em sẽ mang theo những gì? Hãy liệt kê 5 thứ, màu sắc của chúng và khi nào em dùng đến chúng bằng tiếng Trung nhé! (Phần này để em tự do sáng tạo, 老师 sẽ giúp em sửa sau nha!)</p>
+            <div id="luggage-description-area">
+                </div>
+        </div>
+
+        <button id="next-section-button" class="action-button next-section-btn" onclick="nextSection()">Tiếp tục phần sau 🚀</button>
+        <button id="finish-game-button" class="action-button hidden" onclick="showFinalSummary_B13()">Hoàn Thành & Xem Kết Quả 🎉</button>
+
+        <div id="final-summary" class="hidden">
+            <h2>✨ Bảng Tổng Kết Thành Tích ✨</h2>
+            <p>Chúc mừng em đã hoàn thành tất cả các thử thách! Cùng xem lại kết quả nào:</p>
+            <p><strong>Tổng thời gian làm bài:</strong> <span id="total-time-taken"></span></p>
+            <p><strong>Tổng điểm:</strong> <span id="total-score"></span></p>
+            <h3>Chi tiết các câu trả lời:</h3>
+            <ul id="summary-details"></ul>
+            <button onclick="restartGame()" class="action-button" style="background-image: linear-gradient(to right, var(--primary-color), #5BC0DE);">Chơi Lại Từ Đầu 🔁</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Dữ liệu cho trò chơi Bài 13 ---
+        const hanziMatchingData_B13 = [
+            { id: 1, hanzi: "药", pinyin: "yào" }, { id: 2, hanzi: "箱子", pinyin: "xiāngzi" },
+            { id: 3, hanzi: "重", pinyin: "zhòng" }, { id: 4, hanzi: "轻", pinyin: "qīng" },
+            { id: 5, hanzi: "新", pinyin: "xīn" }, { id: 6, hanzi: "旧", pinyin: "jiù" },
+            { id: 7, hanzi: "舒服", pinyin: "shūfu" }, { id: 8, hanzi: "衣服", pinyin: "yīfu" },
+            { id: 9, hanzi: "颜色", pinyin: "yánsè" }, { id: 10, hanzi: "里边", pinyin: "lǐbian" }
+        ];
+
+        const imageVocabData_B13 = [
+            { id: 'iv1', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgb65KdoGb8eBIT0dyjodODL-fsDnGbRr2MhGmbcAZXp8Q6plo5I7s-KZ2-szmUW6B9rZeqOMAvAvCRvsF5Y1Fx8XXHaHQLapYQzA_eQ', answer: "中药", pinyin_hint: "zhōngyào" },
+            { id: 'iv2', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZAmpQQ8uDZUCZghWEJK38JGtlCOFeVPfziA&s', answer: "西药", pinyin_hint: "xīyào" },
+            { id: 'iv3', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkJ61wN50cIkXFBc20NX3k73dpjbqM1cfs-Q&s', answer: "行李箱", pinyin_hint: "xínglǐxiāng" },
+            { id: 'iv4', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRne1I4S8wwF9YTNgeugkBktjjz7ELLxfDWQ&s', answer: "牙刷", pinyin_hint: "yáshuā" },
+            { id: 'iv5', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFpjre9LrAoFfhwsMlNfa7puLa7UsdJel1Yw&s', answer: "衣服", pinyin_hint: "yīfu" },
+            { id: 'iv6', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxysZJrTnTscFFKAkJoy2CKheBsj1G_XbWEQ&s', answer: "雨伞", pinyin_hint: "yǔsǎn" },
+            { id: 'iv7', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDGVbcwUV85q86pMLimyaAuL216IqDHAnJ1A&s', answer: "手机", pinyin_hint: "shǒujī" },
+            { id: 'iv8', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyvQ9IvuyLz4rzB6WuJRRTAY_sIwfR96dOxw&s', answer: "防晒霜", pinyin_hint: "fángshàishuāng" }
+        ];
+
+        const quantifierFillData_B13 = [
+            { id: 'qf1', sentence_before: "一", sentence_after: "衣服 (yīfu)", answer: "件", options: ["件", "把", "本", "张"] },
+            { id: 'qf2', sentence_before: "一", sentence_after: "雨伞 (yǔsǎn)", answer: "把", options: ["件", "把", "本", "张"] },
+            { id: 'qf3', sentence_before: "一", sentence_after: "词典 (cídiǎn)", answer: "本", options: ["件", "把", "本", "张"] },
+            { id: 'qf4', sentence_before: "四", sentence_after: "银行卡 (yínhángkǎ)", answer: "张", options: ["件", "把", "本", "张"] },
+            { id: 'qf5', sentence_before: "一", sentence_after: "笔 (bǐ)", answer: "支", options: ["支", "台", "条", "瓶"] },
+            { id: 'qf6', sentence_before: "一", sentence_after: "电脑 (diànnǎo)", answer: "台", options: ["支", "台", "条", "瓶"] },
+            { id: 'qf7', sentence_before: "一", sentence_after: "牙刷 (yáshuā)", answer: "把", options: ["支", "台", "条", "把"] },
+            { id: 'qf8', sentence_before: "两", sentence_after: "啤酒 (píjiǔ)", answer: "瓶", options: ["支", "台", "条", "瓶"] },
+            { id: 'qf9', sentence_before: "三", sentence_after: "铅笔 (qiānbǐ)", answer: "支", options: ["支", "台", "条", "瓶"] },
+            { id: 'qf10', sentence_before: "一", sentence_after: "裤子 (kùzi)", answer: "条", options: ["支", "台", "条", "瓶"] },
+            { id: 'qf11', sentence_before: "很多", sentence_after: "小鸟 (xiǎo niǎo)", answer: "只", options: ["只", "群", "个", "条"] },
+            { id: 'qf12', sentence_before: "一", sentence_after: "香水 (xiāngshuǐ)", answer: "瓶", options: ["只", "滴", "个", "瓶"] }
+        ];
+
+        const sentenceFillBlanksData_B13 = [
+            { id: 'sf1', sentence_parts: ["我的箱子很 ", "，你的箱子比较 ", "。"], options: ["重", "轻"], answers: ["重", "轻"] },
+            { id: 'sf2', sentence_parts: ["这件衣服是 ", " 的，那件是 ", " 的。"], options: ["新", "旧"], answers: ["新", "旧"] },
+            { id: 'sf3', sentence_parts: ["我喜欢 ", " 蓝色的，不喜欢 ", " 蓝色的。"], options: ["深", "浅"], answers: ["深", "浅"] },
+            { id: 'sf4', sentence_parts: ["我生病了，觉得很 ", "。"], options: ["舒服", "不舒服"], answers: ["不舒服"] },
+            { id: 'sf5', sentence_parts: ["你喜欢吃 ", " 还是 ", "？"], options: ["中药", "西药"], answers: ["中药", "西药"] }, // User can choose either order
+            { id: 'sf6', sentence_parts: ["我的手机在箱子", "。"], options: ["里边", "上面", "旁边"], answers: ["里边"] }
+        ];
+
+        const sentenceQnAData_B13 = [
+            { id: 'qna1_b13', question: "你生病的时候，觉得怎么样？", exampleAnswer: "我觉得不舒服，头疼。" },
+            { id: 'qna2_b13', question: "你的箱子里有什么东西？ (写两样东西)", exampleAnswer: "我的箱子里有衣服和书。" },
+            { id: 'qna3_b13', question: "这个黑箱子重不重？", exampleAnswer: "这个黑箱子很重 / 不重。" },
+            { id: 'qna4_b13', question: "你的手机是什么颜色的？", exampleAnswer: "我的手机是黑色的。" },
+            { id: 'qna5_b13', question: "你喜欢用中药还是西药？", exampleAnswer: "我喜欢用西药。" }
+        ];
+
+        const youMeiyouData_B13 = [
+            { id: 'ym1', parts: ["我 ", " 一个新手机。"], answer: "有" },
+            { id: 'ym2', parts: ["他 ", " 中药，他有西药。"], answer: "没有" },
+            { id: 'ym3', parts: ["妹妹 ", " 英语书吗？她 ", " 英语书。"], answers: ["有", "有"] },
+            { id: 'ym4', parts: ["箱子里 ", " 衣服，但是 ", " 雨伞。"], answers: ["有", "没有"] }
+        ];
+
+        const readingQuestions_B13 = [
+            { id: 'rq1', question: "B 有箱子吗？", correctAnswer: "有啊。/ 有。" },
+            { id: 'rq2', question: "A 的箱子重不重？", correctAnswer: "A的箱子很重。" },
+            { id: 'rq3', question: "B 有几个箱子？它们是什么颜色的？", correctAnswer: "B有两个箱子，一个是黑的，一个是红的。" },
+            { id: 'rq4', question: "红色的箱子怎么样？", correctAnswer: "红色的箱子比较轻。" },
+            { id: 'rq5', question: "B 的新箱子是谁的？旧箱子呢？", correctAnswer: "B的新箱子是朋友的，旧箱子是他的。" }
+        ];
+
+        let currentSectionIndex_B13 = 0;
+        const sections_B13 = ['section-hanzi', 'section-vocab-quantifier', 'section-sentence-practice', 'section-reading', 'section-describe-luggage'];
+        let score_B13 = 0;
+        let timerInterval_B13;
+        let secondsElapsed_B13 = 0;
+        let userAnswers_B13 = {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateHanziMatching_B13();
+            populateImageVocabWriting_B13();
+            populateQuantifierFill_B13();
+            populateSentenceFillBlanks_B13();
+            populateSentenceQnA_B13();
+            populateYouMeiyou_B13();
+            populateReadingQuestions_B13();
+            populateDescribeLuggage_B13();
+
+            showSection_B13(currentSectionIndex_B13);
+            startTimer_B13();
+            updateScoreDisplay_B13();
+        });
+
+        function startTimer_B13() {
+            if (timerInterval_B13) clearInterval(timerInterval_B13);
+            secondsElapsed_B13 = 0;
+            document.getElementById('timer').textContent = `⏳ Thời gian: ${formatTime_B13(secondsElapsed_B13)}`;
+            timerInterval_B13 = setInterval(() => {
+                secondsElapsed_B13++;
+                document.getElementById('timer').textContent = `⏳ Thời gian: ${formatTime_B13(secondsElapsed_B13)}`;
+            }, 1000);
+        }
+        function formatTime_B13(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        function updateScoreDisplay_B13() {
+             document.getElementById('score-display').textContent = `Điểm: ${score_B13}`;
+        }
+        function updateScore_B13(points) {
+            score_B13 += points;
+            updateScoreDisplay_B13();
+        }
+
+        function showSection_B13(index) {
+            document.querySelectorAll('.game-section').forEach(sec => sec.classList.add('hidden'));
+            const currentSectionElement = document.getElementById(sections_B13[index]);
+            if (currentSectionElement) {
+                currentSectionElement.classList.remove('hidden');
+            }
+
+            const nextButton = document.getElementById('next-section-button');
+            const finishButton = document.getElementById('finish-game-button');
+
+            if (index >= sections_B13.length - 1) {
+                if(nextButton) nextButton.style.display = 'none';
+                if(finishButton) finishButton.classList.remove('hidden');
+                if(finishButton) finishButton.style.display = 'block'; // or 'inline-block'
+            } else {
+                if(nextButton) nextButton.style.display = 'block'; // or 'inline-block'
+                if(finishButton) finishButton.classList.add('hidden');
+            }
+        }
+
+
+        function nextSection() {
+            currentSectionIndex_B13++;
+            if (currentSectionIndex_B13 < sections_B13.length) {
+                showSection_B13(currentSectionIndex_B13);
+            }
+        }
+         function restartGame() {
+            currentSectionIndex_B13 = 0;
+            score_B13 = 0;
+            userAnswers_B13 = {};
+            updateScoreDisplay_B13();
+
+            document.querySelectorAll('input[type="text"], textarea, select').forEach(input => {
+                if(input.tagName === 'SELECT') input.selectedIndex = 0;
+                else input.value = '';
+                input.disabled = false;
+                if(input.style) input.style.borderColor = '#ccc';
+            });
+            document.querySelectorAll('.feedback').forEach(fb => {fb.textContent = ''; fb.className = 'feedback';});
+            document.querySelectorAll('.pinyin-text.visible').forEach(p => p.classList.remove('visible'));
+            document.querySelectorAll('.pinyin-hint.visible').forEach(p => p.classList.remove('visible'));
+            document.querySelectorAll('.blank').forEach(b => { b.textContent = '(chọn)'; delete b.dataset.filled; b.style.color = 'var(--danger-color)';});
+
+
+            document.querySelectorAll('.action-button, .toggle-pinyin-btn').forEach(btn => btn.disabled = false);
+            const hanziMatchingButton = document.querySelector('#hanzi-matching button.action-button');
+             if(hanziMatchingButton) hanziMatchingButton.disabled = false;
+            // TODO: Reset other specific check buttons if needed in their populate functions.
+
+            document.getElementById('final-summary').classList.add('hidden');
+            showSection_B13(currentSectionIndex_B13);
+            startTimer_B13();
+        }
+
+        function togglePinyinVisibility(containerId, pinyinClass) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.querySelectorAll(`.${pinyinClass}`).forEach(span => {
+                    span.classList.toggle('visible');
+                });
+            }
+        }
+
+        function populateHanziMatching_B13() {
+            const tbody = document.getElementById('hanzi-matching-body');
+            tbody.innerHTML = '';
+            const allPinyinsForOptions = shuffleArray_B13([...new Set(hanziMatchingData_B13.map(item => item.pinyin))]);
+
+            hanziMatchingData_B13.forEach(item => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td class="pinyin-column">${item.id}. ${item.hanzi} (<span class="pinyin-text">${item.pinyin}</span>)</td>
+                    <td>
+                        <select id="b13-pinyin-select-${item.id}">
+                            <option value="">Chọn Pinyin</option>
+                            ${allPinyinsForOptions.map(p => `<option value="${p}">${p}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td id="b13-match-feedback-${item.id}" class="feedback"></td>
+                `;
+            });
+        }
+        function shuffleArray_B13(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function populateImageVocabWriting_B13() {
+            const container = document.getElementById('image-vocab-writing');
+            const gridContainer = container.querySelector('.image-vocab-grid') || document.createElement('div');
+            if (!container.querySelector('.image-vocab-grid')) { // Only add grid if not exists
+                gridContainer.className = 'image-vocab-grid';
+                // Insert grid after the toggle pinyin button
+                const toggleBtn = container.querySelector('.toggle-pinyin-btn');
+                if (toggleBtn) {
+                    toggleBtn.after(gridContainer);
+                } else { // Or after instruction if no toggle button (fallback)
+                     const instruction = container.querySelector('.instruction-text');
+                     if(instruction) instruction.after(gridContainer);
+                     else container.appendChild(gridContainer); // Append if nothing else
+                }
+            }
+            gridContainer.innerHTML = ''; // Clear previous items in grid
+
+            imageVocabData_B13.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'image-vocab-item';
+                div.innerHTML = `
+                    <img src="${item.image}" alt="Hình ảnh cho ${item.answer}">
+                    <input type="text" id="b13-iv-${item.id}" placeholder="汉字">
+                    <div><small class="pinyin-hint">${item.pinyin_hint}</small></div>
+                    <button class="action-button" style="font-size:0.9em; padding: 6px 12px; margin-top:5px;" onclick="checkImageVocab_B13('${item.id}', '${item.answer}', this)">Kiểm tra</button>
+                    <div id="b13-iv-feedback-${item.id}" class="feedback"></div>
+                `;
+                gridContainer.appendChild(div);
+            });
+        }
+
+        function populateQuantifierFill_B13() {
+            const container = document.getElementById('quantifier-fill');
+            container.innerHTML = '<h3>2. 用正确的量词填空 (Dùng lượng từ đúng điền vào chỗ trống):</h3> <p class="instruction-text">📏 Chọn hoặc điền lượng từ (measure word) phù hợp vào mỗi chỗ trống.</p>';
+            quantifierFillData_B13.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'quantifier-fill-item';
+                let inputHtml = '';
+                if (item.options && item.options.length > 0) {
+                    inputHtml = `<select id="b13-qf-${item.id}">
+                                    <option value="">Chọn</option>
+                                    ${item.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                 </select>`;
+                } else {
+                    inputHtml = `<input type="text" id="b13-qf-${item.id}" placeholder="量词">`;
+                }
+                div.innerHTML = `
+                    <span>${item.sentence_before}</span>
+                    ${inputHtml}
+                    <span>${item.sentence_after}</span>
+                    <button class="action-button" style="font-size:0.8em; padding: 5px 10px; margin-left:10px;" onclick="checkQuantifier_B13('${item.id}', '${item.answer}', this)">Kiểm tra</button>
+                    <span id="b13-qf-feedback-${item.id}" class="feedback"></span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function populateSentenceFillBlanks_B13(){
+            const container = document.getElementById('sentence-fill-blanks');
+            container.innerHTML = '<h3>1. 选择合适的词语填空 (Chọn từ thích hợp điền vào chỗ trống):</h3><p class="instruction-text">🤔 Hãy chọn từ đúng trong các lựa chọn để hoàn thành các câu sau.</p>';
+            sentenceFillBlanksData_B13.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'sentence-fill-item';
+                let sentenceHtml = '';
+                item.sentence_parts.forEach((part, i) => {
+                    sentenceHtml += `<span>${part}</span>`;
+                    if (i < item.answers.length) {
+                        sentenceHtml += `<span id="b13-sf-blank-${item.id}-${i}" class="blank">(chọn)</span>`;
+                    }
+                });
+
+                div.innerHTML = `
+                    <p><strong>Câu ${index + 1}:</strong> ${sentenceHtml}</p>
+                    <div class="options-inline">
+                        ${item.options.map(opt => `<button onclick="selectSentenceFillOption(this, '${item.id}', '${opt}')">${opt}</button>`).join('')}
+                    </div>
+                    <button onclick="checkSentenceFill_B13('${item.id}', this)" class="action-button" style="font-size:0.9em; padding: 8px 15px; background-color:var(--cute-pink); margin-top:10px;">Kiểm tra câu ${index+1}</button>
+                    <div id="b13-sf-feedback-${item.id}" class="feedback"></div>
+                `;
+                container.appendChild(div);
+                userAnswers_B13[`sentenceFill_${item.id}`] = { selected: Array(item.answers.length).fill(null) };
+            });
+        }
+
+        function populateSentenceQnA_B13(){
+            const container = document.getElementById('sentence-qna');
+            container.innerHTML = '<h3>2. 回答问题 (Trả lời câu hỏi):</h3> <p class="instruction-text">💬 Dùng kiến thức đã học để trả lời các câu hỏi này bằng tiếng Trung nhé! (Phần này 老师 sẽ nhận xét sau nha 😊)</p>';
+            sentenceQnAData_B13.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'qna-item';
+                div.innerHTML = `
+                    <p><strong>${index + 1}. ${item.question}</strong></p>
+                    <textarea id="b13-qna-ans-${item.id}" placeholder="${item.exampleAnswer}"></textarea>
+                    <div class="feedback">Đáp án của em sẽ được 老师 xem sau.</div>
+                `;
+                container.appendChild(div);
+                document.getElementById(`b13-qna-ans-${item.id}`).addEventListener('change', (e) => {
+                    userAnswers_B13[`sentenceQnA_${item.id}`] = { question: item.question, userAnswer: e.target.value, isSelfAssessed: true };
+                });
+            });
+        }
+
+        function populateYouMeiyou_B13(){
+            const container = document.getElementById('sentence-completion-youmeiyou');
+            container.innerHTML = '<h3>3. 用 "有" 或 "没有" 完成句子 (Dùng "có" hoặc "không có" hoàn thành câu):</h3> <p class="instruction-text">✍️ Hoàn thành các câu sau bằng cách điền "有 (yǒu)" hoặc "没有 (méiyǒu)".</p>';
+            youMeiyouData_B13.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'youmeiyou-item';
+                let sentenceHtml = '';
+                const numAnswers = Array.isArray(item.answers) ? item.answers.length : (item.answer ? 1 : 0);
+                let partIndex = 0;
+                for (let i = 0; i < numAnswers; i++) {
+                    sentenceHtml += `<span>${item.parts[partIndex++]}</span>`;
+                    sentenceHtml += `<input type="text" id="b13-ym-${item.id}-${i}" class="youmeiyou-blank" placeholder="有/没有">`;
+                }
+                if (partIndex < item.parts.length) {
+                    sentenceHtml += `<span>${item.parts[partIndex]}</span>`;
+                }
+
+                div.innerHTML = `
+                    <p><strong>Câu ${index + 1}:</strong> ${sentenceHtml}</p>
+                    <button onclick="checkYouMeiyou_B13('${item.id}', this)" class="action-button" style="font-size:0.9em; padding: 8px 15px; background-color:var(--cute-pink); margin-top:5px;">Kiểm tra</button>
+                    <div id="b13-ym-feedback-${item.id}" class="feedback"></div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function populateReadingQuestions_B13(){
+            const container = document.getElementById('reading-questions-container');
+            container.innerHTML = ''; // Clear previous questions
+            readingQuestions_B13.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'question-item';
+                div.innerHTML = `
+                    <p><strong>${index + 1}. ${item.question}</strong></p>
+                    <textarea id="b13-rq-${item.id}" placeholder="Trả lời bằng tiếng Trung..."></textarea>
+                    <div class="feedback">Đáp án của em sẽ được 老师 xem sau.</div>
+                `;
+                container.appendChild(div);
+                 document.getElementById(`b13-rq-${item.id}`).addEventListener('change', (e) => {
+                    userAnswers_B13[`readingQuestion_${item.id}`] = { question: item.question, userAnswer: e.target.value, isSelfAssessed: true };
+                });
+            });
+        }
+
+        function populateDescribeLuggage_B13(){
+            const container = document.getElementById('luggage-description-area');
+            container.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const div = document.createElement('div');
+                div.className = 'describe-luggage-item';
+                div.innerHTML = `
+                    <label for="b13-luggage-item-${i}">东西 ${i}:</label>
+                    <input type="text" id="b13-luggage-item-${i}" placeholder="Tên đồ vật (Hán tự)">
+                    <label for="b13-luggage-color-${i}">颜色:</label>
+                    <input type="text" id="b13-luggage-color-${i}" placeholder="Màu sắc (Hán tự)">
+                    <label for="b13-luggage-usage-${i}">什么时候使用:</label>
+                    <input type="text" id="b13-luggage-usage-${i}" placeholder="Khi nào dùng (tiếng Trung)">
+                `;
+                container.appendChild(div);
+                ['item', 'color', 'usage'].forEach(field => {
+                    document.getElementById(`b13-luggage-${field}-${i}`).addEventListener('change', (e) => {
+                        if (!userAnswers_B13[`describeLuggage_${i}`]) userAnswers_B13[`describeLuggage_${i}`] = {isSelfAssessed: true};
+                        userAnswers_B13[`describeLuggage_${i}`][field] = e.target.value;
+                    });
+                });
+            }
+        }
+
+
+        function checkHanziMatching_B13() {
+            let sectionScore = 0;
+            userAnswers_B13['hanziMatching_B13'] = [];
+            hanziMatchingData_B13.forEach(item => {
+                const pinyinSelect = document.getElementById(`b13-pinyin-select-${item.id}`);
+                const feedbackEl = document.getElementById(`b13-match-feedback-${item.id}`);
+                const userPinyin = pinyinSelect.value;
+                let isCorrect = (userPinyin === item.pinyin);
+
+                if (isCorrect) {
+                    feedbackEl.textContent = '🎉 Chính xác!';
+                    feedbackEl.className = 'feedback correct';
+                    sectionScore++;
+                } else {
+                    feedbackEl.textContent = `😢 Chưa đúng. Pinyin đúng: ${item.pinyin}`;
+                    feedbackEl.className = 'feedback incorrect';
+                }
+                pinyinSelect.disabled = true;
+                userAnswers_B13['hanziMatching_B13'].push({
+                    id: item.id, hanzi: item.hanzi, userPinyin: userPinyin, correctPinyin: item.pinyin, isCorrect: isCorrect
+                });
+            });
+            updateScore_B13(sectionScore);
+            document.querySelector('#hanzi-matching button.action-button').disabled = true;
+        }
+
+        function normalizePinyin_B13(pinyin) {
+            if (!pinyin) return "";
+            let str = pinyin.toLowerCase();
+            str = str.replace(/[āáǎà]/g, 'a').replace(/[ēéěè]/g, 'e').replace(/[īíǐì]/g, 'i').replace(/[ōóǒò]/g, 'o').replace(/[ūúǔùüǖǘǚǜ]/g, 'u').replace(/\s+/g, '');
+            return str;
+        }
+
+        function checkImageVocab_B13(itemId, correctAnswer, buttonElement) {
+            const inputEl = document.getElementById(`b13-iv-${itemId}`);
+            const userAnswer = inputEl.value.trim();
+            const feedbackEl = document.getElementById(`b13-iv-feedback-${itemId}`);
+            let isCorrect = (userAnswer === correctAnswer);
+
+            if(isCorrect) {
+                feedbackEl.textContent = '🖼️👍 Chính xác!';
+                feedbackEl.className = 'feedback correct';
+                updateScore_B13(1);
+            } else {
+                feedbackEl.textContent = `🤔 Sai rồi. Đáp án: ${correctAnswer}`;
+                feedbackEl.className = 'feedback incorrect';
+            }
+            inputEl.disabled = true;
+            buttonElement.disabled = true;
+            userAnswers_B13[`imageVocab_${itemId}`] = { userAnswer, correctAnswer, isCorrect };
+        }
+
+        function checkQuantifier_B13(itemId, correctAnswer, buttonElement) {
+            const inputEl = document.getElementById(`b13-qf-${itemId}`);
+            const userAnswer = inputEl.value.trim();
+            const feedbackEl = document.getElementById(`b13-qf-feedback-${itemId}`);
+            let isCorrect = (userAnswer === correctAnswer);
+
+            if(isCorrect) {
+                feedbackEl.textContent = '📏✔️ Đúng rồi!';
+                feedbackEl.className = 'feedback correct';
+                updateScore_B13(1);
+            } else {
+                feedbackEl.textContent = `🤔 Chưa đúng. Đáp án: ${correctAnswer}`;
+                feedbackEl.className = 'feedback incorrect';
+            }
+            inputEl.disabled = true;
+            buttonElement.disabled = true;
+            userAnswers_B13[`quantifierFill_${itemId}`] = { userAnswer, correctAnswer, isCorrect };
+        }
+
+        let selectedSentenceFillOptions = {};
+
+        function selectSentenceFillOption(buttonEl, itemId, selectedOption) {
+            const itemContainer = buttonEl.closest('.sentence-fill-item');
+            const blanks = itemContainer.querySelectorAll('.blank');
+            if (!selectedSentenceFillOptions[itemId]) {
+                 selectedSentenceFillOptions[itemId] = Array(blanks.length).fill(null);
+            }
+
+            let filled = false;
+            for (let i = 0; i < blanks.length; i++) {
+                if (blanks[i].textContent === '(chọn)' || blanks[i].dataset.filled !== 'true') {
+                    blanks[i].textContent = selectedOption;
+                    blanks[i].style.color = 'var(--primary-color)';
+                    blanks[i].dataset.filled = 'true';
+                    selectedSentenceFillOptions[itemId][i] = selectedOption;
+                    filled = true;
+                    break;
+                }
+            }
+            if(filled) buttonEl.disabled = true;
+        }
+
+        function checkSentenceFill_B13(itemId, buttonElement) {
+            const itemData = sentenceFillBlanksData_B13.find(i => i.id === itemId);
+            const feedbackEl = document.getElementById(`b13-sf-feedback-${itemId}`);
+            const userSelectedAnswers = selectedSentenceFillOptions[itemId] || [];
+            let allCorrect = true;
+            let scoreForThisItem = 0;
+
+            itemData.answers.forEach((correctAnswer, i) => {
+                if (userSelectedAnswers[i] !== correctAnswer) {
+                    allCorrect = false;
+                } else {
+                    scoreForThisItem++;
+                }
+            });
+
+            if (allCorrect && userSelectedAnswers.length === itemData.answers.length) {
+                feedbackEl.textContent = '📝✔️ Hoàn hảo!';
+                feedbackEl.className = 'feedback correct';
+            } else {
+                feedbackEl.textContent = `🤔 Xem lại nhé. Đáp án đúng: ${itemData.answers.join(' / ')}`;
+                feedbackEl.className = 'feedback incorrect';
+            }
+            updateScore_B13(scoreForThisItem);
+            buttonElement.disabled = true;
+            const itemContainer = document.getElementById(`b13-sf-feedback-${itemId}`).closest('.sentence-fill-item');
+            if(itemContainer) itemContainer.querySelectorAll('.options-inline button').forEach(btn => btn.disabled = true);
+
+            userAnswers_B13[`sentenceFill_${itemId}`] = { userAnswer: userSelectedAnswers.join(' / '), correctAnswer: itemData.answers.join(' / '), isCorrect: allCorrect };
+        }
+
+
+        function checkYouMeiyou_B13(itemId, buttonElement) {
+            const itemData = youMeiyouData_B13.find(i => i.id === itemId);
+            const feedbackEl = document.getElementById(`b13-ym-feedback-${itemId}`);
+            let allCorrectInItem = true;
+            let userAnswersArray = [];
+            let scoreForThis = 0;
+
+            const numBlanks = Array.isArray(itemData.answers) ? itemData.answers.length : (itemData.answer ? 1 : 0);
+
+
+            for (let i = 0; i < numBlanks; i++) {
+                const inputEl = document.getElementById(`b13-ym-${itemId}-${i}`);
+                const userAnswer = inputEl.value.trim();
+                userAnswersArray.push(userAnswer);
+                const correctAnswer = Array.isArray(itemData.answers) ? itemData.answers[i] : itemData.answer;
+                if (userAnswer === correctAnswer) {
+                    scoreForThis++;
+                } else {
+                    allCorrectInItem = false;
+                }
+                inputEl.disabled = true;
+            }
+
+            if (allCorrectInItem && numBlanks > 0) { // Ensure there was something to check
+                feedbackEl.textContent = '👍 Chính xác!';
+                feedbackEl.className = 'feedback correct';
+            } else if (numBlanks > 0) {
+                const correctAnswersText = Array.isArray(itemData.answers) ? itemData.answers.join(' / ') : itemData.answer;
+                feedbackEl.textContent = `🤔 Chưa đúng. Đáp án: ${correctAnswersText}`;
+                feedbackEl.className = 'feedback incorrect';
+            } else {
+                 feedbackEl.textContent = `Không có đáp án để kiểm tra cho mục này.`;
+            }
+            updateScore_B13(scoreForThis);
+            buttonElement.disabled = true;
+            userAnswers_B13[`youMeiyou_${itemId}`] = { userAnswer: userAnswersArray.join(' / '), correctAnswer: Array.isArray(itemData.answers) ? itemData.answers.join(' / ') : itemData.answer, isCorrect: allCorrectInItem };
+        }
+
+
+        function showFinalSummary_B13() {
+            if(timerInterval_B13) clearInterval(timerInterval_B13);
+            document.querySelectorAll('.game-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById('next-section-button').classList.add('hidden');
+            document.getElementById('finish-game-button').classList.add('hidden');
+
+            document.getElementById('total-time-taken').textContent = formatTime_B13(secondsElapsed_B13);
+            document.getElementById('total-score').textContent = score_B13;
+
+            const detailsUl = document.getElementById('summary-details');
+            detailsUl.innerHTML = '';
+
+            if (userAnswers_B13.hanziMatching_B13) {
+                const li = document.createElement('li');
+                let correctCount = userAnswers_B13.hanziMatching_B13.filter(a => a.isCorrect).length;
+                li.innerHTML = `<strong>Phần I.1 - Nối Chữ Hán:</strong> ${correctCount}/${hanziMatchingData_B13.length} đúng.`;
+                li.classList.add(correctCount === hanziMatchingData_B13.length ? 'correct-ans' : 'incorrect-ans');
+                detailsUl.appendChild(li);
+            }
+            // Thêm tổng kết cho các phần khác tương tự...
+
+            document.getElementById('final-summary').classList.remove('hidden');
+            window.scrollTo(0, document.getElementById('final-summary').offsetTop - 20);
+        }
+
+    </script>
+</body>
+</html>

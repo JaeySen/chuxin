@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoạt Động Giao Tiếp: Đi Chợ Mua Hoa Quả (Có Hình Ảnh)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; 
+        }
+        .role-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            padding: 1.5rem; 
+            border-left-width: 8px;
+        }
+        .buyer-card { border-left-color: #3b82f6; }
+        .seller-card { border-left-color: #16a34a; }
+        .role-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
+        .buyer-title { color: #2563eb; }
+        .seller-title { color: #15803d; }
+        .fruit-list-item {
+            background-color: #f9fafb; 
+            padding: 0.75rem; 
+            border-radius: 8px;
+            margin-bottom: 0.75rem; 
+            border: 1px solid #e5e7eb; 
+            display: flex;
+            align-items: center;
+            gap: 1rem; /* Space between image and text */
+        }
+        .fruit-list-item img {
+            width: 5rem; /* 80px */
+            height: 5rem; /* 80px */
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .fruit-list-item .info {
+            flex-grow: 1;
+        }
+        .fruit-list-item .info .name {
+            font-weight: 700;
+            font-size: 1.25rem; /* 20px */
+            color: #111827; /* Gray-900 */
+        }
+        .fruit-list-item .info .details {
+            font-size: 1rem; /* 16px */
+            color: #4b5563; /* Gray-600 */
+        }
+
+        .script-suggestion-list li {
+            background-color: #f9fafb; 
+            padding: 0.75rem; 
+            border-radius: 6px;
+            margin-bottom: 0.5rem; 
+            border: 1px solid #e5e7eb; 
+        }
+        .suggestion, .script-suggestion {
+            background-color: #fffbeb; 
+            border: 1px dashed #f59e0b; 
+            padding: 1rem; 
+            border-radius: 8px;
+            margin-top: 1rem; 
+        }
+        .script-suggestion { background-color: #eff6ff; border-color: #60a5fa; }
+        .script-suggestion h4 { color: #1d4ed8; margin-top:0; font-size: 1.1rem; font-weight:600; }
+
+        .chinese-text { font-style: italic; color: #57534e; }
+        .pinyin-text { font-size: 0.9em; color: #78716c; display: none; }
+        .pinyin-text.visible { display: inline; }
+        h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.75rem; color: #374151; }
+        
+        .phach-section, .action-buttons-section {
+            background-color: #e0f2fe; 
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid #bae6fd; 
+        }
+        .phach-section input[type="number"] {
+            padding: 0.5rem; border-radius: 6px; border: 1px solid #9ca3af; 
+            margin-left: 0.5rem; margin-right: 0.5rem; width: 80px;
+        }
+        .phach-section button, .action-buttons-section button, #character-selection-view button {
+            background-color: #38bdf8; color: white; padding: 0.75rem 1.5rem; 
+            border-radius: 8px; font-weight: 600; font-size: 1.1rem; 
+            border: none; cursor: pointer; transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .phach-section button:hover, .action-buttons-section button:hover, #character-selection-view button:hover {
+            background-color: #0ea5e9; transform: translateY(-1px);
+        }
+        #character-selection-view button.buyer-btn { background-color: #3b82f6; }
+        #character-selection-view button.buyer-btn:hover { background-color: #2563eb; }
+        #character-selection-view button.seller-btn { background-color: #16a34a; }
+        #character-selection-view button.seller-btn:hover { background-color: #15803d; }
+        .toggle-pinyin-btn {
+            background-color: #eab308; color: white; padding: 0.5rem 1rem;
+            border-radius: 6px; font-weight: 500; cursor: pointer;
+            transition: background-color 0.2s; margin-bottom: 1rem; border: none;
+        }
+        .toggle-pinyin-btn:hover { background-color: #ca8a04; }
+        .hidden { display: none !important; }
+        #character-selection-view {
+            text-align: center; padding: 2rem; background-color: white;
+            border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        #character-selection-view h2 { font-size: 2rem; color: #1f2937; margin-bottom: 1.5rem; }
+        #character-selection-view .button-container { display: flex; justify-content: center; gap: 1rem; }
+
+        @media print {
+            body { background-color: white; font-size: 12pt; }
+            .role-card { box-shadow: none; border: 1px solid #ccc; margin-bottom: 1.5rem; padding: 1rem; page-break-inside: avoid; }
+            .no-print { display: none; }
+            .printable-area { max-width: 100%; }
+            .phach-section, .action-buttons-section, #character-selection-view, .script-suggestion { display: none; }
+            .toggle-pinyin-btn { display: none; }
+            .pinyin-text { display: inline !important; }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="printable-area">
+        <header class="text-center mb-6 no-print">
+            <h1 class="text-3xl font-bold text-gray-700">🛒 Hoạt Động Giao Tiếp: Đi Chợ Mua Hoa Quả 🍓</h1>
+            <p class="text-md text-gray-500">去市场买水果 <span class="pinyin-text">(qù shìchǎng mǎi shuǐguǒ)</span></p>
+        </header>
+
+        <div id="character-selection-view">
+            <h2>👋 Bạn là ai hôm nay?</h2>
+            <div class="button-container">
+                <button onclick="selectRole('buyer')" class="buyer-btn">Tôi là Người Mua 🧑‍🌾</button>
+                <button onclick="selectRole('seller')" class="seller-btn">Tôi là Người Bán 🏪</button>
+            </div>
+        </div>
+
+        <div id="role-play-view" class="hidden">
+            <div class="text-center mb-4 no-print">
+                 <button onclick="showCharacterSelection()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow-md text-sm">
+                    ↩️ Quay lại chọn nhân vật
+                </button>
+            </div>
+            <div class="phach-section no-print text-center">
+                <h3 class="text-xl font-semibold text-sky-700 mt-0 mb-3">🏷️ Khu Vực Đồng Bộ Phách</h3>
+                <p class="mb-2 text-gray-700">
+                    Bộ đề hiện tại (Phách số): <strong id="current-phach-display" class="text-sky-600 text-lg">1</strong>
+                </p>
+                <div>
+                    <label for="phach-input" class="text-gray-700">Nhập số phách (1-10):</label>
+                    <input type="number" id="phach-input" min="1" max="10" value="1">
+                    <button onclick="handleMatchPhach()">✔️ Khớp Phách</button>
+                </div>
+            </div>
+
+            <div id="buyer-role-card" class="role-card buyer-card hidden">
+                <button class="toggle-pinyin-btn no-print" onclick="togglePinyin(this)">👁️ Hiện Pinyin</button>
+                <h2 class="role-title buyer-title">PHIẾU A: NGƯỜI MUA <span class="chinese-text">(买东西的人)</span> <span class="pinyin-text">(mǎi dōngxi de rén)</span> 🧑‍🌾</h2>
+                <h3>📝 Nhiệm vụ của bạn:</h3>
+                <p class="mb-3 text-gray-700">Bạn đến một cửa hàng hoa quả. Hỏi giá và mua những thứ trong "Danh sách cần mua". Bạn có <strong class="text-red-600">30 đồng (三十块钱 <span class="pinyin-text">sānshí kuài qián</span>)</strong>, hãy tính toán cẩn thận nhé!</p>
+                <h3>🛍️ Danh sách cần mua <span class="chinese-text">(购物单</span> <span class="pinyin-text">gòuwù dān</span>):</h3>
+                <ul id="shopping-list-buyer" class="list-none p-0"></ul>
+                <p class="mt-2 text-sm text-gray-600">Và hỏi giá thêm một loại quả khác mà bạn thích.</p>
+                
+                <div class="script-suggestion mt-6">
+                    <h4>📝 Kịch bản gợi ý cho bạn (Người Mua):</h4>
+                    <ul class="script-suggestion-list list-none p-0 text-sm">
+                        <li><strong>Chào hỏi:</strong> <span class="chinese-text">你好！</span> <span class="pinyin-text">(Nǐ hǎo!)</span></li>
+                        <li><strong>Nói muốn mua gì:</strong> <span class="chinese-text">我想买水果。</span> <span class="pinyin-text">(Wǒ xiǎng mǎi shuǐguǒ.)</span></li>
+                        <li><strong>Hỏi giá (ví dụ Táo):</strong> <span class="chinese-text">请问苹果一斤多少钱？</span> <span class="pinyin-text">(Qǐngwèn píngguǒ yì jīn duōshao qián?)</span></li>
+                        <li><strong>Mặc cả (nếu cần):</strong> <span class="chinese-text">太贵了，便宜一点儿吧！</span> <span class="pinyin-text">(Tài guì le, piányi yìdiǎnr ba!)</span></li>
+                        <li><strong>Nói số lượng (ví dụ 2 cân):</strong> <span class="chinese-text">我要两斤。</span> <span class="pinyin-text">(Wǒ yào liǎng jīn.)</span></li>
+                        <li><strong>Hỏi tổng tiền:</strong> <span class="chinese-text">一共多少钱？</span> <span class="pinyin-text">(Yígòng duōshao qián?)</span></li>
+                        <li><strong>Trả tiền:</strong> <span class="chinese-text">给你钱。</span> <span class="pinyin-text">(Gěi nǐ qián.)</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="seller-role-card" class="role-card seller-card hidden">
+                <button class="toggle-pinyin-btn no-print" onclick="togglePinyin(this)">👁️ Hiện Pinyin</button>
+                <h2 class="role-title seller-title">PHIẾU B: NGƯỜI BÁN <span class="chinese-text">(卖东西的人)</span> <span class="pinyin-text">(mài dōngxi de rén)</span> 🏪</h2>
+                <h3>📝 Nhiệm vụ của bạn:</h3>
+                <p class="mb-3 text-gray-700">Bạn là chủ cửa hàng hoa quả. Trả lời khách hàng và tính tiền cho họ.</p>
+                <h3>🏷️ Bảng giá của bạn hôm nay <span class="chinese-text">(今日价格单</span> <span class="pinyin-text">jīnrì jiàgé dān</span>):</h3>
+                <ul id="price-list-seller" class="list-none p-0"></ul>
+
+                <div class="script-suggestion mt-6">
+                    <h4>📝 Kịch bản gợi ý cho bạn (Người Bán):</h4>
+                    <ul class="script-suggestion-list list-none p-0 text-sm">
+                        <li><strong>Chào khách:</strong> <span class="chinese-text">你好！/ 欢迎光临！</span> <span class="pinyin-text">(Nǐ hǎo! / Huānyíng guānglín!)</span></li>
+                        <li><strong>Hỏi khách muốn gì:</strong> <span class="chinese-text">你买什么？</span> <span class="pinyin-text">(Nǐ mǎi shénme?)</span></li>
+                        <li><strong>Báo giá (ví dụ Táo 3 đồng):</strong> <span class="chinese-text">苹果三块一斤。</span> <span class="pinyin-text">(Píngguǒ sān kuài yì jīn.)</span></li>
+                        <li><strong>Hỏi số lượng:</strong> <span class="chinese-text">你要几斤？</span> <span class="pinyin-text">(Nǐ yào jǐ jīn?)</span></li>
+                        <li><strong>Tính tổng tiền (ví dụ 16.5 đồng):</strong> <span class="chinese-text">一共十六块五毛。</span> <span class="pinyin-text">(Yígòng shíliù kuài wǔ máo.)</span></li>
+                        <li><strong>Nhận tiền và thối tiền (ví dụ nhận 50, thối 33.5):</strong> <span class="chinese-text">收你五十块，找你三十三块五毛。</span> <span class="pinyin-text">(Shōu nǐ wǔshí kuài, zhǎo nǐ sānshísān kuài wǔ máo.)</span></li>
+                         <li><strong>Cảm ơn, tiễn khách:</strong> <span class="chinese-text">谢谢！您慢走！</span> <span class="pinyin-text">(Xièxie! Nín màn zǒu!)</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="action-buttons-section text-center mt-8 mb-4 no-print">
+                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-700">
+                    🖨️ In Phiếu
+                </button>
+                <button onclick="handleChangeScenario()" class="bg-green-500 hover:bg-green-700 ml-2">
+                    🔄 Đổi Bộ Đề (Phách)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allFruitsData = [
+            { name: "Táo", chinese: "苹果", pinyin: "píngguǒ", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoCDBwHdRmovxn9d3GZ14Uwbb7YUK7hFgq1A&s", basePriceMin: 2.5, basePriceMax: 6 },
+            { name: "Quýt", chinese: "橘子", pinyin: "júzi", imageUrl: "https://vcdn1-suckhoe.vnecdn.net/2022/11/17/close-up-fresh-organic-mandari-7704-8534-1668676426.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=7xwH-Nb8gPUf1pAZGZ7jyg", basePriceMin: 2, basePriceMax: 4.5 },
+            { name: "Chuối", chinese: "香蕉", pinyin: "xiāngjiāo", imageUrl: "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2021/10/14/chuoi1-16341869574602070184903.jpg", basePriceMin: 3, basePriceMax: 5 },
+            { name: "Dưa hấu", chinese: "西瓜", pinyin: "xīguā", imageUrl: "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2022/11/12/dua-hau-16682703712011380946081.jpg", basePriceMin: 1.5, basePriceMax: 3 },
+            { name: "Nho", chinese: "葡萄", pinyin: "pútao", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw33gbpYpsdGtOMdLeYFmPpdX-I-8ku8e8SA&s", basePriceMin: 6, basePriceMax: 12 },
+            { name: "Xoài", chinese: "芒果", pinyin: "mángguǒ", imageUrl: "https://suckhoedoisong.qltns.mediacdn.vn/Images/duylinh/2019/08/15/8-loi-ich-it-biet-cua-xoai1565855128.jpg", basePriceMin: 5, basePriceMax: 10 },
+            { name: "Lê", chinese: "梨", pinyin: "lí", imageUrl: "https://cdn.tgdd.vn/Products/Images/8788/223091/bhx/le-duong-hop-1kg-4-6-trai-202205111941249856.jpg", basePriceMin: 3, basePriceMax: 5.5 },
+            { name: "Đào", chinese: "桃子", pinyin: "táozi", imageUrl: "https://citifruit.com/uploads/images/Products/qua-dao-800x600.jpg", basePriceMin: 4, basePriceMax: 8 }
+        ];
+
+        const jinQuantitiesData = [
+            { amount: 1, chinese: "一斤", pinyin: "yì jīn" },
+            { amount: 1.5, chinese: "一斤半", pinyin: "yì jīn bàn" },
+            { amount: 2, chinese: "两斤", pinyin: "liǎng jīn" },
+            { amount: 2.5, chinese: "两斤半", pinyin: "liǎng jīn bàn" },
+            { amount: 3, chinese: "三斤", pinyin: "sān jīn" }
+        ];
+
+        const MAX_SCENARIOS = 10;
+        let currentScenarioId = 1;
+        let selectedRole = null; 
+
+        // DOM Elements
+        const characterSelectionView = document.getElementById('character-selection-view');
+        const rolePlayView = document.getElementById('role-play-view');
+        const buyerRoleCard = document.getElementById('buyer-role-card');
+        const sellerRoleCard = document.getElementById('seller-role-card');
+        const currentPhachDisplay = document.getElementById('current-phach-display');
+        const phachInput = document.getElementById('phach-input');
+        const shoppingListBuyerContainer = document.getElementById('shopping-list-buyer');
+        const priceListSellerContainer = document.getElementById('price-list-seller');
+
+        // Seeded Pseudo-Random Number Generator
+        let scenarioPrng;
+        function mulberry32(a) {
+            return function() {
+              var t = a += 0x6D2B79F5;
+              t = Math.imul(t ^ t >>> 15, t | 1);
+              t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+              return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            }
+        }
+
+        function getSeededRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(scenarioPrng() * (max - min + 1)) + min;
+        }
+
+        function getSeededRandomElement(arr) {
+            if (!arr || arr.length === 0) return undefined;
+            return arr[Math.floor(scenarioPrng() * arr.length)];
+        }
+        
+        function generateSeededRandomPrice(minKuai, maxKuai) {
+            const kuai = getSeededRandomInt(Math.floor(minKuai), Math.floor(maxKuai -1 < minKuai ? minKuai : maxKuai -1));
+            const mao = getSeededRandomInt(0, 9);
+            let priceValue = kuai + (mao / 10);
+            priceValue = Math.max(minKuai, Math.min(maxKuai, priceValue));
+            const finalKuai = Math.floor(priceValue);
+            const finalMao = Math.round((priceValue - finalKuai) * 10);
+            let priceString = `${finalKuai}块`;
+            let pinyinString = `${kuaiToPinyin(finalKuai)} kuài`;
+            if (finalMao > 0) {
+                priceString += `${finalMao}毛`;
+                pinyinString += ` ${maoToPinyin(finalMao)} máo`;
+            }
+            return { value: parseFloat(priceValue.toFixed(1)), string: priceString, pinyin: pinyinString };
+        }
+
+        function kuaiToPinyin(num) {
+            const pinyinMap = ["líng", "yī", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ", "shí"];
+            if (num >= 0 && num <= 10) return pinyinMap[num];
+            if (num > 10 && num < 20) return `shí ${pinyinMap[num%10] || ''}`.trim();
+            if (num % 10 === 0 && num <=90) return `${pinyinMap[num/10]} shí`.trim();
+            if (num > 20 && num < 100) return `${pinyinMap[Math.floor(num/10)]} shí ${pinyinMap[num%10] || ''}`.trim();
+            return String(num); 
+        }
+        function maoToPinyin(num) {
+            const pinyinMap = ["líng", "yī", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ"];
+            return (num >=0 && num <=9) ? pinyinMap[num] : String(num);
+        }
+
+        function generateSpecificScenario(scenarioId) {
+            scenarioPrng = mulberry32(scenarioId * 12345 + 67890); 
+
+            const marketDayOfferings = [];
+            let availableFruitsForThisScenario = [...allFruitsData];
+            const numFruitsInMarket = getSeededRandomInt(Math.min(5, availableFruitsForThisScenario.length), Math.min(8, availableFruitsForThisScenario.length));
+
+            for (let j = 0; j < numFruitsInMarket; j++) {
+                if (availableFruitsForThisScenario.length === 0) break;
+                const fruitIndex = Math.floor(scenarioPrng() * availableFruitsForThisScenario.length);
+                const fruitData = availableFruitsForThisScenario.splice(fruitIndex, 1)[0];
+                const price = generateSeededRandomPrice(fruitData.basePriceMin, fruitData.basePriceMax); 
+                marketDayOfferings.push({ ...fruitData, price: price });
+            }
+            marketDayOfferings.sort((a, b) => a.name.localeCompare(b.name));
+
+            const buyerShoppingListItems = [];
+            let fruitsToChooseFromForBuyer = [...marketDayOfferings]; 
+            const numItemsToBuy = getSeededRandomInt(Math.min(2, fruitsToChooseFromForBuyer.length), Math.min(3, fruitsToChooseFromForBuyer.length));
+
+            for (let k = 0; k < numItemsToBuy; k++) {
+                if (fruitsToChooseFromForBuyer.length === 0) break;
+                const itemIndex = Math.floor(scenarioPrng() * fruitsToChooseFromForBuyer.length);
+                const marketItem = fruitsToChooseFromForBuyer.splice(itemIndex, 1)[0];
+                const quantity = getSeededRandomElement(jinQuantitiesData); 
+                buyerShoppingListItems.push({ ...marketItem, quantity: quantity });
+            }
+            return {
+                id: scenarioId,
+                buyerShoppingList: buyerShoppingListItems, 
+                sellerPriceList: marketDayOfferings      
+            };
+        }
+
+        function displayShoppingList(shoppingListItems) {
+            shoppingListBuyerContainer.innerHTML = '';
+            if (!shoppingListItems) return;
+            shoppingListItems.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'fruit-list-item';
+                li.innerHTML = `
+                    <img src="${item.imageUrl}" alt="${item.chinese}">
+                    <div class="info">
+                        <div class="name">
+                            <span class="chinese-text">${item.chinese}</span> 
+                            <span class="pinyin-text">${item.pinyin}</span>
+                        </div>
+                        <div class="details">
+                            ${item.quantity.amount} cân <span class="chinese-text">(${item.quantity.chinese})</span> 
+                            <span class="pinyin-text">(${item.quantity.pinyin})</span>
+                        </div>
+                    </div>
+                `;
+                shoppingListBuyerContainer.appendChild(li);
+            });
+        }
+
+        function displayPriceList(priceListItems) {
+            priceListSellerContainer.innerHTML = '';
+            if (!priceListItems) return;
+            priceListItems.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'fruit-list-item';
+                const priceStringForChinese = item.price.string.replace('块', '块一斤').replace(/(\d)毛$/, '$1毛一斤');
+                li.innerHTML = `
+                    <img src="${item.imageUrl}" alt="${item.chinese}">
+                    <div class="info">
+                        <div class="name">
+                            <span class="chinese-text">${item.chinese}</span> 
+                            <span class="pinyin-text">${item.pinyin}</span>
+                        </div>
+                        <div class="details">
+                            ${item.price.string}/cân 
+                            <span class="chinese-text">(${priceStringForChinese})</span> 
+                            <span class="pinyin-text">(${item.price.pinyin} yì jīn)</span>
+                        </div>
+                    </div>
+                `;
+                priceListSellerContainer.appendChild(li);
+            });
+        }
+        
+        function resetPinyinVisibility() {
+            document.querySelectorAll('.pinyin-text').forEach(el => el.classList.remove('visible'));
+            const pinyinToggleButtons = document.querySelectorAll('.toggle-pinyin-btn');
+            pinyinToggleButtons.forEach(btn => {
+                if (btn.closest('.role-card:not(.hidden)')) {
+                     btn.textContent = '👁️ Hiện Pinyin';
+                }
+            });
+        }
+
+        function loadScenario(scenarioId) {
+            const scenario = generateSpecificScenario(scenarioId);
+            if (scenario) {
+                currentScenarioId = scenario.id;
+                currentPhachDisplay.textContent = currentScenarioId;
+                phachInput.value = currentScenarioId;
+                displayShoppingList(scenario.buyerShoppingList);
+                displayPriceList(scenario.sellerPriceList);
+                resetPinyinVisibility();
+            }
+        }
+        
+        window.selectRole = function(role) {
+            selectedRole = role;
+            characterSelectionView.classList.add('hidden');
+            rolePlayView.classList.remove('hidden');
+            buyerRoleCard.classList.add('hidden');
+            sellerRoleCard.classList.add('hidden');
+
+            if (role === 'buyer') buyerRoleCard.classList.remove('hidden');
+            else if (role === 'seller') sellerRoleCard.classList.remove('hidden');
+            
+            loadScenario(currentScenarioId); 
+        }
+
+        window.showCharacterSelection = function() {
+            rolePlayView.classList.add('hidden');
+            buyerRoleCard.classList.add('hidden');
+            sellerRoleCard.classList.add('hidden');
+            characterSelectionView.classList.remove('hidden');
+            selectedRole = null;
+        }
+        
+        window.handleChangeScenario = function() {
+            let randomId;
+            if (MAX_SCENARIOS <= 1) randomId = 1;
+            else {
+                do { randomId = Math.floor(Math.random() * MAX_SCENARIOS) + 1; } 
+                while (randomId === currentScenarioId && MAX_SCENARIOS > 1);
+            }
+            loadScenario(randomId);
+        }
+
+        window.handleMatchPhach = function() {
+            const inputPhach = parseInt(phachInput.value);
+            if (!isNaN(inputPhach) && inputPhach >= 1 && inputPhach <= MAX_SCENARIOS) {
+                loadScenario(inputPhach);
+            } else {
+                 alert(`Vui lòng nhập số phách hợp lệ từ 1 đến ${MAX_SCENARIOS}.`);
+            }
+        }
+
+        window.togglePinyin = function(buttonElement) {
+            const card = buttonElement.closest('.role-card');
+            if (!card) return; 
+            const pinyinTexts = card.querySelectorAll('.pinyin-text');
+            let isCurrentlyVisible = pinyinTexts.length > 0 && pinyinTexts[0].classList.contains('visible');
+            pinyinTexts.forEach(el => el.classList.toggle('visible'));
+            buttonElement.textContent = isCurrentlyVisible ? '👁️ Hiện Pinyin' : '🙈 Ẩn Pinyin';
+        }
+        
+        function initializeApp() {
+            showCharacterSelection(); 
+        }
+        window.onload = initializeApp;
+    </script></body></html>

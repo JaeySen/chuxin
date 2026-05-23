@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài học: 秦始皇和长城 (Tần Thủy Hoàng và Trường Thành)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .lesson-section {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .hanzi {
+            font-family: "KaiTi", "SimKai", serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #1e293b;
+            line-height: 2;
+        }
+        .pinyin {
+            color: #64748b;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        .translation {
+            color: #475569;
+            font-style: italic;
+        }
+        .toggle-button {
+            cursor: pointer;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        .toggle-button:hover {
+            background-color: #2563eb;
+        }
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .flashcard {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        .card-back {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 1rem;
+        }
+        .summary-container {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .summary-header {
+            background-color: #f1f5f9;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .summary-content {
+            padding: 1.5rem;
+        }
+        .highlight {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .auxiliary-text {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: none;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            border: 1px dashed #cbd5e1;
+        }
+        .answer {
+            display: none;
+            background-color: #eef2ff;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800">课文二：秦始皇和长城</h1>
+        <p class="text-xl text-slate-600 mt-2">Qínshǐhuáng hé Chángchéng - Tần Thủy Hoàng và Trường Thành</p>
+    </header>
+
+    <main>
+        <!-- Phần 1: Từ vựng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">I. Từ vựng trọng tâm (生词)</h2>
+            <div class="flashcard-container">
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">秦始皇</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>Qínshǐhuáng</b> (n.)</p><p class="translation">Tần Thủy Hoàng (Hoàng đế đầu tiên của TQ)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">统一</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>tǒngyī</b> (v.)</p><p class="translation">Thống nhất</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">修建</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>xiūjiàn</b> (v.)</p><p class="translation">Xây dựng, tu sửa (công trình lớn)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">长城</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>Chángchéng</b> (n.)</p><p class="translation">Trường Thành (Vạn Lý Trường Thành)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">为了</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>wèile</b> (prep.)</p><p class="translation">Để, vì (mục đích)</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">挡</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>dǎng</b> (v.)</p><p class="translation">Chặn, ngăn cản, che chắn</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">侵略</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>qīnlüè</b> (v.)</p><p class="translation">Xâm lược</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">保护</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>bǎohù</b> (v.)</p><p class="translation">Bảo vệ</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">古代</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>gǔdài</b> (n.)</p><p class="translation">Cổ đại, thời xưa</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">智慧</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>zhìhuì</b> (n.)</p><p class="translation">Trí tuệ</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">奇迹</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>qíjì</b> (n.)</p><p class="translation">Kỳ tích, phép màu</p></div>
+                </div>
+                <div class="flashcard">
+                    <p class="text-4xl font-bold text-blue-800 mb-2">兵马俑</p>
+                    <button class="toggle-button" onclick="toggleCard(this)">Xem nghĩa</button>
+                    <div class="card-back"><p class="pinyin"><b>bīngmǎyǒng</b> (n.)</p><p class="translation">Binh mã dũng (Đội quân đất nung)</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 2: Tóm tắt nội dung bài khóa -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">II. Tóm tắt nội dung bài khóa (内容梗概)</h2>
+            <p class="mb-4 text-gray-600">Đoạn văn dưới đây tóm tắt về lịch sử và ý nghĩa của Vạn Lý Trường Thành:</p>
+            
+            <div class="summary-container">
+                <div class="summary-header">中文段落 (Đoạn văn tiếng Trung)</div>
+                <div class="summary-content">
+                    <p class="hanzi text-justify">
+                        <span class="highlight">秦始皇</span>是中国历史上第一位皇帝。他做了一件非常伟大的事，就是<span class="highlight">统一</span>了中国。为了<span class="highlight">保护</span>国家，<span class="highlight">挡</span>住北方敌人的<span class="highlight">侵略</span>，他下令<span class="highlight">修建</span>了长城。长城有万里长，所以叫“万里长城”。它是中国<span class="highlight">古代</span>劳动人民<span class="highlight">智慧</span>的结晶，也是世界建筑史上的<span class="highlight">奇迹</span>之一。除了长城，秦始皇陵的<span class="highlight">兵马俑</span>也非常有名。
+                    </p>
+                    
+                    <button class="text-blue-600 font-semibold mt-4 hover:underline flex items-center" onclick="toggleAuxiliary(this)">
+                        <span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa
+                    </button>
+
+                    <div class="auxiliary-text">
+                        <p class="mb-4"><strong>Pinyin:</strong><br>
+                        <b>Qínshǐhuáng</b> shì Zhōngguó lìshǐ shàng dì yī wèi huángdì. Tā zuò le yī jiàn fēicháng wěidà de shì, jiùshì <b>tǒngyī</b> le Zhōngguó. Wèile <b>bǎohù</b> guójiā, <b>dǎng</b> zhù běifāng dírén de <b>qīnlüè</b>, tā xiàlìng <b>xiūjiàn</b> le Chángchéng. Chángchéng yǒu wàn lǐ cháng, suǒyǐ jiào “Wànlǐ Chángchéng”. Tā shì Zhōngguó <b>gǔdài</b> láodòng rénmín <b>zhìhuì</b> de jiéjīng, yěshì shìjiè jiànzhù shǐ shàng de <b>qíjì</b> zhī yī. Chúle Chángchéng, Qínshǐhuáng líng de <b>bīngmǎyǒng</b> yě fēicháng yǒumíng.</p>
+                        
+                        <p><strong>Dịch nghĩa:</strong><br>
+                        <b>Tần Thủy Hoàng</b> là vị hoàng đế đầu tiên trong lịch sử Trung Quốc. Ông đã làm một việc vô cùng vĩ đại, đó chính là <b>thống nhất</b> Trung Quốc. Để <b>bảo vệ</b> đất nước, <b>ngăn chặn</b> sự <b>xâm lược</b> của kẻ thù phương Bắc, ông đã hạ lệnh <b>xây dựng</b> Trường Thành. Trường Thành dài vạn dặm, nên gọi là "Vạn Lý Trường Thành". Nó là kết tinh của <b>trí tuệ</b> nhân dân lao động <b>cổ đại</b> Trung Quốc, cũng là một trong những <b>kỳ tích</b> trong lịch sử kiến trúc thế giới. Ngoài Trường Thành, <b>Đội quân đất nung</b> trong lăng Tần Thủy Hoàng cũng vô cùng nổi tiếng.</p>
+                    </div>
+                </div>
+            </div>
+
+             <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="font-bold text-blue-800 mb-2">🤔 Câu hỏi thảo luận:</h3>
+                <p>Người Trung Quốc có câu "Bất đáo Trường Thành phi hảo hán" (不到长城非好汉). Bạn hiểu câu này nghĩa là gì?</p>
+            </div>
+        </section>
+
+        <!-- Phần 3: Ngữ pháp trọng điểm -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">III. Ngữ pháp trọng điểm (语法)</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">1. 不仅……而且…… (Bùjǐn... érqiě...)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Không những/không chỉ... mà còn... (Biểu thị mức độ tăng tiến).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Ví dụ:</b> 长城<b>不仅</b>长，<b>而且</b>很高。</p>
+                    <p class="text-gray-600">(Trường Thành không chỉ dài, mà còn rất cao.)</p>
+                    <p><b>Ví dụ:</b> 他<b>不仅</b>会说汉语，<b>而且</b>说得很流利。</p>
+                    <p class="text-gray-600">(Anh ấy không chỉ biết nói tiếng Trung, mà còn nói rất lưu loát.)</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600">2. ……之一 (……zhī yī)</h3>
+                <p class="mb-2"><b>Ý nghĩa:</b> Một trong những... (Biểu thị một phần tử trong một tập hợp).</p>
+                <div class="bg-gray-100 p-3 rounded">
+                    <p><b>Cấu trúc:</b> Danh từ (tập hợp) + 之一</p>
+                    <p><b>Ví dụ:</b> 长城是世界奇迹<b>之一</b>。</p>
+                    <p class="text-gray-600">(Trường Thành là một trong những kỳ quan thế giới.)</p>
+                    <p><b>Ví dụ:</b> 他是我最好的朋友<b>之一</b>。</p>
+                    <p class="text-gray-600">(Anh ấy là một trong những người bạn tốt nhất của tôi.)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phần 4: Bài tập vận dụng -->
+        <section class="lesson-section">
+            <h2 class="text-2xl font-bold mb-6 text-slate-700">IV. Bài tập vận dụng (练习)</h2>
+            
+            <div class="space-y-4">
+                <p class="font-semibold">Điền từ thích hợp vào chỗ trống:</p>
+                <div class="bg-gray-100 p-4 rounded-lg mb-4 text-center font-mono">
+                    统一  |  奇迹  |  修建  |  保护  |  古代
+                </div>
+                
+                <div>
+                    <p>1. 长城是为了________国家而修建的。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans1')">Xem đáp án</button>
+                    <div id="ans1" class="answer"><b>保护</b> (bǎohù) - Bảo vệ</div>
+                </div>
+
+                <div>
+                    <p>2. 秦始皇________了中国。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans2')">Xem đáp án</button>
+                    <div id="ans2" class="answer"><b>统一</b> (tǒngyī) - Thống nhất</div>
+                </div>
+
+                <div>
+                    <p>3. 这是世界建筑史上的一个________。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans3')">Xem đáp án</button>
+                    <div id="ans3" class="answer"><b>奇迹</b> (qíjì) - Kỳ tích</div>
+                </div>
+                
+                 <div>
+                    <p>4. 很多人一起努力，才________了这座大桥。</p>
+                    <button class="text-sm text-blue-500 hover:underline mt-1" onclick="toggleAnswer('ans4')">Xem đáp án</button>
+                    <div id="ans4" class="answer"><b>修建</b> (xiūjiàn) - Xây dựng</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function toggleCard(btn) {
+            const cardBack = btn.nextElementSibling;
+            if (cardBack.style.display === 'none' || cardBack.style.display === '') {
+                cardBack.style.display = 'block';
+                btn.textContent = 'Ẩn nghĩa';
+            } else {
+                cardBack.style.display = 'none';
+                btn.textContent = 'Xem nghĩa';
+            }
+        }
+
+        function toggleAnswer(id) {
+            const ans = document.getElementById(id);
+            if (ans.style.display === 'none' || ans.style.display === '') {
+                ans.style.display = 'block';
+            } else {
+                ans.style.display = 'none';
+            }
+        }
+
+        function toggleAuxiliary(btn) {
+            const auxText = btn.nextElementSibling;
+            if (auxText.style.display === 'none' || auxText.style.display === '') {
+                auxText.style.display = 'block';
+                btn.innerHTML = '<span class="mr-1">🙈</span> Ẩn Pinyin & Dịch nghĩa';
+            } else {
+                auxText.style.display = 'none';
+                btn.innerHTML = '<span class="mr-1">🔍</span> Hiện Pinyin & Dịch nghĩa';
+            }
+        }
+    </script>
+</body>
+</html>

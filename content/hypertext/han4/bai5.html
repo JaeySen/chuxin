@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Ôn Tập Tiếng Trung - Bài 17</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .feedback-correct {
+            animation: pop 0.5s ease;
+        }
+        .feedback-incorrect {
+            animation: shake 0.5s ease;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body class="bg-rose-50 text-gray-800 flex items-center justify-center min-h-screen p-4">
+
+    <div id="game-container" class="w-full max-w-2xl mx-auto">
+
+        <!-- Màn hình bắt đầu -->
+        <div id="start-screen" class="text-center p-8 bg-white rounded-2xl shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-rose-600 mb-4">Ôn tập Bài 17 nào! 🏮</h1>
+            <p class="text-lg mb-6">Bạn đã sẵn sàng để "xử lý" câu chữ "把" trong bài "把“福”字倒着贴在门上" chưa? Thử sức ngay thôi!</p>
+            <img src="https://placehold.co/400x200/FFE4E6/E11D48?text=B%E1%BA%AFt+%C4%91%E1%BA%A7u!+%F0%9F%A5%B3" class="rounded-lg mx-auto mb-6" alt="Hình ảnh chào mừng">
+            <button id="start-btn" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition-transform transform hover:scale-105">
+                Chơi ngay!
+            </button>
+        </div>
+
+        <!-- Màn hình chính của trò chơi -->
+        <div id="game-screen" class="hidden">
+            <!-- Header thông tin -->
+            <div class="flex justify-between items-center mb-4 bg-white p-4 rounded-xl shadow-md">
+                <div>
+                    <h2 id="section-title" class="text-xl font-bold text-rose-600"></h2>
+                    <p id="question-counter" class="text-sm text-gray-500"></p>
+                </div>
+                <div class="text-right">
+                    <div class="text-lg font-semibold">⏰ <span id="timer">00:00</span></div>
+                    <div class="text-lg font-semibold">🏆 <span id="score">0</span> điểm</div>
+                </div>
+            </div>
+
+            <!-- Khu vực câu hỏi -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg mb-4">
+                <div id="question-container" class="mb-5 min-h-[60px]"></div>
+                <div id="input-area" class="flex items-center gap-2">
+                    <input type="text" id="answer-input" class="flex-grow p-3 border-2 border-rose-200 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-rose-400 outline-none transition" placeholder="Nhập câu trả lời của bạn...">
+                    <button id="check-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-lg transition">Kiểm tra</button>
+                </div>
+                 <div id="essay-area" class="hidden">
+                    <textarea id="essay-input" rows="8" class="w-full p-3 border-2 border-rose-200 rounded-lg focus:ring-2 focus:ring-rose-400 focus:border-rose-400 outline-none transition" placeholder="Viết đoạn văn mô tả các bước ở đây..."></textarea>
+                    <button id="submit-essay-btn" class="w-full mt-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-lg transition">Nộp bài</button>
+                </div>
+            </div>
+            
+            <!-- Phản hồi -->
+            <div id="feedback-message" class="text-center font-bold text-xl p-2 min-h-[40px]"></div>
+
+            <!-- Các nút điều khiển -->
+            <div class="flex justify-center gap-4 mt-4">
+                <button id="hint-btn" class="bg-sky-500 hover:bg-sky-600 text-white py-2 px-5 rounded-lg transition">💡 Gợi ý</button>
+                <button id="skip-btn" class="bg-gray-400 hover:bg-gray-500 text-white py-2 px-5 rounded-lg transition">Bỏ qua</button>
+            </div>
+        </div>
+        
+        <!-- Màn hình tổng kết -->
+        <div id="summary-screen" class="hidden text-center p-8 bg-white rounded-2xl shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-rose-600 mb-2">Hoàn thành xuất sắc! 🎉</h1>
+            <p class="text-lg mb-6">Cùng xem lại kết quả của bạn nào:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-white mb-6">
+                <div class="bg-green-500 p-4 rounded-lg">
+                    <div class="text-4xl font-bold" id="correct-summary">0</div>
+                    <div class="text-lg">Đúng</div>
+                </div>
+                <div class="bg-red-500 p-4 rounded-lg">
+                    <div class="text-4xl font-bold" id="incorrect-summary">0</div>
+                    <div class="text-lg">Sai</div>
+                </div>
+                <div class="bg-blue-500 p-4 rounded-lg">
+                    <div class="text-4xl font-bold" id="time-summary">00:00</div>
+                    <div class="text-lg">Tổng thời gian</div>
+                </div>
+            </div>
+
+            <div id="review-section" class="text-left mb-6">
+                <h3 class="text-xl font-bold mb-3 text-rose-700">🔍 Cần xem lại ở:</h3>
+                <ul id="mistake-list" class="list-disc list-inside bg-rose-50 p-4 rounded-lg"></ul>
+            </div>
+            
+             <div id="essay-review-section" class="text-left mb-6 hidden">
+                <h3 class="text-xl font-bold mb-3 text-rose-700">📝 Các bài viết của bạn:</h3>
+                <div id="saved-essay-container"></div>
+            </div>
+
+            <button id="restart-btn" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition-transform transform hover:scale-105">
+                Chơi lại lần nữa
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Lấy các phần tử DOM
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const summaryScreen = document.getElementById('summary-screen');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const sectionTitle = document.getElementById('section-title');
+        const questionCounter = document.getElementById('question-counter');
+        const timerEl = document.getElementById('timer');
+        const scoreEl = document.getElementById('score');
+        const questionContainer = document.getElementById('question-container');
+        const answerInput = document.getElementById('answer-input');
+        const checkBtn = document.getElementById('check-btn');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const hintBtn = document.getElementById('hint-btn');
+        const skipBtn = document.getElementById('skip-btn');
+        const inputArea = document.getElementById('input-area');
+        const essayArea = document.getElementById('essay-area');
+        const essayInput = document.getElementById('essay-input');
+        const submitEssayBtn = document.getElementById('submit-essay-btn');
+
+
+        // Dữ liệu trò chơi được lấy từ bài giảng
+        const gameData = [
+            {
+                title: "✍️ Ôn tập Chữ Hán",
+                questions: [
+                    { question: "Viết chữ Hán cho 'bùzhì' (bố trí)", answer: "布置", hint: "Chữ đầu tiên có bộ 罒 (võng) và chữ thứ hai có bộ 巾 (cân)." },
+                    { question: "Viết chữ Hán cho 'dǎsǎo' (quét dọn)", answer: "打扫", hint: "Chữ đầu tiên có bộ 扌(thủ), chữ thứ hai cũng vậy." },
+                    { question: "Viết chữ Hán cho 'guà' (treo)", answer: "挂", hint: "Bên trái là bộ 扌(thủ)." },
+                    { question: "Viết chữ Hán cho 'tiē' (dán)", answer: "贴", hint: "Bên trái là bộ 贝 (bối)." },
+                    { question: "Viết chữ Hán cho 'fú' (phúc)", answer: "福", hint: "Bên trái là bộ 礻(thị)." },
+                    { question: "Viết chữ Hán cho 'duìliánr' (câu đối)", answer: "对联", hint: "Chữ thứ hai có bộ 耳 (nhĩ)." },
+                ]
+            },
+            {
+                title: "📚 Ôn tập Từ vựng",
+                questions: [
+                    { question: "'Nếm, thưởng thức' trong tiếng Trung là gì?", answer: "品尝", hint: "Âm Hán Việt là 'phẩm thưởng'." },
+                    { question: "'Tự tay' làm gì đó là gì?", answer: "亲手", hint: "Âm Hán Việt là 'thân thủ'." },
+                    { question: "'Hội trường' trong tiếng Trung là gì?", answer: "会场", hint: "Âm Hán Việt là 'hội trường'." },
+                    { question: "'Đồng ý, nhận lời' là gì?", answer: "答应", hint: "Âm Hán Việt là 'đáp ứng'." },
+                    { question: "'Niềm vui bất ngờ' là gì?", answer: "惊喜", hint: "Âm Hán Việt là 'kinh hỷ'." },
+                    { question: "'Hoa thuỷ tiên' là gì?", answer: "水仙", hint: "Âm Hán Việt là 'thủy tiên'." },
+                    { question: "'Thịnh vượng' là gì?", answer: "兴旺", hint: "Âm Hán Việt là 'hưng vượng'." },
+                ]
+            },
+            {
+                title: "🤔 Ôn tập Ngữ pháp (Sắp xếp câu)",
+                questions: [
+                    { question: "Sắp xếp: 我 / 书 / 放在书架上 / 把", answer: "我把书放在书架上", hint: "Chủ ngữ + 把 + Tân ngữ + Động từ + Thành phần khác." },
+                    { question: "Sắp xếp: 请 / 你 / 这封信 / 交给老师 / 把", answer: "请你把这封信交给老师", hint: "Câu mệnh lệnh, 请 đứng đầu." },
+                    { question: "Sắp xếp: 我们 / 教室 / 布置成 / 会场 / 把", answer: "我们把教室布置成会场", hint: "Cấu trúc 把... + V + 成..." },
+                    { question: "Sắp xếp: 妈妈 / 衣服 / 洗干净了 / 把", answer: "妈妈把衣服洗干净了", hint: "Đừng quên 了 ở cuối câu để chỉ sự hoàn thành." },
+                    { question: "Sắp xếp: 他 / 没 / 作业 / 做完 / 把", answer: "他没把作业做完", hint: "Phó từ phủ định '没' đứng trước '把'." },
+                ]
+            },
+            {
+                title: "📝 Vận dụng thực tế",
+                questions: [
+                    { 
+                        question: `
+                            <div class='text-left text-base'>
+                                <p class='font-bold text-center text-lg mb-4'>Câu 1: Dọn dẹp phòng</p>
+                                <p class='mb-2'>Tưởng tượng bạn vừa dọn dẹp và trang trí lại phòng của mình cho một dịp đặc biệt (như Tết). Hãy viết một đoạn văn ngắn (50-80 chữ) kể lại quá trình đó.</p>
+                                <p class='font-bold'>Yêu cầu:</p>
+                                <ul class='list-disc list-inside bg-rose-50 p-3 rounded-md'>
+                                    <li>Sử dụng ít nhất 3 câu có cấu trúc '把'.</li>
+                                    <li>Áp dụng các cấu trúc chỉ trình tự như <strong>首先/先, 其次/然后, 最后</strong>.</li>
+                                </ul>
+                            </div>
+                        `,
+                        answer: "ESSAY",
+                        hint: "Bạn có thể bắt đầu với việc dọn dẹp (首先，我把...), sau đó là sắp xếp đồ đạc (然后，我把...), và cuối cùng là trang trí (最后，我把...)."
+                    },
+                    { 
+                        question: `
+                            <div class='text-left text-base'>
+                                <p class='font-bold text-center text-lg mb-4'>Câu 2: Hướng dẫn làm Bánh Mì</p>
+                                <img src='https://tvpfood.com/wp-content/uploads/2024/11/huong-dan-cach-lam-banh-mi-cha-lua-tvpfood.com_8350d4b090294483861c4bfb6206aa5b_1024x1024.jpg' onerror="this.onerror=null;this.src='https://placehold.co/600x300/FECACA/9F1239?text=Image+Not+Found';" alt='Các bước làm bánh mì chả lụa' class='rounded-lg mx-auto mb-4 w-full max-w-md'>
+                                <p class='font-bold'>Từ vựng tham khảo:</p>
+                                <ul class='list-disc list-inside mb-4 bg-rose-50 p-3 rounded-md'>
+                                    <li>Bánh mì: <strong>面包 (miànbāo)</strong></li>
+                                    <li>Chả lụa: <strong>越南火腿 (yuènán huǒtuǐ)</strong></li>
+                                    <li>Xẻ đôi bánh mì: <strong>把面包对半切开 (bǎ miànbāo duìbàn qiēkāi)</strong></li>
+                                    <li>Cắt lát chả: <strong>把火腿切成片 (bǎ huǒtuǐ qiē chéng piàn)</strong></li>
+                                    <li>Thêm/Nhét vào: <strong>把...放进... (bǎ...fàngjìn...)</strong></li>
+                                    <li>Dưa leo: <strong>黄瓜 (huángguā)</strong></li>
+                                    <li>Rau mùi: <strong>香菜 (xiāngcài)</strong></li>
+                                    <li>Xịt tương ớt: <strong>把辣椒酱挤上去 (bǎ làjiāojiàng jǐ shàngqù)</strong></li>
+                                </ul>
+                                <p class='font-bold'>Yêu cầu: Dựa vào hình, hãy viết một đoạn văn mô tả các bước làm một ổ bánh mì.</p>
+                                 <ul class='list-disc list-inside bg-rose-50 p-3 rounded-md'>
+                                    <li>Sử dụng ít nhất 3 câu có cấu trúc '把'.</li>
+                                    <li>Áp dụng các cấu trúc chỉ trình tự như <strong>第一, 第二, 第三...</strong>.</li>
+                                </ul>
+                            </div>
+                        `,
+                        answer: "ESSAY",
+                        hint: "Bắt đầu bằng việc xử lý bánh mì (第一步，把面包...), sau đó thêm nhân (第二步，把火腿和黄瓜...), và cuối cùng là thêm nước sốt (最后，把辣椒酱...)."
+                    }
+                ]
+            }
+        ];
+
+        // Biến trạng thái của trò chơi
+        let currentSectionIndex = 0;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let seconds = 0;
+        let mistakes = [];
+        let essayAnswers = [];
+
+        // Hàm bắt đầu trò chơi
+        function startGame() {
+            currentSectionIndex = 0;
+            currentQuestionIndex = 0;
+            score = 0;
+            seconds = 0;
+            mistakes = [];
+            essayAnswers = [];
+
+            scoreEl.textContent = score;
+            startScreen.classList.add('hidden');
+            summaryScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerEl.textContent = '00:00';
+            clearInterval(timer); 
+            timer = setInterval(() => {
+                seconds++;
+                const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+                const secs = String(seconds % 60).padStart(2, '0');
+                timerEl.textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            feedbackMessage.textContent = '';
+            feedbackMessage.className = 'text-center font-bold text-xl p-2 min-h-[40px]';
+            answerInput.value = '';
+            
+            if (currentSectionIndex >= gameData.length) {
+                showSummary();
+                return;
+            }
+
+            const section = gameData[currentSectionIndex];
+            const question = section.questions[currentQuestionIndex];
+            
+            sectionTitle.textContent = section.title;
+            questionCounter.textContent = `Câu ${currentQuestionIndex + 1} / ${section.questions.length}`;
+            
+            questionContainer.innerHTML = `<div class="text-xl md:text-2xl font-medium">${question.question}</div>`;
+
+            if (question.answer === "ESSAY") {
+                inputArea.classList.add('hidden');
+                essayArea.classList.remove('hidden');
+                essayInput.focus();
+            } else {
+                inputArea.classList.remove('hidden');
+                essayArea.classList.add('hidden');
+                answerInput.focus();
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().replace(/[.,。，]/g, '');
+            if (userAnswer === '') {
+                feedbackMessage.textContent = 'Bạn ơi, chưa nhập câu trả lời! 🤔';
+                feedbackMessage.className += ' text-orange-500';
+                return;
+            }
+
+            const correctAnswer = gameData[currentSectionIndex].questions[currentQuestionIndex].answer.replace(/[.,。，]/g, '');
+            
+            if (userAnswer === correctAnswer) {
+                score += 10;
+                scoreEl.textContent = score;
+                feedbackMessage.textContent = 'Chính xác! Bạn giỏi quá! ✅';
+                feedbackMessage.className += ' text-green-500 feedback-correct';
+            } else {
+                feedbackMessage.textContent = `Tiếc quá, sai rồi! Đáp án đúng là: ${gameData[currentSectionIndex].questions[currentQuestionIndex].answer} ❌`;
+                feedbackMessage.className += ' text-red-500 feedback-incorrect';
+                mistakes.push({
+                    question: gameData[currentSectionIndex].questions[currentQuestionIndex].question,
+                    yourAnswer: answerInput.value,
+                    correctAnswer: gameData[currentSectionIndex].questions[currentQuestionIndex].answer
+                });
+            }
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= gameData[currentSectionIndex].questions.length) {
+                currentSectionIndex++;
+                currentQuestionIndex = 0;
+            }
+            loadQuestion();
+        }
+        
+        function showHint() {
+            const hint = gameData[currentSectionIndex].questions[currentQuestionIndex].hint;
+            feedbackMessage.textContent = `💡 Gợi ý: ${hint}`;
+            feedbackMessage.className = 'text-center font-bold text-xl p-2 min-h-[40px] text-sky-600';
+        }
+
+        function submitEssay() {
+            essayAnswers.push(essayInput.value);
+            essayInput.value = '';
+            nextQuestion(); 
+        }
+
+        function showSummary() {
+            clearInterval(timer);
+            gameScreen.classList.add('hidden');
+            summaryScreen.classList.remove('hidden');
+
+            const correctCount = (score / 10);
+            document.getElementById('correct-summary').textContent = correctCount;
+            document.getElementById('incorrect-summary').textContent = mistakes.length;
+            document.getElementById('time-summary').textContent = timerEl.textContent;
+
+            const mistakeList = document.getElementById('mistake-list');
+            mistakeList.innerHTML = '';
+            if (mistakes.length === 0) {
+                mistakeList.innerHTML = '<li>Chúc mừng! Bạn không sai câu nào.</li>';
+            } else {
+                mistakes.forEach(mistake => {
+                    const li = document.createElement('li');
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = mistake.question;
+                    li.innerHTML = `<b>Câu hỏi:</b> "${questionDiv.innerText.split('\n')[0]}" <br> <span class="text-red-600">Bạn trả lời: ${mistake.yourAnswer}</span> | <span class="text-green-600">Đáp án đúng: ${mistake.correctAnswer}</span>`;
+                    mistakeList.appendChild(li);
+                });
+            }
+            
+            const essayReviewSection = document.getElementById('essay-review-section');
+            const savedEssayContainer = document.getElementById('saved-essay-container');
+            savedEssayContainer.innerHTML = '';
+            if (essayAnswers.length > 0) {
+                essayReviewSection.classList.remove('hidden');
+                 essayAnswers.forEach((answer, index) => {
+                    if (answer.trim() !== '') {
+                        const essayDiv = document.createElement('div');
+                        essayDiv.className = 'bg-gray-100 p-4 rounded-lg whitespace-pre-wrap mb-2';
+                        essayDiv.innerHTML = `<p class="font-semibold mb-1">Bài viết ${index + 1}:</p><p>${answer}</p>`;
+                        savedEssayContainer.appendChild(essayDiv);
+                    }
+                });
+            } else {
+                essayReviewSection.classList.add('hidden');
+            }
+        }
+
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+        checkBtn.addEventListener('click', checkAnswer);
+        answerInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        skipBtn.addEventListener('click', nextQuestion);
+        hintBtn.addEventListener('click', showHint);
+        submitEssayBtn.addEventListener('click', submitEssay);
+    </script>
+</body>
+</html>

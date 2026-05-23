@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情景对话：互动角色扮演</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f7fafc;
+        }
+        /* Hide pinyin and vietnamese by default */
+        .pinyin, .vietnamese {
+            display: none;
+            color: #4a5568;
+            font-size: 0.9em;
+        }
+        /* Show them when the corresponding class is added to the body */
+        body.show-pinyin .pinyin { display: block; }
+        body.show-vietnamese .vietnamese { display: block; }
+
+        .scenario-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .scenario-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .task-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .task-item.completed {
+            text-decoration: line-through;
+            color: #a0aec0;
+        }
+        .task-item.completed .fa-circle { display: none; }
+        .task-item:not(.completed) .fa-check-circle { display: none; }
+        .hints {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .hints.show { max-height: 500px; }
+        .highlight {
+            color: #c53030;
+            font-weight: 600;
+            background-color: #fed7d7;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-container {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        /* Toggle Switch Style */
+        .toggle-switch input:checked + .toggle-bg { background-color: #48bb78; }
+        .toggle-switch input:checked + .toggle-bg + .toggle-dot { transform: translateX(100%); }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Scenario Selection Screen -->
+    <div id="scenario-selection" class="container mx-auto p-6">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold">情景对话：互动角色扮演</h1>
+            <p class="text-xl text-gray-500 mt-2">选择一个场景开始练习吧！</p>
+        </header>
+
+        <div class="fixed top-4 right-4 bg-white p-3 rounded-lg shadow-lg z-20">
+            <h3 class="font-bold text-sm mb-2">显示选项</h3>
+            <div class="flex flex-col space-y-2">
+                <label class="flex items-center cursor-pointer toggle-switch">
+                    <div class="relative">
+                        <input type="checkbox" class="sr-only" onchange="toggleDisplay('pinyin')">
+                        <div class="toggle-bg block bg-gray-200 w-10 h-6 rounded-full"></div>
+                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                    </div>
+                    <div class="ml-3 text-gray-700 font-medium text-sm">拼音 (Pinyin)</div>
+                </label>
+                <label class="flex items-center cursor-pointer toggle-switch">
+                     <div class="relative">
+                        <input type="checkbox" class="sr-only" onchange="toggleDisplay('vietnamese')">
+                        <div class="toggle-bg block bg-gray-200 w-10 h-6 rounded-full"></div>
+                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                    </div>
+                    <div class="ml-3 text-gray-700 font-medium text-sm">越南语 (Tiếng Việt)</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Scenario 1 Card -->
+            <div class="scenario-card cursor-pointer bg-white rounded-xl shadow-md overflow-hidden" onclick="showScenario('scenario1')">
+                <div class="p-8">
+                    <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">场景一</div>
+                    <h2 class="block mt-1 text-2xl leading-tight font-bold text-black">约看演唱会</h2>
+                    <p class="mt-2 text-gray-500">你想约朋友去看一场热门演唱会，但是票很难买。你们能成功吗？</p>
+                </div>
+            </div>
+            <!-- Scenario 2 Card -->
+            <div class="scenario-card cursor-pointer bg-white rounded-xl shadow-md overflow-hidden" onclick="showScenario('scenario2')">
+                <div class="p-8">
+                    <div class="uppercase tracking-wide text-sm text-pink-500 font-semibold">场景二</div>
+                    <h2 class="block mt-1 text-2xl leading-tight font-bold text-black">约看恐怖电影</h2>
+                    <p class="mt-2 text-gray-500">一部期待已久的恐怖电影上映了！但你的朋友好像很害怕，你能说服他/她吗？</p>
+                </div>
+            </div>
+            <!-- Scenario 3 Card -->
+            <div class="scenario-card cursor-pointer bg-white rounded-xl shadow-md overflow-hidden" onclick="showScenario('scenario3')">
+                <div class="p-8">
+                    <div class="uppercase tracking-wide text-sm text-teal-500 font-semibold">场景三</div>
+                    <h2 class="block mt-1 text-2xl leading-tight font-bold text-black">计划周末旅行</h2>
+                    <p class="mt-2 text-gray-500">周末想去旅行，你想去爬山，朋友想去海边。你们要怎么决定？</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role-Playing Interface Container (Hidden by default) -->
+    <div id="role-play-container" class="hidden">
+        <!-- Content will be injected by JavaScript -->
+    </div>
+    
+    <!-- Ticket App Modal (Hidden by default) -->
+    <div id="ticket-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden opacity-0" onclick="closeTicketModal(event)">
+        <div class="modal-container bg-gray-100 w-full max-w-md mx-auto rounded-2xl shadow-lg z-50 transform scale-95 opacity-0" onclick="event.stopPropagation()">
+            <div class="p-5">
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <p class="text-2xl font-bold"><i class="fas fa-ticket-alt text-red-500"></i> 票神 App</p>
+                    <div class="modal-close cursor-pointer z-50" onclick="closeTicketModal(event)">
+                        <i class="fas fa-times text-gray-400 hover:text-gray-600"></i>
+                    </div>
+                </div>
+                <div class="my-5">
+                    <h3 class="text-center text-xl font-bold mb-2">G.E.M. 邓紫棋 演唱会</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-green-300">
+                            <div>
+                                <p class="font-bold">内场票</p>
+                                <p class="vietnamese text-sm text-gray-500">(Khu vực sân khấu)</p>
+                                <p class="text-sm text-gray-500">¥1280</p>
+                            </div>
+                            <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600" onclick="alert('购买成功！/ Mua thành công!')">买得到</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-orange-300">
+                            <div>
+                                <p class="font-bold">看台前排</p>
+                                <p class="vietnamese text-sm text-gray-500">(Khán đài trước)</p>
+                                <p class="text-sm text-gray-500">¥880</p>
+                            </div>
+                            <button class="bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600" onclick="alert('购买成功！/ Mua thành công!')">买得到</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-300 opacity-60">
+                            <div>
+                                <p class="font-bold text-gray-500">看台后排</p>
+                                <p class="vietnamese text-sm text-gray-400">(Khán đài sau)</p>
+                                <p class="text-sm text-gray-400">¥580</p>
+                            </div>
+                            <button class="bg-gray-400 text-white font-bold py-2 px-4 rounded-lg cursor-not-allowed">卖完了</button>
+                        </div>
+                         <div class="text-center pt-2">
+                             <p class="text-sm text-red-600">注意：内场票太贵了，我可能<span class="highlight">买不起</span>！</p>
+                             <p class="vietnamese text-sm text-red-600">(Lưu ý: Vé khu vực sân khấu đắt quá, có lẽ tớ mua không nổi!)</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const scenarios = {
+            scenario1: {
+                title: "约看演唱会",
+                theme: { text: "text-indigo-500", bg: "bg-indigo-100", icon: "fa-music" },
+                studentA: {
+                    name: "小安",
+                    situation: "你刚得知你和朋友都喜欢的歌手G.E.M.邓紫棋这周六晚上要开演唱会。这是唯一的一场，你很想和朋友一起去，但担心票卖得很快。",
+                    info: "<li><i class='fas fa-calendar-alt w-4 text-center mr-1 text-gray-400'></i><strong>时间：</strong>这周六晚上7:30</li><li><i class='fas fa-map-marker-alt w-4 text-center mr-1 text-gray-400'></i><strong>地点：</strong>市中心体育场</li><li><i class='fas fa-ticket-alt w-4 text-center mr-1 text-gray-400'></i><strong>问题：</strong>票很难买，不知道现在还<span class='highlight'>买得到买不到</span>。</li>",
+                    tasks: [
+                        { text: "给朋友打电话。", pinyin: "Gěi péngyǒu dǎ diànhuà.", vietnamese: "Gọi điện cho bạn." },
+                        { text: "问他/她<span class='highlight'>去得了去不了</span>。", pinyin: "Wèn tā/tā qù de liǎo qù bu liǎo.", vietnamese: "Hỏi anh ấy/cô ấy đi được không." },
+                        { text: "表达你对买票的<span class='highlight'>担心</span>。", pinyin: "Biǎodá nǐ duì mǎi piào de dānxīn.", vietnamese: "Bày tỏ sự lo lắng của bạn về việc mua vé." },
+                        { text: "讨论后做出最终<span class='highlight'>决定</span>。", pinyin: "Tǎolùn hòu zuò chū zuìzhōng juédìng.", vietnamese: "Thảo luận và đưa ra quyết định cuối cùng." }
+                    ],
+                    hints: {
+                        vocab: "`演出`, `担心`, `肯定`, `估计`, `决定`, `...的话`",
+                        structures: [
+                            { text: "我们还<span class='highlight'>买得到票吗</span>？", pinyin: "Wǒmen hái mǎi de dào piào ma?", vietnamese: "Chúng ta còn mua được vé không?" },
+                            { text: "你星期六晚上<span class='highlight'>去得了吗</span>？", pinyin: "Nǐ xīngqíliù wǎnshàng qù de liǎo ma?", vietnamese: "Tối thứ Bảy cậu đi được không?" }
+                        ]
+                    },
+                    extraButton: `<button onclick="openTicketModal()" class="mt-4 w-full bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition"><i class="fas fa-mobile-alt mr-2"></i>打开 “票神” App 购票</button>`
+                },
+                studentB: {
+                    name: "小琳",
+                    situation: "你正在为做不完的作业发愁，这时你的好朋友打来了电话。",
+                    info: "<li><i class='fas fa-child w-4 text-center mr-1 text-gray-400'></i><strong>日程：</strong>周六晚上可能要帮父母照看弟弟。</li><li><i class='fas fa-book w-4 text-center mr-1 text-gray-400'></i><strong>作业：</strong>作业太多，不确定周五晚上<span class='highlight'>做得完做不完</span>。</li><li><i class='fas fa-mobile-alt w-4 text-center mr-1 text-gray-400'></i><strong>办法：</strong>你知道一个叫“票神”的App，但没用过。</li>",
+                    tasks: [
+                        { text: "接电话，听朋友说。", pinyin: "Jiē diànhuà, tīng péngyǒu shuō.", vietnamese: "Nghe điện thoại, lắng nghe bạn nói." },
+                        { text: "说明你的困难（看弟弟，作业<span class='highlight'>做不完</span>）。", pinyin: "Shuōmíng nǐ de kùnnán (kàn dìdì, zuòyè zuò bu wán).", vietnamese: "Trình bày khó khăn của bạn (trông em, bài tập làm không xong)." },
+                        { text: "提出用“票神”App买票的建议。", pinyin: "Tíchū yòng “piàoshén” App mǎi piào de jiànyì.", vietnamese: "Đề xuất giải pháp mua vé qua App '票神'." },
+                        { text: "和朋友一起做出最终决定。", pinyin: "Hé péngyǒu yīqǐ zuò chū zuìzhōng juédìng.", vietnamese: "Cùng bạn đưa ra quyết định cuối cùng." }
+                    ],
+                    hints: {
+                        vocab: "`影响`, `了解`, `约`, `内容`",
+                        structures: [
+                            { text: "我有很多作业，<span class='highlight'>怕做不完</span>。", pinyin: "Wǒ yǒu hěnduō zuòyè, pà zuò bu wán.", vietnamese: "Tớ có nhiều bài tập, sợ làm không xong." },
+                            { text: "要是作业<span class='highlight'>做得完</span>，我就<span class='highlight'>去得了</span>。", pinyin: "Yàoshi zuòyè zuò de wán, wǒ jiù qù de liǎo.", vietnamese: "Nếu làm xong bài tập thì tớ đi được." }
+                        ]
+                    }
+                }
+            },
+            scenario2: {
+                title: "约看恐怖电影",
+                theme: { text: "text-pink-500", bg: "bg-pink-100", icon: "fa-ghost" },
+                studentA: {
+                    name: "小强",
+                    situation: "你最喜欢的恐怖电影系列出了续集，这周末刚上映。你特别想去看，决定约上你的朋友。",
+                    info: "<li><i class='fas fa-film w-4 text-center mr-1 text-gray-400'></i><strong>电影：</strong>《鬼屋5》</li><li><i class='fas fa-clock w-4 text-center mr-1 text-gray-400'></i><strong>时间：</strong>周六下午3点</li><li><i class='fas fa-info-circle w-4 text-center mr-1 text-gray-400'></i><strong>问题：</strong>你朋友胆子很小，不知道他/她<span class='highlight'>受得了受不了</span>。</li>",
+                    tasks: [
+                        { text: "告诉朋友这个好消息。", pinyin: "Gàosù péngyǒu zhège hǎo xiāoxī.", vietnamese: "Báo cho bạn tin tốt này." },
+                        { text: "热情地邀请他/她一起去看。", pinyin: "Rèqíng de yāoqǐng tā/tā yīqǐ qù kàn.", vietnamese: "Nhiệt tình mời anh ấy/cô ấy đi xem cùng." },
+                        { text: "如果他/她害怕，想办法说服他/她。", pinyin: "Rúguǒ tā/tā hàipà, xiǎng bànfǎ shuōfú tā/tā.", vietnamese: "Nếu anh ấy/cô ấy sợ, hãy tìm cách thuyết phục." },
+                        { text: "确认他/她到底<span class='highlight'>去得了去不了</span>。", pinyin: "Quèrèn tā/tā dàodǐ qù de liǎo qù bu liǎo.", vietnamese: "Xác nhận xem rốt cuộc anh ấy/cô ấy đi được không." }
+                    ],
+                    hints: {
+                        vocab: "`精彩`, `有趣`, `肯定`, `决定`",
+                        structures: [
+                            { text: "听说这部电影特别<span class='highlight'>精彩</span>！", pinyin: "Tīng shuō zhè bù diànyǐng tèbié jīngcǎi!", vietnamese: "Nghe nói bộ phim này đặc sắc lắm!" },
+                            { text: "别担心，你肯定<span class='highlight'>受得了</span>！", pinyin: "Bié dānxīn, nǐ kěndìng shòu de liǎo!", vietnamese: "Đừng lo, cậu chắc chắn chịu được!" }
+                        ]
+                    }
+                },
+                studentB: {
+                    name: "小静",
+                    situation: "你胆子特别小，非常害怕看恐怖片。这时，你的朋友兴冲冲地打来电话。",
+                    info: "<li><i class='fas fa-star w-4 text-center mr-1 text-gray-400'></i><strong>信息：</strong>你知道这部电影评分很高，但听说特别吓人。</li><li><i class='fas fa-exclamation-triangle w-4 text-center mr-1 text-gray-400'></i><strong>感觉：</strong>你一想到恐怖片就害怕，感觉自己<span class='highlight'>受不了</span>。</li><li><i class='fas fa-question-circle w-4 text-center mr-1 text-gray-400'></i><strong>疑问：</strong>电影院里人那么多，会不会<span class='highlight'>坐不下</span>？</li>",
+                    tasks: [
+                        { text: "听听朋友有什么计划。", pinyin: "Tīng tīng péngyǒu yǒu shé me jìhuà.", vietnamese: "Nghe xem bạn có kế hoạch gì." },
+                        { text: "表达你的害怕，告诉他/她你可能<span class='highlight'>看不下去</span>。", pinyin: "Biǎodá nǐ de hàipà, gàosù tā/tā nǐ kěnéng kàn bu xiàqù.", vietnamese: "Bày tỏ sự sợ hãi của bạn, nói với anh ấy/cô ấy rằng bạn có thể không xem nổi." },
+                        { text: "询问电影院的情况，比如人多不多。", pinyin: "Xúnwèn diànyǐngyuàn de qíngkuàng, bǐrú rén duō bù duō.", vietnamese: "Hỏi về tình hình rạp chiếu phim, ví dụ như có đông người không." },
+                        { text: "做出最终决定：去还是不去。", pinyin: "Zuò chū zuìzhōng juédìng: Qù háishì bù qù.", vietnamese: "Đưa ra quyết định cuối cùng: đi hay không đi." }
+                    ],
+                    hints: {
+                        vocab: "`担心`, `影响`, `了解`, `内容`",
+                        structures: [
+                            { text: "我胆子小，恐怖片我<span class='highlight'>看不下去</span>。", pinyin: "Wǒ dǎnzi xiǎo, kǒngbù piàn wǒ kàn bu xiàqù.", vietnamese: "Tớ nhát gan, phim kinh dị tớ xem không nổi." },
+                            { text: "我真的<span class='highlight'>受不了</span>那个气氛。", pinyin: "Wǒ zhēn de shòu bu liǎo nàgè qìfēn.", vietnamese: "Tớ thật sự không chịu nổi không khí đó." }
+                        ]
+                    }
+                }
+            },
+            scenario3: {
+                title: "计划周末旅行",
+                theme: { text: "text-teal-500", bg: "bg-teal-100", icon: "fa-map-signs" },
+                studentA: {
+                    name: "小山",
+                    situation: "周末快到了，你想和朋友计划一次短途旅行。你比较喜欢安静的自然风光，所以想去爬山。",
+                    info: "<li><i class='fas fa-mountain w-4 text-center mr-1 text-gray-400'></i><strong>计划：</strong>去国家森林公园爬山，住一晚。</li><li><i class='fas fa-bed w-4 text-center mr-1 text-gray-400'></i><strong>问题：</strong>你刚查了，山上的小木屋非常火爆，现在可能<span class='highlight'>订不到了</span>。</li><li><i class='fas fa-car w-4 text-center mr-1 text-gray-400'></i><strong>交通：</strong>去山里没有直达车，坐长途汽车要3个小时。</li>",
+                    tasks: [
+                        { text: "跟朋友提出周末去爬山的计划。", pinyin: "Gēn péngyǒu tíchū zhōumò qù páshān de jìhuà.", vietnamese: "Đề xuất kế hoạch đi leo núi cuối tuần với bạn." },
+                        { text: "说明爬山的好处（空气好，风景美）。", pinyin: "Shuōmíng páshān de hǎochù (kōngqì hǎo, fēngjǐng měi).", vietnamese: "Trình bày lợi ích của việc leo núi (không khí trong lành, cảnh đẹp)." },
+                        { text: "告诉他/她住宿可能<span class='highlight'>订不到</span>的困难。", pinyin: "Gàosù tā/tā zhùsù kěnéng dìng bu dào de kùnnán.", vietnamese: "Nói cho anh ấy/cô ấy biết khó khăn về việc có thể không đặt được chỗ ở." },
+                        { text: "听听朋友的意见，一起商量。", pinyin: "Tīng tīng péngyǒu de yìjiàn, yīqǐ shāngliáng.", vietnamese: "Lắng nghe ý kiến của bạn, cùng nhau thương lượng." }
+                    ],
+                    hints: {
+                        vocab: "`传统`, `艺术`, `了解`, `决定`",
+                        structures: [
+                            { text: "山上的小木屋我们还<span class='highlight'>订得到吗</span>？", pinyin: "Shānshàng de xiǎo mùwū wǒmen hái dìng de dào ma?", vietnamese: "Nhà gỗ nhỏ trên núi chúng ta còn đặt được không?" },
+                            { text: "如果<span class='highlight'>订不到</span>，我们就<span class='highlight'>去不了</span>了。", pinyin: "Rúguǒ dìng bu dào, wǒmen jiù qù bu liǎo le.", vietnamese: "Nếu không đặt được, chúng ta sẽ không đi được." }
+                        ]
+                    }
+                },
+                studentB: {
+                    name: "小海",
+                    situation: "你觉得工作日太累了，周末想去热闹的地方放松一下。你更喜欢去海边。",
+                    info: "<li><i class='fas fa-umbrella-beach w-4 text-center mr-1 text-gray-400'></i><strong>计划：</strong>去东海岸，可以游泳、吃海鲜。</li><li><i class='fas fa-cloud-sun-rain w-4 text-center mr-1 text-gray-400'></i><strong>问题：</strong>你刚看了天气预报，周末海边有大雨，可能<span class='highlight'>去不了</span>。</li><li><i class='fas fa-suitcase w-4 text-center mr-1 text-gray-400'></i><strong>行李：</strong>你的大行李箱坏了，小行李箱<span class='highlight'>装不下</span>所有东西。</li>",
+                    tasks: [
+                        { text: "听完朋友的计划，提出你想去海边的想法。", pinyin: "Tīng wán péngyǒu de jìhuà, tíchū nǐ xiǎng qù hǎibiān de xiǎngfǎ.", vietnamese: "Nghe xong kế hoạch của bạn, hãy đưa ra ý tưởng muốn đi biển của bạn." },
+                        { text: "说明去海边的乐趣（热闹，可以玩水）。", pinyin: "Shuōmíng qù hǎibiān de lèqù (rènào, kěyǐ wán shuǐ).", vietnamese: "Trình bày niềm vui khi đi biển (náo nhiệt, có thể chơi nước)." },
+                        { text: "告诉他/她天气不好，海边可能<span class='highlight'>去不了</span>。", pinyin: "Gàosù tā/tā tiānqì bù hǎo, hǎibiān kěnéng qù bu liǎo.", vietnamese: "Nói với anh ấy/cô ấy thời tiết không tốt, có thể không đi biển được." },
+                        { text: "一起讨论一个两个人都<span class='highlight'>去得了</span>的地方。", pinyin: "Yīqǐ tǎolùn yīgè liǎng gèrén dōu qù de liǎo de dìfāng.", vietnamese: "Cùng nhau thảo luận về một nơi mà cả hai đều đi được." }
+                    ],
+                    hints: {
+                        vocab: "`担心`, `影响`, `估计`, `内容`",
+                        structures: [
+                            { text: "天气不好，我们<span class='highlight'>去不了</span>海边了。", pinyin: "Tiānqì bù hǎo, wǒmen qù bu liǎo hǎibiān le.", vietnamese: "Thời tiết không tốt, chúng ta không đi biển được rồi." },
+                            { text: "这个小箱子<span class='highlight'>装不下</span>我的东西。", pinyin: "Zhège xiǎo xiāngzi zhuāng bu xià wǒ de dōngxī.", vietnamese: "Cái vali nhỏ này không đựng vừa đồ của tớ." }
+                        ]
+                    }
+                }
+            }
+        };
+
+        function showScenario(scenarioId) {
+            const scenario = scenarios[scenarioId];
+            const container = document.getElementById('role-play-container');
+            
+            const content = `
+                <div class="container mx-auto p-4 md:p-8">
+                    <header class="text-center mb-8 relative">
+                        <button onclick="showSelectionScreen()" class="absolute top-0 left-0 text-gray-500 hover:text-gray-800 text-lg"><i class="fas fa-arrow-left mr-2"></i>返回</button>
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-800">${scenario.title}</h1>
+                        <p class="text-lg text-gray-600 mt-2">开始你们的对话吧！</p>
+                    </header>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+                        ${generateRoleCard(scenario.studentA, scenario.theme, 'A', scenario.studentA.extraButton)}
+                        ${generateRoleCard(scenario.studentB, scenario.theme, 'B')}
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = content;
+            document.getElementById('scenario-selection').classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+
+        function generateRoleCard(student, theme, role, extraButton = '') {
+            const tasksHtml = student.tasks.map(task => `
+                <li class="task-item flex items-start" onclick="toggleTask(this)">
+                    <i class="far fa-circle mr-3 mt-1 ${theme.text}"></i><i class="fas fa-check-circle mr-3 mt-1 text-green-500"></i>
+                    <div>
+                        <span>${task.text}</span>
+                        <p class="pinyin">${task.pinyin}</p>
+                        <p class="vietnamese">${task.vietnamese}</p>
+                    </div>
+                </li>
+            `).join('');
+
+            const hintsHtml = `
+                <p class="font-semibold">重点词汇:</p>
+                <p class="text-sm">${student.hints.vocab}</p>
+                <p class="font-semibold mt-2">重点句式:</p>
+                ${student.hints.structures.map(s => `
+                    <div>
+                        <p class="text-sm">${s.text}</p>
+                        <p class="pinyin text-xs">${s.pinyin}</p>
+                        <p class="vietnamese text-xs">${s.vietnamese}</p>
+                    </div>
+                `).join('')}
+            `;
+
+            return `
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4" style="border-color: ${theme.text.includes('indigo') ? '#667eea' : theme.text.includes('pink') ? '#ec4899' : '#4fd1c5'};">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 ${theme.bg} ${theme.text} rounded-full flex items-center justify-center text-2xl font-bold mr-4">${role}</div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">${student.name}</h2>
+                            <p class="text-gray-500">${role === 'A' ? '打电话的人' : '接电话的人'}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-lg flex items-center"><i class="fas fa-bullhorn mr-2 ${theme.text}"></i>情景</h3>
+                            <div class="text-gray-600 mt-1 pl-6">
+                                <span>${student.situation}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg flex items-center"><i class="fas fa-info-circle mr-2 ${theme.text}"></i>你的信息</h3>
+                            <ul class="list-none space-y-1 mt-1 pl-6 text-gray-600">${student.info}</ul>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg flex items-center"><i class="fas fa-tasks mr-2 ${theme.text}"></i>你的任务</h3>
+                            <ul class="list-none space-y-2 mt-2 pl-6">${tasksHtml}</ul>
+                        </div>
+                        <div>
+                            <button onclick="toggleHints('hints-${role}', this)" class="w-full text-left font-semibold text-lg flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
+                                <span><i class="fas fa-lightbulb mr-2 ${theme.text}"></i>提示</span>
+                                <i class="fas fa-chevron-down transform transition-transform"></i>
+                            </button>
+                            <div class="hints" id="hints-${role}">
+                                <div class="p-4 mt-2 bg-gray-50 rounded-lg border">${hintsHtml}</div>
+                            </div>
+                        </div>
+                        ${role === 'A' && extraButton ? extraButton : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showSelectionScreen() {
+            document.getElementById('role-play-container').classList.add('hidden');
+            document.getElementById('scenario-selection').classList.remove('hidden');
+        }
+
+        function toggleTask(element) {
+            element.classList.toggle('completed');
+        }
+
+        function toggleHints(id, button) {
+            const hints = document.getElementById(id);
+            const icon = button.querySelector('.fa-chevron-down');
+            hints.classList.toggle('show');
+            icon.classList.toggle('rotate-180');
+        }
+        
+        function toggleDisplay(type) {
+            document.body.classList.toggle(`show-${type}`);
+        }
+
+        function openTicketModal() {
+            const modal = document.getElementById('ticket-modal');
+            const modalContainer = modal.querySelector('.modal-container');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContainer.classList.remove('scale-95', 'opacity-0');
+                modalContainer.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeTicketModal(event) {
+            // Close only if clicking on the overlay or the close button
+            if (event.target.id !== 'ticket-modal' && !event.target.closest('.modal-close')) {
+                return;
+            }
+            const modal = document.getElementById('ticket-modal');
+            const modalContainer = modal.querySelector('.modal-container');
+            modal.classList.add('opacity-0');
+            modalContainer.classList.add('scale-95', 'opacity-0');
+            modalContainer.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+    </script>
+</body>
+</html>

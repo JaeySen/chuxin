@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game: Một Ngày Của Tôi - Bài 21</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2980b9; /* Belize Hole */
+            --secondary-color: #27ae60; /* Nephritis */
+            --accent-color: #f39c12; /* Orange */
+            --bg-color: #ecf0f1; /* Clouds */
+            --text-color: #34495e; /* Wet Asphalt */
+            --light-text-color: #fff;
+            --correct-color: #2ecc71; /* Emerald */
+            --incorrect-color: #e74c3c; /* Alizarin */
+            --font-family: 'Baloo 2', cursive;
+        }
+
+        /* --- General Styles --- */
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 95vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s ease;
+        }
+
+        /* --- Screens --- */
+        .screen {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- Start Screen --- */
+        #start-screen h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        #start-screen p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .start-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            color: var(--light-text-color);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Game Screen --- */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .game-header-item {
+            background: #eafaf1;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        #timer { color: var(--accent-color); }
+        #score { color: var(--primary-color); }
+
+        .pinyin-toggle {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .pinyin-toggle-label { margin-right: 8px; font-weight: 700; }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; width: 20px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--secondary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        #question-container {
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .level-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .clock-question {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 3.5rem;
+            background: #f0f0f0;
+            padding: 10px 30px;
+            border-radius: 15px;
+            border: 3px solid #ccc;
+        }
+        .paragraph-question {
+            font-size: 1.2rem;
+            max-width: 90%;
+            line-height: 1.6;
+        }
+
+
+        .question-pinyin {
+            font-size: 1.5rem;
+            color: #888;
+            margin-bottom: 25px;
+            height: 2rem; /* Reserve space to prevent layout shift */
+            transition: opacity 0.3s;
+        }
+        .pinyin-hidden .question-pinyin { opacity: 0; }
+
+        .question-translation {
+             font-size: 1rem;
+             color: #666;
+             margin-bottom: 25px;
+        }
+
+        #options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .option-btn {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-color);
+        }
+        .option-btn.correct { background-color: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .option-btn.incorrect { background-color: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        
+        #text-input {
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            width: 100%;
+            max-width: 470px;
+            box-sizing: border-box;
+            text-align: center;
+            font-family: var(--font-family);
+        }
+        #text-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        #scramble-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            min-height: 50px;
+            margin-bottom: 20px;
+        }
+        .scramble-word {
+            padding: 10px 15px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+        }
+        .scramble-word.dragging { opacity: 0.5; }
+
+        .feedback {
+            font-size: 1.2rem;
+            font-weight: bold;
+            height: 30px;
+            margin-top: 15px;
+        }
+
+        .game-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .footer-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        #hint-btn { background-color: var(--accent-color); color: white; }
+        #hint-box {
+            background: #fef9e7;
+            border: 1px solid var(--accent-color);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            width: 90%;
+            max-width: 500px;
+            font-style: italic;
+        }
+        #skip-btn { background-color: #95a5a6; color: white; }
+        #submit-btn { background-color: var(--primary-color); color: white; font-size: 1.2rem; padding: 12px 30px; }
+        #submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* --- Summary Screen --- */
+        #summary-screen h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+        #summary-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+        .summary-item {
+            background: #e4f2fd;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .summary-item .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        #badge-container {
+            margin: 20px 0;
+        }
+        #badge-display {
+            font-size: 5rem;
+        }
+        #badge-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        #mistakes-log {
+            text-align: left;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+        #mistakes-log h3 { text-align: center; }
+        .mistake-item {
+            background: #fadbd8;
+            border: 1px solid var(--incorrect-color);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .sample-answer {
+            background: #e8f8f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 4px solid var(--correct-color);
+        }
+        #restart-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 15px;
+                min-height: 98vh;
+            }
+            .question-text { font-size: 2rem; }
+            .question-pinyin { font-size: 1.2rem; }
+            .game-header { flex-direction: column; gap: 10px; }
+            #options-container { grid-template-columns: 1fr; }
+            .option-btn { height: auto; min-height: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+
+        <!-- ===== Màn hình Bắt đầu ===== -->
+        <div id="start-screen" class="screen">
+            <h1>Một Ngày Của Tôi ☀️</h1>
+            <p>Sẵn sàng ôn tập Bài 21: "我们明天七点一刻出发" chưa? <br> Cùng xem bạn quản lý thời gian giỏi thế nào nhé! ⏰</p>
+            <button id="start-btn" class="start-btn">Bắt đầu!</button>
+        </div>
+
+        <!-- ===== Màn hình Chơi Game ===== -->
+        <div id="game-screen" class="screen hidden">
+            <!-- Header: Timer, Score, Pinyin Toggle -->
+            <div class="game-header">
+                <div id="timer" class="game-header-item">⏳ 00:00</div>
+                <div class="pinyin-toggle">
+                    <span class="pinyin-toggle-label">Pinyin</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pinyin-switch" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div id="score" class="game-header-item">Điểm: 0 ✨</div>
+            </div>
+
+            <!-- Khu vực câu hỏi -->
+            <div id="question-container">
+                <div id="level-title" class="level-title"></div>
+                <div id="question-text" class="question-text"></div>
+                <div id="question-pinyin" class="question-pinyin"></div>
+                <div id="question-translation" class="question-translation"></div>
+                
+                <!-- Container cho các loại câu trả lời -->
+                <div id="options-container"></div>
+                <input type="text" id="text-input" class="hidden" autocomplete="off">
+                <div id="scramble-container" class="hidden"></div>
+                <textarea id="expression-input" class="hidden" rows="6" style="width: 100%; max-width: 470px; font-size: 1.1rem; padding: 15px; border-radius: 12px; border: 2px solid #e0e0e0; font-family: var(--font-family);" placeholder="Viết đoạn văn của bạn ở đây..."></textarea>
+                
+                <div id="feedback" class="feedback"></div>
+                <div id="hint-box" class="hidden"></div>
+            </div>
+
+            <!-- Footer: Hint, Skip, Submit buttons -->
+            <div class="game-footer">
+                <button id="hint-btn" class="footer-btn">💡 Gợi ý</button>
+                <button id="submit-btn" class="footer-btn">Kiểm tra</button>
+                <button id="skip-btn" class="footer-btn">Bỏ qua ⏭️</button>
+            </div>
+        </div>
+
+        <!-- ===== Màn hình Tổng kết ===== -->
+        <div id="summary-screen" class="screen hidden">
+            <h2>🎉 Hoàn thành! Bạn đúng là một người đúng giờ! 🎉</h2>
+            
+            <div id="badge-container">
+                <div id="badge-display"></div>
+                <div id="badge-text"></div>
+            </div>
+
+            <div id="summary-details">
+                <div class="summary-item">
+                    <div>Tổng thời gian</div>
+                    <div id="final-time" class="value"></div>
+                </div>
+                <div class="summary-item">
+                    <div>Tổng điểm</div>
+                    <div id="final-score" class="value"></div>
+                </div>
+                 <div class="summary-item">
+                    <div>Số câu đúng</div>
+                    <div id="correct-count" class="value" style="color: var(--correct-color);"></div>
+                </div>
+                 <div class="summary-item">
+                    <div>Số câu sai</div>
+                    <div id="incorrect-count" class="value" style="color: var(--incorrect-color);"></div>
+                </div>
+            </div>
+
+            <div id="mistakes-log">
+                <h3>Cùng xem lại các câu sai nhé:</h3>
+                <div id="mistakes-list"></div>
+            </div>
+            
+            <button id="restart-btn" class="start-btn footer-btn">Chơi lại</button>
+        </div>
+    </div>
+
+<script>
+// ===================================================================================
+// === DỮ LIỆU TRÒ CHƠI (Dựa trên Bài 21) ===
+// ===================================================================================
+const gameData = [
+    // --- Cấp 1: Bây giờ là mấy giờ? ---
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '7:30',
+        pinyin: '',
+        questionClasses: ['clock-question'],
+        options: ['七点半', '七点一刻', '差半小时七点'],
+        answer: '七点半',
+        hint: '30 phút còn được gọi là "nửa" (半).'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '8:15',
+        pinyin: '',
+        questionClasses: ['clock-question'],
+        options: ['八点半', '八点一刻', '八点'],
+        answer: '八点一刻',
+        hint: '15 phút còn được gọi là "một khắc" (一刻).'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '9:50',
+        pinyin: '',
+        questionClasses: ['clock-question'],
+        options: ['九点五十', '差十分十点', 'Cả hai đều đúng'],
+        answer: 'Cả hai đều đúng',
+        hint: 'Bạn có thể nói giờ hơn hoặc giờ kém.'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '11:05',
+        pinyin: '',
+        questionClasses: ['clock-question'],
+        options: ['十一点五分', '十一点零五分', '十一点五'],
+        answer: '十一点零五分',
+        hint: 'Khi số phút nhỏ hơn 10, cần thêm "零".'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '起床',
+        pinyin: 'qǐchuáng',
+        options: ['đi ngủ', 'thức dậy', 'tắm'],
+        answer: 'thức dậy',
+        hint: 'Hành động đầu tiên vào buổi sáng.'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '锻炼',
+        pinyin: 'duànliàn',
+        options: ['tập thể dục', 'ăn cơm', 'lên lớp'],
+        answer: 'tập thể dục',
+        hint: 'Hành động giúp cơ thể khỏe mạnh, thường làm ở 操场.'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '出发',
+        pinyin: 'chūfā',
+        options: ['tập hợp', 'xuất phát', 'leo núi'],
+        answer: 'xuất phát',
+        hint: 'Bắt đầu một chuyến đi.'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '集合',
+        pinyin: 'jíhé',
+        options: ['tập hợp', 'xuất phát', 'tan học'],
+        answer: 'tập hợp',
+        hint: 'Mọi người tụ tập tại một điểm trước khi đi đâu đó.'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '然后',
+        pinyin: 'ránhòu',
+        options: ['trước tiên', 'sau đó', 'cuối cùng'],
+        answer: 'sau đó',
+        hint: 'Từ dùng để nối hai hành động xảy ra theo trình tự.'
+    },
+    {
+        level: "Cấp 1: Bây giờ là mấy giờ? 🕒",
+        type: 'mcq',
+        question: '准时',
+        pinyin: 'zhǔnshí',
+        options: ['đúng giờ', 'muộn giờ', 'sớm giờ'],
+        answer: 'đúng giờ',
+        hint: 'Không sớm cũng không muộn.'
+    },
+
+    // --- Cấp 2: Hoàn thành câu ---
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '我____天早上六点半起床。',
+        pinyin: 'wǒ ____ tiān zǎoshang liù diǎn bàn qǐchuáng.',
+        answer: '每',
+        hint: 'Từ có nghĩa là "mỗi".'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '我们明天七点一____出发。',
+        pinyin: 'wǒmen míngtiān qī diǎn yī ____ chūfā.',
+        answer: '刻',
+        hint: 'Từ chỉ 15 phút.'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '差十分八点去____室。',
+        pinyin: 'chà shífēn bā diǎn qù ____ shì.',
+        answer: '教',
+        hint: 'Nơi chúng ta上课.'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '午饭____，我常常去朋友那儿聊天儿。',
+        pinyin: 'wǔfàn ____, wǒ chángcháng qù péngyǒu nǎr liáotiānr.',
+        answer: '以后',
+        hint: 'Từ có nghĩa là "sau khi".'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '我去操场____身体。',
+        pinyin: 'wǒ qù cāochǎng ____ shēntǐ.',
+        answer: '锻炼',
+        hint: 'Hành động rèn luyện sức khỏe.'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '我先洗澡，____睡觉。',
+        pinyin: 'wǒ xiān xǐzǎo, ____ shuìjiào.',
+        answer: '然后',
+        hint: 'Từ chỉ trình tự "sau đó".'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '明天我们去爬____。',
+        pinyin: 'míngtiān wǒmen qù pá ____.',
+        answer: '山',
+        hint: 'Từ có nghĩa là "núi".'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '七点在楼前____，七点一刻出发。',
+        pinyin: 'qī diǎn zài lóu qián ____, qī diǎn yīkè chūfā.',
+        answer: '集合',
+        hint: 'Hành động mọi người tập trung lại.'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '上午我们有四____课。',
+        pinyin: 'shàngwǔ wǒmen yǒu sì ____ kè.',
+        answer: '节',
+        hint: 'Lượng từ cho các tiết học.'
+    },
+    {
+        level: "Cấp 2: Điền vào chỗ trống ✍️",
+        type: 'fill-blank',
+        question: '你要____午饭。',
+        pinyin: 'nǐ yào ____ wǔfàn.',
+        answer: '带',
+        hint: 'Động từ có nghĩa là "mang theo".'
+    },
+
+    // --- Cấp 3: Sắp xếp câu ---
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['我们', '明天', '七点一刻', '出发'],
+        answer: '我们明天七点一刻出发',
+        hint: 'Đây là câu chủ đề của bài học.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['我', '六点半', '每天', '起床'],
+        answer: '我每天六点半起床',
+        hint: 'Trạng ngữ chỉ tần suất (每天) thường đứng sau chủ ngữ.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['差', '八点', '十分', '去教室'],
+        answer: '差十分八点去教室',
+        hint: 'Cấu trúc giờ kém: 差 + số phút + 点 + giờ.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['锻炼', '操场', '我去', '身体'],
+        answer: '我去操场锻炼身体',
+        hint: 'Cấu trúc: S + 去 + Nơi chốn + V + O.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['晚上', '看电视', '我', '在宿舍'],
+        answer: '我晚上在宿舍看电视',
+        hint: 'Thứ tự: Chủ ngữ + Thời gian + Nơi chốn + Hành động.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['什么时候', '明天', '出发'],
+        answer: '明天什么时候出发',
+        hint: 'Câu hỏi về thời gian xuất phát.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['中午', '回来吗'],
+        answer: '中午回来吗',
+        hint: 'Câu hỏi xác nhận việc quay về vào buổi trưa.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['我', '然后', '睡觉', '洗澡'],
+        answer: '我洗澡然后睡觉',
+        hint: 'Sắp xếp hành động theo trình tự hợp lý.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['都', '学生', '和', '老师', '去'],
+        answer: '老师和学生都去',
+        hint: 'Cả giáo viên và học sinh đều đi.'
+    },
+    {
+        level: "Cấp 3: Bậc thầy sắp xếp 🧩",
+        type: 'scramble',
+        words: ['在', '集合', '楼前', '七点'],
+        answer: '七点在楼前集合',
+        hint: 'Thông báo về thời gian và địa điểm tập trung.'
+    },
+    
+    // --- Cấp 4: Chuyên gia Giao tiếp ---
+    {
+        level: "Cấp 4: Chuyên gia Giao tiếp 🎤",
+        type: 'expression',
+        question: 'Bạn thức dậy lúc mấy giờ mỗi ngày?',
+        pinyin: 'nǐ měitiān jǐ diǎn qǐchuáng?',
+        sampleAnswer: '我每天早上七点起床。',
+        hint: 'Sử dụng cấu trúc: 我每天 + (buổi) + ...点 + 起床。'
+    },
+    {
+        level: "Cấp 4: Chuyên gia Giao tiếp 🎤",
+        type: 'expression',
+        question: 'Sau khi ăn tối, bạn thường làm gì? (Dùng 然后)',
+        pinyin: 'chī wǎnfàn yǐhòu, nǐ chángcháng zuò shénme?',
+        sampleAnswer: '我吃晚饭以后，先洗澡，然后看电视。',
+        hint: 'Sử dụng cấu trúc: ...以后, ...然后...'
+    },
+    {
+        level: "Cấp 4: Chuyên gia Giao tiếp 🎤",
+        type: 'expression',
+        question: 'Hỏi bạn của bạn khi nào thì bắt đầu lên lớp.',
+        pinyin: 'wèn nǐ de péngyou shénme shíhou shàngkè.',
+        sampleAnswer: '你几点上课？',
+        hint: 'Sử dụng "几点" để hỏi giờ.'
+    },
+     {
+        level: "Cấp 4: Chuyên gia Giao tiếp 🎤",
+        type: 'expression',
+        question: 'Nói rằng: "Ngày mai 7 giờ tập trung trước tòa nhà, 7:15 xuất phát."',
+        pinyin: '',
+        sampleAnswer: '明天七点在楼前集合，七点一刻出发。',
+        hint: 'Sử dụng các từ vựng 集合, 出发, 刻.'
+    },
+
+    // --- Cấp 5: Viết đoạn văn ---
+    {
+        level: "Cấp 5: Tác gia kể chuyện 📖",
+        type: 'expression',
+        question: 'Hãy viết một đoạn văn ngắn (khoảng 3-5 câu) mô tả một ngày của bạn. Cố gắng sử dụng các từ như: 每天, 起床, 上课/上班, 吃午饭, 然后, 睡觉.',
+        pinyin: 'Miáoxiě nǐ de yītiān.',
+        questionClasses: ['paragraph-question'],
+        sampleAnswer: '我每天早上七点起床，七点半吃早饭。八点去上课。中午十二点吃午饭。下午我去图书馆看书。晚上我做练习，然后十一点睡觉。',
+        hint: 'Bắt đầu với "我每天...", sau đó kể các hoạt động theo trình tự thời gian.'
+    }
+];
+
+
+// ===================================================================================
+// === LOGIC CỦA TRÒ CHƠI (Tái sử dụng) ===
+// ===================================================================================
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
+const summaryScreen = document.getElementById('summary-screen');
+const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
+const skipBtn = document.getElementById('skip-btn');
+const hintBtn = document.getElementById('hint-btn');
+const submitBtn = document.getElementById('submit-btn');
+
+const timerEl = document.getElementById('timer');
+const scoreEl = document.getElementById('score');
+const pinyinSwitch = document.getElementById('pinyin-switch');
+const levelTitleEl = document.getElementById('level-title');
+const questionTextEl = document.getElementById('question-text');
+const questionPinyinEl = document.getElementById('question-pinyin');
+const questionTranslationEl = document.getElementById('question-translation');
+const optionsContainer = document.getElementById('options-container');
+const textInput = document.getElementById('text-input');
+const scrambleContainer = document.getElementById('scramble-container');
+const expressionInput = document.getElementById('expression-input');
+const feedbackEl = document.getElementById('feedback');
+const hintBox = document.getElementById('hint-box');
+
+let gameState = {};
+let timerInterval;
+
+function initGameState() {
+    gameState = {
+        currentQuestionIndex: 0,
+        score: 0,
+        startTime: null,
+        elapsedSeconds: 0,
+        mistakes: [],
+        pinyinVisible: true,
+    };
+}
+
+function startGame() {
+    initGameState();
+    startScreen.classList.add('hidden');
+    summaryScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    gameState.startTime = new Date();
+    startTimer();
+    renderQuestion();
+    updateScore();
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        gameState.elapsedSeconds++;
+        const minutes = Math.floor(gameState.elapsedSeconds / 60).toString().padStart(2, '0');
+        const seconds = (gameState.elapsedSeconds % 60).toString().padStart(2, '0');
+        timerEl.textContent = `⏳ ${minutes}:${seconds}`;
+    }, 1000);
+}
+
+function renderQuestion() {
+    optionsContainer.innerHTML = '';
+    textInput.value = '';
+    textInput.classList.add('hidden');
+    scrambleContainer.innerHTML = '';
+    scrambleContainer.classList.add('hidden');
+    expressionInput.value = '';
+    expressionInput.classList.add('hidden');
+    feedbackEl.textContent = '';
+    hintBox.classList.add('hidden');
+    submitBtn.disabled = false;
+    submitBtn.style.display = 'block';
+    questionTranslationEl.textContent = '';
+    
+    questionTextEl.className = 'question-text'; // Reset classes
+
+
+    if (gameState.currentQuestionIndex >= gameData.length) {
+        endGame();
+        return;
+    }
+
+    const q = gameData[gameState.currentQuestionIndex];
+    levelTitleEl.textContent = q.level;
+    questionTextEl.textContent = q.question;
+    questionPinyinEl.textContent = q.pinyin || '';
+    if (q.translation) {
+        questionTranslationEl.textContent = `(${q.translation})`;
+    }
+    
+    if (q.questionClasses) {
+        q.questionClasses.forEach(cls => questionTextEl.classList.add(cls));
+    }
+
+
+    switch (q.type) {
+        case 'mcq':
+            submitBtn.style.display = 'none'; // Hide submit for MCQ, answer on click
+            q.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn');
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+            break;
+        case 'fill-blank':
+            submitBtn.textContent = 'Kiểm tra';
+            textInput.classList.remove('hidden');
+            textInput.focus();
+            break;
+        case 'scramble':
+            submitBtn.textContent = 'Kiểm tra';
+            scrambleContainer.classList.remove('hidden');
+            const shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
+            shuffledWords.forEach(word => {
+                const wordEl = document.createElement('div');
+                wordEl.textContent = word;
+                wordEl.classList.add('scramble-word');
+                wordEl.draggable = true;
+                wordEl.addEventListener('dragstart', handleDragStart);
+                scrambleContainer.appendChild(wordEl);
+            });
+            scrambleContainer.addEventListener('dragover', handleDragOver);
+            scrambleContainer.addEventListener('drop', handleDrop);
+            break;
+        case 'expression':
+            submitBtn.textContent = 'Hoàn thành';
+            expressionInput.classList.remove('hidden');
+            expressionInput.focus();
+            break;
+    }
+}
+let draggedItem = null;
+
+function handleDragStart(e) {
+    draggedItem = e.target;
+    e.target.style.opacity = '0.5';
+}
+function handleDragOver(e) { e.preventDefault(); }
+function handleDrop(e) {
+    e.preventDefault();
+    if(e.target.classList.contains('scramble-word')) {
+        const rect = e.target.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        if(offsetX > rect.width / 2) {
+             e.target.parentNode.insertBefore(draggedItem, e.target.nextSibling);
+        } else {
+             e.target.parentNode.insertBefore(draggedItem, e.target);
+        }
+    } else {
+         scrambleContainer.appendChild(draggedItem);
+    }
+    draggedItem.style.opacity = '1';
+    draggedItem = null;
+}
+
+function checkAnswer(selectedOption = null) {
+    if (submitBtn.disabled) return;
+
+    const q = gameData[gameState.currentQuestionIndex];
+    let isCorrect = false;
+    let userAnswerForLog = '';
+    
+    switch(q.type) {
+        case 'mcq':
+            isCorrect = selectedOption === q.answer;
+            userAnswerForLog = selectedOption;
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.onclick = null; // Disable buttons after selection
+                if (btn.textContent === q.answer) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selectedOption) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            break;
+        case 'fill-blank':
+            userAnswerForLog = textInput.value.trim();
+            isCorrect = userAnswerForLog.toLowerCase() === q.answer.toLowerCase();
+            break;
+        case 'scramble':
+            const words = [...scrambleContainer.querySelectorAll('.scramble-word')].map(el => el.textContent);
+            userAnswerForLog = words.join('');
+            isCorrect = userAnswerForLog === q.answer;
+            break;
+        case 'expression':
+            userAnswerForLog = expressionInput.value;
+            // For expression, we show feedback but always mark as correct for points
+            isCorrect = true; 
+            feedbackEl.innerHTML = `Tuyệt vời! Đây là một câu trả lời mẫu:<div class="sample-answer">${q.sampleAnswer}</div>`;
+            feedbackEl.style.color = 'var(--text-color)';
+            break;
+    }
+
+    if (q.type !== 'expression') {
+        if (isCorrect) {
+            feedbackEl.textContent = '🎉 Chính xác! Tuyệt vời!';
+            feedbackEl.style.color = 'var(--correct-color)';
+        } else {
+            feedbackEl.textContent = `🤔 Chưa đúng rồi! Đáp án là: "${q.answer}"`;
+            feedbackEl.style.color = 'var(--incorrect-color)';
+            gameState.mistakes.push({ ...q, userAnswer: userAnswerForLog });
+        }
+    }
+
+    if (isCorrect) {
+        gameState.score += 10;
+        updateScore();
+    }
+
+
+    submitBtn.disabled = true;
+    setTimeout(() => {
+        gameState.currentQuestionIndex++;
+        renderQuestion();
+    }, q.type === 'expression' ? 4000 : (q.type === 'mcq' ? 1500 : 2000));
+}
+
+function updateScore() {
+    scoreEl.textContent = `Điểm: ${gameState.score} ✨`;
+}
+
+function togglePinyin() {
+    gameState.pinyinVisible = pinyinSwitch.checked;
+    const container = document.getElementById('question-container');
+    if (gameState.pinyinVisible) {
+        container.classList.remove('pinyin-hidden');
+    } else {
+        container.classList.add('pinyin-hidden');
+    }
+}
+
+function showHint() {
+    const q = gameData[gameState.currentQuestionIndex];
+    hintBox.textContent = `💡 Gợi ý nè: ${q.hint}`;
+    hintBox.classList.remove('hidden');
+}
+
+function skipQuestion() {
+    const q = gameData[gameState.currentQuestionIndex];
+    if (q.type !== 'expression') {
+         gameState.mistakes.push({ ...q, userAnswer: "(bỏ qua)" });
+    }
+    feedbackEl.textContent = 'Bỏ qua câu này!';
+    feedbackEl.style.color = '#888';
+    setTimeout(() => {
+        gameState.currentQuestionIndex++;
+        renderQuestion();
+    }, 1000);
+}
+
+function endGame() {
+    clearInterval(timerInterval);
+    gameScreen.classList.add('hidden');
+    summaryScreen.classList.remove('hidden');
+
+    const totalQuestions = gameData.filter(q => q.type !== 'expression').length;
+    const minutes = Math.floor(gameState.elapsedSeconds / 60).toString().padStart(2, '0');
+    const seconds = (gameState.elapsedSeconds % 60).toString().padStart(2, '0');
+    const correctCount = totalQuestions - gameState.mistakes.length;
+
+    document.getElementById('final-time').textContent = `${minutes}:${seconds}`;
+    document.getElementById('final-score').textContent = gameState.score;
+    document.getElementById('correct-count').textContent = correctCount;
+    document.getElementById('incorrect-count').textContent = gameState.mistakes.length;
+    
+    const badgeDisplay = document.getElementById('badge-display');
+    const badgeText = document.getElementById('badge-text');
+    if (gameState.mistakes.length === 0) {
+        badgeDisplay.textContent = '🥇';
+        badgeText.textContent = 'Bậc Thầy Kể Chuyện';
+    } else if (gameState.mistakes.length <= 5) {
+        badgeDisplay.textContent = '🥈';
+        badgeText.textContent = 'Nhà Hoạch Định Tài Ba';
+    } else {
+        badgeDisplay.textContent = '🥉';
+        badgeText.textContent = 'Người Yêu Thời Gian';
+    }
+
+    const mistakesList = document.getElementById('mistakes-list');
+    mistakesList.innerHTML = '';
+    if (gameState.mistakes.length === 0) {
+        mistakesList.innerHTML = '<p style="text-align: center;">Bạn không sai câu nào cả! Quá đỉnh! 🥳</p>';
+    } else {
+        gameState.mistakes.forEach(mistake => {
+            const item = document.createElement('div');
+            item.classList.add('mistake-item');
+            item.innerHTML = `
+                <p><b>Câu hỏi:</b> ${mistake.question}</p>
+                <p><b>Bạn trả lời:</b> <span style="color: var(--incorrect-color);">${mistake.userAnswer}</span></p>
+                <p><b>Đáp án đúng:</b> <span style="color: var(--correct-color);">${mistake.answer || mistake.sampleAnswer}</span></p>
+            `;
+            mistakesList.appendChild(item);
+        });
+    }
+}
+
+// Event Listeners
+startBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', startGame);
+pinyinSwitch.addEventListener('change', togglePinyin);
+hintBtn.addEventListener('click', showHint);
+skipBtn.addEventListener('click', skipQuestion);
+submitBtn.addEventListener('click', () => checkAnswer());
+
+textInput.addEventListener('keyup', (event) => {
+    if (event.key === "Enter") {
+        checkAnswer();
+    }
+});
+</script>
+
+</body>
+</html>
+

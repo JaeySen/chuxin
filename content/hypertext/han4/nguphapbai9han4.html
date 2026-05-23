@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Học Tập Ngữ Pháp: Bổ Ngữ Khả Năng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-btn.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .correct {
+            border-color: #22c55e !important;
+            background-color: #f0fdf4;
+        }
+        .incorrect {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2;
+        }
+        .feedback {
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
+        .correct-feedback {
+            color: #22c55e;
+        }
+        .incorrect-feedback {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-600">Phiếu Học Tập Ngữ Pháp</h1>
+            <p class="mt-2 text-lg text-slate-600">Bài 9: Bổ Ngữ Khả Năng (可能补语)</p>
+        </header>
+
+        <!-- Grammar Section -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-slate-700 border-b-2 border-blue-500 pb-2 mb-4">I. Ngữ Pháp Trọng Tâm 📚</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <!-- Tabs -->
+                <div class="flex border-b mb-4 overflow-x-auto">
+                    <button class="tab-btn py-2 px-4 font-semibold border-b-2 border-transparent transition active flex-shrink-0" onclick="openTab(event, 'tab1')">Khái niệm & Cấu trúc</button>
+                    <button class="tab-btn py-2 px-4 font-semibold border-b-2 border-transparent transition flex-shrink-0" onclick="openTab(event, 'tab2')">Các Dạng Thường Gặp</button>
+                    <button class="tab-btn py-2 px-4 font-semibold border-b-2 border-transparent transition flex-shrink-0" onclick="openTab(event, 'tab3')">Phân Biệt</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="tab1" class="tab-content active">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1. Bổ ngữ Khả năng là gì?</h3>
+                    <p class="mb-4">Bổ ngữ khả năng (BNKN) dùng để diễn tả một hành động <strong class="text-blue-600">có khả năng thực hiện hoặc hoàn thành hay không</strong> do điều kiện chủ quan hoặc khách quan cho phép.</p>
+                    
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2. Cấu trúc</h3>
+                    <div class="space-y-3">
+                        <div class="bg-blue-50 p-4 rounded-md">
+                            <p class="font-mono font-semibold">Khẳng định: <span class="text-blue-800">Động từ + 得 + Bổ ngữ</span></p>
+                            <p class="text-sm text-slate-600 mt-1">Ví dụ: 我<strong>听得懂</strong>老师说的话。(Tôi nghe hiểu được lời thầy giáo nói.)</p>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-md">
+                            <p class="font-mono font-semibold">Phủ định: <span class="text-red-800">Động từ + 不 + Bổ ngữ</span></p>
+                            <p class="text-sm text-slate-600 mt-1">Ví dụ: 作业太多，我今天<strong>做不完</strong>。(Bài tập nhiều quá, hôm nay tôi làm không xong.)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab2" class="tab-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-3">Các Dạng Bổ Ngữ Thường Gặp</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-semibold">A. Với Bổ ngữ Xu hướng (上, 下, 进, 出, 回, 过, 起...)</p>
+                            <div class="bg-slate-50 p-3 mt-2 rounded-lg border border-slate-200">
+                                <p class="italic text-slate-600">Ngữ cảnh: An và Bình đang đi leo núi.</p>
+                                <p><strong>Bình:</strong> 山这么高，你<strong>爬得上去</strong>吗？(Núi cao thế này, cậu có leo lên nổi không?)</p>
+                                <p><strong>An:</strong> 没问题，我<strong>爬得上去</strong>！(Không vấn đề, tớ leo lên được!)</p>
+                                <p><strong>Bình:</strong> 那个山洞太黑了，我<strong>不敢进去</strong>。(Cái hang núi kia tối quá, tớ không dám vào.)</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold">B. Với các động từ/tính từ đặc biệt (动, 好, 住, 了...)</p>
+                            <div class="bg-slate-50 p-3 mt-2 rounded-lg border border-slate-200">
+                                <p class="italic text-slate-600">Ngữ cảnh: Sau khi leo núi.</p>
+                                <p><strong>An:</strong> 我太累了，一点儿也<strong>走不动</strong>了。(Tớ mệt quá, đi không nổi một chút nào nữa rồi.)</p>
+                                <p><strong>Bình:</strong> 这么多生词，你一天<strong>记得住</strong>吗？(Nhiều từ mới thế, một ngày cậu nhớ hết nổi không?)</p>
+                                <p><strong>An:</strong> 我担心明天的考试我<strong>考不好</strong>。(Tớ lo bài thi ngày mai mình làm không tốt.)</p>
+                                <p><strong>Bình:</strong> 你的腿受伤了，参加<strong>不了</strong>明天的活动了。(Chân cậu bị thương rồi, không tham gia được hoạt động ngày mai nữa.)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab3" class="tab-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-3">Phân biệt Bổ ngữ Khả năng và Bổ ngữ Trạng thái</h3>
+                    <p class="mb-4">Đây là hai loại bổ ngữ dễ gây nhầm lẫn. Hãy xem bảng so sánh dưới đây:</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100">
+                                    <th class="p-3 font-semibold border">Tiêu chí</th>
+                                    <th class="p-3 font-semibold border text-blue-600">Bổ ngữ Khả năng</th>
+                                    <th class="p-3 font-semibold border text-teal-600">Bổ ngữ Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="p-3 border font-semibold">Ý nghĩa</td>
+                                    <td class="p-3 border">Diễn tả <strong class="text-blue-600">khả năng</strong> xảy ra (chưa chắc đã xảy ra)</td>
+                                    <td class="p-3 border">Đánh giá, mô tả <strong class="text-teal-600">kết quả, mức độ</strong> của hành động đã xảy ra</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 border font-semibold">Phủ định</td>
+                                    <td class="p-3 border">V + <strong class="text-blue-600">不</strong> + BN (演不好)</td>
+                                    <td class="p-3 border">V + 得 + <strong class="text-teal-600">不</strong> + Tính từ (演得不好)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 border font-semibold">Câu hỏi</td>
+                                    <td class="p-3 border">V + <strong class="text-blue-600">得</strong> + BN + V + <strong class="text-blue-600">不</strong> + BN? (演得好演不好?)</td>
+                                    <td class="p-3 border">V + 得 + Tính từ + <strong class="text-teal-600">不</strong> + Tính từ? (演得好不好?)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 border font-semibold">Tân ngữ</td>
+                                    <td class="p-3 border"><strong class="text-blue-600">Có thể</strong> đứng sau bổ ngữ (我演不好这个节目。)</td>
+                                    <td class="p-3 border"><strong class="text-teal-600">Không thể</strong> đứng sau bổ ngữ, phải đưa lên trước (这个节目他演得不好。)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-slate-700 border-b-2 border-blue-500 pb-2 mb-4">II. Luyện Tập Củng Cố ✏️</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md space-y-8">
+                <!-- Exercise 1: Multiple Choice -->
+                <div class="exercise" data-type="mcq">
+                    <h3 class="text-lg font-semibold mb-3">Bài 1: Chọn đáp án đúng để hoàn thành câu.</h3>
+                    <div class="space-y-4">
+                        <div class="question" data-answer="B">
+                            <p>1. 这件行李太重了，我一个人拿( )动。</p>
+                            <div class="flex space-x-4 mt-2">
+                                <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"> A. 得</label>
+                                <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"> B. 不</label>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="B">
+                            <p>2. 教室里人太多，我们进( )去。</p>
+                            <div class="flex space-x-4 mt-2">
+                                <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"> A. 得</label>
+                                <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"> B. 不</label>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="A">
+                            <p>3. 你放心，这点儿事我做( )好。</p>
+                            <div class="flex space-x-4 mt-2">
+                                <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"> A. 得</label>
+                                <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"> B. 不</label>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise 2: Fill in the Blanks -->
+                <div class="exercise" data-type="fill">
+                    <h3 class="text-lg font-semibold mb-3">Bài 2: Dùng từ cho sẵn để hoàn thành câu với bổ ngữ khả năng.</h3>
+                    <div class="space-y-4">
+                        <div class="question" data-answer="听不清楚">
+                            <p>1. 他说得太快，我___________。(清楚)</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="坐得下">
+                            <p>2. 这个房间不大，___________二十个人吗？(坐下)</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="找不到">
+                            <p>3. 我的钥匙呢？我怎么___________？(找到)</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise 3: Error Correction -->
+                <div class="exercise" data-type="correct">
+                    <h3 class="text-lg font-semibold mb-3">Bài 3: Tìm và sửa lỗi sai trong các câu sau.</h3>
+                    <div class="space-y-4">
+                        <div class="question" data-answer="这个沙发我们两个搬不动。">
+                            <p>1. <span class="text-red-500 line-through">这个沙发我们两个搬得不动。</span></p>
+                            <input type="text" placeholder="Viết lại câu đúng..." class="mt-2 p-2 border rounded-md w-full transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="这个包放不下这么多书。">
+                            <p>2. <span class="text-red-500 line-through">这个包放得不下这么多书。</span></p>
+                            <input type="text" placeholder="Viết lại câu đúng..." class="mt-2 p-2 border rounded-md w-full transition">
+                            <div class="feedback"></div>
+                        </div>
+                         <div class="question" data-answer="他演不好这个节目。">
+                            <p>3. <span class="text-red-500 line-through">他演得不好这个节目。</span> (Diễn tả khả năng)</p>
+                            <input type="text" placeholder="Viết lại câu đúng..." class="mt-2 p-2 border rounded-md w-full transition">
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Exercise 4: New exercise from image -->
+                <div class="exercise" data-type="fill">
+                    <h3 class="text-lg font-semibold mb-3">Bài 4: Chọn các cụm từ dưới đây điền vào chỗ trống.</h3>
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-md mb-4 text-sm text-slate-700 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <span>学得了</span> <span>学不了</span> <span>记得住</span> <span>记不住</span>
+                        <span>修不好</span> <span>修不了</span> <span>上得去</span> <span>上不去</span>
+                        <span>用得了</span> <span>用不了</span> <span>找得到</span> <span>找不到</span>
+                        <span>走得动</span> <span>走不动</span> <span>搬得动</span> <span>搬不动</span>
+                        <span>参加得了</span> <span>参加不了</span> <span>放不进去</span> <span>放得进去</span>
+                        <span>爬得上去</span> <span>爬不上去</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="question" data-answer="记不住">
+                            <p>1. 一天我___________那么多生词。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="找不到">
+                            <p>2. 他没去过那儿，肯定___________。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="学得了">
+                            <p>3. 我们一年___________五千个词。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="用不了">
+                            <p>4. 从这儿到天津坐火车___________三个小时。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="上不去">
+                            <p>5. 这辆车人太多，___________了，我们再等一辆吧。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="修不好">
+                            <p>6. 你这台电视机太旧了，可能___________了，换一台新的吧。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="参加不了">
+                            <p>7. 他感冒了，明天的运动会可能___________。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                        <div class="question" data-answer="走不动">
+                            <p>8. 我们休息休息吧，我___________了。</p>
+                            <input type="text" class="mt-2 p-2 border rounded-md w-full sm:w-1/2 transition">
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button id="check-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg">
+                    Kiểm tra đáp án
+                </button>
+                <button id="reset-btn" class="w-full sm:w-auto bg-slate-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-slate-600 transition-transform transform hover:scale-105 shadow-lg">
+                    Làm lại
+                </button>
+            </div>
+            <div id="score" class="text-center mt-6 font-bold text-xl"></div>
+        </section>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            const tabcontent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            const tablinks = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        const checkBtn = document.getElementById('check-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const scoreDiv = document.getElementById('score');
+
+        checkBtn.addEventListener('click', () => {
+            let totalCorrect = 0;
+            let totalQuestions = 0;
+
+            document.querySelectorAll('.exercise').forEach(exercise => {
+                const type = exercise.dataset.type;
+                
+                exercise.querySelectorAll('.question').forEach(q => {
+                    totalQuestions++;
+                    const correctAnswer = q.dataset.answer;
+                    const feedbackDiv = q.querySelector('.feedback');
+                    let isCorrect = false;
+
+                    if (type === 'mcq') {
+                        const selected = q.querySelector('input:checked');
+                        if (selected) {
+                            isCorrect = selected.value === correctAnswer;
+                            const labels = q.querySelectorAll('label');
+                            labels.forEach(label => {
+                                const radio = label.querySelector('input');
+                                if (radio.value === correctAnswer) {
+                                    label.classList.add('text-green-600', 'font-semibold');
+                                }
+                                if (radio.checked && !isCorrect) {
+                                    label.classList.add('text-red-600');
+                                }
+                            });
+                        }
+                    } else if (type === 'fill' || type === 'correct') {
+                        const input = q.querySelector('input');
+                        const userAnswer = input.value.trim().replace(/[.。,，]/g, '');
+                        isCorrect = userAnswer === correctAnswer;
+                        input.classList.remove('correct', 'incorrect');
+                        input.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    }
+
+                    feedbackDiv.innerHTML = ''; // Clear previous feedback
+                    if (isCorrect) {
+                        totalCorrect++;
+                        feedbackDiv.innerHTML = `<span class="correct-feedback">Chính xác!</span>`;
+                    } else {
+                        feedbackDiv.innerHTML = `<span class="incorrect-feedback">Chưa đúng. Đáp án đúng là: <strong>${correctAnswer}</strong></span>`;
+                    }
+                });
+            });
+
+            scoreDiv.textContent = `Kết quả: ${totalCorrect} / ${totalQuestions} câu đúng!`;
+            if (totalCorrect === totalQuestions) {
+                scoreDiv.classList.add('text-green-600');
+                scoreDiv.classList.remove('text-red-600');
+            } else {
+                 scoreDiv.classList.add('text-red-600');
+                 scoreDiv.classList.remove('text-green-600');
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+                radio.closest('label').classList.remove('text-green-600', 'font-semibold', 'text-red-600');
+            });
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                input.value = '';
+                input.classList.remove('correct', 'incorrect');
+            });
+            document.querySelectorAll('.feedback').forEach(feedback => feedback.innerHTML = '');
+            scoreDiv.textContent = '';
+        });
+    </script>
+</body>
+</html>

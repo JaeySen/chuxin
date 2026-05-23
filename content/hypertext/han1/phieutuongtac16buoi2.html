@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Học Tập Tương Tác - Bài 16</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .task-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .task-header {
+            background-color: #ff9800;
+            color: white;
+            padding: 10px 20px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-header h2 {
+            border: none;
+            padding: 0;
+            margin: 0;
+            color: white;
+            font-size: 1.5em;
+        }
+        .task-duration {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        .task-columns {
+            display: flex;
+            gap: 20px;
+        }
+        .task-column {
+            width: 50%;
+        }
+        .task-column h3 {
+            color: #1a73e8;
+            font-size: 1.2em;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%231a73e8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat left center;
+            background-size: 20px;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+        .interactive-section {
+            background-color: #e8f0fe;
+            border-left: 4px solid #1a73e8;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        textarea, input[type="text"] {
+            width: 95%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            font-family: inherit;
+            font-size: 1em;
+        }
+        .vocab-list {
+            background-color: #f1f3f4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .vocab-list b {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .vocab-item {
+            display: inline-block;
+            background-color: #d6eaff;
+            color: #0d47a1;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0d47a1;
+        }
+        .feedback {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct {
+            color: #2e7d32;
+        }
+        .incorrect {
+            color: #d32f2f;
+        }
+        .quiz-question {
+            margin-bottom: 15px;
+        }
+         #task3-header {
+            background-color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>PHIẾU HỌC TẬP TƯƠNG TÁC: BÀI 16</h1>
+        <h2 style="text-align:center; color: #555; border:none;">你常去图书馆吗？ (Nǐ cháng qù túshūguǎn ma?)</h2>
+
+        <div class="task-card">
+            <div class="task-header">
+                <h2>🚀 Nhiệm vụ Lớn 2: Lập kế hoạch cuối tuần Online</h2>
+                <span class="task-duration">45 phút</span>
+            </div>
+            <div class="task-columns">
+                <div class="task-column">
+                    <h3>Tiến trình</h3>
+                    <ul>
+                        <li><strong>Giao nhiệm vụ (5'):</strong> Thảo luận nhóm về kế hoạch cuối tuần.</li>
+                        <li><strong>Thảo luận (20'):</strong> Cùng nhau lên ý tưởng chi tiết.</li>
+                        <li><strong>Trình bày (15'):</strong> Đại diện nhóm trình bày kế hoạch.</li>
+                        <li><strong>Phản hồi (5'):</strong> Các nhóm khác góp ý, đặt câu hỏi.</li>
+                    </ul>
+                </div>
+                <div class="task-column">
+                    <h3>Chuyển đổi Online & Tương tác</h3>
+                    <ul>
+                        <li><strong>Công cụ chính:</strong> Breakout Rooms, Google Slides.</li>
+                        <li>Rèn luyện kỹ năng thương lượng, thuyết trình và cộng tác online.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="interactive-section">
+                <h4><b>Thực hành: Lên ý tưởng cho cuối tuần</b></h4>
+                <p>Cuối tuần này (星期六和星期日), bạn và nhóm dự định sẽ làm gì? Hãy liệt kê các hoạt động bằng tiếng Trung.</p>
+                <div class="vocab-list">
+                    <b>Sử dụng các từ vựng đã học trong Bài 16:</b>
+                    <span class="vocab-item">去图书馆 (qù túshūguǎn)</span>
+                    <span class="vocab-item">借书 (jiè shū)</span>
+                    <span class="vocab-item">上网 (shàng wǎng)</span>
+                    <span class="vocab-item">查资料 (chá zīliào)</span>
+                    <span class="vocab-item">看电影 (kàn diànyǐng)</span>
+                    <span class="vocab-item">看电视剧 (kàn diànshìjù)</span>
+                    <span class="vocab-item">休息 (xiūxi)</span>
+                    <span class="vocab-item">去公园玩儿 (qù gōngyuán wánr)</span>
+                    <span class="vocab-item">去超市买东西 (qù chāoshì mǎi dōngxi)</span>
+                    <span class="vocab-item">跟朋友聊天儿 (gēn péngyou liáotiānr)</span>
+                </div>
+                <textarea id="weekend-plan" rows="5" placeholder="Ví dụ: 星期六上午我们一起去图书馆看书, 下午去超市买东西..."></textarea>
+            </div>
+        </div>
+
+        <div class="task-card">
+            <div class="task-header" id="task3-header">
+                <h2>✍️ Nhiệm vụ Lớn 3: Viết Sáng tạo & Tổng kết</h2>
+                <span class="task-duration">20 phút</span>
+            </div>
+            
+            <div class="interactive-section" style="border-left-color: #2c3e50;">
+                <h4><b>3.1. Viết Email xác nhận kế hoạch (15 phút)</b></h4>
+                <p>Dựa vào kế hoạch cuối tuần bạn vừa brainstorm ở Nhiệm vụ 2, hãy viết một email ngắn bằng tiếng Trung gửi cho bạn cùng nhóm để xác nhận lại kế hoạch.</p>
+                 <div class="vocab-list">
+                    <b>Gợi ý cấu trúc và từ vựng:</b>
+                    <span class="vocab-item">...，好吗？ (..., hǎo ma?)</span>
+                    <span class="vocab-item">咱们 (zánmen)</span>
+                    <span class="vocab-item">一起 (yìqǐ)</span>
+                    <span class="vocab-item">或者 (huòzhě)</span>
+                    <span class="vocab-item">晚上 (wǎnshang)</span>
+                    <span class="vocab-item">星期六 (xīngqīliù)</span>
+                </div>
+                <textarea id="email-content" rows="7" placeholder="在这里写邮件... (Viết email ở đây)"></textarea>
+            </div>
+
+            <div class="interactive-section" style="border-left-color: #2c3e50; margin-top: 20px;">
+                <h4><b>3.2. Tổng kết kiến thức: "或者" (huòzhě) và "还是" (háishì)</b></h4>
+                <p>Trong bài 16, chúng ta đã học cách phân biệt <b>还是 (dùng trong câu hỏi lựa chọn)</b> và <b>或者 (dùng trong câu trần thuật)</b>. Hãy làm bài tập nhanh dưới đây để kiểm tra!</p>
+                <form id="quiz-form">
+                    <div class="quiz-question">
+                        <p>1. A: 你喝茶 ______ 喝咖啡？ (Nǐ hē chá ______ hē kāfēi?)</p>
+                        <p>   B: 我喝茶。</p>
+                        <label><input type="radio" name="q1" value="huozhe"> 或者</label>
+                        <label><input type="radio" name="q1" value="haishi"> 还是</label>
+                        <span class="feedback" id="feedback1"></span>
+                    </div>
+                    <div class="quiz-question">
+                        <p>2. 晚上我常复习课文，______ 听音乐。(Wǎnshang wǒ cháng fùxí kèwén, ______ tīng yīnyuè.)</p>
+                        <label><input type="radio" name="q2" value="huozhe"> 或者</label>
+                        <label><input type="radio" name="q2" value="haishi"> 还是</label>
+                        <span class="feedback" id="feedback2"></span>
+                    </div>
+                    <div class="quiz-question">
+                        <p>3. 星期天我跟朋友一起去公园玩儿 ______ 去超市买东西。(Xīngqītiān wǒ gēn péngyou yìqǐ qù gōngyuán wánr ______ qù chāoshì mǎi dōngxi.)</p>
+                        <label><input type="radio" name="q3" value="huozhe"> 或者</label>
+                        <label><input type="radio" name="q3" value="haishi"> 还是</label>
+                        <span class="feedback" id="feedback3"></span>
+                    </div>
+                     <div class="quiz-question">
+                        <p>4. A: 你星期六去 ______ 星期日去？ (Nǐ xīngqīliù qù ______ xīngqīrì qù?)</p>
+                        <p>   B: 我星期六去。</p>
+                        <label><input type="radio" name="q4" value="huozhe"> 或者</label>
+                        <label><input type="radio" name="q4" value="haishi"> 还是</label>
+                        <span class="feedback" id="feedback4"></span>
+                    </div>
+                    <button type="button" onclick="checkAnswers()">Kiểm tra đáp án</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkAnswers() {
+            const answers = {
+                q1: 'haishi',
+                q2: 'huozhe',
+                q3: 'huozhe',
+                q4: 'haishi'
+            };
+
+            for (const q in answers) {
+                const feedbackEl = document.getElementById('feedback' + q.substring(1));
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+
+                if (selected) {
+                    if (selected.value === answers[q]) {
+                        feedbackEl.textContent = 'Đúng rồi!';
+                        feedbackEl.className = 'feedback correct';
+                    } else {
+                        feedbackEl.textContent = 'Sai rồi, thử lại nhé!';
+                        feedbackEl.className = 'feedback incorrect';
+                    }
+                } else {
+                    feedbackEl.textContent = 'Bạn chưa chọn đáp án!';
+                    feedbackEl.className = 'feedback incorrect';
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

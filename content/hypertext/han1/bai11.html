@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Từ Vựng Việt-Trung (Sửa Lỗi)</title>
+
+    <style>
+        /* === CSS Giữ nguyên như phiên bản trước === */
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 15px; padding-bottom: 30px; background-color: #f8f9fa; }
+        h1 { color: #343a40; margin-bottom: 20px; }
+        #difficulty-selector { display: flex; flex-direction: column; align-items: center; background-color: #fff; padding: 30px 40px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        #difficulty-selector h2 { margin-top: 0; margin-bottom: 25px; color: #495057; }
+        .difficulty-btn { font-size: 1.1em; padding: 12px 25px; min-width: 250px; margin: 10px 0; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease; font-weight: bold; }
+        #easy-mode-btn { background-color: #28a745; color: white; }
+        #easy-mode-btn:hover { background-color: #218838; }
+        #hard-mode-btn { background-color: #dc3545; color: white; }
+        #hard-mode-btn:hover { background-color: #c82333; }
+        .difficulty-btn:active { transform: scale(0.98); }
+        #game-container { display: none; flex-direction: column; align-items: center; width: 100%; }
+        .timer { font-size: 1.2em; font-weight: bold; color: #495057; margin-bottom: 15px; padding: 8px 15px; background-color: #e9ecef; border-radius: 5px; border: 1px solid #ced4da; min-width: 220px; text-align: center; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+        .timer.low-time { color: #dc3545; background-color: #f8d7da; border-color: #f5c6cb; font-weight: bolder; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+        .prompt-container { text-align: center; margin-bottom: 20px; background-color: #ffffff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); min-width: 300px; max-width: 90%; }
+        #prompt-language-helper { font-size: 0.9em; color: #6c757d; margin-bottom: 5px; }
+        #prompt-word { color: #007bff; font-size: 1.8em; margin-top: 5px; margin-bottom: 5px; font-weight: bold; word-wrap: break-word; overflow-wrap: break-word; }
+        #prompt-word .pinyin { display: block; font-size: 0.6em; color: #6c757d; font-weight: normal; margin-top: 3px; }
+        .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 8px; width: 90%; max-width: 480px; aspect-ratio: 1 / 1; margin-bottom: 15px; background-color: #e9ecef; padding: 10px; border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.1); position: relative; }
+        .grid-container.game-over::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(200, 200, 200, 0.5); border-radius: 8px; pointer-events: none; z-index: 10; }
+        .grid-cell { background-color: #fff; border: 1px solid #ced4da; border-radius: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 1.1em; cursor: pointer; transition: background-color 0.3s ease, transform 0.1s ease; text-align: center; padding: 3px; word-wrap: break-word; overflow-wrap: break-word; position: relative; z-index: 1; }
+        .grid-cell .pinyin { font-size: 0.7em; color: #6c757d; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 95%; }
+        .grid-cell:hover:not(.correct):not(.disabled) { background-color: #f1f3f5; transform: scale(1.03); }
+        .correct { background-color: #28a745 !important; color: white; cursor: default; transform: scale(1); pointer-events: none; }
+        .correct .pinyin { color: rgba(255, 255, 255, 0.8); }
+        .incorrect { animation: flash-red 0.5s; }
+        .disabled { cursor: not-allowed !important; pointer-events: none !important; opacity: 0.6 !important; background-color: #e9ecef !important; color: #6c757d !important; }
+        @keyframes flash-red { 0%, 100% { background-color: #fff; color: black; } 50% { background-color: #dc3545; color: white; } }
+        .hint-highlight { animation: flash-yellow 0.8s ease-out; }
+        @keyframes flash-yellow { 0%, 100% { background-color: #fff; } 50% { background-color: #fff3cd; } }
+        .message { margin-top: 15px; font-size: 1.3em; font-weight: bold; color: #17a2b8; min-height: 25px; }
+        #current-mode-display { font-size: 0.9em; color: #6c757d; margin-bottom: 10px; font-style: italic; }
+        .button-container { text-align: center; margin-top: 5px; }
+        .restart-btn, .hint-btn, .switch-mode-btn { display: inline-block; margin: 8px 5px; padding: 10px 18px; font-size: 1.0em; font-weight: bold; color: #fff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .restart-btn { background-color: #6c757d; }
+        .restart-btn:hover { background-color: #5a6268; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .restart-btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .restart-btn:disabled { background-color: #adb5bd; cursor: not-allowed; box-shadow: none; }
+        .hint-btn { background-color: #ffc107; color: #212529; }
+        .hint-btn:hover { background-color: #e0a800; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .hint-btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .hint-btn:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; box-shadow: none; }
+        .switch-mode-btn { background-color: #17a2b8; }
+        .switch-mode-btn:hover { background-color: #138496; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .switch-mode-btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .switch-mode-btn:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; box-shadow: none; }
+    </style>
+    </head>
+<body>
+
+    <h1>Bingo Từ Vựng Việt-Trung</h1>
+
+    <div id="difficulty-selector">
+        <h2>Chọn Chế Độ Chơi</h2>
+        <button id="easy-mode-btn" class="difficulty-btn">Chế Độ Dễ (Có Pinyin)</button>
+        <button id="hard-mode-btn" class="difficulty-btn">Chế Độ Khó (Không Pinyin)</button>
+    </div>
+
+    <div id="game-container">
+        <div id="timer-display" class="timer">Thời gian còn lại: 03:00</div>
+        <div class="prompt-container">
+            <p id="prompt-language-helper"></p>
+            <h2 id="prompt-word"></h2>
+        </div>
+        <div id="grid-container" class="grid-container"></div>
+        <div id="message" class="message"></div>
+        <div id="current-mode-display"></div>
+        <div class="button-container">
+            <button id="hint-button" class="hint-btn" disabled>Gợi ý</button>
+            <button id="switch-mode-button" class="switch-mode-btn" disabled>Đổi Chế Độ</button>
+            <button id="restart-button" class="restart-btn">Bắt đầu lại</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Từ vựng (Đã sửa 留学生) ---
+            const rawVocabularyString = `
+2. 介绍 - Jièshào - Giới thiệu
+4. 一下儿 - Yī xiàr - Một chút
+6. 没什么 - Méi shénme - Không có gì
+7. 留学生 - Liúxué shēng - Du học sinh
+8. 秘书 - Mìshū - Thư ký
+9. 教授 - Jiàoshòu - Giáo sư
+10. 教师 - Jiàoshī - Giáo viên
+11. 中文 - Zhōngwén - Tiếng Trung
+12. 新生 - Xīnshēng - Sinh viên mới
+13. 以为 - Yǐwéi - Nghĩ rằng
+14. 遇到 - Yùdào - Gặp
+15. 室友 - Shìyǒu - Bạn cùng phòng
+16. 见面 - Jiànmiàn - Gặp mặt
+17. 加 - Jiā - Thêm
+18. 微信 - Wēixìn - WeChat
+            `;
+
+            // --- Hàm Parse Vocabulary (Giữ nguyên) ---
+            function parseVocabulary(rawString) { /* ... giữ nguyên ... */ console.log("---- Bắt đầu Parse Vocabulary ----"); if (!rawString || typeof rawString !== 'string') { console.error("Lỗi: Dữ liệu từ vựng đầu vào không hợp lệ."); return []; } const lines = rawString.trim().split('\n'); const pairs = lines .map(line => line.trim()) .map(line => line.replace(/^\d+\.\s*/, '')) .filter(line => line && line.includes(' - ')) .map((line, index) => { const parts = line.split(' - '); if (parts.length === 3) { const chinesePart = parts[0].trim(); const pinyinPart = parts[1].trim(); const vietnamesePart = parts[2].trim(); if (chinesePart && pinyinPart && vietnamesePart) { return { chinese: chinesePart, pinyin: pinyinPart, vietnamese: vietnamesePart }; } else { console.warn(`Bỏ qua dòng ${index + 1}: Phần tử rỗng sau khi tách "${line}"`); return null; } } else { console.warn(`Bỏ qua dòng ${index + 1}: Sai định dạng (cần 3 phần) "${line}" (Số phần tử: ${parts.length})`); return null; } }) .filter(pair => pair !== null); console.log(`---- Parse Vocabulary Hoàn tất - Tìm thấy ${pairs.length} cặp từ ----`); return pairs; }
+
+            // --- DOM References ---
+            const difficultySelectorElement = document.getElementById('difficulty-selector');
+            const gameContainerElement = document.getElementById('game-container');
+            const easyModeButton = document.getElementById('easy-mode-btn');
+            const hardModeButton = document.getElementById('hard-mode-btn');
+            const gridContainer = document.getElementById('grid-container');
+            const promptWordElement = document.getElementById('prompt-word');
+            const promptLanguageHelperElement = document.getElementById('prompt-language-helper');
+            const messageElement = document.getElementById('message');
+            const timerDisplayElement = document.getElementById('timer-display');
+            const restartButtonElement = document.getElementById('restart-button');
+            const hintButtonElement = document.getElementById('hint-button');
+            const switchModeButtonElement = document.getElementById('switch-mode-button');
+            const currentModeDisplayElement = document.getElementById('current-mode-display');
+
+            // --- Constants & State ---
+            const GRID_SIZE = 5;
+            const TOTAL_CELLS = GRID_SIZE * GRID_SIZE;
+            const TOTAL_TIME_SECONDS = 180;
+            let vocabulary = [];
+            let remainingPairs = [];
+            let currentPair = null;
+            let promptLanguage = '';
+            let targetLanguage = '';
+            let pairsFound = 0;
+            let timerInterval = null;
+            let timeLeft = TOTAL_TIME_SECONDS;
+            let gameActive = false;
+            let difficultyMode = 'hard';
+
+            // --- Helper Functions ---
+            function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[array[i], array[j]] = [array[j], array[i]]; } }
+            function updateTimerDisplay() { /* ... giữ nguyên ... */ if (!timerDisplayElement) return; const minutes = Math.floor(timeLeft / 60); const seconds = timeLeft % 60; const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; timerDisplayElement.textContent = `Thời gian còn lại: ${formattedTime}`; if (timeLeft <= 30 && timeLeft > 0) { timerDisplayElement.classList.add('low-time'); } else { timerDisplayElement.classList.remove('low-time'); } if (timeLeft <= 0) { timerDisplayElement.classList.remove('low-time'); } }
+            function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
+            function startTimer() { stopTimer(); timeLeft = TOTAL_TIME_SECONDS; updateTimerDisplay(); gameActive = true; timerInterval = setInterval(() => { timeLeft--; updateTimerDisplay(); if (timeLeft <= 0) { endGame(false); } }, 1000); }
+            function updateModeDisplay() { if (currentModeDisplayElement) { currentModeDisplayElement.textContent = `Chế độ hiện tại: ${difficultyMode === 'easy' ? 'Dễ (Có Pinyin)' : 'Khó'}`; } }
+            function getDisplayTextParts(pair, lang) { const parts = { text: '', pinyin: null }; if (lang === 'vietnamese') { parts.text = pair.vietnamese; } else if (lang === 'chinese') { parts.text = pair.chinese; if (difficultyMode === 'easy') { parts.pinyin = pair.pinyin; } } return parts; }
+            function formatDisplayHTML(parts) { if (parts.pinyin) { return `${parts.text}<span class="pinyin">(${parts.pinyin})</span>`; } return parts.text; }
+            function getComparisonText(pair, lang) { if (lang === 'vietnamese') { return pair.vietnamese; } else if (lang === 'chinese') { return pair.chinese; } return ''; }
+
+             // --- Game Logic Functions ---
+             function endGame(isWin) { /* ... giữ nguyên, đảm bảo disable các nút ... */ if (!gameActive && timerInterval == null && !isWin) return; gameActive = false; stopTimer(); const cells = gridContainer.querySelectorAll('.grid-cell'); cells.forEach(cell => { cell.classList.add('disabled'); }); gridContainer.classList.add('game-over'); if(hintButtonElement) hintButtonElement.disabled = true; if(switchModeButtonElement) switchModeButtonElement.disabled = true; if (isWin) { messageElement.textContent = `🎉 Chúc mừng! Bạn đã hoàn thành! 🎉`; promptWordElement.textContent = "✔️"; promptLanguageHelperElement.textContent = "Tuyệt vời!"; timerDisplayElement.classList.remove('low-time'); } else { messageElement.textContent = "⏰ Hết giờ! Thử lại nhé! ⏰"; promptWordElement.textContent = "⏳"; promptLanguageHelperElement.textContent = "Đã hết thời gian"; timerDisplayElement.textContent = "Thời gian: 00:00"; timerDisplayElement.classList.remove('low-time'); } }
+
+             // Sửa lại createGrid: Chỉ tạo ô, không gắn listener
+             function createGrid() {
+                 gridContainer.innerHTML = ''; // Xóa sạch ô cũ
+                 for (let i = 0; i < TOTAL_CELLS; i++) {
+                     const cell = document.createElement('div');
+                     cell.classList.add('grid-cell');
+                     gridContainer.appendChild(cell);
+                 }
+                 gridContainer.classList.remove('game-over');
+                 console.log(`createGrid: Created ${TOTAL_CELLS} cells.`);
+             }
+
+             function selectNextChallenge() { /* ... giữ nguyên ... */ if (remainingPairs.length === 0) { if(gameActive) endGame(true); return false; } if (!gameActive && timerInterval != null) { return false; } const randomIndex = Math.floor(Math.random() * remainingPairs.length); currentPair = remainingPairs[randomIndex]; remainingPairs.splice(randomIndex, 1); promptLanguage = Math.random() < 0.5 ? 'vietnamese' : 'chinese'; targetLanguage = promptLanguage === 'vietnamese' ? 'chinese' : 'vietnamese'; promptLanguageHelperElement.textContent = `Tìm từ ${targetLanguage === 'vietnamese' ? 'Tiếng Việt' : 'Tiếng Trung'} tương ứng:`; const promptParts = getDisplayTextParts(currentPair, promptLanguage); promptWordElement.innerHTML = formatDisplayHTML(promptParts); messageElement.textContent = ''; populateGrid(); return true; }
+
+             // Sửa lại populateGrid: Gắn listener ở đây
+             function populateGrid() {
+                 console.log("Populating grid in mode:", difficultyMode);
+                 const correctPair = currentPair;
+                 const correctComparisonText = getComparisonText(correctPair, targetLanguage);
+                 let distractorPairs = vocabulary.filter(p => getComparisonText(p, targetLanguage) !== correctComparisonText);
+                 shuffleArray(distractorPairs);
+                 let gridPairs = [correctPair];
+                 let distractorIndex = 0;
+                 while (gridPairs.length < TOTAL_CELLS) { if (distractorPairs.length === 0 || vocabulary.length <= 1) { gridPairs.push(correctPair); } else { gridPairs.push(distractorPairs[distractorIndex % distractorPairs.length]); distractorIndex++; } }
+                 shuffleArray(gridPairs);
+
+                 const cells = gridContainer.querySelectorAll('.grid-cell');
+                 console.log(`populateGrid: Found ${cells.length} cells to populate.`);
+                 if (cells.length !== TOTAL_CELLS) { console.error("Mismatch cells in populateGrid!"); messageElement.textContent = "Lỗi hiển thị lưới!"; return; }
+
+                 cells.forEach((cell, index) => {
+                     const cellPair = gridPairs[index];
+                     cell.dataset.chinese = cellPair.chinese;
+                     cell.dataset.pinyin = cellPair.pinyin;
+                     cell.dataset.vietnamese = cellPair.vietnamese;
+                     cell.dataset.displayLang = targetLanguage;
+                     cell.dataset.comparisonText = getComparisonText(cellPair, targetLanguage);
+                     const displayParts = getDisplayTextParts(cellPair, targetLanguage);
+                     cell.innerHTML = formatDisplayHTML(displayParts);
+                     cell.className = 'grid-cell';
+                     cell.style.pointerEvents = 'auto';
+                     // Gắn listener ở đây
+                     cell.removeEventListener('click', handleCellClick);
+                     cell.addEventListener('click', handleCellClick);
+                 });
+             }
+
+             function handleCellClick(event) { /* ... giữ nguyên logic dùng dataset ... */ if (!gameActive) return; const clickedCell = event.target.closest('.grid-cell'); if (!clickedCell || !clickedCell.classList.contains('grid-cell') || clickedCell.classList.contains('correct') || clickedCell.classList.contains('disabled')) { return; } const clickedWordComparison = clickedCell.dataset.comparisonText; const expectedWordComparison = getComparisonText(currentPair, targetLanguage); console.log(`Clicked: "${clickedWordComparison}", Expected: "${expectedWordComparison}"`); if (clickedWordComparison === expectedWordComparison) { clickedCell.classList.add('correct','disabled'); pairsFound++; selectNextChallenge(); } else { clickedCell.classList.add('incorrect'); clickedCell.style.pointerEvents = 'none'; setTimeout(() => { if (clickedCell.classList.contains('incorrect')) { clickedCell.classList.remove('incorrect'); if (!clickedCell.classList.contains('correct') && !clickedCell.classList.contains('disabled')) { clickedCell.style.pointerEvents = 'auto'; } } }, 500); } }
+             function handleHintClick() { /* ... giữ nguyên logic dùng dataset ... */ if (!gameActive || !currentPair) return; const correctWordComparison = getComparisonText(currentPair, targetLanguage); const cells = gridContainer.querySelectorAll('.grid-cell'); let foundCell = null; cells.forEach(cell => { const cellComparisonText = cell.dataset.comparisonText; if (cellComparisonText === correctWordComparison && !cell.classList.contains('correct') && !cell.classList.contains('disabled')) { foundCell = cell; } }); if (foundCell) { foundCell.classList.add('hint-highlight'); console.log("Gợi ý (text gốc): ", correctWordComparison); setTimeout(() => { if (foundCell && foundCell.classList.contains('hint-highlight')) { foundCell.classList.remove('hint-highlight'); } }, 800); } else { console.log("Không tìm thấy ô gợi ý (có thể đã chọn đúng?)"); } }
+             function handleSwitchModeClick() { /* ... giữ nguyên logic đổi mode và cập nhật UI ... */ if (!gameActive) return; difficultyMode = (difficultyMode === 'easy' ? 'hard' : 'easy'); console.log("Switched mode to:", difficultyMode); updateModeDisplay(); const promptParts = getDisplayTextParts(currentPair, promptLanguage); promptWordElement.innerHTML = formatDisplayHTML(promptParts); const cells = gridContainer.querySelectorAll('.grid-cell'); cells.forEach(cell => { const cellPair = { chinese: cell.dataset.chinese, pinyin: cell.dataset.pinyin, vietnamese: cell.dataset.vietnamese }; const displayLang = cell.dataset.displayLang; const displayParts = getDisplayTextParts(cellPair, displayLang); cell.innerHTML = formatDisplayHTML(displayParts); }); console.log("Grid updated for new mode."); }
+
+            // --- Initialization Function (Đã loại bỏ khối reset thừa) ---
+            function initGame() {
+                console.log(`Initializing game in ${difficultyMode} mode...`);
+                stopTimer();
+                gameActive = false;
+                pairsFound = 0;
+                if (!vocabulary || vocabulary.length === 0) { console.error("Không thể init game vì vocabulary rỗng!"); messageElement.textContent = "Lỗi: Không có từ vựng."; if(restartButtonElement) restartButtonElement.disabled = true; if(hintButtonElement) hintButtonElement.disabled = true; if(switchModeButtonElement) switchModeButtonElement.disabled = true; return; }
+                remainingPairs = [...vocabulary];
+                shuffleArray(remainingPairs);
+                messageElement.textContent = '';
+                promptWordElement.innerHTML = '';
+                promptLanguageHelperElement.textContent = 'Đang tải...';
+                timerDisplayElement.classList.remove('low-time');
+                timerDisplayElement.textContent = "Thời gian: 03:00";
+                updateModeDisplay();
+                if(restartButtonElement) restartButtonElement.disabled = false;
+                if(hintButtonElement) hintButtonElement.disabled = true;
+                if(switchModeButtonElement) switchModeButtonElement.disabled = true;
+
+                createGrid(); // Chỉ tạo lưới trống, không gắn listener ở đây
+
+                if (remainingPairs.length > 0) {
+                     if (selectNextChallenge()) { // selectNextChallenge sẽ gọi populateGrid (nơi gắn listener)
+                          startTimer();
+                          promptLanguageHelperElement.textContent = 'Tìm từ đi!';
+                          if(hintButtonElement) hintButtonElement.disabled = false;
+                          if(switchModeButtonElement) switchModeButtonElement.disabled = false;
+                     } else { /* ... xử lý lỗi ... */ messageElement.textContent = "Lỗi khi bắt đầu vòng mới."; if(restartButtonElement) restartButtonElement.disabled = true; if(hintButtonElement) hintButtonElement.disabled = true; if(switchModeButtonElement) switchModeButtonElement.disabled = true; }
+                } else { /* ... xử lý lỗi ... */ messageElement.textContent = "Lỗi: Không có từ vựng để bắt đầu."; promptLanguageHelperElement.textContent = 'Lỗi tải từ'; timerDisplayElement.textContent = "Thời gian: --:--"; if(restartButtonElement) restartButtonElement.disabled = true; if(hintButtonElement) hintButtonElement.disabled = true; if(switchModeButtonElement) switchModeButtonElement.disabled = true; }
+            }
+
+            // --- Logic Chọn Chế Độ (Giữ nguyên) ---
+            function selectDifficulty(mode) { /* ... giữ nguyên ... */ difficultyMode = mode; console.log(`Selected difficulty: ${difficultyMode}`); if (difficultySelectorElement) difficultySelectorElement.style.display = 'none'; if (gameContainerElement) gameContainerElement.style.display = 'flex'; initGame(); }
+
+            // --- Event Listeners ---
+            if (easyModeButton) easyModeButton.addEventListener('click', () => selectDifficulty('easy'));
+            if (hardModeButton) hardModeButton.addEventListener('click', () => selectDifficulty('hard'));
+            if(restartButtonElement) restartButtonElement.addEventListener('click', initGame);
+            if(hintButtonElement) hintButtonElement.addEventListener('click', handleHintClick);
+            if(switchModeButtonElement) switchModeButtonElement.addEventListener('click', handleSwitchModeClick);
+
+
+            // --- Initial Setup on Load (Giữ nguyên) ---
+            vocabulary = parseVocabulary(rawVocabularyString);
+            if (vocabulary.length === 0) { /* ... xử lý lỗi ... */ if(difficultySelectorElement) { const errorMsg = document.createElement('p'); errorMsg.textContent = "Lỗi nghiêm trọng: Không tải được từ vựng!"; errorMsg.style.color = 'red'; errorMsg.style.marginTop = '20px'; difficultySelectorElement.appendChild(errorMsg); if(easyModeButton) easyModeButton.disabled = true; if(hardModeButton) hardModeButton.disabled = true; } console.error("!!! Lỗi nghiêm trọng: Danh sách từ vựng rỗng sau khi parse."); if(restartButtonElement) restartButtonElement.disabled = true; if(hintButtonElement) hintButtonElement.disabled = true; if(switchModeButtonElement) switchModeButtonElement.disabled = true;}
+            else { console.log(`Đã tải thành công ${vocabulary.length} cặp từ. Chờ chọn chế độ...`); }
+        });
+    </script>
+    </body>
+</html>

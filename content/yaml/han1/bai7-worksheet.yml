@@ -1,0 +1,32 @@
+id: han1-bai7-worksheet
+course: han1
+order: 7
+title: "Bài 7 — Phiếu phỏng vấn bạn cùng lớp"
+subtitle: "Hỏi 1 bạn các câu sau và ghi lại câu trả lời"
+interactionType: worksheet
+submitMode: save
+estimatedMinutes: 15
+tags: [interview, speaking]
+intro: |
+  Hỏi một bạn cùng lớp các câu hỏi dưới đây bằng tiếng Trung,
+  sau đó ghi lại câu trả lời (có thể dùng tiếng Việt hoặc tiếng Trung).
+fields:
+  - name: partnerName
+    label: "Tên bạn cùng lớp (姓名)"
+    type: text
+  - name: q1
+    label: "你叫什么名字？(Bạn tên là gì?)"
+    hint: "Họ tên đầy đủ"
+    type: text
+  - name: q2
+    label: "你是哪国人？(Bạn là người nước nào?)"
+    type: text
+  - name: q3
+    label: "你今年多大？(Năm nay bạn bao nhiêu tuổi?)"
+    type: text
+  - name: q4
+    label: "你家有几口人？(Nhà bạn có mấy người?)"
+    type: textarea
+  - name: q5
+    label: "你的爱好是什么？(Sở thích của bạn là gì?)"
+    type: textarea
