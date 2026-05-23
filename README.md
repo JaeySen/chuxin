@@ -10,7 +10,7 @@ Both consume the same Firestore content and share progress.
 ## Repository layout
 
 ```
-hanailab/
+chuxin/
 ├─ apps/
 │  ├─ vanilla/                # Static jQuery app (Firebase Hosting target: vanilla)
 │  └─ react/                  # Vite SPA           (Firebase Hosting target: app)
