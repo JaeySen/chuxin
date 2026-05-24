@@ -1,0 +1,25 @@
+[Unit]
+Description=Sotam API (Fastify + Socket.io)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=sotam
+WorkingDirectory=/home/sotam/sotam/apps/api
+EnvironmentFile=/home/sotam/sotam/apps/api/.env
+ExecStart=/usr/bin/node dist/index.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/sotam/sotam/apps/api
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

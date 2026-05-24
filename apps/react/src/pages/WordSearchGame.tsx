@@ -1,262 +1,163 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { WordSearchBoard } from "../components/WordSearchBoard";
 import {
-  subscribeGame,
-  joinGame,
-  startGame,
-  endGame,
-  submitFoundWord,
-  type GameState,
+  useWordSearchGame, joinWordSearch, startWordSearch, endWordSearch, submitFoundWord,
 } from "../lib/wordSearchGame";
-
-const GAME_DURATION = 60; // seconds
-
-function getPlayerId(): string {
-  let id = localStorage.getItem("wsPlayerId");
-  if (!id) {
-    id = Math.random().toString(36).slice(2, 10);
-    localStorage.setItem("wsPlayerId", id);
-  }
-  return id;
-}
+import { useAuth } from "../lib/auth-context";
 
 export function WordSearchGame() {
   const { gameId } = useParams<{ gameId: string }>();
-  const [game, setGame] = useState<GameState | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [nameInput, setNameInput] = useState(
-    () => localStorage.getItem("wsPlayerName") ?? ""
-  );
+  const { user, loading: authLoading } = useAuth();
+  const { game, error } = useWordSearchGame(gameId);
   const [joined, setJoined] = useState(false);
-  const [myColor, setMyColor] = useState("#2563eb");
-  const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
+  const [joinErr, setJoinErr] = useState<string | null>(null);
+  const [actErr, setActErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const playerId = getPlayerId();
-  const isCreator = gameId ? !!localStorage.getItem(`wsCreator_${gameId}`) : false;
+  const isTeacher = !!game && !!user && game.teacherUid === user.id;
+  const me = game && user ? game.players[user.id] : null;
 
-  // Subscribe to Firestore game doc
   useEffect(() => {
-    if (!gameId) return;
-    const unsub = subscribeGame(gameId, (g) => {
-      setGame(g);
-      setLoading(false);
-      if (!g) { setError("Không tìm thấy trò chơi"); return; }
-      if (g.players[playerId]) {
-        setJoined(true);
-        setMyColor(g.players[playerId].color);
-      }
-    });
-    return unsub;
-  }, [gameId, playerId]);
+    if (!game || !user || joined || isTeacher) return;
+    if (me) { setJoined(true); return; }
+    joinWordSearch(game.id)
+      .then(() => setJoined(true))
+      .catch((e) => setJoinErr(e instanceof Error ? e.message : String(e)));
+  }, [game, user, isTeacher, me, joined]);
 
-  // Countdown timer derived from Firestore startAt
-  useEffect(() => {
-    if (game?.status !== "active" || !game.startAt) return;
-    const startMs = (game.startAt as any).toMillis?.() ?? Date.now();
+  async function runAction(fn: () => Promise<unknown>) {
+    setActErr(null);
+    try { await fn(); }
+    catch (e: unknown) { setActErr(e instanceof Error ? e.message : String(e)); }
+  }
 
-    if (timerRef.current) clearInterval(timerRef.current);
+  async function handleFound(wordIndex: number, positions: [number, number][]) {
+    if (!game) return;
+    await runAction(() => submitFoundWord(game.id, wordIndex, positions));
+  }
 
-    timerRef.current = setInterval(() => {
-      const elapsed = (Date.now() - startMs) / 1000;
-      const left = Math.max(0, GAME_DURATION - elapsed);
-      setTimeLeft(Math.ceil(left));
-      if (left <= 0) {
-        clearInterval(timerRef.current!);
-        if (isCreator) endGame(gameId!);
-      }
-    }, 250);
-
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [game?.status, game?.startAt, isCreator, gameId]);
-
-  const handleJoin = useCallback(async () => {
-    if (!gameId || !nameInput.trim()) return;
-    localStorage.setItem("wsPlayerName", nameInput.trim());
-    const res = await joinGame(gameId, playerId, nameInput.trim());
-    if ("error" in res) { setError(res.error); return; }
-    setJoined(true);
-    setMyColor(res.color);
-  }, [gameId, playerId, nameInput]);
-
-  const handleWordFound = useCallback(
-    async (wordKey: string, positions: [number, number][]) => {
-      if (!gameId || !game) return;
-      const myName = game.players[playerId]?.name ?? nameInput;
-      await submitFoundWord(gameId, wordKey, playerId, myName, myColor, positions);
-    },
-    [gameId, game, playerId, nameInput, myColor]
-  );
-
-  const handleStart = useCallback(async () => {
-    if (!gameId) return;
-    await startGame(gameId);
-  }, [gameId]);
-
-  const copyLink = () => {
+  function copyLink() {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-  };
-
-  // ── Loading / error ──────────────────────────────────────────
-  if (loading) return <div className="ws-shell"><div className="ws-center muted">Đang tải...</div></div>;
-  if (error) return <div className="ws-shell"><div className="feedback feedback-bad">{error}</div></div>;
-  if (!game) return null;
-
-  const playerCount = Object.keys(game.players).length;
-  const placedCount = game.placements.length;
-  const foundCount = Object.keys(game.found).length;
-
-  // ── Join screen ──────────────────────────────────────────────
-  if (!joined) {
-    return (
-      <div className="ws-shell ws-center-col">
-        <div className="ws-join-card">
-          <h2>Tham gia Tìm từ</h2>
-          <p className="muted">
-            {playerCount} / {game.maxPlayers} người đã vào
-          </p>
-          <input
-            className="ws-name-input"
-            placeholder="Nhập tên của bạn"
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleJoin()}
-            autoFocus
-          />
-          <button
-            className="btn btn-primary"
-            disabled={!nameInput.trim()}
-            onClick={handleJoin}
-          >
-            Tham gia →
-          </button>
-        </div>
-      </div>
-    );
   }
 
-  // ── Lobby ────────────────────────────────────────────────────
+  if (authLoading || !gameId) return <div className="bingo-shell ws-center-col"><span className="muted">Đang tải…</span></div>;
+  if (!user) return <div className="bingo-shell"><div className="feedback feedback-info">Bạn cần đăng nhập để tham gia.</div></div>;
+  if (error && !game) return <div className="bingo-shell"><div className="feedback feedback-bad">{error}</div></div>;
+  if (!game) return <div className="bingo-shell ws-center-col"><span className="muted">Đang tải…</span></div>;
+
+  const playerCount = Object.keys(game.players).length;
+  const foundCount = Object.keys(game.found).length;
+
+  // ── Lobby ─────────────────────────────────────
   if (game.status === "lobby") {
     return (
-      <div className="ws-shell ws-center-col">
+      <div className="bingo-shell ws-center-col">
         <div className="ws-lobby-card">
-          <h2>Phòng chờ</h2>
+          <h2>Phòng chờ Tìm từ {isTeacher && <span className="ws-lvl-badge">Giáo viên</span>}</h2>
+          <p className="muted">{playerCount} / {game.maxPlayers} học viên</p>
           <div className="ws-player-chips">
             {Object.values(game.players).map((p) => (
-              <div
-                key={p.name}
-                className="ws-player-chip"
-                style={{ background: p.color + "22", borderColor: p.color, color: p.color }}
-              >
+              <div key={p.uid} className="ws-player-chip"
+                style={{ background: p.color + "22", borderColor: p.color, color: p.color }}>
                 {p.name}
               </div>
             ))}
-            {playerCount === 0 && <span className="muted">Chưa có ai vào...</span>}
+            {playerCount === 0 && <span className="muted">Chưa có học viên nào…</span>}
           </div>
-
           <div className="ws-link-row">
-            <span className="muted ws-link-hint">Link cho học viên:</span>
             <button className="btn btn-ghost btn-sm" onClick={copyLink}>
-              {copied ? "Đã copy ✓" : "Copy link"}
+              {copied ? "Đã copy ✓" : "Copy link mời"}
             </button>
           </div>
-
-          {isCreator ? (
-            <button
-              className="btn btn-primary"
-              disabled={playerCount === 0}
-              onClick={handleStart}
-            >
+          {joinErr && <div className="feedback feedback-bad">{joinErr}</div>}
+          {isTeacher ? (
+            <button className="btn btn-primary" disabled={playerCount === 0}
+              onClick={() => runAction(() => startWordSearch(game.id))}>
               Bắt đầu ({playerCount} người)
             </button>
           ) : (
-            <div className="feedback feedback-info">Chờ giáo viên bắt đầu...</div>
+            <div className="feedback feedback-info">Đang chờ giáo viên bắt đầu…</div>
           )}
         </div>
       </div>
     );
   }
 
-  // ── Active / ended game ──────────────────────────────────────
+  // ── Active / Ended ────────────────────────────
   const isActive = game.status === "active";
-  const urgent = isActive && timeLeft <= 10;
 
   return (
-    <div className="ws-shell ws-game">
-      {/* Top bar */}
-      <div className="ws-topbar">
-        <div className={`ws-timer ${urgent ? "ws-timer--urgent" : ""}`}>
-          {isActive ? `${timeLeft}s` : "Hết giờ"}
-        </div>
-        <div className="ws-score-pill">
-          {foundCount} / {placedCount} từ tìm được
-        </div>
-        <div className="ws-players-row">
-          {Object.entries(game.players).map(([uid, p]) => {
-            const pFound = Object.values(game.found).filter((f) => f.by === uid).length;
-            return (
-              <span key={uid} className="ws-pbadge" style={{ borderColor: p.color }}>
-                <span className="ws-pdot" style={{ background: p.color }} />
-                {p.name}&nbsp;<strong>{pFound}</strong>
-              </span>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Main area: board + word list */}
-      <div className="ws-main">
-        <WordSearchBoard
-          grid={game.board}
-          found={game.found}
-          wordList={game.wordList}
-          placements={game.placements}
-          onWordFound={handleWordFound}
-          active={isActive}
-        />
-
-        <div className="ws-word-list">
-          <div className="ws-wl-title">
-            Từ cần tìm <span className="muted">({game.wordList.length} từ)</span>
-          </div>
-          {game.wordList.map((word, i) => {
-            const fi = game.found[word.char];
-            const isPlaced = game.placements.some((p) => p.wordIndex === i);
-            return (
-              <div
-                key={word.char}
-                className={`ws-word-item ${fi ? "ws-word-item--found" : ""} ${!isPlaced && game.status === "ended" ? "ws-word-item--notfound" : ""}`}
-                style={fi ? { borderLeftColor: fi.color, background: fi.color + "18" } : undefined}
-              >
-                <span className="ws-wi-char">{word.char}</span>
-                <span className="ws-wi-pinyin">{word.pinyin}</span>
-                {fi && (
-                  <span className="ws-wi-finder" style={{ color: fi.color }}>
-                    ✓ {fi.name}
-                  </span>
-                )}
-                {!fi && game.status === "ended" && !isPlaced && (
-                  <span className="ws-wi-decoy muted">không có trong bảng</span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Teacher: manual end game */}
-      {isCreator && isActive && (
-        <div className="ws-teacher-controls">
-          <button className="btn btn-ghost btn-sm" onClick={() => endGame(gameId!)}>
-            Kết thúc sớm
-          </button>
-        </div>
+    <div className="bingo-shell">
+      {game.status === "ended" && (
+        <div className="bingo-winner-bar">🎉 Hết giờ — tìm được {foundCount}/{game.wordList.length} từ</div>
       )}
+
+      <div className="bingo-layout">
+        <div className="bingo-board-col">
+          <WordSearchBoard
+            grid={game.board}
+            found={game.found}
+            wordList={game.wordList}
+            placements={game.placements}
+            onWordFound={handleFound}
+            active={isActive && !isTeacher}
+          />
+          <div className="bingo-board-legend">
+            <span className="muted">
+              Kéo chuột để chọn dãy ô (ngang, dọc, chéo). Tìm chữ Hán bằng cách ghép pinyin.
+            </span>
+          </div>
+        </div>
+
+        <div className="bingo-right-col">
+          <div className="ws-wl-title">Tìm các từ ({foundCount}/{game.wordList.length})</div>
+          <div className="ws-word-list">
+            {game.wordList.map((w, i) => {
+              const f = game.found[String(i)];
+              return (
+                <div key={i} className={`ws-word-row ${f ? "ws-word-row--done" : ""}`}
+                  style={f ? { background: f.color + "22", borderColor: f.color } : undefined}>
+                  <div>
+                    <div className="ws-word-hanzi">{w.char}</div>
+                    <div className="ws-word-py">{w.pinyin}</div>
+                    <div className="ws-word-vi muted">{w.en}</div>
+                  </div>
+                  {f && <span className="ws-word-by" style={{ color: f.color }}>✓ {f.name}</span>}
+                </div>
+              );
+            })}
+          </div>
+
+          {isTeacher && isActive && (
+            <button className="btn btn-ghost btn-sm" onClick={() => runAction(() => endWordSearch(game.id))}>
+              Kết thúc trò chơi
+            </button>
+          )}
+          {actErr && <div className="feedback feedback-bad">{actErr}</div>}
+
+          <div className="ws-wl-title" style={{ marginTop: 16 }}>Học viên</div>
+          <div className="bingo-scoreboard">
+            {Object.values(game.players).map((p) => {
+              const count = Object.values(game.found).filter((f) => f.by === p.uid).length;
+              return (
+                <div key={p.uid}
+                  className={`bingo-score-row ${p.uid === user.id ? "bingo-score-row--me" : ""}`}>
+                  <span className="bingo-score-name">
+                    <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 5,
+                      background: p.color, marginRight: 6, verticalAlign: "middle" }} />
+                    {p.name}{p.uid === user.id ? " (bạn)" : ""}
+                  </span>
+                  <span className="bingo-score-count">{count} từ</span>
+                </div>
+              );
+            })}
+            {playerCount === 0 && <div className="muted" style={{ fontSize: 13 }}>Chưa có học viên</div>}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,6 +9,7 @@ export interface AuthUser {
   email: string;
   displayName: string;
   role: Role;
+  locked?: boolean;
 }
 
 interface UserRow {
@@ -19,6 +20,9 @@ interface UserRow {
   role: Role;
   provider: string;
   provider_sub: string | null;
+  locked: boolean;
+  locked_at: Date | null;
+  locked_reason: string | null;
 }
 
 // Teacher allowlist — moved from functions/src/grant-teacher-claim.ts.
@@ -53,7 +57,58 @@ export function verifyJwt(token: string): JwtPayload {
 }
 
 function toAuthUser(row: UserRow): AuthUser {
-  return { id: row.id, email: row.email, displayName: row.display_name, role: row.role };
+  return {
+    id: row.id,
+    email: row.email,
+    displayName: row.display_name,
+    role: row.role,
+    locked: row.locked,
+  };
+}
+
+export async function lockUser(userId: string, reason: string): Promise<void> {
+  await query(
+    `UPDATE users SET locked = true, locked_at = now(), locked_reason = $2 WHERE id = $1`,
+    [userId, reason],
+  );
+}
+
+export async function unlockUser(userId: string): Promise<void> {
+  await query(
+    `UPDATE users SET locked = false, locked_at = NULL, locked_reason = NULL WHERE id = $1`,
+    [userId],
+  );
+}
+
+export interface AuthEventInput {
+  userId: string;
+  eventType: "cross_ip_blocked" | "soft_cross_ip" | "admin_unlock";
+  attemptedIp?: string | null;
+  attemptedUserAgent?: string | null;
+  existingSessionIp?: string | null;
+  resolvedBy?: string | null;
+  note?: string | null;
+}
+
+export async function recordAuthEvent(input: AuthEventInput): Promise<void> {
+  const resolved = input.eventType === "admin_unlock";
+  await query(
+    `INSERT INTO auth_events
+       (user_id, event_type, attempted_ip, attempted_user_agent, existing_session_ip,
+        resolved, resolved_at, resolved_by, note)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+    [
+      input.userId,
+      input.eventType,
+      input.attemptedIp ?? null,
+      input.attemptedUserAgent ?? null,
+      input.existingSessionIp ?? null,
+      resolved,
+      resolved ? new Date() : null,
+      input.resolvedBy ?? null,
+      input.note ?? null,
+    ],
+  );
 }
 
 export async function findUserById(id: string): Promise<AuthUser | null> {

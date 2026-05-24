@@ -29,7 +29,7 @@ export function Home() {
           </div>
         </div>
         <div className="hero-art">
-          <img src="/chuxin-logo.jpg" alt="Sơ Tâm — Han ngữ" />
+          <img src="/chuxin-logo.jpg" alt="Hán ngữ Sơ Tâm" />
         </div>
       </section>
 

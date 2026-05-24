@@ -14,14 +14,14 @@ export function App() {
 }
 
 function Header() {
-  const { user, logout } = useAuth();
+  const { user, role, logout } = useAuth();
   const [open, setOpen] = useState(false);
   return (
     <header className="hanai-header">
       <div className="hanai-header-inner">
         <Link to="/" className="brand">
           <img src="/chuxin-logo.jpg" alt="Sơ Tâm" className="brand-mark" />
-          <span>Sơ Tâm · Hán ngữ</span>
+          <span>Hán ngữ Sơ Tâm</span>
         </Link>
         <nav className="hanai-nav">
           <Link to="/">Khoá học</Link>
@@ -29,6 +29,7 @@ function Header() {
           <Link to="/word-search">Tìm từ</Link>
           <Link to="/bingo">Bingo</Link>
           <Link to="/me">Tiến độ</Link>
+          {role === "admin" && <Link to="/admin" style={{ color: "var(--c-red)" }}>Quản trị</Link>}
         </nav>
         <div className="hanai-auth">
           {user ? (

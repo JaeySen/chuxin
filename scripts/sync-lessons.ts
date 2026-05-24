@@ -24,7 +24,7 @@ const { Pool } = pg;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "..");
-const CONTENT_DIR = path.join(REPO_ROOT, "content", "lessons");
+const CONTENT_DIR = path.join(REPO_ROOT, "content", "yaml");
 
 async function main() {
   if (!process.env.DATABASE_URL) {

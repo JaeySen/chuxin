@@ -3,110 +3,114 @@ import { useNavigate } from "react-router-dom";
 import hsk1Raw from "../data/hsk1.json";
 import hsk2Raw from "../data/hsk2.json";
 import hsk3Raw from "../data/hsk3.json";
-import { getSyllables, generateBoard } from "../utils/wordSearchGen";
-import { createGame, type WordEntry, type GameConfig } from "../lib/wordSearchGame";
+import { generateBoard, pinyinToChars, type WordEntry } from "../utils/wordSearchGen";
+import { createWordSearchGame } from "../lib/wordSearchGame";
+import { useAuth } from "../lib/auth-context";
 
-const TOTAL_WORDS = 14;
-const MIN_SYLLABLES = 2; // only multi-syllable words for word search
+const BOARD_SIZE = 12;
+const TOTAL_WORDS = 10;
 
-function buildPool(): Record<"hsk1" | "hsk2" | "hsk3", WordEntry[]> {
-  const hsk1: WordEntry[] = Object.entries(hsk1Raw)
-    .map(([char, v]) => {
-      const syls = getSyllables(v.pinyin);
-      return { char, pinyin: v.pinyin, en: v.en, syllables: syls };
-    })
-    .filter((w) => w.syllables.length >= MIN_SYLLABLES);
-
-  const hsk2: WordEntry[] = (hsk2Raw as { char: string; pinyin: string; en: string }[]).map((w) => ({
-    ...w,
-    syllables: getSyllables(w.pinyin),
-  }));
-
-  const hsk3: WordEntry[] = (hsk3Raw as { char: string; pinyin: string; en: string }[]).map((w) => ({
-    ...w,
-    syllables: getSyllables(w.pinyin),
-  }));
-
+function buildPool() {
+  const hsk1: WordEntry[] = Object.entries(hsk1Raw as Record<string, { pinyin: string; en: string }>)
+    .map(([char, v]) => ({ char, pinyin: v.pinyin, en: v.en, pinyinChars: pinyinToChars(v.pinyin) }));
+  const hsk2: WordEntry[] = (hsk2Raw as { char: string; pinyin: string; en: string }[])
+    .map((w) => ({ ...w, pinyinChars: pinyinToChars(w.pinyin) }));
+  const hsk3: WordEntry[] = (hsk3Raw as { char: string; pinyin: string; en: string }[])
+    .map((w) => ({ ...w, pinyinChars: pinyinToChars(w.pinyin) }));
   return { hsk1, hsk2, hsk3 };
 }
-
 const POOL = buildPool();
 
 export function WordSearchTeacher() {
   const navigate = useNavigate();
-  const [config, setConfig] = useState<GameConfig>({
-    hsk1: false,
-    hsk2: true,
-    hsk3: true,
-    maxPlayers: 6,
-  });
-  const [loading, setLoading] = useState(false);
-  const [gameLink, setGameLink] = useState<string | null>(null);
+  const { role, user, loading } = useAuth();
+  const [config, setConfig] = useState({ hsk1: true, hsk2: true, hsk3: false, maxPlayers: 10 });
+  const [busy, setBusy] = useState(false);
   const [gameId, setGameId] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  const activePool = useMemo(() => {
+  const activePool = useMemo<WordEntry[]>(() => {
     const words: WordEntry[] = [];
     if (config.hsk1) words.push(...POOL.hsk1);
     if (config.hsk2) words.push(...POOL.hsk2);
     if (config.hsk3) words.push(...POOL.hsk3);
     return words;
-  }, [config]);
+  }, [config.hsk1, config.hsk2, config.hsk3]);
 
-  const fillPool = useMemo(
-    () => [...new Set(activePool.flatMap((w) => w.syllables))],
-    [activePool]
-  );
-
-  async function handleCreate() {
-    if (activePool.length < 4) return;
-    setLoading(true);
-    try {
-      // Shuffle and pick TOTAL_WORDS words; prefer 2-syllable (shorter = more placeable)
-      const shuffled = [...activePool].sort(() => Math.random() - 0.5);
-      const selected = shuffled.slice(0, Math.min(TOTAL_WORDS, shuffled.length));
-
-      const { grid, placed } = generateBoard(
-        selected.map((w) => w.syllables),
-        fillPool.length > 0 ? fillPool : ["zhong", "guo", "ren", "wo", "ni"],
-        9
-      );
-
-      const id = await createGame(grid, selected, placed, config);
-      localStorage.setItem(`wsCreator_${id}`, "1");
-
-      const link = `${window.location.origin}/word-search/${id}`;
-      setGameId(id);
-      setGameLink(link);
-    } finally {
-      setLoading(false);
-    }
+  if (loading) return <div className="bingo-setup-shell"><span className="muted">Đang tải…</span></div>;
+  if (!user) {
+    return (
+      <div className="bingo-setup-shell">
+        <h2>Tạo trò chơi Tìm từ</h2>
+        <div className="feedback feedback-info">Bạn cần đăng nhập để tạo trò chơi.</div>
+      </div>
+    );
+  }
+  if (role !== "teacher" && role !== "admin") {
+    return (
+      <div className="bingo-setup-shell">
+        <h2>Tạo trò chơi Tìm từ</h2>
+        <div className="feedback feedback-bad">Chỉ giáo viên mới có thể tạo trò chơi.</div>
+      </div>
+    );
   }
 
-  if (gameLink && gameId) {
+  async function handleCreate() {
+    if (activePool.length === 0) return;
+    setBusy(true); setErr(null);
+    try {
+      const shuffled = [...activePool].sort((a, b) => a.pinyinChars.length - b.pinyinChars.length);
+      const candidates = shuffled.slice(0, Math.min(30, shuffled.length));
+      const selected = [...candidates].sort(() => Math.random() - 0.5).slice(0, TOTAL_WORDS);
+
+      const { grid, placed } = generateBoard(selected, BOARD_SIZE);
+      // Drop words that didn't fit + remap indices
+      const placedIndices = new Set(placed.map((p) => p.wordIndex));
+      const finalWords = selected.filter((_, i) => placedIndices.has(i));
+      const remap = new Map<number, number>();
+      let next = 0;
+      for (let i = 0; i < selected.length; i++) if (placedIndices.has(i)) remap.set(i, next++);
+      const finalPlacements = placed.map((p) => ({
+        wordIndex: remap.get(p.wordIndex)!,
+        positions: p.positions,
+      }));
+
+      const game = await createWordSearchGame({
+        maxPlayers: config.maxPlayers,
+        board: grid,
+        wordList: finalWords,
+        placements: finalPlacements,
+      });
+      setGameId(game.id);
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally { setBusy(false); }
+  }
+
+  function copyLink(link: string) {
+    navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  }
+
+  if (gameId) {
+    const link = `${window.location.origin}/word-search/${gameId}`;
     return (
-      <div className="ws-teacher-shell">
-        <h2>Trò chơi đã tạo!</h2>
-        <p className="muted">Chia sẻ đường link này cho học viên:</p>
+      <div className="bingo-setup-shell">
+        <h2>Trò chơi Tìm từ đã tạo!</h2>
+        <p className="muted">Chia sẻ đường link cho học viên:</p>
         <div className="ws-link-box">
-          <span className="ws-link-url">{gameLink}</span>
-          <button
-            className="btn btn-ghost btn-sm"
-            onClick={() => navigator.clipboard.writeText(gameLink)}
-          >
-            Copy
+          <span className="ws-link-url">{link}</span>
+          <button className="btn btn-ghost btn-sm" onClick={() => copyLink(link)}>
+            {copied ? "Đã copy ✓" : "Copy"}
           </button>
         </div>
-        <div className="ws-teacher-actions">
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate(`/word-search/${gameId}`)}
-          >
-            Vào phòng →
+        <div className="bingo-setup-btns">
+          <button className="btn btn-primary" onClick={() => navigate(`/word-search/${gameId}`)}>
+            Vào phòng với tư cách giáo viên →
           </button>
-          <button
-            className="btn btn-ghost"
-            onClick={() => { setGameLink(null); setGameId(null); }}
-          >
+          <button className="btn btn-ghost" onClick={() => { setGameId(null); setCopied(false); }}>
             Tạo trò chơi mới
           </button>
         </div>
@@ -115,64 +119,38 @@ export function WordSearchTeacher() {
   }
 
   return (
-    <div className="ws-teacher-shell">
-      <h2>Tạo trò chơi Tìm từ (Word Search)</h2>
-
+    <div className="bingo-setup-shell">
+      <h2>Tạo trò chơi Tìm từ</h2>
       <div className="ws-config-card">
         <div className="ws-config-section">
           <div className="ws-config-label">Chọn nhóm từ vựng</div>
           {(["hsk1", "hsk2", "hsk3"] as const).map((lvl) => (
             <label key={lvl} className="ws-checkbox-row">
-              <input
-                type="checkbox"
-                checked={config[lvl]}
-                onChange={(e) => setConfig((c) => ({ ...c, [lvl]: e.target.checked }))}
-              />
+              <input type="checkbox" checked={config[lvl]}
+                onChange={(e) => setConfig((c) => ({ ...c, [lvl]: e.target.checked }))} />
               <span className="ws-lvl-badge">{lvl.toUpperCase()}</span>
-              <span className="muted">
-                {POOL[lvl].length} từ
-                {lvl === "hsk1" ? " (≥2 âm tiết)" : ""}
-              </span>
+              <span className="muted" style={{ marginLeft: 8 }}>{POOL[lvl].length} từ</span>
             </label>
           ))}
         </div>
 
         <div className="ws-config-section">
           <div className="ws-config-label">
-            Số học viên tối đa:&nbsp;
-            <strong>{config.maxPlayers}</strong>
+            Số học viên tối đa:&nbsp;<strong>{config.maxPlayers}</strong>
           </div>
-          <input
-            type="range"
-            min={1}
-            max={10}
-            value={config.maxPlayers}
+          <input type="range" min={2} max={30} value={config.maxPlayers}
             onChange={(e) => setConfig((c) => ({ ...c, maxPlayers: +e.target.value }))}
-            className="ws-range"
-          />
-          <div className="ws-range-ticks">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-              <span key={n}>{n}</span>
-            ))}
-          </div>
+            className="ws-range" />
         </div>
 
         <div className="ws-config-note">
-          {activePool.length} từ trong nhóm · {Math.min(TOTAL_WORDS, activePool.length)} từ mỗi ván
-          · 8–10 từ có thể tìm được
+          Bảng {BOARD_SIZE}×{BOARD_SIZE} · {TOTAL_WORDS} từ mỗi ván · {activePool.length} từ trong nhóm
         </div>
+        {err && <div className="feedback feedback-bad">{err}</div>}
 
-        <button
-          className="btn btn-primary"
-          disabled={loading || activePool.length < 4}
-          onClick={handleCreate}
-        >
-          {loading ? "Đang tạo bảng..." : "Tạo trò chơi"}
+        <button className="btn btn-primary" disabled={busy || activePool.length === 0} onClick={handleCreate}>
+          {busy ? "Đang tạo..." : "Tạo trò chơi"}
         </button>
-
-        {activePool.length < 4 && (
-          <div className="feedback feedback-info">Hãy chọn ít nhất một nhóm từ vựng.</div>
-        )}
       </div>
     </div>
   );

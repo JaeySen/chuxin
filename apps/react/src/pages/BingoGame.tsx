@@ -1,172 +1,111 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import {
-  subscribeBingo,
-  joinBingo,
-  startBingo,
-  callNextWord,
-  markCell,
-  findBingoLine,
-  type BingoGame as BingoGameState,
+  useBingoGame, joinBingo, startBingo, callNextWord, markCell, endBingo,
 } from "../lib/bingoGame";
+import { useAuth } from "../lib/auth-context";
 
-function getPlayerId(): string {
-  let id = localStorage.getItem("bingoPlayerId");
-  if (!id) {
-    id = Math.random().toString(36).slice(2, 10);
-    localStorage.setItem("bingoPlayerId", id);
+function findBingoLine(board: string[][], marked: Set<string>): [number, number][] | null {
+  const n = board.length;
+  for (let r = 0; r < n; r++) {
+    if (board[r].every((c) => marked.has(c))) return board[r].map((_, c) => [r, c]);
   }
-  return id;
+  for (let c = 0; c < n; c++) {
+    if (board.every((row) => marked.has(row[c]))) return board.map((_, r) => [r, c]);
+  }
+  if (board.every((row, i) => marked.has(row[i]))) return board.map((_, i) => [i, i]);
+  if (board.every((row, i) => marked.has(row[n - 1 - i]))) return board.map((_, i) => [i, n - 1 - i]);
+  return null;
 }
 
 export function BingoGame() {
   const { gameId } = useParams<{ gameId: string }>();
-  const [game, setGame] = useState<BingoGameState | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [nameInput, setNameInput] = useState(
-    () => localStorage.getItem("bingoPlayerName") ?? ""
-  );
+  const { user, loading: authLoading } = useAuth();
+  const { game, error } = useBingoGame(gameId);
   const [joined, setJoined] = useState(false);
+  const [joinErr, setJoinErr] = useState<string | null>(null);
+  const [actErr, setActErr] = useState<string | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const playerId = getPlayerId();
-  const isCreator = gameId ? !!localStorage.getItem(`bingoCreator_${gameId}`) : false;
+  const isTeacher = !!game && !!user && game.teacherUid === user.id;
+  const me = game && user ? game.players[user.id] : null;
+
+  // Auto-join non-teachers when they land on the page
+  useEffect(() => {
+    if (!game || !user || joined || isTeacher) return;
+    if (me) { setJoined(true); return; }
+    joinBingo(game.id)
+      .then(() => setJoined(true))
+      .catch((e) => setJoinErr(e instanceof Error ? e.message : String(e)));
+  }, [game, user, isTeacher, me, joined]);
 
   useEffect(() => {
-    if (!gameId) return;
-    const unsub = subscribeBingo(gameId, (g) => {
-      setGame(g);
-      setLoading(false);
-      if (!g) { setError("Không tìm thấy trò chơi"); return; }
-      if (g.players[playerId]) setJoined(true);
-    });
-    return unsub;
-  }, [gameId, playerId]);
+    if (game?.winner?.uid === user?.id) setShowCelebration(true);
+  }, [game?.winner?.uid, user?.id]);
 
-  // Show celebration when I win
-  useEffect(() => {
-    if (game?.winner?.uid === playerId) setShowCelebration(true);
-  }, [game?.winner?.uid, playerId]);
-
-  const handleJoin = useCallback(async () => {
-    if (!gameId || !nameInput.trim()) return;
-    localStorage.setItem("bingoPlayerName", nameInput.trim());
-    const res = await joinBingo(gameId, playerId, nameInput.trim());
-    if ("error" in res) { setError(res.error); return; }
-    setJoined(true);
-  }, [gameId, playerId, nameInput]);
-
-  const handleMark = useCallback(
-    async (char: string) => {
-      if (!gameId || !game) return;
-      const me = game.players[playerId];
-      if (!me || !game.called.includes(char) || me.marked.includes(char)) return;
-      await markCell(gameId, playerId, char, me.board, me.marked, me.name);
-    },
-    [gameId, game, playerId]
-  );
-
-  const handleCallWord = useCallback(async () => {
-    if (!gameId) return;
-    await callNextWord(gameId);
-  }, [gameId]);
-
-  const copyLink = () => {
+  function copyLink() {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-  };
+  }
 
-  // ── States ────────────────────────────────────────────────────
-  if (loading) return <div className="bingo-shell ws-center-col"><span className="muted">Đang tải...</span></div>;
-  if (error) return <div className="bingo-shell"><div className="feedback feedback-bad">{error}</div></div>;
-  if (!game) return null;
+  async function runAction(fn: () => Promise<unknown>) {
+    setActErr(null);
+    try { await fn(); }
+    catch (e: unknown) { setActErr(e instanceof Error ? e.message : String(e)); }
+  }
+
+  if (authLoading || !gameId) return <div className="bingo-shell ws-center-col"><span className="muted">Đang tải…</span></div>;
+  if (!user) return <div className="bingo-shell"><div className="feedback feedback-info">Bạn cần đăng nhập để tham gia.</div></div>;
+  if (error && !game) return <div className="bingo-shell"><div className="feedback feedback-bad">{error}</div></div>;
+  if (!game) return <div className="bingo-shell ws-center-col"><span className="muted">Đang tải…</span></div>;
 
   const playerCount = Object.keys(game.players).length;
   const currentChar = game.called.at(-1) ?? null;
   const currentWord = currentChar ? game.words[currentChar] : null;
+  const uncalledCount = game.wordPool.length - game.called.length;
 
-  // ── Join screen ───────────────────────────────────────────────
-  if (!joined) {
-    return (
-      <div className="bingo-shell ws-center-col">
-        <div className="ws-join-card">
-          <h2>Tham gia Bingo</h2>
-          <p className="muted">{playerCount} / {game.maxPlayers} người đã vào</p>
-          <input
-            className="ws-name-input"
-            placeholder="Nhập tên của bạn"
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleJoin()}
-            autoFocus
-          />
-          <button className="btn btn-primary" disabled={!nameInput.trim()} onClick={handleJoin}>
-            Tham gia →
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // ── Lobby ─────────────────────────────────────────────────────
+  // ── Lobby ────────────────────────────────────────────────────
   if (game.status === "lobby") {
     return (
       <div className="bingo-shell ws-center-col">
         <div className="ws-lobby-card">
-          <h2>Phòng chờ Bingo</h2>
+          <h2>Phòng chờ Bingo {isTeacher && <span className="ws-lvl-badge">Giáo viên</span>}</h2>
+          <p className="muted">{playerCount} / {game.maxPlayers} học viên</p>
           <div className="ws-player-chips">
             {Object.values(game.players).map((p) => (
-              <div
-                key={p.name}
-                className="ws-player-chip"
-                style={{ background: "#e0f2fe", borderColor: "#0891b2", color: "#0e7490" }}
-              >
+              <div key={p.uid} className="ws-player-chip"
+                style={{ background: "#fff7d6", borderColor: "#ffc60b", color: "#7e1518" }}>
                 {p.name}
               </div>
             ))}
-            {playerCount === 0 && <span className="muted">Chưa có ai...</span>}
+            {playerCount === 0 && <span className="muted">Chưa có học viên nào…</span>}
           </div>
           <div className="ws-link-row">
             <button className="btn btn-ghost btn-sm" onClick={copyLink}>
               {copied ? "Đã copy ✓" : "Copy link mời"}
             </button>
           </div>
-          {isCreator ? (
-            <button
-              className="btn btn-primary"
-              disabled={playerCount === 0}
-              onClick={() => startBingo(gameId!)}
-            >
+          {joinErr && <div className="feedback feedback-bad">{joinErr}</div>}
+          {isTeacher ? (
+            <button className="btn btn-primary" disabled={playerCount === 0}
+              onClick={() => runAction(() => startBingo(game.id))}>
               Bắt đầu ({playerCount} người)
             </button>
           ) : (
-            <div className="feedback feedback-info">Chờ giáo viên bắt đầu...</div>
+            <div className="feedback feedback-info">Đang chờ giáo viên bắt đầu…</div>
           )}
         </div>
       </div>
     );
   }
 
-  // ── Active / ended game ───────────────────────────────────────
-  const me = game.players[playerId];
-  if (!me) return <div className="bingo-shell"><div className="feedback feedback-bad">Bạn không trong trò chơi này.</div></div>;
-
-  const markedSet = new Set(me.marked);
-  const calledSet = new Set(game.called);
-  const winLine = me.bingo ? findBingoLine(me.board, markedSet) : null;
-  const winCells = winLine
-    ? new Set(winLine.map(([r, c]) => `${r},${c}`))
-    : new Set<string>();
-
+  // ── Active / Ended ───────────────────────────────────────────
   const isActive = game.status === "active";
-  const uncalledCount = game.wordPool.length - game.called.length;
 
   return (
     <div className="bingo-shell">
-      {/* Celebration overlay */}
       {showCelebration && (
         <div className="bingo-celebrate" onClick={() => setShowCelebration(false)}>
           <div className="bingo-celebrate-text">BINGO!</div>
@@ -174,59 +113,25 @@ export function BingoGame() {
         </div>
       )}
 
-      {/* Winner banner */}
       {game.winner && (
-        <div className={`bingo-winner-bar ${game.winner.uid === playerId ? "bingo-winner-bar--me" : ""}`}>
-          {game.winner.uid === playerId
-            ? "🎉 BINGO! Bạn thắng!"
-            : `🎊 ${game.winner.name} đã BINGO!`}
+        <div className={`bingo-winner-bar ${game.winner.uid === user.id ? "bingo-winner-bar--me" : ""}`}>
+          {game.winner.uid === user.id ? "🎉 BINGO! Bạn thắng!" : `🎊 ${game.winner.name} đã BINGO!`}
         </div>
       )}
 
       <div className="bingo-layout">
-        {/* ── Board ─────────────────────────────────────── */}
         <div className="bingo-board-col">
-          <div className={`bingo-grid bingo-grid--${game.size}`}>
-            {me.board.map((row, r) =>
-              row.map((char, c) => {
-                const word = game.words[char];
-                const isMarked = markedSet.has(char);
-                const isCalled = calledSet.has(char);
-                const isWin = winCells.has(`${r},${c}`);
-                const isNew = char === currentChar;
-
-                let cls = "bingo-cell";
-                if (isWin) cls += " bingo-cell--win";
-                else if (isMarked) cls += " bingo-cell--marked";
-                else if (isCalled) cls += " bingo-cell--callable";
-                if (isNew && !isMarked) cls += " bingo-cell--new";
-
-                return (
-                  <button
-                    key={`${r}-${c}`}
-                    className={cls}
-                    onClick={() => handleMark(char)}
-                    disabled={!isActive || !isCalled || isMarked}
-                    title={word ? `${word.pinyin} — ${word.en}` : char}
-                  >
-                    <span className="bingo-cell-char">{char}</span>
-                    {word && <span className="bingo-cell-py">{word.pinyin}</span>}
-                  </button>
-                );
-              })
-            )}
-          </div>
-
-          <div className="bingo-board-legend">
-            <span className="bingo-legend-item bingo-legend--callable">Có thể đánh dấu</span>
-            <span className="bingo-legend-item bingo-legend--marked">Đã đánh dấu</span>
-            {winCells.size > 0 && <span className="bingo-legend-item bingo-legend--win">Bingo!</span>}
-          </div>
+          {isTeacher && !me ? (
+            <TeacherBoardOverview game={game} />
+          ) : me ? (
+            <PlayerBoard game={game} me={me} currentChar={currentChar}
+              onMark={(c) => runAction(() => markCell(game.id, c))} isActive={isActive} />
+          ) : (
+            <div className="feedback feedback-info">Bạn chưa tham gia phòng này.</div>
+          )}
         </div>
 
-        {/* ── Right panel ───────────────────────────────── */}
         <div className="bingo-right-col">
-          {/* Current word */}
           <div className="bingo-current">
             <div className="bingo-current-label">Từ vừa rút</div>
             {currentWord ? (
@@ -235,35 +140,33 @@ export function BingoGame() {
                 <div className="bingo-current-py">{currentWord.pinyin}</div>
                 <div className="bingo-current-en">{currentWord.en}</div>
               </>
-            ) : (
-              <div className="muted" style={{ fontSize: 14 }}>Chưa rút từ nào</div>
-            )}
+            ) : <div className="muted" style={{ fontSize: 14 }}>Chưa rút từ nào</div>}
           </div>
 
-          {/* Teacher: draw next word */}
-          {isCreator && isActive && (
-            <button
-              className="btn btn-primary"
-              onClick={handleCallWord}
-              disabled={uncalledCount === 0}
-            >
-              {uncalledCount > 0 ? `Rút từ tiếp theo (còn ${uncalledCount})` : "Hết từ"}
-            </button>
+          {isTeacher && isActive && (
+            <>
+              <button className="btn btn-primary" disabled={uncalledCount === 0}
+                onClick={() => runAction(() => callNextWord(game.id))}>
+                {uncalledCount > 0 ? `Rút từ tiếp theo (còn ${uncalledCount})` : "Hết từ"}
+              </button>
+              <button className="btn btn-ghost btn-sm"
+                onClick={() => runAction(() => endBingo(game.id))}>
+                Kết thúc trò chơi
+              </button>
+            </>
           )}
+          {actErr && <div className="feedback feedback-bad">{actErr}</div>}
 
-          {/* Called words history */}
           <div className="bingo-history-panel">
             <div className="ws-wl-title">Đã rút ({game.called.length})</div>
             <div className="bingo-called-chips">
               {[...game.called].reverse().map((char, i) => {
-                const onMyBoard = me.board.flat().includes(char);
-                const marked = markedSet.has(char);
+                const onMyBoard = !!me && me.board.flat().includes(char);
+                const marked = !!me && me.marked.includes(char);
                 return (
-                  <span
-                    key={char}
+                  <span key={char}
                     className={`bingo-chip ${onMyBoard ? "bingo-chip--mine" : ""} ${marked ? "bingo-chip--marked" : ""}`}
-                    title={game.words[char] ? `${game.words[char].pinyin} — ${game.words[char].en}` : ""}
-                  >
+                    title={game.words[char] ? `${game.words[char].pinyin} — ${game.words[char].en}` : ""}>
                     {char}
                     {i === 0 && <span className="bingo-chip-new">•</span>}
                   </span>
@@ -272,24 +175,88 @@ export function BingoGame() {
             </div>
           </div>
 
-          {/* Player scoreboard */}
           <div className="bingo-scoreboard">
             <div className="ws-wl-title">Học viên</div>
-            {Object.entries(game.players)
-              .sort(([, a], [, b]) => b.marked.length - a.marked.length)
-              .map(([uid, p]) => (
-                <div
-                  key={uid}
-                  className={`bingo-score-row ${p.bingo ? "bingo-score-row--winner" : ""} ${uid === playerId ? "bingo-score-row--me" : ""}`}
-                >
-                  <span className="bingo-score-name">{p.name}{uid === playerId ? " (bạn)" : ""}</span>
+            {Object.values(game.players)
+              .sort((a, b) => b.marked.length - a.marked.length)
+              .map((p) => (
+                <div key={p.uid}
+                  className={`bingo-score-row ${p.bingo ? "bingo-score-row--winner" : ""} ${p.uid === user.id ? "bingo-score-row--me" : ""}`}>
+                  <span className="bingo-score-name">{p.name}{p.uid === user.id ? " (bạn)" : ""}</span>
                   <span className="bingo-score-count">{p.marked.length} ô</span>
                   {p.bingo && <span className="bingo-badge">BINGO</span>}
                 </div>
               ))}
+            {Object.keys(game.players).length === 0 && (
+              <div className="muted" style={{ fontSize: 13 }}>Chưa có học viên</div>
+            )}
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+// ── Teacher overview: show called words + who has what, no personal board ──
+function TeacherBoardOverview({ game }: { game: ReturnType<typeof useBingoGame>["game"] }) {
+  const totalWords = useMemo(() => game?.wordPool.length ?? 0, [game]);
+  if (!game) return null;
+  return (
+    <div className="lesson-card" style={{ padding: 20 }}>
+      <h3 style={{ marginTop: 0 }}>Giám sát giáo viên</h3>
+      <p className="muted">
+        {game.called.length} / {totalWords} từ đã được rút. Dùng nút bên phải để rút từ tiếp theo và kết thúc trò chơi.
+      </p>
+    </div>
+  );
+}
+
+function PlayerBoard({
+  game, me, currentChar, onMark, isActive,
+}: {
+  game: NonNullable<ReturnType<typeof useBingoGame>["game"]>;
+  me: NonNullable<NonNullable<ReturnType<typeof useBingoGame>["game"]>["players"][string]>;
+  currentChar: string | null;
+  onMark: (char: string) => void;
+  isActive: boolean;
+}) {
+  const markedSet = new Set(me.marked);
+  const calledSet = new Set(game.called);
+  const winLine = me.bingo ? findBingoLine(me.board, markedSet) : null;
+  const winCells = winLine ? new Set(winLine.map(([r, c]) => `${r},${c}`)) : new Set<string>();
+
+  return (
+    <>
+      <div className={`bingo-grid bingo-grid--${game.size}`}>
+        {me.board.map((row, r) =>
+          row.map((char, c) => {
+            const word = game.words[char];
+            const isMarked = markedSet.has(char);
+            const isCalled = calledSet.has(char);
+            const isWin = winCells.has(`${r},${c}`);
+            const isNew = char === currentChar;
+            let cls = "bingo-cell";
+            if (isWin) cls += " bingo-cell--win";
+            else if (isMarked) cls += " bingo-cell--marked";
+            else if (isCalled) cls += " bingo-cell--callable";
+            if (isNew && !isMarked) cls += " bingo-cell--new";
+            return (
+              <button key={`${r}-${c}`} className={cls}
+                onClick={() => onMark(char)}
+                disabled={!isActive || !isCalled || isMarked}
+                title={word ? `${word.pinyin} — ${word.en}` : char}>
+                <span className="bingo-cell-char">{char}</span>
+                {word && <span className="bingo-cell-py">{word.pinyin}</span>}
+              </button>
+            );
+          })
+        )}
+      </div>
+      <div className="bingo-board-legend">
+        <span className="bingo-legend-item bingo-legend--callable">Có thể đánh dấu</span>
+        <span className="bingo-legend-item bingo-legend--marked">Đã đánh dấu</span>
+        {winCells.size > 0 && <span className="bingo-legend-item bingo-legend--win">Bingo!</span>}
+      </div>
+    </>
   );
 }

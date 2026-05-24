@@ -51,8 +51,11 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
     throw new SessionExpiredError();
   }
   if (!res.ok) {
-    const body: { error?: string } = await res.json().catch(() => ({}));
-    throw new Error(body.error ?? `HTTP ${res.status}`);
+    const body: { error?: string; message?: string } = await res.json().catch(() => ({}));
+    const err = new Error(body.message ?? body.error ?? `HTTP ${res.status}`);
+    (err as Error & { code?: string; status?: number }).code = body.error;
+    (err as Error & { code?: string; status?: number }).status = res.status;
+    throw err;
   }
   return res.json() as Promise<T>;
 }

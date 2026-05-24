@@ -6,15 +6,23 @@ import { courseRoutes } from "./routes/courses.js";
 import { lessonRoutes } from "./routes/lessons.js";
 import { progressRoutes } from "./routes/progress.js";
 import { worksheetRoutes } from "./routes/worksheets.js";
+import { bingoRoutes } from "./routes/games-bingo.js";
+import { wordSearchRoutes } from "./routes/games-word-search.js";
+import { adminRoutes } from "./routes/admin.js";
 
 const app = Fastify({ logger: true, trustProxy: true });
 
-const ALLOWED_ORIGINS = [
+// Set ALLOWED_ORIGINS in .env as a comma-separated list to override.
+const DEFAULT_ORIGINS = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://sotamhsk-demo.web.app",
-  "https://sotamhsk.web.app",
+  "http://hanngusotam.com",
+  "https://hanngusotam.com",
+  "http://www.hanngusotam.com",
+  "https://www.hanngusotam.com",
 ];
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS?.split(",").map((s) => s.trim()).filter(Boolean))
+  ?? DEFAULT_ORIGINS;
 
 await app.register(cors, {
   origin: (origin, done) => {
@@ -31,6 +39,9 @@ app.register(courseRoutes, { prefix: "/courses" });
 app.register(lessonRoutes, { prefix: "/lessons" });
 app.register(progressRoutes, { prefix: "/progress" });
 app.register(worksheetRoutes, { prefix: "/worksheets" });
+app.register(bingoRoutes, { prefix: "/games/bingo" });
+app.register(wordSearchRoutes, { prefix: "/games/word-search" });
+app.register(adminRoutes, { prefix: "/admin" });
 
 app.get("/health", async () => ({ status: "ok", ts: Date.now() }));
 

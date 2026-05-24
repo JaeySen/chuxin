@@ -943,3 +943,45 @@ body {
   font-size: 13px;
   font-weight: 600;
 }
+
+/* Word Search — word list rows */
+.ws-word-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--c-divider);
+  border-radius: 10px;
+  background: white;
+  transition: background 0.2s;
+}
+.ws-word-row--done { opacity: 0.85; }
+.ws-word-hanzi {
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 22px; font-weight: 700; color: var(--c-red-dark);
+  line-height: 1.1;
+}
+.ws-word-py { font-size: 13px; color: var(--c-text-soft); margin-top: 2px; }
+.ws-word-vi { font-size: 12px; margin-top: 1px; }
+.ws-word-by { font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+/* Admin dashboard tables */
+.admin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.admin-table th {
+  text-align: left; padding: 10px 12px;
+  background: var(--c-red-bg); color: var(--c-red-dark);
+  border-bottom: 2px solid var(--c-divider); font-weight: 600;
+}
+.admin-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--c-divider); vertical-align: middle;
+}
+.admin-table code {
+  font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;
+}
+.admin-table .row-unresolved { background: rgba(255, 198, 11, 0.08); }
+.admin-table .row-resolved { opacity: 0.6; }
+.badge-locked {
+  display: inline-block; margin-left: 6px;
+  font-size: 11px; font-weight: 700;
+  background: var(--c-red); color: white;
+  padding: 2px 8px; border-radius: 999px;
+}

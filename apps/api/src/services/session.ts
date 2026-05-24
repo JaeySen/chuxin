@@ -55,6 +55,14 @@ export async function getSessionByToken(token: string): Promise<ActiveSession | 
   return rows[0] ? toSession(rows[0]) : null;
 }
 
+export async function findActiveSessionsForUser(userId: string): Promise<ActiveSession[]> {
+  const { rows } = await query<SessionRow>(
+    "SELECT * FROM sessions WHERE user_id = $1 ORDER BY last_seen_at DESC",
+    [userId],
+  );
+  return rows.map(toSession);
+}
+
 export async function deleteSessionByToken(token: string): Promise<void> {
   await query("DELETE FROM sessions WHERE token = $1", [token]);
 }
