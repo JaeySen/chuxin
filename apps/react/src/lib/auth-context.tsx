@@ -1,110 +1,73 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
-  auth,
-  db,
-  ensureUserDoc,
-  onAuthStateChanged,
-  signOut,
-  type User,
-} from "./firebase";
-import { createSession, deleteSession } from "./api";
-
-// ── Types ──────────────────────────────────────────────────────
+  apiLogin,
+  apiSignup,
+  apiLogout,
+  apiMe,
+  type AuthUser,
+} from "./api";
 
 export type Role = "admin" | "teacher" | "student" | null;
 
 interface AuthState {
-  user: User | null;
+  user: AuthUser | null;
   loading: boolean;
   role: Role;
-  /** Always call this instead of signOut(auth) — properly clears the backend session. */
+  signIn: (email: string, password: string) => Promise<AuthUser>;
+  signUp: (email: string, password: string, displayName: string) => Promise<AuthUser>;
+  signInWithGoogle: () => Promise<never>;
   logout: () => Promise<void>;
 }
-
-// ── Context ────────────────────────────────────────────────────
 
 const Ctx = createContext<AuthState>({
   user: null,
   loading: true,
   role: null,
+  signIn: async () => { throw new Error("AuthProvider not mounted"); },
+  signUp: async () => { throw new Error("AuthProvider not mounted"); },
+  signInWithGoogle: async () => { throw new Error("AuthProvider not mounted"); },
   logout: async () => {},
 });
 
-// ── Provider ───────────────────────────────────────────────────
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser]       = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const [role, setRole]       = useState<Role>(null);
 
-  // Unsubscribe handle for the per-user Firestore session watcher
-  const sessionUnsubRef = useRef<(() => void) | null>(null);
-
-  // ── logout ─────────────────────────────────────────────────
-  async function logout() {
-    sessionUnsubRef.current?.();
-    sessionUnsubRef.current = null;
-    await deleteSession();                   // DELETE /auth/session (best-effort)
-    localStorage.removeItem("sessionToken");
-    await signOut(auth);
-  }
-
-  // ── onAuthStateChanged ─────────────────────────────────────
   useEffect(() => {
-    return onAuthStateChanged(auth, async (firebaseUser) => {
-      // Always tear down the previous session listener first
-      sessionUnsubRef.current?.();
-      sessionUnsubRef.current = null;
-
-      if (!firebaseUser) {
-        localStorage.removeItem("sessionToken");
-        setUser(null);
-        setRole(null);
-        setLoading(false);
-        return;
-      }
-
-      // 1. Ensure user doc exists in Firestore
-      await ensureUserDoc(firebaseUser);
-
-      // 2. Get ID token + custom claims (role) in parallel
-      const [idToken, tokenResult] = await Promise.all([
-        firebaseUser.getIdToken(),
-        firebaseUser.getIdTokenResult(),
-      ]);
-      const userRole = (tokenResult.claims.role as Role) ?? "student";
-
-      // 3. Create / refresh backend session.
-      //    Passing the existing token means a page reload won't kick another device.
-      const sessionToken = await createSession(idToken);
-      if (sessionToken) localStorage.setItem("sessionToken", sessionToken);
-
-      setUser(firebaseUser);
-      setRole(userRole);
+    let cancelled = false;
+    apiMe().then((u) => {
+      if (cancelled) return;
+      setUser(u);
       setLoading(false);
-
-      // 4. Watch users/{uid}/sessions/active for remote-logout.
-      //    If sessionToken in Firestore changes (another device logged in),
-      //    the stored local token won't match → sign out this tab automatically.
-      sessionUnsubRef.current = onSnapshot(
-        doc(db, "users", firebaseUser.uid, "sessions", "active"),
-        (snap) => {
-          if (!snap.exists()) return;
-          const serverToken = snap.data()?.sessionToken as string | undefined;
-          const localToken  = localStorage.getItem("sessionToken");
-          if (serverToken && localToken && serverToken !== localToken) {
-            logout(); // silent remote logout
-          }
-        }
-      );
     });
-  // logout is defined in the same closure and stable — eslint-disable is intentional
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => { cancelled = true; };
   }, []);
 
+  async function signIn(email: string, password: string) {
+    const u = await apiLogin(email, password);
+    setUser(u);
+    return u;
+  }
+
+  async function signUp(email: string, password: string, displayName: string) {
+    const u = await apiSignup({ email, password, displayName });
+    setUser(u);
+    return u;
+  }
+
+  async function signInWithGoogle(): Promise<never> {
+    throw new Error("Google sign-in is not configured yet. Set GOOGLE_OAUTH_CLIENT_ID on the API and add /auth/google.");
+  }
+
+  async function logout() {
+    await apiLogout();
+    setUser(null);
+  }
+
+  const role: Role = user?.role ?? null;
+
   return (
-    <Ctx.Provider value={{ user, loading, role, logout }}>
+    <Ctx.Provider value={{ user, loading, role, signIn, signUp, signInWithGoogle, logout }}>
       {children}
     </Ctx.Provider>
   );

@@ -1,77 +1,84 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { adminAuth } from "../lib/firebase.js";
-import { upsertSession, deleteSession } from "../services/session.js";
+import {
+  signupWithPassword,
+  loginWithPassword,
+  findUserById,
+  signJwt,
+} from "../services/auth.js";
+import { createSession, deleteSessionByToken } from "../services/session.js";
 import { authenticate } from "../middleware/authenticate.js";
 
-const SessionBody = z.object({
-  idToken: z.string().min(1),
-  existingSessionToken: z.string().optional(),
+const SignupBody = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  displayName: z.string().min(1).max(80),
 });
 
+const LoginBody = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+function getClientMeta(req: { headers: Record<string, unknown>; ip?: string }) {
+  const xff = req.headers["x-forwarded-for"];
+  const ip = (typeof xff === "string" ? xff.split(",")[0]?.trim() : undefined) ?? req.ip ?? "unknown";
+  const userAgent = (req.headers["user-agent"] as string | undefined) ?? "unknown";
+  return { ip, userAgent };
+}
+
 export async function authRoutes(app: FastifyInstance) {
-  /**
-   * POST /auth/session
-   * Called by the client right after Firebase sign-in.
-   * Returns a sessionToken that must accompany every subsequent request.
-   *
-   * Single-device rule:
-   *  - Same device (existingSessionToken matches stored) → refreshes, returns same token.
-   *  - New device → new token stored → previous device's token becomes invalid.
-   */
-  app.post("/session", async (req, reply) => {
-    const parsed = SessionBody.safeParse(req.body);
+  app.post("/signup", async (req, reply) => {
+    const parsed = SignupBody.safeParse(req.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: "Invalid request body", details: parsed.error.format() });
+    }
+
+    let user;
+    try {
+      user = await signupWithPassword(parsed.data);
+    } catch (err) {
+      if (err instanceof Error && err.message === "EMAIL_TAKEN") {
+        return reply.status(409).send({ error: "Email already registered" });
+      }
+      throw err;
+    }
+
+    const { ip, userAgent } = getClientMeta(req);
+    const sessionToken = await createSession(user.id, ip, userAgent);
+    const jwt = signJwt(user);
+
+    return reply.send({ jwt, sessionToken, user });
+  });
+
+  app.post("/login", async (req, reply) => {
+    const parsed = LoginBody.safeParse(req.body);
     if (!parsed.success) {
       return reply.status(400).send({ error: "Invalid request body" });
     }
 
-    const { idToken, existingSessionToken } = parsed.data;
-
-    let decoded: Awaited<ReturnType<typeof adminAuth.verifyIdToken>>;
+    let user;
     try {
-      decoded = await adminAuth.verifyIdToken(idToken);
+      user = await loginWithPassword(parsed.data.email, parsed.data.password);
     } catch {
-      return reply.status(401).send({ error: "Invalid Firebase token" });
+      return reply.status(401).send({ error: "Invalid email or password" });
     }
 
-    const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim()
-      ?? req.ip
-      ?? "unknown";
-    const userAgent = req.headers["user-agent"] ?? "unknown";
-    const role = (decoded as Record<string, unknown>).role as string ?? "student";
+    const { ip, userAgent } = getClientMeta(req);
+    const sessionToken = await createSession(user.id, ip, userAgent);
+    const jwt = signJwt(user);
 
-    const sessionToken = await upsertSession(
-      decoded.uid,
-      role,
-      ip,
-      userAgent,
-      existingSessionToken
-    );
-
-    return reply.send({
-      sessionToken,
-      user: { uid: decoded.uid, email: decoded.email ?? null, role },
-    });
+    return reply.send({ jwt, sessionToken, user });
   });
 
-  /**
-   * DELETE /auth/session
-   * Explicit logout — deletes the active session from Firestore.
-   */
   app.delete("/session", { preHandler: [authenticate] }, async (req, reply) => {
-    await deleteSession(req.user.uid);
+    await deleteSessionByToken(req.user.sessionToken);
     return reply.send({ ok: true });
   });
 
-  /**
-   * GET /auth/me
-   * Returns the current authenticated user info.
-   */
   app.get("/me", { preHandler: [authenticate] }, async (req, reply) => {
-    return reply.send({
-      uid: req.user.uid,
-      email: req.user.email,
-      role: req.user.role,
-    });
+    const user = await findUserById(req.user.uid);
+    if (!user) return reply.status(404).send({ error: "User not found" });
+    return reply.send(user);
   });
 }

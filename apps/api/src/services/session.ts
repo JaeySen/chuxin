@@ -1,61 +1,68 @@
-import { db } from "../lib/firebase.js";
-import { FieldValue } from "firebase-admin/firestore";
 import crypto from "node:crypto";
+import { query, withTransaction } from "../db/index.js";
 
 export interface ActiveSession {
-  sessionToken: string;
-  ip: string;
-  userAgent: string;
-  role: string;
-  createdAt: FirebaseFirestore.FieldValue;
-  lastSeenAt: FirebaseFirestore.FieldValue;
+  token: string;
+  userId: string;
+  ip: string | null;
+  userAgent: string | null;
+  createdAt: Date;
+  lastSeenAt: Date;
 }
 
-// Path: users/{uid}/sessions/active  (4 segments = valid Firestore doc)
-function ref(uid: string) {
-  return db.collection("users").doc(uid).collection("sessions").doc("active");
+interface SessionRow {
+  token: string;
+  user_id: string;
+  ip: string | null;
+  user_agent: string | null;
+  created_at: Date;
+  last_seen_at: Date;
+}
+
+function toSession(row: SessionRow): ActiveSession {
+  return {
+    token: row.token,
+    userId: row.user_id,
+    ip: row.ip,
+    userAgent: row.user_agent,
+    createdAt: row.created_at,
+    lastSeenAt: row.last_seen_at,
+  };
 }
 
 /**
- * Create or refresh a session.
- * - If `existingToken` matches the stored token → refresh lastSeenAt, return same token.
- * - Otherwise → generate new token (kicks any other active device).
+ * Create a new session and invalidate all prior sessions for the user
+ * (single-device enforcement). Returns the new session token.
  */
-export async function upsertSession(
-  uid: string,
-  role: string,
+export async function createSession(
+  userId: string,
   ip: string,
   userAgent: string,
-  existingToken?: string
 ): Promise<string> {
-  const snap = await ref(uid).get();
-
-  if (existingToken && snap.exists && snap.data()?.sessionToken === existingToken) {
-    await ref(uid).update({ lastSeenAt: FieldValue.serverTimestamp() });
-    return existingToken;
-  }
-
-  const sessionToken = crypto.randomUUID();
-  await ref(uid).set({
-    sessionToken,
-    ip,
-    userAgent,
-    role,
-    createdAt: FieldValue.serverTimestamp(),
-    lastSeenAt: FieldValue.serverTimestamp(),
+  const token = crypto.randomBytes(32).toString("hex");
+  await withTransaction(async (client) => {
+    await client.query("DELETE FROM sessions WHERE user_id = $1", [userId]);
+    await client.query(
+      `INSERT INTO sessions (token, user_id, ip, user_agent) VALUES ($1, $2, $3, $4)`,
+      [token, userId, ip, userAgent],
+    );
   });
-  return sessionToken;
+  return token;
 }
 
-export async function getSession(uid: string): Promise<ActiveSession | null> {
-  const snap = await ref(uid).get();
-  return snap.exists ? (snap.data() as ActiveSession) : null;
+export async function getSessionByToken(token: string): Promise<ActiveSession | null> {
+  const { rows } = await query<SessionRow>("SELECT * FROM sessions WHERE token = $1", [token]);
+  return rows[0] ? toSession(rows[0]) : null;
 }
 
-export async function deleteSession(uid: string): Promise<void> {
-  await ref(uid).delete();
+export async function deleteSessionByToken(token: string): Promise<void> {
+  await query("DELETE FROM sessions WHERE token = $1", [token]);
 }
 
-export async function touchSession(uid: string): Promise<void> {
-  await ref(uid).update({ lastSeenAt: FieldValue.serverTimestamp() }).catch(() => {});
+export async function deleteAllSessionsForUser(userId: string): Promise<void> {
+  await query("DELETE FROM sessions WHERE user_id = $1", [userId]);
+}
+
+export async function touchSession(token: string): Promise<void> {
+  await query("UPDATE sessions SET last_seen_at = now() WHERE token = $1", [token]);
 }

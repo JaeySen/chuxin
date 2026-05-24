@@ -1,44 +1,39 @@
 /**
- * Sync content/lessons/**\/*.yml to Firestore.
+ * Sync content/lessons/**\/*.yml to Postgres.
  *
  * Usage:
- *   pnpm sync                         # writes to the production project
- *   pnpm sync:emulator                # writes to the local Firestore emulator
+ *   pnpm sync
  *
- * The `course/{id}` documents (with their lessonIds) are also rewritten from scratch.
+ * Requires DATABASE_URL env var (see apps/api/.env.example).
+ *
+ * Writes:
+ *   - One row per lesson into the `lessons` table (id, course_id, order, title,
+ *     subtitle, interaction_type, data JSONB).
+ *   - One row per course into the `courses` table.
  */
 
+import "dotenv/config";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "yaml";
-import { initializeApp, applicationDefault, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import pg from "pg";
 import { LessonSchema, COURSES, type Lesson } from "@hanai/shared";
+
+const { Pool } = pg;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "..");
 const CONTENT_DIR = path.join(REPO_ROOT, "content", "lessons");
 
 async function main() {
-  const usingEmulator = !!process.env.FIRESTORE_EMULATOR_HOST;
-  const projectId = process.env.FIREBASE_PROJECT_ID ?? "sotamhsk";
-
-  if (usingEmulator) {
-    console.log(`→ using emulator at ${process.env.FIRESTORE_EMULATOR_HOST}`);
-    initializeApp({ projectId });
-  } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    initializeApp({ credential: applicationDefault(), projectId });
-  } else if (process.env.FB_SERVICE_ACCOUNT_JSON) {
-    initializeApp({
-      credential: cert(JSON.parse(process.env.FB_SERVICE_ACCOUNT_JSON)),
-      projectId,
-    });
-  } else {
-    initializeApp({ projectId });
+  if (!process.env.DATABASE_URL) {
+    console.error("DATABASE_URL is required (see apps/api/.env.example).");
+    process.exit(1);
   }
 
-  const db = getFirestore();
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
   const lessons = await loadAllLessons();
   console.log(`Found ${lessons.length} lesson YAML files.`);
 
@@ -59,24 +54,58 @@ async function main() {
   }
   console.log(`✓ all ${validated.length} lessons validated against schema.`);
 
-  const batch = db.batch();
-  for (const lesson of validated) {
-    batch.set(db.collection("lessons").doc(lesson.id), {
-      ...lesson,
-      updatedAt: new Date(),
-    });
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    for (const c of COURSES) {
+      await client.query(
+        `INSERT INTO courses (id, title, subtitle, color, "order", updated_at)
+         VALUES ($1, $2, $3, $4, $5, now())
+         ON CONFLICT (id) DO UPDATE SET
+           title    = EXCLUDED.title,
+           subtitle = EXCLUDED.subtitle,
+           color    = EXCLUDED.color,
+           "order"  = EXCLUDED."order",
+           updated_at = now()`,
+        [c.id, c.title, c.subtitle ?? null, c.color, c.order],
+      );
+    }
+
+    for (const lesson of validated) {
+      await client.query(
+        `INSERT INTO lessons (id, course_id, "order", title, subtitle, interaction_type, data, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, now())
+         ON CONFLICT (id) DO UPDATE SET
+           course_id        = EXCLUDED.course_id,
+           "order"          = EXCLUDED."order",
+           title            = EXCLUDED.title,
+           subtitle         = EXCLUDED.subtitle,
+           interaction_type = EXCLUDED.interaction_type,
+           data             = EXCLUDED.data,
+           updated_at       = now()`,
+        [
+          lesson.id,
+          lesson.course,
+          lesson.order,
+          lesson.title,
+          lesson.subtitle ?? null,
+          lesson.interactionType,
+          lesson,
+        ],
+      );
+    }
+
+    await client.query("COMMIT");
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
   }
 
-  for (const c of COURSES) {
-    const ids = validated
-      .filter((l) => l.course === c.id)
-      .sort((a, b) => a.order - b.order)
-      .map((l) => l.id);
-    batch.set(db.collection("courses").doc(c.id), { ...c, lessonIds: ids });
-  }
-
-  await batch.commit();
-  console.log(`✓ wrote ${validated.length} lessons + ${COURSES.length} courses to Firestore.`);
+  await pool.end();
+  console.log(`✓ wrote ${validated.length} lessons + ${COURSES.length} courses to Postgres.`);
 }
 
 async function loadAllLessons(): Promise<{ file: string; raw: unknown }[]> {

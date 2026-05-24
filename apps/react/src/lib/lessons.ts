@@ -1,19 +1,19 @@
-import { db, doc, getDoc, getDocs, collection, query, where, orderBy } from "./firebase";
+import { apiFetch } from "./api";
 import type { Lesson } from "@hanai/shared";
 
 export async function fetchLesson(id: string): Promise<Lesson | null> {
-  const snap = await getDoc(doc(db, "lessons", id));
-  return snap.exists() ? (snap.data() as Lesson) : null;
+  try {
+    return await apiFetch<Lesson>(`/lessons/${encodeURIComponent(id)}`);
+  } catch (err) {
+    if (err instanceof Error && /HTTP 404/.test(err.message)) return null;
+    throw err;
+  }
 }
 
 export async function fetchCourseLessons(course: string): Promise<Lesson[]> {
-  const snap = await getDocs(
-    query(collection(db, "lessons"), where("course", "==", course), orderBy("order")),
-  );
-  return snap.docs.map((d) => d.data() as Lesson);
+  return apiFetch<Lesson[]>(`/courses/${encodeURIComponent(course)}/lessons`);
 }
 
 export async function fetchAllLessons(): Promise<Lesson[]> {
-  const snap = await getDocs(query(collection(db, "lessons"), orderBy("course"), orderBy("order")));
-  return snap.docs.map((d) => d.data() as Lesson);
+  return apiFetch<Lesson[]>("/lessons");
 }

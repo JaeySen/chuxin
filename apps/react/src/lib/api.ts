@@ -1,40 +1,39 @@
-import { auth } from "./firebase";
-
 const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:4000";
 
-// ── Low-level fetch ────────────────────────────────────────────
-
-async function buildHeaders(extra?: HeadersInit): Promise<HeadersInit> {
-  const idToken = await auth.currentUser?.getIdToken().catch(() => null);
-  const sessionToken = localStorage.getItem("sessionToken");
-  return {
-    "Content-Type": "application/json",
-    ...(idToken       && { Authorization: `Bearer ${idToken}` }),
-    ...(sessionToken  && { "X-Session-Token": sessionToken }),
-    ...extra,
-  };
+export interface AuthUser {
+  id: string;
+  email: string;
+  displayName: string;
+  role: "student" | "teacher" | "admin";
 }
 
-export async function apiFetch<T>(
-  path: string,
-  init: RequestInit = {}
-): Promise<T> {
-  const headers = await buildHeaders(init.headers);
-  const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+const JWT_KEY = "jwt";
+const SESSION_KEY = "sessionToken";
 
-  if (res.status === 401) {
-    // The server rejected our session; clean up local state.
-    // auth-context's Firestore listener will sign the user out.
-    localStorage.removeItem("sessionToken");
-    throw new SessionExpiredError();
-  }
+export function getStoredJwt(): string | null {
+  return localStorage.getItem(JWT_KEY);
+}
+export function getStoredSessionToken(): string | null {
+  return localStorage.getItem(SESSION_KEY);
+}
+export function storeCredentials(jwt: string, sessionToken: string): void {
+  localStorage.setItem(JWT_KEY, jwt);
+  localStorage.setItem(SESSION_KEY, sessionToken);
+}
+export function clearCredentials(): void {
+  localStorage.removeItem(JWT_KEY);
+  localStorage.removeItem(SESSION_KEY);
+}
 
-  if (!res.ok) {
-    const body: { error?: string } = await res.json().catch(() => ({}));
-    throw new Error(body.error ?? `HTTP ${res.status}`);
-  }
-
-  return res.json() as Promise<T>;
+function buildHeaders(extra?: HeadersInit): HeadersInit {
+  const jwt = getStoredJwt();
+  const sessionToken = getStoredSessionToken();
+  return {
+    "Content-Type": "application/json",
+    ...(jwt && { Authorization: `Bearer ${jwt}` }),
+    ...(sessionToken && { "X-Session-Token": sessionToken }),
+    ...extra,
+  };
 }
 
 export class SessionExpiredError extends Error {
@@ -44,34 +43,63 @@ export class SessionExpiredError extends Error {
   }
 }
 
-// ── Auth helpers (called by auth-context, no pre-existing token needed) ──
+export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, { ...init, headers: buildHeaders(init.headers) });
 
-export async function createSession(idToken: string): Promise<string | null> {
-  const existingSessionToken = localStorage.getItem("sessionToken") ?? undefined;
+  if (res.status === 401) {
+    clearCredentials();
+    throw new SessionExpiredError();
+  }
+  if (!res.ok) {
+    const body: { error?: string } = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `HTTP ${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+interface AuthResponse {
+  jwt: string;
+  sessionToken: string;
+  user: AuthUser;
+}
+
+export async function apiSignup(input: {
+  email: string;
+  password: string;
+  displayName: string;
+}): Promise<AuthUser> {
+  const data = await apiFetch<AuthResponse>("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+  storeCredentials(data.jwt, data.sessionToken);
+  return data.user;
+}
+
+export async function apiLogin(email: string, password: string): Promise<AuthUser> {
+  const data = await apiFetch<AuthResponse>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  storeCredentials(data.jwt, data.sessionToken);
+  return data.user;
+}
+
+export async function apiLogout(): Promise<void> {
   try {
-    const res = await fetch(`${API_BASE}/auth/session`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idToken, existingSessionToken }),
-    });
-    if (!res.ok) return null;
-    const data = (await res.json()) as { sessionToken?: string };
-    return data.sessionToken ?? null;
+    await apiFetch("/auth/session", { method: "DELETE" });
   } catch {
-    // API unreachable in dev without the server running — degrade gracefully
-    return null;
+    // best-effort — credentials are cleared regardless
+  } finally {
+    clearCredentials();
   }
 }
 
-export async function deleteSession(): Promise<void> {
-  const idToken = await auth.currentUser?.getIdToken().catch(() => null);
-  const sessionToken = localStorage.getItem("sessionToken");
-  if (!idToken || !sessionToken) return;
-  await fetch(`${API_BASE}/auth/session`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${idToken}`,
-      "X-Session-Token": sessionToken,
-    },
-  }).catch(() => {});
+export async function apiMe(): Promise<AuthUser | null> {
+  if (!getStoredJwt()) return null;
+  try {
+    return await apiFetch<AuthUser>("/auth/me");
+  } catch {
+    return null;
+  }
 }

@@ -18,31 +18,28 @@
   </main>
 
   <script type="module">
-    import { auth, db, collection, getDocs, query, orderBy } from "/shared/firebase.js";
+    import { fetchAllProgress } from "/shared/firebase.js";
     import { mountHeader, requireAuth, el } from "/shared/ui.js";
 
     mountHeader();
 
-    requireAuth(async (user) => {
+    requireAuth(async () => {
       const host = document.getElementById("progress-host");
-      const snap = await getDocs(
-        query(collection(db, "users", user.uid, "progress"), orderBy("lastSeenAt", "desc")),
-      );
-      if (snap.empty) {
+      const rows = await fetchAllProgress();
+      if (!rows.length) {
         host.appendChild(el("div", { class: "feedback feedback-info" }, "Bạn chưa làm bài nào. Hãy chọn bài đầu tiên!"));
         return;
       }
-      snap.forEach((d) => {
-        const p = d.data();
-        const row = el("a", { class: "lesson-row", href: `/lesson.html?id=${d.id}` });
+      for (const p of rows) {
+        const row = el("a", { class: "lesson-row", href: `/lesson.html?id=${p.lessonId}` });
         row.appendChild(el("div", {},
-          el("strong", {}, d.id),
+          el("strong", {}, p.lessonId),
           el("div", { class: "muted", style: "font-size:13px;" },
             `Số lần làm: ${p.attempts ?? 0} · Điểm cao nhất: ${p.bestScore ?? "—"}`),
         ));
         row.appendChild(el("span", { class: "badge" }, p.completed ? "✓ Hoàn thành" : "Đang học"));
         host.appendChild(row);
-      });
+      }
     });
   </script>
 </body>

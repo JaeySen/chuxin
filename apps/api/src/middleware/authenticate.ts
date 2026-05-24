@@ -1,14 +1,13 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { adminAuth } from "../lib/firebase.js";
-import { getSession, touchSession } from "../services/session.js";
+import { verifyJwt, type Role } from "../services/auth.js";
+import { getSessionByToken, touchSession } from "../services/session.js";
 
-// Extend Fastify's request type globally (picked up in all route files)
 declare module "fastify" {
   interface FastifyRequest {
     user: {
       uid: string;
-      email: string | null;
-      role: string;
+      email: string;
+      role: Role;
       sessionToken: string;
     };
   }
@@ -25,28 +24,27 @@ export async function authenticate(req: FastifyRequest, reply: FastifyReply) {
     return reply.status(401).send({ error: "Missing X-Session-Token header" });
   }
 
-  let decoded: Awaited<ReturnType<typeof adminAuth.verifyIdToken>>;
+  let payload;
   try {
-    decoded = await adminAuth.verifyIdToken(bearer.slice(7));
+    payload = verifyJwt(bearer.slice(7));
   } catch {
-    return reply.status(401).send({ error: "Invalid or expired Firebase token" });
+    return reply.status(401).send({ error: "Invalid or expired token" });
   }
 
-  const session = await getSession(decoded.uid);
-  if (!session || session.sessionToken !== sessionToken) {
+  const session = await getSessionByToken(sessionToken);
+  if (!session || session.userId !== payload.sub) {
     return reply.status(401).send({
       error: "Session invalidated — sign in again",
       code: "SESSION_INVALID",
     });
   }
 
-  // Fire-and-forget: update lastSeenAt without blocking the request
-  touchSession(decoded.uid);
+  touchSession(sessionToken).catch(() => {});
 
   req.user = {
-    uid: decoded.uid,
-    email: decoded.email ?? null,
-    role: (decoded as Record<string, unknown>).role as string ?? "student",
+    uid: payload.sub,
+    email: payload.email,
+    role: payload.role,
     sessionToken,
   };
 }

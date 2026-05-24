@@ -1,6 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/auth-context";
-import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "./lib/firebase";
 import { useState } from "react";
 
 export function App() {
@@ -21,8 +20,8 @@ function Header() {
     <header className="hanai-header">
       <div className="hanai-header-inner">
         <Link to="/" className="brand">
-          <span className="brand-logo">汉</span>
-          <span>SotamHSK</span>
+          <img src="/chuxin-logo.jpg" alt="Sơ Tâm" className="brand-mark" />
+          <span>Sơ Tâm · Hán ngữ</span>
         </Link>
         <nav className="hanai-nav">
           <Link to="/">Khoá học</Link>
@@ -48,35 +47,59 @@ function Header() {
 }
 
 function SignInModal({ close }: { close: () => void }) {
+  const { signIn, signUp, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [err, setErr] = useState<string | null>(null);
 
   return (
     <div className="hanai-modal" onClick={close}>
       <div className="hanai-modal-card" onClick={(e) => e.stopPropagation()}>
-        <h3>Đăng nhập SotamHSK</h3>
+        <h3>{mode === "signin" ? "Đăng nhập SotamHSK" : "Tạo tài khoản SotamHSK"}</h3>
         <button
           className="btn btn-google"
           onClick={async () => {
-            try { await signInWithPopup(auth, googleProvider); close(); }
-            catch (e: any) { setErr(e.message); }
+            try { await signInWithGoogle(); close(); }
+            catch (e: unknown) { setErr(e instanceof Error ? e.message : String(e)); }
           }}
         >
           Đăng nhập bằng Google
         </button>
         <div className="divider">hoặc dùng email</div>
+        {mode === "signup" && (
+          <input
+            type="text"
+            placeholder="Tên hiển thị"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+          />
+        )}
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input type="password" placeholder="Mật khẩu" value={pw} onChange={(e) => setPw(e.target.value)} />
         <div className="row gap">
-          <button className="btn btn-primary" onClick={async () => {
-            try { await signInWithEmailAndPassword(auth, email, pw); close(); }
-            catch (e: any) { setErr(e.message); }
-          }}>Đăng nhập</button>
-          <button className="btn btn-ghost" onClick={async () => {
-            try { await createUserWithEmailAndPassword(auth, email, pw); close(); }
-            catch (e: any) { setErr(e.message); }
-          }}>Tạo tài khoản</button>
+          {mode === "signin" ? (
+            <>
+              <button className="btn btn-primary" onClick={async () => {
+                try { await signIn(email, pw); close(); }
+                catch (e: unknown) { setErr(e instanceof Error ? e.message : String(e)); }
+              }}>Đăng nhập</button>
+              <button className="btn btn-ghost" onClick={() => { setErr(null); setMode("signup"); }}>
+                Tạo tài khoản
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-primary" onClick={async () => {
+                try { await signUp(email, pw, displayName); close(); }
+                catch (e: unknown) { setErr(e instanceof Error ? e.message : String(e)); }
+              }}>Tạo tài khoản</button>
+              <button className="btn btn-ghost" onClick={() => { setErr(null); setMode("signin"); }}>
+                Quay lại đăng nhập
+              </button>
+            </>
+          )}
         </div>
         {err && <div className="feedback feedback-bad">{err}</div>}
         <button className="btn btn-text close-x" onClick={close}>Đóng</button>
