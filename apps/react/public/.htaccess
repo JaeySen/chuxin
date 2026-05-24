@@ -1,4 +1,12 @@
+# SPA fallback — let React Router handle deep links so F5 doesn't 404.
+# Works on both Apache and LiteSpeed (LiteSpeed reads .htaccess natively).
+
 Options -MultiViews
 RewriteEngine On
+
+# If the request is for a real file or directory, serve it directly.
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Otherwise, hand the request to index.html so React Router takes over.
 RewriteRule ^ index.html [QSA,L]

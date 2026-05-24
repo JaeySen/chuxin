@@ -3,18 +3,20 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchCourseLessons } from "../lib/lessons";
 import type { Lesson, CourseId } from "@hanai/shared";
 import { INTERACTION_LABELS, COURSES, CHAPTERS_BY_COURSE } from "@hanai/shared";
+import { useAuth } from "../lib/auth-context";
 
 export function CoursePage() {
   const { courseId } = useParams();
+  const { user } = useAuth();
   const [lessons, setLessons] = useState<Lesson[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!courseId) return;
+    if (!courseId || !user) { setLessons(null); return; }
     setLessons(null);
     setErr(null);
     fetchCourseLessons(courseId).then(setLessons).catch((e) => setErr(e.message));
-  }, [courseId]);
+  }, [courseId, user]);
 
   const course = COURSES.find((c) => c.id === courseId);
   const chapters = courseId ? CHAPTERS_BY_COURSE[courseId as CourseId] ?? [] : [];
@@ -39,10 +41,17 @@ export function CoursePage() {
       {course?.subtitle && <p className="muted" style={{ fontSize: 16 }}>{course.subtitle}</p>}
 
       {err && <div className="feedback feedback-bad" style={{ marginTop: 16 }}>{err}</div>}
-      {!lessons && !err && <div className="muted">Đang tải…</div>}
+      {user && !lessons && !err && <div className="muted">Đang tải…</div>}
 
-      {/* If we have curriculum metadata for this course, render chapter-grouped view. */}
-      {chapters.length > 0 ? (
+      {!user && (
+        <div className="feedback feedback-info" style={{ marginTop: 16 }}>
+          <strong>Đăng nhập để xem nội dung khoá học.</strong>{" "}
+          Cấu trúc bài và chi tiết bài học sẽ hiển thị sau khi bạn đăng nhập.
+        </div>
+      )}
+
+      {/* Chapter list — gated entirely; guests don't see headings either. */}
+      {user && chapters.length > 0 ? (
         <div className="chapter-list">
           {chapters.map((ch) => {
             const matching = lessonsByBai.get(ch.bai) ?? [];
@@ -74,13 +83,11 @@ export function CoursePage() {
             );
           })}
         </div>
-      ) : (
-        // Fallback: simple flat list for courses without curriculum metadata yet.
+      ) : user ? (
+        // Fallback for courses without curriculum metadata yet (HSK2-6) — auth users only.
         <div className="lesson-list" style={{ marginTop: 16 }}>
           {lessons?.length === 0 && (
-            <div className="feedback feedback-info">
-              Khoá học này đang được biên soạn.
-            </div>
+            <div className="feedback feedback-info">Khoá học này đang được biên soạn.</div>
           )}
           {lessons?.map((l) => (
             <Link key={l.id} to={`/lesson/${l.id}`} className="lesson-row">
@@ -92,7 +99,7 @@ export function CoursePage() {
             </Link>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

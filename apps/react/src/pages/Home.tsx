@@ -3,16 +3,34 @@ import { useEffect, useState } from "react";
 import { fetchAllLessons } from "../lib/lessons";
 import type { Lesson } from "@hanai/shared";
 import { INTERACTION_LABELS, COURSES } from "@hanai/shared";
+import { useAuth } from "../lib/auth-context";
+
+const TEACHERS = [
+  {
+    name: "Cô Nguyễn Hồng Nhung",
+    role: "Founder · Giảng viên trưởng",
+    photo: "/founder.jpg",
+    bio: "Thạc sĩ ngôn ngữ Trung, hơn 10 năm kinh nghiệm giảng dạy HSK 1 → HSK 6.",
+  },
+  {
+    name: "Thầy Trần Minh Đức",
+    role: "Co-founder · Phụ trách chuyên môn",
+    photo: "/co-founder.jpg",
+    bio: "Cử nhân Hán ngữ Đại học Bắc Kinh, chuyên luyện thi HSKK và phiên dịch.",
+  },
+];
 
 export function Home() {
+  const { user } = useAuth();
   const [lessons, setLessons] = useState<Lesson[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   useEffect(() => {
+    if (!user) { setLessons(null); return; }
     fetchAllLessons().then(setLessons).catch((e) => setErr(e.message));
-  }, []);
+  }, [user]);
 
   return (
-    <div className="container" style={{ padding: "12px 20px 80px" }}>
+    <div className="container" style={{ padding: "12px 16px 80px" }}>
       {/* Hero */}
       <section className="hero">
         <div className="hero-copy">
@@ -34,7 +52,7 @@ export function Home() {
       </section>
 
       {/* Courses */}
-      <h2 style={{ marginTop: 48, color: "var(--c-red-dark)" }}>Các khoá học</h2>
+      <h2 className="section-h">Các khoá học</h2>
       <div className="course-grid">
         {COURSES.map((c) => (
           <Link key={c.id} className="course-tile" to={`/course/${c.id}`}>
@@ -45,47 +63,58 @@ export function Home() {
         ))}
       </div>
 
-      {/* Showcase: curriculum + schedule */}
-      <h2 style={{ marginTop: 48, color: "var(--c-red-dark)" }}>Chương trình &amp; Lịch học</h2>
-      <div className="showcase-grid">
-        <div className="showcase-card">
-          <img src="/chuxin-curriculum.jpg" alt="Chương trình giảng dạy Sơ Tâm" />
-          <div className="showcase-card-body">
-            <h3>Chương trình giảng dạy</h3>
-            <p className="muted">Tổng quan giáo trình HSK 1 → HSK 6, theo từng bài và chủ đề.</p>
-          </div>
-        </div>
-        <div className="showcase-card">
-          <img src="/chuxin-first_class_schedule.jpg" alt="Lịch lớp khai giảng" />
-          <div className="showcase-card-body">
-            <h3>Lịch khai giảng</h3>
-            <p className="muted">Thời khóa biểu lớp đầu tiên — đăng ký để giữ chỗ.</p>
-          </div>
-        </div>
+      {/* Schedule banner — full-width */}
+      <h2 className="section-h">Lịch khai giảng</h2>
+      <div className="schedule-banner">
+        <img src="/chuxin-first_class_schedule.jpg" alt="Lịch lớp khai giảng" />
       </div>
 
-      {/* All lessons */}
-      <h2 style={{ marginTop: 48, color: "var(--c-red-dark)" }}>Tất cả bài học</h2>
-      {err && <div className="feedback feedback-bad">{err}</div>}
-      {!lessons && !err && <div className="muted">Đang tải…</div>}
-      {lessons?.length === 0 && (
-        <div className="feedback feedback-info">
-          Chưa có bài học nào. Hãy chạy <code>pnpm sync</code> để nạp dữ liệu.
-        </div>
-      )}
-      <div className="lesson-list">
-        {lessons?.map((l) => (
-          <Link key={l.id} to={`/lesson/${l.id}`} className="lesson-row">
-            <div>
-              <strong>{l.title}</strong>
-              <div className="muted" style={{ fontSize: 13 }}>
-                {l.course} · ~{l.estimatedMinutes ?? 10} phút
-              </div>
+      {/* Teachers */}
+      <h2 className="section-h">Đội ngũ giảng viên</h2>
+      <div className="teacher-grid">
+        {TEACHERS.map((t) => (
+          <article key={t.name} className="teacher-card">
+            <img src={t.photo} alt={t.name} className="teacher-photo" />
+            <div className="teacher-body">
+              <h3>{t.name}</h3>
+              <div className="teacher-role">{t.role}</div>
+              <p className="muted">{t.bio}</p>
             </div>
-            <span className="badge">{INTERACTION_LABELS[l.interactionType]}</span>
-          </Link>
+          </article>
         ))}
       </div>
+
+      {/* All lessons — only for authenticated users */}
+      {user ? (
+        <>
+          <h2 className="section-h">Tất cả bài học</h2>
+          {err && <div className="feedback feedback-bad">{err}</div>}
+          {!lessons && !err && <div className="muted">Đang tải…</div>}
+          {lessons?.length === 0 && (
+            <div className="feedback feedback-info">
+              Chưa có bài học nào. Hãy chạy <code>pnpm sync</code> để nạp dữ liệu.
+            </div>
+          )}
+          <div className="lesson-list">
+            {lessons?.map((l) => (
+              <Link key={l.id} to={`/lesson/${l.id}`} className="lesson-row">
+                <div>
+                  <strong>{l.title}</strong>
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    {l.course} · ~{l.estimatedMinutes ?? 10} phút
+                  </div>
+                </div>
+                <span className="badge">{INTERACTION_LABELS[l.interactionType]}</span>
+              </Link>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="feedback feedback-info" style={{ marginTop: 32 }}>
+          <strong>Đăng nhập để xem nội dung bài học.</strong>{" "}
+          Tất cả khoá học, danh sách bài, và phòng game đều mở sau khi đăng nhập.
+        </div>
+      )}
     </div>
   );
 }

@@ -985,3 +985,130 @@ body {
   background: var(--c-red); color: white;
   padding: 2px 8px; border-radius: 999px;
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   Home additions (schedule banner + teachers + responsive sweep)
+   ───────────────────────────────────────────────────────────────── */
+
+.section-h { margin-top: 48px; color: var(--c-red-dark); }
+
+/* Full-width schedule banner */
+.schedule-banner {
+  margin-top: 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: white;
+  border: 1.5px solid var(--c-yellow);
+  box-shadow: 0 6px 18px var(--c-shadow);
+}
+.schedule-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Teachers grid */
+.teacher-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+.teacher-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--c-card);
+  border: 1.5px solid var(--c-border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px var(--c-shadow);
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.teacher-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px var(--c-shadow); }
+.teacher-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--c-yellow-bg);
+}
+.teacher-body { padding: 18px 20px; }
+.teacher-body h3 { margin: 0 0 4px; color: var(--c-red-dark); }
+.teacher-role {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-yellow-dark);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.teacher-body p { margin: 0; font-size: 14px; line-height: 1.5; }
+
+/* ── Responsive sweep ────────────────────────────────── */
+
+/* Header: wrap nav onto multiple rows on narrow screens */
+@media (max-width: 720px) {
+  .hanai-header-inner {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+  .hanai-nav {
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: flex-start;
+  }
+  .hanai-nav a { padding: 4px 8px; font-size: 14px; }
+  .hanai-header-inner .brand span:not(.brand-logo) { font-size: 15px; }
+  .brand-mark { height: 32px; width: 32px; }
+}
+
+/* Hero: stack earlier + smaller heading on phones */
+@media (max-width: 640px) {
+  .hero { padding-top: 16px; gap: 20px; }
+  .hero-copy h1 { font-size: 26px; }
+  .hero-copy p { font-size: 15px; }
+  .hero-art { padding: 12px; border-radius: 16px; }
+  .hero-cta .btn { flex: 1; min-width: 0; }
+  .section-h { margin-top: 32px; font-size: 22px; }
+}
+
+/* Course tiles: 2 cols on tablets, 1 col on phones */
+@media (max-width: 640px) {
+  .course-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .course-tile { padding: 14px 14px 12px; border-radius: 14px; }
+  .course-tile h3 { font-size: 16px; margin: 0; }
+  .course-tile .muted { font-size: 12px; }
+}
+@media (max-width: 380px) {
+  .course-grid { grid-template-columns: 1fr; }
+}
+
+/* Teachers: stack on phones */
+@media (max-width: 520px) {
+  .teacher-grid { grid-template-columns: 1fr; gap: 14px; }
+  .teacher-photo { aspect-ratio: 16 / 10; }
+}
+
+/* Lesson rows: tighten padding + allow wrapping */
+@media (max-width: 520px) {
+  .lesson-row { padding: 10px 12px; gap: 10px; flex-wrap: wrap; }
+  .lesson-row strong { font-size: 14px; }
+  .lesson-row .badge { font-size: 11px; padding: 2px 8px; }
+}
+
+/* Admin tables — horizontal scroll wrapper already handles narrow widths,
+   but shrink font + padding to fit a 320px viewport more comfortably */
+@media (max-width: 520px) {
+  .admin-table { font-size: 12px; }
+  .admin-table th, .admin-table td { padding: 6px 8px; }
+}
+
+/* Sign-in modal: full-width on phones */
+@media (max-width: 480px) {
+  .hanai-modal-card { width: calc(100vw - 24px); padding: 20px; }
+}

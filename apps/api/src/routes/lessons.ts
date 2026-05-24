@@ -9,14 +9,16 @@ interface LessonRow {
 }
 
 export async function lessonRoutes(app: FastifyInstance) {
-  app.get("/", async () => {
+  // Lesson body content is gated — guests can see course shells but not the
+  // actual hanzi/pinyin/exercises inside lessons.
+  app.get("/", { preHandler: [authenticate] }, async () => {
     const { rows } = await query<LessonRow>(
       `SELECT id, data FROM lessons ORDER BY course_id, "order"`,
     );
     return rows.map((r) => r.data);
   });
 
-  app.get<{ Params: { id: string } }>("/:id", async (req, reply) => {
+  app.get<{ Params: { id: string } }>("/:id", { preHandler: [authenticate] }, async (req, reply) => {
     const { rows } = await query<LessonRow>(
       `SELECT id, data FROM lessons WHERE id = $1`,
       [req.params.id],

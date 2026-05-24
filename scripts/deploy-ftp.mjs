@@ -21,7 +21,9 @@ await ftpDeploy.deploy({
   port: Number(process.env.FTP_PORT) || 22,
   localRoot,
   remoteRoot: process.env.FTP_REMOTE_ROOT ?? "/public_html/",
-  include: ["*", "**/*"],
+  // The default glob doesn't match dotfiles — explicitly include .htaccess
+  // and any other dot-prefixed files so SPA routing works on LiteSpeed/Apache.
+  include: ["*", "**/*", ".*", "**/.*"],
   deleteRemote: false,
   sftp: true,
 });

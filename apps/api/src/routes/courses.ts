@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { query } from "../db/index.js";
+import { authenticate } from "../middleware/authenticate.js";
 
 interface CourseRow {
   id: string;
@@ -45,7 +46,8 @@ export async function courseRoutes(app: FastifyInstance) {
     return { ...rows[0], lessonIds: lessonIds.rows.map((r) => r.id) };
   });
 
-  app.get<{ Params: { id: string } }>("/:id/lessons", async (req) => {
+  // Lesson list within a course is content — guests get a 401 here.
+  app.get<{ Params: { id: string } }>("/:id/lessons", { preHandler: [authenticate] }, async (req) => {
     const { rows } = await query<{ id: string; data: unknown }>(
       `SELECT id, data FROM lessons WHERE course_id = $1 ORDER BY "order"`,
       [req.params.id],
