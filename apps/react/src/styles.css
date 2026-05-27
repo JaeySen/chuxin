@@ -1027,8 +1027,8 @@ body {
 .teacher-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px var(--c-shadow); }
 .teacher-photo {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
+  display: block;
   background: var(--c-yellow-bg);
 }
 .teacher-body { padding: 18px 20px; }
@@ -1091,7 +1091,7 @@ body {
 /* Teachers: stack on phones */
 @media (max-width: 520px) {
   .teacher-grid { grid-template-columns: 1fr; gap: 14px; }
-  .teacher-photo { aspect-ratio: 16 / 10; }
+  .teacher-photo { aspect-ratio: auto; }
 }
 
 /* Lesson rows: tighten padding + allow wrapping */

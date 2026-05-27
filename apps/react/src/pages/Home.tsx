@@ -7,13 +7,13 @@ import { useAuth } from "../lib/auth-context";
 
 const TEACHERS = [
   {
-    name: "Cô Nguyễn Hồng Nhung",
+    name: "Thầy Nguyễn Đức Trung",
     role: "Founder · Giảng viên trưởng",
     photo: "/founder.jpg",
     bio: "Thạc sĩ ngôn ngữ Trung, hơn 10 năm kinh nghiệm giảng dạy HSK 1 → HSK 6.",
   },
   {
-    name: "Thầy Trần Minh Đức",
+    name: "Cô Lê Thiên Giao Hạ",
     role: "Co-founder · Phụ trách chuyên môn",
     photo: "/co-founder.jpg",
     bio: "Cử nhân Hán ngữ Đại học Bắc Kinh, chuyên luyện thi HSKK và phiên dịch.",
@@ -75,11 +75,11 @@ export function Home() {
         {TEACHERS.map((t) => (
           <article key={t.name} className="teacher-card">
             <img src={t.photo} alt={t.name} className="teacher-photo" />
-            <div className="teacher-body">
+            {/* <div className="teacher-body">
               <h3>{t.name}</h3>
               <div className="teacher-role">{t.role}</div>
               <p className="muted">{t.bio}</p>
-            </div>
+            </div> */}
           </article>
         ))}
       </div>
