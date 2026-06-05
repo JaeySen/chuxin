@@ -87,6 +87,8 @@ body {
   background: rgba(255,255,255,0.85);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--c-divider);
+  /* Required so the absolute-positioned mobile drawer anchors to this element */
+  isolation: isolate;
 }
 .hanai-header-inner {
   max-width: 1080px; margin: 0 auto; padding: 12px 20px;
@@ -113,27 +115,40 @@ body {
 .hanai-user { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 
 .hanai-modal {
-  position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+  /* Portal renders directly into body — z-index 9999 wins over everything
+     (sticky header is z-50, bingo board is z-200). */
+  position: fixed; inset: 0; background: rgba(15,23,42,0.55);
   display: flex; align-items: center; justify-content: center;
-  z-index: 100;
+  z-index: 9999;
+  /* Prevent page scroll while modal is open */
+  overflow: hidden;
 }
 .hanai-modal-card {
   background: white; border-radius: 20px; padding: 28px;
-  width: min(420px, 92vw);
+  width: min(400px, 94vw);
   display: flex; flex-direction: column; gap: 12px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.28);
   position: relative;
+  max-height: 92vh; overflow-y: auto;
 }
-.hanai-modal-card h3 { margin: 0 0 4px; }
+.hanai-modal-card h3 { margin: 0 0 4px; font-size: 20px; color: var(--c-red-dark); }
 .hanai-modal-card input {
-  padding: 11px 14px; border: 1.5px solid var(--c-divider);
-  border-radius: 10px; font-size: 15px;
+  padding: 12px 14px; border: 1.5px solid var(--c-divider);
+  border-radius: 10px; font-size: 16px; width: 100%;
+  transition: border-color 0.15s;
 }
+.hanai-modal-card input:focus { outline: none; border-color: var(--c-red); }
 .hanai-modal-card .divider {
   text-align: center; color: var(--c-text-muted); font-size: 13px;
-  margin: 8px 0;
+  margin: 4px 0;
 }
-.close-x { position: absolute; top: 12px; right: 14px; }
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.modal-actions .btn-primary { flex: 1; }
+.close-x {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 16px; color: var(--c-text-muted);
+  line-height: 1; padding: 4px 6px;
+}
 
 #hanai-toast {
   position: fixed; left: 50%; bottom: 36px; transform: translateX(-50%);
@@ -1111,4 +1126,351 @@ body {
 /* Sign-in modal: full-width on phones */
 @media (max-width: 480px) {
   .hanai-modal-card { width: calc(100vw - 24px); padding: 20px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Schedule table (replaces the original lịch khai giảng image)
+   ───────────────────────────────────────────────────────────────── */
+
+.schedule-card {
+  margin-top: 16px;
+  background: linear-gradient(180deg, #fff 0%, var(--c-yellow-bg) 100%);
+  border: 1.5px solid var(--c-yellow);
+  border-radius: 18px;
+  padding: 18px 20px 20px;
+  box-shadow: 0 6px 18px var(--c-shadow);
+}
+/* CSS Grid schedule — each row is the same grid, no <table> */
+.sg-grid {
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  font-size: 14px;
+}
+.sg-header,
+.sg-row {
+  display: grid;
+  grid-template-columns: var(--sg-cols, 80px 1fr 100px 110px 120px);
+  align-items: center;
+}
+.sg-header {
+  background: var(--c-red);
+}
+.sg-row { border-bottom: 1px solid var(--c-divider); }
+.sg-row:last-child { border-bottom: 0; }
+.sg-row--alt { background: var(--c-yellow-bg); }
+.sg-cell {
+  padding: 11px 14px;
+  line-height: 1.35;
+}
+.sg-hcell {
+  color: var(--c-yellow);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.sg-code {
+  font-weight: 800;
+  color: var(--c-yellow-dark);
+  font-family: "Inter", monospace;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.sg-name {
+  font-weight: 600;
+  color: var(--c-red-dark);
+}
+
+/* Responsive: on narrow screens make it scroll horizontally */
+.schedule-card { overflow-x: auto; }
+@media (max-width: 540px) {
+  .sg-grid { min-width: 440px; }
+}
+.schedule-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+.schedule-hl {
+  background: white;
+  border: 1px dashed var(--c-yellow);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.schedule-hl strong {
+  display: block;
+  color: var(--c-red-dark);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+.schedule-hl p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-text-soft);
+}
+.schedule-source-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--c-text-muted);
+  text-align: right;
+}
+.schedule-source-note code {
+  background: white;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+@media (max-width: 720px) {
+  .schedule-card { padding: 14px 12px 16px; }
+  .sg-grid { font-size: 13px; }
+  .sg-cell { padding: 9px 10px; }
+  .schedule-highlights { grid-template-columns: 1fr; gap: 8px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Tài liệu (Documents)
+   ───────────────────────────────────────────────────────────────── */
+
+.doc-create-card {
+  background: linear-gradient(180deg, var(--c-yellow-bg), white);
+  border: 1.5px dashed var(--c-yellow);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.doc-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.doc-form-row label {
+  display: flex; flex-direction: column; gap: 4px; font-size: 13px;
+}
+.doc-form-row label span { color: var(--c-text-soft); font-weight: 600; }
+.doc-form-row label:nth-child(3) { grid-column: 1 / -1; } /* URL full width */
+.doc-form-row input {
+  padding: 9px 12px;
+  border: 1.5px solid var(--c-divider);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+.doc-form-row input:focus { outline: none; border-color: var(--c-red); }
+
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+.doc-card {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: var(--c-card);
+  border: 1.5px solid var(--c-border);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 3px 10px var(--c-shadow);
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.doc-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px var(--c-shadow); }
+.doc-card-icon {
+  font-size: 28px;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--c-yellow-bg);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.doc-card-body { flex: 1; min-width: 0; }
+.doc-card-body h3 {
+  margin: 0 0 4px;
+  color: var(--c-red-dark);
+  font-size: 16px;
+  line-height: 1.3;
+}
+.doc-card-desc {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.doc-card-meta {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  font-size: 12px; color: var(--c-text-muted);
+}
+.doc-card-warn {
+  margin-top: 6px; font-size: 12px;
+  color: #991b1b; background: var(--c-wrong-bg);
+  padding: 4px 8px; border-radius: 6px;
+}
+
+/* Detail page */
+.doc-meta-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 16px; flex-wrap: wrap;
+  padding: 14px 18px;
+  margin-top: 14px;
+  background: white;
+  border: 1px solid var(--c-divider);
+  border-radius: 12px;
+}
+.doc-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 18px;
+  font-size: 13px;
+  flex: 1; min-width: 220px;
+}
+.doc-meta-grid > div { min-width: 0; overflow-wrap: anywhere; }
+.doc-meta-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.doc-hash {
+  font-family: ui-monospace, monospace; font-size: 12px;
+  background: #f3f4f6; padding: 1px 6px; border-radius: 4px;
+}
+
+.doc-embed-wrap {
+  margin-top: 18px;
+  border: 1px solid var(--c-divider);
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+.doc-embed {
+  width: 100%;
+  height: 80vh;
+  min-height: 600px;
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .doc-form-row { grid-template-columns: 1fr; }
+  .doc-meta-grid { grid-template-columns: 1fr; }
+  .doc-embed { height: 70vh; min-height: 480px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Hamburger menu + mobile nav drawer (icon grid)
+   ───────────────────────────────────────────────────────────────── */
+
+.hanai-header-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+/* Desktop nav */
+.hanai-nav--desktop { display: flex; gap: 4px; }
+.hanai-nav--desktop a {
+  text-decoration: none; color: var(--c-text-soft);
+  font-weight: 500; padding: 6px 10px; border-radius: 8px;
+  font-size: 14px;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.hanai-nav--desktop a:hover { background: rgba(0,0,0,0.05); color: var(--c-text); }
+
+/* Hamburger button */
+.hamburger {
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px;
+  width: 38px; height: 38px;
+  background: transparent; border: none; cursor: pointer;
+  padding: 4px; border-radius: 8px;
+  transition: background 0.15s;
+}
+.hamburger:hover { background: rgba(0,0,0,0.06); }
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--c-red-dark); border-radius: 2px;
+  transition: transform 0.25s, opacity 0.2s;
+  transform-origin: center;
+}
+.hamburger--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger--open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile drawer — ABSOLUTE so it overlays content, no layout shift */
+.hanai-nav--mobile {
+  position: absolute;
+  top: 100%;        /* sits right below the sticky header */
+  left: 0; right: 0;
+  z-index: 48;      /* below modal (9999) but above page content */
+  background: white;
+  border-top: 1px solid var(--c-divider);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+  padding: 16px;
+  animation: slideDown 0.18s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 2-column icon grid */
+.hanai-nav--mobile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.nav-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  text-decoration: none;
+  color: var(--c-text);
+  background: #f8f8f8;
+  border: 1px solid var(--c-divider);
+  border-radius: 14px;
+  transition: background 0.12s, border-color 0.12s, transform 0.12s;
+}
+.nav-tile:hover, .nav-tile:active {
+  background: var(--c-red-bg);
+  border-color: var(--c-red);
+  transform: scale(0.97);
+}
+.nav-tile-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+.nav-tile-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-red-dark);
+  text-align: center;
+}
+.nav-tile--admin {
+  background: var(--c-yellow-bg);
+  border-color: var(--c-yellow);
+}
+.nav-tile--admin .nav-tile-label { color: var(--c-yellow-dark); }
+.nav-tile--admin:hover {
+  background: var(--c-yellow);
+  border-color: var(--c-yellow-dark);
+}
+
+@media (max-width: 720px) {
+  .hanai-nav--desktop { display: none; }
+  .hamburger { display: flex; }
+  .hanai-header-inner { flex-wrap: nowrap; }
+  .hanai-nav { display: none; }
+}
+@media (min-width: 721px) {
+  .hanai-nav--mobile { display: none !important; }
+  .hamburger { display: none !important; }
 }
