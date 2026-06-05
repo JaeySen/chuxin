@@ -4,6 +4,7 @@ import { fetchAllLessons } from "../lib/lessons";
 import type { Lesson } from "@hanai/shared";
 import { INTERACTION_LABELS, COURSES } from "@hanai/shared";
 import { useAuth } from "../lib/auth-context";
+import { ScheduleTable } from "../components/ScheduleTable";
 
 const TEACHERS = [
   {
@@ -63,11 +64,9 @@ export function Home() {
         ))}
       </div>
 
-      {/* Schedule banner — full-width */}
+      {/* Schedule — table sourced from Google Sheet (with hardcoded fallback) */}
       <h2 className="section-h">Lịch khai giảng</h2>
-      <div className="schedule-banner">
-        <img src="/chuxin-first_class_schedule.jpg" alt="Lịch lớp khai giảng" />
-      </div>
+      <ScheduleTable />
 
       {/* Teachers */}
       <h2 className="section-h">Đội ngũ giảng viên</h2>
