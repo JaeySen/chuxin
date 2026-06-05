@@ -9,6 +9,8 @@ import { worksheetRoutes } from "./routes/worksheets.js";
 import { bingoRoutes } from "./routes/games-bingo.js";
 import { wordSearchRoutes } from "./routes/games-word-search.js";
 import { adminRoutes } from "./routes/admin.js";
+import { scheduleRoutes } from "./routes/schedule.js";
+import { documentRoutes } from "./routes/documents.js";
 
 const app = Fastify({ logger: true, trustProxy: true });
 
@@ -42,6 +44,8 @@ app.register(worksheetRoutes, { prefix: "/worksheets" });
 app.register(bingoRoutes, { prefix: "/games/bingo" });
 app.register(wordSearchRoutes, { prefix: "/games/word-search" });
 app.register(adminRoutes, { prefix: "/admin" });
+app.register(scheduleRoutes, { prefix: "/schedule" });
+app.register(documentRoutes, { prefix: "/documents" });
 
 app.get("/health", async () => ({ status: "ok", ts: Date.now() }));
 

@@ -12,6 +12,8 @@ import { WordSearchGame } from "./pages/WordSearchGame";
 import { BingoTeacher } from "./pages/BingoTeacher";
 import { BingoGame } from "./pages/BingoGame";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import { DocumentsPage } from "./pages/DocumentsPage";
+import { DocumentDetailPage } from "./pages/DocumentDetailPage";
 import "./styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -28,6 +30,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="word-search/:gameId" element={<WordSearchGame />} />
           <Route path="bingo" element={<BingoTeacher />} />
           <Route path="bingo/:gameId" element={<BingoGame />} />
+          <Route path="documents" element={<DocumentsPage />} />
+          <Route path="documents/:id" element={<DocumentDetailPage />} />
           <Route path="admin" element={<AdminDashboard />} />
         </Route>
       </Routes>
