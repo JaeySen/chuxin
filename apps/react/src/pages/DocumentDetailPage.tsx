@@ -4,6 +4,8 @@ import { apiFetch } from "../lib/api";
 import { useAuth } from "../lib/auth-context";
 import type { ApiDocument } from "./DocumentsPage";
 
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:4000";
+
 function fmt(iso: string | null): string {
   if (!iso) return "—";
   return new Date(iso).toLocaleString("vi-VN");
@@ -12,7 +14,7 @@ function fmt(iso: string | null): string {
 export function DocumentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, role, loading } = useAuth();
+  const { role } = useAuth();
   const [doc, setDoc] = useState<ApiDocument | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -24,17 +26,15 @@ export function DocumentDetailPage() {
     if (!id) return;
     try {
       setErr(null);
-      const d = await apiFetch<ApiDocument>(`/documents/${id}`);
-      setDoc(d);
+      const res = await fetch(`${API_BASE}/documents/${id}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setDoc(await res.json() as ApiDocument);
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : String(e));
     }
   }
 
-  useEffect(() => {
-    if (user) load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, id]);
+  useEffect(() => { load(); }, [id]);
 
   async function handleRefresh() {
     if (!id) return;
@@ -61,26 +61,24 @@ export function DocumentDetailPage() {
     setBusy(true);
     try {
       await apiFetch(`/documents/${id}`, { method: "DELETE" });
-      navigate("/documents");
+      navigate("/thu-vien");
     } catch (e: unknown) {
       setRefreshNote(e instanceof Error ? e.message : String(e));
     } finally { setBusy(false); }
   }
 
-  if (loading) return <div className="container" style={{ padding: 40 }}><span className="muted">Đang tải…</span></div>;
-  if (!user) return <div className="container" style={{ padding: 40 }}><div className="feedback feedback-info">Vui lòng đăng nhập.</div></div>;
   if (err) return <div className="container" style={{ padding: 40 }}><div className="feedback feedback-bad">{err}</div></div>;
   if (!doc) return <div className="container" style={{ padding: 40 }}><span className="muted">Đang tải…</span></div>;
 
   return (
     <div className="container" style={{ padding: "20px 16px 60px" }}>
-      <Link to="/documents" className="muted" style={{ textDecoration: "none" }}>← Tài liệu</Link>
+      <Link to="/thu-vien" className="muted" style={{ textDecoration: "none" }}>← Thư viện</Link>
       <h1 style={{ color: "var(--c-red-dark)", marginTop: 8 }}>{doc.heading}</h1>
       {doc.description && <p className="muted" style={{ fontSize: 16 }}>{doc.description}</p>}
 
       <div className="doc-meta-row">
         <div className="doc-meta-grid">
-          <div><span className="muted">Người tạo:</span> <strong>{doc.createdByEmail ?? "—"}</strong></div>
+          <div><span className="muted">Người tạo:</span> <strong>{doc.createdByName ?? "—"}</strong></div>
           <div><span className="muted">Cập nhật lần cuối:</span> <strong>{fmt(doc.fetchedAt)}</strong></div>
           <div><span className="muted">Kích thước:</span> <strong>{doc.contentBytes ? `${doc.contentBytes.toLocaleString()} bytes` : "—"}</strong></div>
           <div><span className="muted">Mã nội dung (SHA-256):</span> <code className="doc-hash">{doc.contentHash?.slice(0, 12) ?? "—"}</code></div>

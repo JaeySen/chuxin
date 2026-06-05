@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { apiFetch } from "../lib/api";
 import { useAuth } from "../lib/auth-context";
 
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:4000";
+
 export interface ApiDocument {
   id: string;
   heading: string;
@@ -14,7 +16,7 @@ export interface ApiDocument {
   contentBytes: number | null;
   fetchedAt: string | null;
   fetchError: string | null;
-  createdByEmail: string | null;
+  createdByName: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -33,8 +35,12 @@ function fmtRelative(iso: string | null): string {
   return new Date(iso).toLocaleDateString("vi-VN");
 }
 
+function previewThumbUrl(docId: string) {
+  return `https://docs.google.com/document/d/${docId}/export?format=png&page=1`;
+}
+
 export function DocumentsPage() {
-  const { user, role, loading } = useAuth();
+  const { role } = useAuth();
   const [docs, setDocs] = useState<ApiDocument[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
@@ -43,31 +49,21 @@ export function DocumentsPage() {
   async function refresh() {
     try {
       setErr(null);
-      const list = await apiFetch<ApiDocument[]>("/documents");
-      setDocs(list);
+      // Public endpoint — no auth token needed, but apiFetch sends it if available
+      const res = await fetch(`${API_BASE}/documents`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setDocs(await res.json() as ApiDocument[]);
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : String(e));
     }
   }
 
-  useEffect(() => {
-    if (user) refresh();
-  }, [user]);
-
-  if (loading) return <div className="container" style={{ padding: 40 }}><span className="muted">Đang tải…</span></div>;
-  if (!user) {
-    return (
-      <div className="container" style={{ padding: "28px 20px" }}>
-        <h1 style={{ color: "var(--c-red-dark)" }}>Tài liệu</h1>
-        <div className="feedback feedback-info">Vui lòng đăng nhập để xem tài liệu.</div>
-      </div>
-    );
-  }
+  useEffect(() => { refresh(); }, []);
 
   return (
     <div className="container" style={{ padding: "28px 20px 80px" }}>
-      <h1 style={{ color: "var(--c-red-dark)", marginTop: 0 }}>Tài liệu</h1>
-      <p className="muted">Bộ sưu tập tài liệu học liệu của lớp — mở từ Google Docs.</p>
+      <h1 style={{ color: "var(--c-red-dark)", marginTop: 0 }}>Thư viện tài liệu</h1>
+      <p className="muted">Bộ sưu tập học liệu của lớp — mở từ Google Docs.</p>
 
       {canCreate && <CreateForm onCreated={refresh} />}
 
@@ -81,14 +77,29 @@ export function DocumentsPage() {
 
       <div className="doc-grid">
         {docs?.map((d) => (
-          <Link key={d.id} to={`/documents/${d.id}`} className="doc-card">
-            <div className="doc-card-icon">📄</div>
-            <div className="doc-card-body">
+          <Link key={d.id} to={`/thu-vien/${d.id}`} className="doc-card-v2">
+            {/* Preview image — blurred bottom half */}
+            <div className="doc-card-preview">
+              <img
+                src={previewThumbUrl(d.docId)}
+                alt=""
+                className="doc-card-preview-img"
+                loading="lazy"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
+              <div className="doc-card-preview-fade" />
+              <div className="doc-card-preview-icon">📄</div>
+            </div>
+
+            {/* Body */}
+            <div className="doc-card-v2-body">
               <h3>{d.heading}</h3>
-              {d.description && <p className="muted doc-card-desc">{d.description}</p>}
+              {d.description && <p className="doc-card-desc">{d.description}</p>}
               <div className="doc-card-meta">
-                <span>Cập nhật: <strong>{fmtRelative(d.fetchedAt)}</strong></span>
-                {d.createdByEmail && <span>· {d.createdByEmail}</span>}
+                {d.createdByName && (
+                  <span className="doc-card-author">✍ {d.createdByName}</span>
+                )}
+                <span>· {fmtRelative(d.fetchedAt)}</span>
               </div>
               {d.fetchError && (
                 <div className="doc-card-warn">⚠ {d.fetchError}</div>

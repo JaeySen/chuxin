@@ -31,12 +31,12 @@ interface ApiDocument {
   contentBytes: number | null;
   fetchedAt: Date | null;
   fetchError: string | null;
-  createdByEmail: string | null;
+  createdByName: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-function toApi(row: DocumentRow & { created_by_email?: string | null }): ApiDocument {
+function toApi(row: DocumentRow & { created_by_name?: string | null }): ApiDocument {
   return {
     id: row.id,
     heading: row.heading,
@@ -48,7 +48,7 @@ function toApi(row: DocumentRow & { created_by_email?: string | null }): ApiDocu
     contentBytes: row.content_bytes,
     fetchedAt: row.fetched_at,
     fetchError: row.fetch_error,
-    createdByEmail: row.created_by_email ?? null,
+    createdByName: row.created_by_name ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -80,12 +80,12 @@ async function runFetch(docId: string, documentId: string): Promise<{ hash: stri
 }
 
 export async function documentRoutes(app: FastifyInstance) {
-  // All endpoints require authentication — tài liệu is gated like lessons.
-  app.addHook("preHandler", authenticate);
+  // GET / and GET /:id are public — Thư viện is visible to guests.
+  // Write operations (POST, DELETE) are teacher/admin only and add authenticate themselves.
 
   app.get("/", async () => {
-    const { rows } = await query<DocumentRow & { created_by_email: string | null }>(
-      `SELECT d.*, u.email AS created_by_email
+    const { rows } = await query<DocumentRow & { created_by_name: string | null }>(
+      `SELECT d.*, u.display_name AS created_by_name
          FROM documents d
          LEFT JOIN users u ON u.id = d.created_by
          ORDER BY d.created_at DESC`,
@@ -94,8 +94,8 @@ export async function documentRoutes(app: FastifyInstance) {
   });
 
   app.get<{ Params: { id: string } }>("/:id", async (req, reply) => {
-    const { rows } = await query<DocumentRow & { created_by_email: string | null }>(
-      `SELECT d.*, u.email AS created_by_email
+    const { rows } = await query<DocumentRow & { created_by_name: string | null }>(
+      `SELECT d.*, u.display_name AS created_by_name
          FROM documents d
          LEFT JOIN users u ON u.id = d.created_by
          WHERE d.id = $1`,
@@ -107,7 +107,7 @@ export async function documentRoutes(app: FastifyInstance) {
 
   app.post(
     "/",
-    { preHandler: [requireRole("teacher", "admin")] },
+    { preHandler: [authenticate, requireRole("teacher", "admin")] },
     async (req, reply) => {
       const parsed = CreateBody.safeParse(req.body);
       if (!parsed.success) return reply.status(400).send({ error: "Invalid body", details: parsed.error.format() });
@@ -144,7 +144,7 @@ export async function documentRoutes(app: FastifyInstance) {
 
   app.post<{ Params: { id: string } }>(
     "/:id/refresh",
-    { preHandler: [requireRole("teacher", "admin")] },
+    { preHandler: [authenticate, requireRole("teacher", "admin")] },
     async (req, reply) => {
       const { rows } = await query<DocumentRow>(`SELECT * FROM documents WHERE id = $1`, [req.params.id]);
       const doc = rows[0];
@@ -153,8 +153,8 @@ export async function documentRoutes(app: FastifyInstance) {
       const before = doc.content_hash;
       const result = await runFetch(doc.doc_id, doc.id);
 
-      const { rows: refreshed } = await query<DocumentRow & { created_by_email: string | null }>(
-        `SELECT d.*, u.email AS created_by_email
+      const { rows: refreshed } = await query<DocumentRow & { created_by_name: string | null }>(
+        `SELECT d.*, u.display_name AS created_by_name
            FROM documents d
            LEFT JOIN users u ON u.id = d.created_by
            WHERE d.id = $1`,
@@ -171,7 +171,7 @@ export async function documentRoutes(app: FastifyInstance) {
 
   app.delete<{ Params: { id: string } }>(
     "/:id",
-    { preHandler: [requireRole("teacher", "admin")] },
+    { preHandler: [authenticate, requireRole("teacher", "admin")] },
     async (req, reply) => {
       const { rowCount } = await query(`DELETE FROM documents WHERE id = $1`, [req.params.id]);
       if (!rowCount) return reply.status(404).send({ error: "Document not found" });
