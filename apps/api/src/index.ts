@@ -11,6 +11,7 @@ import { wordSearchRoutes } from "./routes/games-word-search.js";
 import { adminRoutes } from "./routes/admin.js";
 import { scheduleRoutes } from "./routes/schedule.js";
 import { documentRoutes } from "./routes/documents.js";
+import { giaoVuRoutes } from "./routes/giaovu.js";
 
 const app = Fastify({ logger: true, trustProxy: true });
 
@@ -22,6 +23,8 @@ const DEFAULT_ORIGINS = [
   "https://hanngusotam.com",
   "http://www.hanngusotam.com",
   "https://www.hanngusotam.com",
+  "https://giaovu.hanngusotam.com",
+  "http://localhost:5174",
 ];
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS?.split(",").map((s) => s.trim()).filter(Boolean))
   ?? DEFAULT_ORIGINS;
@@ -46,6 +49,7 @@ app.register(wordSearchRoutes, { prefix: "/games/word-search" });
 app.register(adminRoutes, { prefix: "/admin" });
 app.register(scheduleRoutes, { prefix: "/schedule" });
 app.register(documentRoutes, { prefix: "/documents" });
+app.register(giaoVuRoutes, { prefix: "/giaovu" });
 
 app.get("/health", async () => ({ status: "ok", ts: Date.now() }));
 
