@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { query } from "../db/index.js";
 
-export type Role = "student" | "teacher" | "admin";
+export type Role = "student" | "teacher" | "admin" | "staff" | "assistant";
 
 export interface AuthUser {
   id: string;

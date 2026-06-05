@@ -1,6 +1,6 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 
-export type Role = "admin" | "teacher" | "student" | "guest";
+export type Role = "admin" | "teacher" | "student" | "staff" | "assistant" | "guest";
 
 /**
  * Usage: { preHandler: [authenticate, requireRole("teacher", "admin")] }
