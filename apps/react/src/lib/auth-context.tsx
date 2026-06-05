@@ -13,8 +13,8 @@ interface AuthState {
   user: AuthUser | null;
   loading: boolean;
   role: Role;
-  signIn: (email: string, password: string) => Promise<AuthUser>;
-  signUp: (email: string, password: string, displayName: string) => Promise<AuthUser>;
+  signIn: (input: { email?: string; phone?: string; password: string }) => Promise<AuthUser>;
+  signUp: (input: { email?: string; phone?: string; password: string; displayName: string }) => Promise<AuthUser>;
   signInWithGoogle: () => Promise<never>;
   logout: () => Promise<void>;
 }
@@ -43,20 +43,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => { cancelled = true; };
   }, []);
 
-  async function signIn(email: string, password: string) {
-    const u = await apiLogin(email, password);
+  async function signIn(input: { email?: string; phone?: string; password: string }) {
+    const u = await apiLogin(input);
     setUser(u);
     return u;
   }
 
-  async function signUp(email: string, password: string, displayName: string) {
-    const u = await apiSignup({ email, password, displayName });
+  async function signUp(input: { email?: string; phone?: string; password: string; displayName: string }) {
+    const u = await apiSignup(input);
     setUser(u);
     return u;
   }
 
   async function signInWithGoogle(): Promise<never> {
-    throw new Error("Google sign-in is not configured yet. Set GOOGLE_OAUTH_CLIENT_ID on the API and add /auth/google.");
+    throw new Error("Google sign-in is not configured yet.");
   }
 
   async function logout() {

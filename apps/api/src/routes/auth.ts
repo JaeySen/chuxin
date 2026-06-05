@@ -2,11 +2,14 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import {
   signupWithPassword,
+  signupWithPhone,
   loginWithPassword,
+  loginWithPhone,
   findUserById,
   signJwt,
   lockUser,
   recordAuthEvent,
+  normalizePhone,
 } from "../services/auth.js";
 import {
   createSession,
@@ -18,15 +21,17 @@ import { authenticate } from "../middleware/authenticate.js";
 import { getSetting } from "../services/settings.js";
 
 const SignupBody = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
+  phone: z.string().min(8).max(20).optional(),
   password: z.string().min(8),
   displayName: z.string().min(1).max(80),
-});
+}).refine((d) => d.email || d.phone, { message: "email or phone is required" });
 
 const LoginBody = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
+  phone: z.string().min(8).max(20).optional(),
   password: z.string().min(1),
-});
+}).refine((d) => d.email || d.phone, { message: "email or phone is required" });
 
 function getClientMeta(req: { headers: Record<string, unknown>; ip?: string }) {
   const xff = req.headers["x-forwarded-for"];
@@ -36,18 +41,45 @@ function getClientMeta(req: { headers: Record<string, unknown>; ip?: string }) {
 }
 
 export async function authRoutes(app: FastifyInstance) {
+  // ── Public config endpoint ────────────────────────────────────────────
+  // Frontend reads this on load to know which login methods to show.
+  app.get("/config", async () => {
+    const [allowSignup, disableEmail, allowPhone] = await Promise.all([
+      getSetting<boolean>("allow_signup", true),
+      getSetting<boolean>("disable_email_login", false),
+      getSetting<boolean>("allow_phone_login", true),
+    ]);
+    return { allowSignup, disableEmailLogin: disableEmail, allowPhoneLogin: allowPhone };
+  });
+
+  // ── Signup ───────────────────────────────────────────────────────────
   app.post("/signup", async (req, reply) => {
-    const parsed = SignupBody.safeParse(req.body);
-    if (!parsed.success) {
-      return reply.status(400).send({ error: "Invalid request body", details: parsed.error.format() });
+    const allowSignup = await getSetting<boolean>("allow_signup", true);
+    if (!allowSignup) {
+      return reply.status(403).send({ error: "SIGNUP_DISABLED", message: "Tính năng tự đăng ký đã bị tắt. Liên hệ giáo viên để được cấp tài khoản." });
     }
+
+    const parsed = SignupBody.safeParse(req.body);
+    if (!parsed.success) return reply.status(400).send({ error: "Invalid request body", details: parsed.error.format() });
 
     let user;
     try {
-      user = await signupWithPassword(parsed.data);
+      if (parsed.data.phone) {
+        user = await signupWithPhone({
+          phone: parsed.data.phone,
+          password: parsed.data.password,
+          displayName: parsed.data.displayName,
+        });
+      } else {
+        user = await signupWithPassword({
+          email: parsed.data.email!,
+          password: parsed.data.password,
+          displayName: parsed.data.displayName,
+        });
+      }
     } catch (err) {
-      if (err instanceof Error && err.message === "EMAIL_TAKEN") {
-        return reply.status(409).send({ error: "Email already registered" });
+      if (err instanceof Error && (err.message === "EMAIL_TAKEN" || err.message === "PHONE_TAKEN")) {
+        return reply.status(409).send({ error: err.message === "EMAIL_TAKEN" ? "Email already registered" : "Phone number already registered" });
       }
       throw err;
     }
@@ -58,15 +90,20 @@ export async function authRoutes(app: FastifyInstance) {
     return reply.send({ jwt, sessionToken, user });
   });
 
+  // ── Login ────────────────────────────────────────────────────────────
   app.post("/login", async (req, reply) => {
     const parsed = LoginBody.safeParse(req.body);
     if (!parsed.success) return reply.status(400).send({ error: "Invalid request body" });
 
     let user;
     try {
-      user = await loginWithPassword(parsed.data.email, parsed.data.password);
+      if (parsed.data.phone) {
+        user = await loginWithPhone(normalizePhone(parsed.data.phone), parsed.data.password);
+      } else {
+        user = await loginWithPassword(parsed.data.email!, parsed.data.password);
+      }
     } catch {
-      return reply.status(401).send({ error: "Invalid email or password" });
+      return reply.status(401).send({ error: "Invalid credentials" });
     }
 
     if (user.locked) {
@@ -78,7 +115,7 @@ export async function authRoutes(app: FastifyInstance) {
 
     const { ip, userAgent } = getClientMeta(req);
 
-    // Cross-IP detection — only enforced for students. Teachers/admins are unrestricted.
+    // Cross-IP detection — only for students.
     if (user.role === "student") {
       const existing = await findActiveSessionsForUser(user.id);
       const conflicting = existing.find((s) => s.ip && s.ip !== ip);
@@ -87,7 +124,6 @@ export async function authRoutes(app: FastifyInstance) {
         const enforce = await getSetting<boolean>("enforce_cross_ip_lock", true);
 
         if (enforce) {
-          // Hard mode: lock + kill all sessions + reject this login
           await lockUser(user.id, `Cross-IP login attempt: existing ${conflicting.ip} vs new ${ip}`);
           await deleteAllSessionsForUser(user.id);
           await recordAuthEvent({
@@ -102,7 +138,6 @@ export async function authRoutes(app: FastifyInstance) {
             message: "Phát hiện đăng nhập từ mạng khác. Tài khoản đã bị khóa và phiên hiện tại đã đăng xuất. Liên hệ quản trị viên để mở khóa.",
           });
         } else {
-          // Soft mode: log it but still allow login (existing session is replaced by createSession)
           await recordAuthEvent({
             userId: user.id,
             eventType: "soft_cross_ip",

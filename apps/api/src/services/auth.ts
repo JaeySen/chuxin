@@ -7,6 +7,7 @@ export type Role = "student" | "teacher" | "admin";
 export interface AuthUser {
   id: string;
   email: string;
+  phone: string | null;
   displayName: string;
   role: Role;
   locked?: boolean;
@@ -15,6 +16,7 @@ export interface AuthUser {
 interface UserRow {
   id: string;
   email: string;
+  phone: string | null;
   password_hash: string | null;
   display_name: string;
   role: Role;
@@ -60,10 +62,53 @@ function toAuthUser(row: UserRow): AuthUser {
   return {
     id: row.id,
     email: row.email,
+    phone: row.phone ?? null,
     displayName: row.display_name,
     role: row.role,
     locked: row.locked,
   };
+}
+
+export function normalizePhone(raw: string): string {
+  // Strip all non-digits, normalise leading 0 → +84 (Vietnamese)
+  const digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("84")) return `+${digits}`;
+  if (digits.startsWith("0")) return `+84${digits.slice(1)}`;
+  return `+${digits}`;
+}
+
+export async function findUserByPhone(phone: string): Promise<UserRow | null> {
+  const norm = normalizePhone(phone);
+  const { rows } = await query<UserRow>("SELECT * FROM users WHERE phone = $1", [norm]);
+  return rows[0] ?? null;
+}
+
+export async function signupWithPhone(input: {
+  phone: string;
+  password: string;
+  displayName: string;
+}): Promise<AuthUser> {
+  const phone = normalizePhone(input.phone);
+  const existing = await findUserByPhone(phone);
+  if (existing) throw new Error("PHONE_TAKEN");
+
+  const passwordHash = await argon2.hash(input.password, { type: argon2.argon2id });
+
+  const { rows } = await query<UserRow>(
+    `INSERT INTO users (email, phone, password_hash, display_name, role, provider)
+     VALUES ($1, $2, $3, $4, 'student', 'password')
+     RETURNING *`,
+    [`phone_${phone.replace(/\D/g, "")}@placeholder.local`, phone, passwordHash, input.displayName],
+  );
+  return toAuthUser(rows[0]);
+}
+
+export async function loginWithPhone(phone: string, password: string): Promise<AuthUser> {
+  const user = await findUserByPhone(phone);
+  if (!user || !user.password_hash) throw new Error("INVALID_CREDENTIALS");
+  const ok = await argon2.verify(user.password_hash, password);
+  if (!ok) throw new Error("INVALID_CREDENTIALS");
+  return toAuthUser(user);
 }
 
 export async function lockUser(userId: string, reason: string): Promise<void> {

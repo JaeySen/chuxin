@@ -4,10 +4,13 @@ import { query } from "../db/index.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { requireRole } from "../middleware/authorize.js";
 import { getAllSettings, setSetting } from "../services/settings.js";
-import { unlockUser, recordAuthEvent } from "../services/auth.js";
+import { unlockUser, recordAuthEvent, signupWithPassword, signupWithPhone, normalizePhone } from "../services/auth.js";
 
 const SettingsPatchBody = z.object({
   enforce_cross_ip_lock: z.boolean().optional(),
+  allow_signup:          z.boolean().optional(),
+  disable_email_login:   z.boolean().optional(),
+  allow_phone_login:     z.boolean().optional(),
 });
 
 interface AuthEventRow {
@@ -126,5 +129,43 @@ export async function adminRoutes(app: FastifyInstance) {
       note: "Unlocked from user list",
     });
     return { ok: true };
+  });
+
+  // ── Admin creates a new user (bypasses allow_signup flag) ────
+  const CreateUserBody = z.object({
+    displayName: z.string().min(1).max(80),
+    password:    z.string().min(8),
+    role:        z.enum(["student", "teacher", "admin"]),
+    email:       z.string().email().optional(),
+    phone:       z.string().min(8).max(20).optional(),
+  }).refine((d) => d.email || d.phone, { message: "email or phone is required" });
+
+  app.post("/users", async (req, reply) => {
+    const parsed = CreateUserBody.safeParse(req.body);
+    if (!parsed.success) return reply.status(400).send({ error: "Invalid body", details: parsed.error.format() });
+    const { displayName, password, role, email, phone } = parsed.data;
+
+    let user;
+    try {
+      if (phone) {
+        user = await signupWithPhone({ phone: normalizePhone(phone), password, displayName });
+      } else {
+        user = await signupWithPassword({ email: email!, password, displayName });
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg === "EMAIL_TAKEN" || msg === "PHONE_TAKEN") {
+        return reply.status(409).send({ error: msg });
+      }
+      throw err;
+    }
+
+    // Update role if not student (signupWithPassword defaults to student/teacher via allowlist)
+    if (role !== user.role) {
+      await query(`UPDATE users SET role = $1 WHERE id = $2`, [role, user.id]);
+      user = { ...user, role };
+    }
+
+    return reply.send(user);
   });
 }

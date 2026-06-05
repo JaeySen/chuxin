@@ -3,8 +3,15 @@ const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "http:/
 export interface AuthUser {
   id: string;
   email: string;
+  phone: string | null;
   displayName: string;
   role: "student" | "teacher" | "admin";
+}
+
+export interface AuthConfig {
+  allowSignup: boolean;
+  disableEmailLogin: boolean;
+  allowPhoneLogin: boolean;
 }
 
 const JWT_KEY = "jwt";
@@ -66,8 +73,27 @@ interface AuthResponse {
   user: AuthUser;
 }
 
+// Cached so every modal open doesn't re-fetch.
+let configCache: AuthConfig | null = null;
+
+export async function apiAuthConfig(): Promise<AuthConfig> {
+  if (configCache) return configCache;
+  try {
+    const cfg = await fetch(`${API_BASE}/auth/config`).then((r) => r.json() as Promise<AuthConfig>);
+    configCache = cfg;
+    return cfg;
+  } catch {
+    return { allowSignup: true, disableEmailLogin: false, allowPhoneLogin: true };
+  }
+}
+
+export function invalidateAuthConfigCache(): void {
+  configCache = null;
+}
+
 export async function apiSignup(input: {
-  email: string;
+  email?: string;
+  phone?: string;
   password: string;
   displayName: string;
 }): Promise<AuthUser> {
@@ -79,10 +105,10 @@ export async function apiSignup(input: {
   return data.user;
 }
 
-export async function apiLogin(email: string, password: string): Promise<AuthUser> {
+export async function apiLogin(input: { email?: string; phone?: string; password: string }): Promise<AuthUser> {
   const data = await apiFetch<AuthResponse>("/auth/login", {
     method: "POST",
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify(input),
   });
   storeCredentials(data.jwt, data.sessionToken);
   return data.user;
@@ -92,7 +118,7 @@ export async function apiLogout(): Promise<void> {
   try {
     await apiFetch("/auth/session", { method: "DELETE" });
   } catch {
-    // best-effort — credentials are cleared regardless
+    // best-effort
   } finally {
     clearCredentials();
   }

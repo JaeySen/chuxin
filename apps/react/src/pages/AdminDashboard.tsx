@@ -1,10 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { Navigate } from "react-router-dom";
-import { apiFetch } from "../lib/api";
+import { apiFetch, invalidateAuthConfigCache } from "../lib/api";
 import { useAuth } from "../lib/auth-context";
 
 interface Settings {
   enforce_cross_ip_lock?: boolean;
+  allow_signup?: boolean;
+  disable_email_login?: boolean;
+  allow_phone_login?: boolean;
 }
 
 interface AuthEvent {
@@ -84,14 +87,15 @@ export function AdminDashboard() {
     );
   }
 
-  async function toggleEnforce(next: boolean) {
+  async function patchSettings(patch: Partial<Settings>) {
     setBusyKey("settings");
     try {
       const s = await apiFetch<Settings>("/admin/settings", {
         method: "PATCH",
-        body: JSON.stringify({ enforce_cross_ip_lock: next }),
+        body: JSON.stringify(patch),
       });
       setSettings(s);
+      invalidateAuthConfigCache(); // so modal picks up new config on next open
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally { setBusyKey(null); }
@@ -117,36 +121,81 @@ export function AdminDashboard() {
     } finally { setBusyKey(null); }
   }
 
-  const enforce = !!settings?.enforce_cross_ip_lock;
+  const enforce   = !!settings?.enforce_cross_ip_lock;
+  const allowSignup     = settings?.allow_signup !== false;
+  const disableEmail    = !!settings?.disable_email_login;
+  const allowPhone      = settings?.allow_phone_login !== false;
+
+  const TOGGLES: Array<{
+    key: keyof Settings;
+    label: string;
+    onDesc: string;
+    offDesc: string;
+    value: boolean;
+  }> = [
+    {
+      key: "enforce_cross_ip_lock",
+      label: "Tự động khóa khi đăng nhập từ mạng khác (hard mode)",
+      onDesc: "BẬT: khóa tài khoản + đăng xuất phiên cũ ngay lập tức. Phải mở khóa thủ công.",
+      offDesc: "TẮT (soft mode): chỉ ghi log, vẫn cho đăng nhập.",
+      value: enforce,
+    },
+    {
+      key: "allow_signup",
+      label: "Cho phép học viên tự tạo tài khoản",
+      onDesc: "BẬT: nút \"Tạo tài khoản\" hiển thị trên form đăng nhập.",
+      offDesc: "TẮT: ẩn nút tạo tài khoản — chỉ admin/giáo viên mới tạo được.",
+      value: allowSignup,
+    },
+    {
+      key: "disable_email_login",
+      label: "Tắt đăng nhập bằng email (dùng số điện thoại thay thế)",
+      onDesc: "BẬT: form chỉ hiển thị trường số điện thoại (ẩn email).",
+      offDesc: "TẮT: form hiển thị email như bình thường.",
+      value: disableEmail,
+    },
+    {
+      key: "allow_phone_login",
+      label: "Cho phép đăng nhập bằng số điện thoại",
+      onDesc: "BẬT: người dùng có thể đặt mật khẩu và đăng nhập bằng số điện thoại.",
+      offDesc: "TẮT: tùy chọn đăng nhập bằng số điện thoại bị ẩn.",
+      value: allowPhone,
+    },
+  ];
 
   return (
     <div className="container" style={{ padding: "28px 20px 80px" }}>
       <h1 style={{ color: "var(--c-red-dark)", marginTop: 0 }}>Bảng quản trị</h1>
-      <p className="muted">Bảo mật đăng nhập học viên, kiểm tra và mở khóa tài khoản.</p>
+      <p className="muted">Tạo tài khoản, cấu hình đăng nhập, kiểm tra và mở khóa tài khoản.</p>
 
       {err && <div className="feedback feedback-bad" style={{ marginTop: 12 }}>{err}</div>}
 
+      {/* Create user */}
+      <section className="lesson-card" style={{ marginTop: 20 }}>
+        <h3 style={{ marginTop: 0 }}>Tạo tài khoản mới</h3>
+        <CreateUserForm onCreated={refresh} />
+      </section>
+
       {/* Settings card */}
       <section className="lesson-card" style={{ marginTop: 20 }}>
-        <h3 style={{ marginTop: 0 }}>Cấu hình bảo mật</h3>
-        <label className="ws-checkbox-row" style={{ gap: 12 }}>
-          <input
-            type="checkbox"
-            checked={enforce}
-            disabled={busyKey === "settings" || !settings}
-            onChange={(e) => toggleEnforce(e.target.checked)}
-          />
-          <div>
-            <div style={{ fontWeight: 600 }}>
-              Tự động đăng xuất khi phát hiện đăng nhập từ mạng khác (hard mode)
+        <h3 style={{ marginTop: 0 }}>Cấu hình đăng nhập &amp; bảo mật</h3>
+        {TOGGLES.map((t) => (
+          <label key={t.key} className="ws-checkbox-row" style={{ gap: 12, marginBottom: 14 }}>
+            <input
+              type="checkbox"
+              checked={t.value}
+              disabled={busyKey === "settings" || !settings}
+              onChange={(e) => patchSettings({ [t.key]: e.target.checked })}
+            />
+            <div>
+              <div style={{ fontWeight: 600 }}>{t.label}</div>
+              <div className="muted" style={{ fontSize: 13 }}>
+                {t.value ? t.onDesc : t.offDesc}
+              </div>
             </div>
-            <div className="muted" style={{ fontSize: 13 }}>
-              {enforce
-                ? "Đang BẬT: học viên đăng nhập từ IP khác sẽ bị khóa tài khoản + đăng xuất phiên cũ. Phải mở khóa thủ công."
-                : "Đang TẮT (soft mode): cho phép đăng nhập đa IP, chỉ ghi log để xem xét."}
-            </div>
-          </div>
-        </label>
+          </label>
+        ))}
+
       </section>
 
       {/* Auth events */}
@@ -257,5 +306,87 @@ export function AdminDashboard() {
         )}
       </section>
     </div>
+  );
+}
+
+function CreateUserForm({ onCreated }: { onCreated: () => void }) {
+  const [method, setMethod] = useState<"email" | "phone">("email");
+  const [email, setEmail]           = useState("");
+  const [phone, setPhone]           = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [password, setPassword]     = useState("");
+  const [role, setRole]             = useState<"student" | "teacher" | "admin">("student");
+  const [busy, setBusy]             = useState(false);
+  const [err, setErr]               = useState<string | null>(null);
+  const [ok, setOk]                 = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true); setErr(null); setOk(null);
+    try {
+      const body =
+        method === "phone"
+          ? { phone: phone.replace(/\D/g, ""), displayName, password, role }
+          : { email, displayName, password, role };
+      const created = await apiFetch<{ email: string; displayName: string; role: string }>(
+        "/admin/users", { method: "POST", body: JSON.stringify(body) }
+      );
+      setOk(`Đã tạo tài khoản: ${created.displayName} (${method === "phone" ? phone : email}) — vai trò: ${role}`);
+      setEmail(""); setPhone(""); setDisplayName(""); setPassword(""); setRole("student");
+      onCreated();
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", gap: 8 }}>
+        {(["email", "phone"] as const).map((m) => (
+          <button key={m} type="button"
+            className={`btn btn-sm ${method === m ? "btn-secondary" : "btn-ghost"}`}
+            onClick={() => setMethod(m)}>
+            {m === "email" ? "📧 Email" : "📱 Điện thoại"}
+          </button>
+        ))}
+      </div>
+
+      <div className="doc-form-row">
+        <label>
+          <span>Tên hiển thị *</span>
+          <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} required maxLength={80} />
+        </label>
+        <label>
+          <span>{method === "email" ? "Email *" : "Số điện thoại *"}</span>
+          {method === "email" ? (
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          ) : (
+            <input type="tel" inputMode="numeric" pattern="[0-9]*" placeholder="0901234567"
+              value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))} required />
+          )}
+        </label>
+        <label>
+          <span>Mật khẩu * (tối thiểu 8 ký tự)</span>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+        </label>
+        <label>
+          <span>Vai trò</span>
+          <select value={role} onChange={(e) => setRole(e.target.value as typeof role)}
+            style={{ padding: "9px 12px", border: "1.5px solid var(--c-divider)", borderRadius: 8, fontSize: 14 }}>
+            <option value="student">Học viên</option>
+            <option value="teacher">Giáo viên</option>
+            <option value="admin">Quản trị viên</option>
+          </select>
+        </label>
+      </div>
+
+      {err && <div className="feedback feedback-bad">{err}</div>}
+      {ok  && <div className="feedback feedback-ok">{ok}</div>}
+
+      <button type="submit" className="btn btn-primary" disabled={busy}
+        style={{ alignSelf: "flex-start" }}>
+        {busy ? "Đang tạo…" : "Tạo tài khoản"}
+      </button>
+    </form>
   );
 }
