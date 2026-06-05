@@ -40,8 +40,7 @@ export function Home() {
             Học tiếng Trung cùng <span className="hero-accent">Sơ Tâm</span>
           </h1>
           <p>
-            Lộ trình HSK 1 → HSK 6, học qua tương tác — flashcard, đố vui, ghép cặp,
-            nghe nói và trò chơi đồng đội. Tiến độ và điểm số được lưu khi bạn đăng nhập.
+            Các khóa học được chuẩn hóa với trải nghiệm học tương tác: Flashcard, đố vui, ghép cặp, thực hành nghe - nói và trò chơi đồng đội. Hệ thống tự động đồng bộ tiến độ và điểm số sau mỗi phiên đăng nhập.
           </p>
           <div className="hero-cta">
             <Link to="/courses" className="btn btn-primary">Xem các khoá học</Link>
