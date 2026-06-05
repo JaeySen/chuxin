@@ -2,24 +2,25 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchAllLessons } from "../lib/lessons";
 import type { Lesson } from "@hanai/shared";
-import { INTERACTION_LABELS, COURSES } from "@hanai/shared";
+import { INTERACTION_LABELS, COURSES, type CourseStatus } from "@hanai/shared";
 import { useAuth } from "../lib/auth-context";
 import { ScheduleTable } from "../components/ScheduleTable";
 
-const TEACHERS = [
-  {
-    name: "Thầy Nguyễn Đức Trung",
-    role: "Founder · Giảng viên trưởng",
-    photo: "/founder.jpg",
-    bio: "Thạc sĩ ngôn ngữ Trung, hơn 10 năm kinh nghiệm giảng dạy HSK 1 → HSK 6.",
-  },
-  {
-    name: "Cô Lê Thiên Giao Hạ",
-    role: "Co-founder · Phụ trách chuyên môn",
-    photo: "/co-founder.jpg",
-    bio: "Cử nhân Hán ngữ Đại học Bắc Kinh, chuyên luyện thi HSKK và phiên dịch.",
-  },
-];
+const STATUS_LABEL: Record<CourseStatus, string> = {
+  "ongoing":      "Đang học",
+  "opening-soon": "Sắp khai giảng",
+  "enrolling":    "Đang tuyển sinh",
+  "full":         "Đã đủ lớp",
+  "coming-soon":  "Sắp ra mắt",
+};
+
+const STATUS_CLASS: Record<CourseStatus, string> = {
+  "ongoing":      "status-ongoing",
+  "opening-soon": "status-opening-soon",
+  "enrolling":    "status-enrolling",
+  "full":         "status-full",
+  "coming-soon":  "status-coming-soon",
+};
 
 export function Home() {
   const { user } = useAuth();
@@ -43,8 +44,8 @@ export function Home() {
             nghe nói và trò chơi đồng đội. Tiến độ và điểm số được lưu khi bạn đăng nhập.
           </p>
           <div className="hero-cta">
-            <Link to="/course/han1" className="btn btn-primary">Bắt đầu HSK 1</Link>
-            <Link to="/me" className="btn btn-secondary">Tiến độ của tôi</Link>
+            <Link to="/courses" className="btn btn-primary">Xem các khoá học</Link>
+            <Link to="/ve-chung-toi" className="btn btn-secondary">Về chúng tôi</Link>
           </div>
         </div>
         <div className="hero-art">
@@ -57,6 +58,11 @@ export function Home() {
       <div className="course-grid">
         {COURSES.map((c) => (
           <Link key={c.id} className="course-tile" to={`/course/${c.id}`}>
+            {c.status && (
+              <span className={`course-status-badge ${STATUS_CLASS[c.status]}`}>
+                {STATUS_LABEL[c.status]}
+              </span>
+            )}
             <h3>{c.title}</h3>
             <div className="muted">{c.subtitle}</div>
             <div className="tile-bar" style={{ background: c.color }} />
@@ -64,24 +70,9 @@ export function Home() {
         ))}
       </div>
 
-      {/* Schedule — table sourced from Google Sheet (with hardcoded fallback) */}
+      {/* Schedule */}
       <h2 className="section-h">Lịch khai giảng</h2>
       <ScheduleTable />
-
-      {/* Teachers */}
-      <h2 className="section-h">Đội ngũ giảng viên</h2>
-      <div className="teacher-grid">
-        {TEACHERS.map((t) => (
-          <article key={t.name} className="teacher-card">
-            <img src={t.photo} alt={t.name} className="teacher-photo" />
-            {/* <div className="teacher-body">
-              <h3>{t.name}</h3>
-              <div className="teacher-role">{t.role}</div>
-              <p className="muted">{t.bio}</p>
-            </div> */}
-          </article>
-        ))}
-      </div>
 
       {/* All lessons — only for authenticated users */}
       {user ? (

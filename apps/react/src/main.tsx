@@ -14,6 +14,7 @@ import { BingoGame } from "./pages/BingoGame";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { DocumentDetailPage } from "./pages/DocumentDetailPage";
+import { AboutPage } from "./pages/AboutPage";
 import "./styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
+          <Route path="courses" element={<Home />} />
           <Route path="course/:courseId" element={<CoursePage />} />
           <Route path="lesson/:lessonId" element={<LessonPage />} />
           <Route path="me" element={<MePage />} />
@@ -30,8 +32,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="word-search/:gameId" element={<WordSearchGame />} />
           <Route path="bingo" element={<BingoTeacher />} />
           <Route path="bingo/:gameId" element={<BingoGame />} />
+          <Route path="thu-vien" element={<DocumentsPage />} />
+          <Route path="thu-vien/:id" element={<DocumentDetailPage />} />
+          {/* Legacy redirect alias */}
           <Route path="documents" element={<DocumentsPage />} />
           <Route path="documents/:id" element={<DocumentDetailPage />} />
+          <Route path="ve-chung-toi" element={<AboutPage />} />
           <Route path="admin" element={<AdminDashboard />} />
         </Route>
       </Routes>

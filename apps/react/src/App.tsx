@@ -15,14 +15,56 @@ export function App() {
   );
 }
 
-const NAV_LINKS = [
-  { to: "/",            label: "Khoá học", icon: "📚" },
-  { to: "/pinyin",      label: "Ngữ âm",   icon: "🔊" },
-  { to: "/word-search", label: "Tìm từ",   icon: "🔍" },
-  { to: "/bingo",       label: "Bingo",     icon: "🎯" },
-  { to: "/documents",   label: "Tài liệu",  icon: "📄" },
-  { to: "/me",          label: "Tiến độ",   icon: "📊" },
+// Always-visible links
+const PUBLIC_LINKS = [
+  { to: "/courses",      label: "Các khoá học",  icon: "📚" },
+  { to: "/thu-vien",     label: "Thư viện",       icon: "📄" },
+  { to: "/ve-chung-toi", label: "Về chúng tôi",   icon: "🏫" },
 ];
+
+// Games submenu — only rendered when logged in
+const GAME_LINKS = [
+  { to: "/pinyin",      label: "Ngữ âm",  icon: "🔊" },
+  { to: "/word-search", label: "Tìm từ",  icon: "🔍" },
+  { to: "/bingo",       label: "Bingo",   icon: "🎯" },
+];
+
+function GamesDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const h = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [open]);
+
+  return (
+    <div className="nav-dropdown" ref={ref}>
+      <button
+        className="nav-dropdown-btn"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        🎮 Trò chơi <span className="nav-dropdown-caret">{open ? "▴" : "▾"}</span>
+      </button>
+      {open && (
+        <div className="nav-dropdown-menu">
+          {GAME_LINKS.map((l) => (
+            <Link key={l.to} to={l.to} className="nav-dropdown-item">
+              <span>{l.icon}</span> {l.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function Header() {
   const { user, role, logout } = useAuth();
@@ -30,10 +72,8 @@ function Header() {
   const [menuOpen, setMenuOpen]   = useState(false);
   const location = useLocation();
 
-  // Close mobile menu on navigate
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
-  // Close menu on outside click
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e: MouseEvent) => {
@@ -43,6 +83,11 @@ function Header() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
+
+  const mobileTiles = [
+    ...PUBLIC_LINKS,
+    ...(user ? GAME_LINKS : []),
+  ];
 
   return (
     <header className="hanai-header">
@@ -55,7 +100,8 @@ function Header() {
 
         {/* Desktop nav */}
         <nav className="hanai-nav hanai-nav--desktop">
-          {NAV_LINKS.map((l) => <Link key={l.to} to={l.to}>{l.label}</Link>)}
+          {PUBLIC_LINKS.map((l) => <Link key={l.to} to={l.to}>{l.label}</Link>)}
+          {user && <GamesDropdown />}
           {role === "admin" && (
             <Link to="/admin" style={{ color: "var(--c-red)", fontWeight: 700 }}>⚙ Quản trị</Link>
           )}
@@ -91,7 +137,7 @@ function Header() {
       {menuOpen && (
         <nav className="hanai-nav--mobile">
           <div className="hanai-nav--mobile-grid">
-            {NAV_LINKS.map((l) => (
+            {mobileTiles.map((l) => (
               <Link key={l.to} to={l.to} className="nav-tile">
                 <span className="nav-tile-icon">{l.icon}</span>
                 <span className="nav-tile-label">{l.label}</span>
