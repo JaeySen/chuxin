@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SITE = "https://hanngusotam.com";
+const SITE = "https://www.hanngusotam.com";
 const DEFAULT_IMAGE = `${SITE}/chuxin-logo.jpg`;
 
 interface HeadMeta {

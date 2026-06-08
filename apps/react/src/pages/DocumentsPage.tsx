@@ -48,7 +48,7 @@ export function DocumentsPage() {
   useHead({
     title: "Thư viện tài liệu · Hán ngữ Sơ Tâm",
     description: "Tài liệu học tiếng Trung miễn phí từ Hán ngữ Sơ Tâm — giáo án, bài tập, từ vựng HSK và học liệu bổ trợ.",
-    canonical: "https://hanngusotam.com/thu-vien",
+    canonical: "https://www.hanngusotam.com/thu-vien",
   });
 
   const canCreate = role === "teacher" || role === "admin";

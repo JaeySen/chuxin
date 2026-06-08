@@ -19,7 +19,7 @@ export function AboutPage() {
   useHead({
     title: "Về chúng tôi · Hán ngữ Sơ Tâm",
     description: "Tìm hiểu về Hán ngữ Sơ Tâm — sứ mệnh, tinh thần Chuxin, và đội ngũ giảng viên giàu kinh nghiệm. Trung tâm tiếng Trung uy tín tại Việt Nam.",
-    canonical: "https://hanngusotam.com/ve-chung-toi",
+    canonical: "https://www.hanngusotam.com/ve-chung-toi",
   });
   return (
     <div className="container" style={{ padding: "28px 20px 80px" }}>

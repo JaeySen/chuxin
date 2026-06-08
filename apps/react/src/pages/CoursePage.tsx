@@ -27,7 +27,7 @@ export function CoursePage() {
     description: course
       ? `Học ${course.title} — ${course.subtitle ?? ""}. Chương trình chuẩn hoá, học liệu tương tác từ Hán ngữ Sơ Tâm.`
       : "Khoá học tiếng Trung tại Hán ngữ Sơ Tâm.",
-    canonical: courseId ? `https://hanngusotam.com/course/${courseId}` : undefined,
+    canonical: courseId ? `https://www.hanngusotam.com/course/${courseId}` : undefined,
   });
 
   // Group lessons by their order field (treated as the bài number).

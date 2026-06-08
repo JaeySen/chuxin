@@ -6,4 +6,4 @@ Disallow: /pinyin
 Disallow: /word-search
 Disallow: /bingo
 
-Sitemap: https://hanngusotam.com/sitemap.xml
+Sitemap: https://www.hanngusotam.com/sitemap.xml

@@ -36,7 +36,7 @@ export function Home() {
   useHead({
     title: "Hán ngữ Sơ Tâm · Học tiếng Trung tại Việt Nam",
     description: "Trung tâm tiếng Trung Sơ Tâm — Các khoá học Hán ngữ từ HSK 1 đến HSK 6, Tiếng Trung Thương mại và Tiếng Trung Trẻ em. Phương pháp học tương tác, giáo viên giàu kinh nghiệm.",
-    canonical: "https://hanngusotam.com/",
+    canonical: "https://www.hanngusotam.com/",
   });
 
   return (
@@ -46,8 +46,8 @@ export function Home() {
         "@type": "EducationalOrganization",
         "name": "Hán ngữ Sơ Tâm",
         "alternateName": "Chuxin",
-        "url": "https://hanngusotam.com",
-        "logo": "https://hanngusotam.com/chuxin-logo.jpg",
+        "url": "https://www.hanngusotam.com",
+        "logo": "https://www.hanngusotam.com/chuxin-logo.jpg",
         "description": "Trung tâm tiếng Trung Sơ Tâm — các khoá học Hán ngữ từ HSK 1 đến HSK 6, Tiếng Trung Thương mại và Tiếng Trung Trẻ em tại Việt Nam.",
         "inLanguage": "vi",
         "sameAs": [],
@@ -55,12 +55,12 @@ export function Home() {
           "@type": "OfferCatalog",
           "name": "Các khoá học tiếng Trung",
           "itemListElement": [
-            { "@type": "Course", "name": "Hán ngữ 1", "description": "HSK 1 — Khởi đầu", "url": "https://hanngusotam.com/course/han1" },
-            { "@type": "Course", "name": "Hán ngữ 2", "description": "HSK 2 — Tiếp nối", "url": "https://hanngusotam.com/course/han2" },
-            { "@type": "Course", "name": "Hán ngữ 3", "description": "HSK 3 — Mở rộng vốn từ", "url": "https://hanngusotam.com/course/han3" },
-            { "@type": "Course", "name": "Hán ngữ 4", "description": "HSK 4 — Đọc · Nói · Tranh luận", "url": "https://hanngusotam.com/course/han4" },
-            { "@type": "Course", "name": "Tiếng Trung Thương mại", "description": "Giao tiếp kinh doanh & đàm phán", "url": "https://hanngusotam.com/course/thuong-mai" },
-            { "@type": "Course", "name": "Tiếng Trung Trẻ em", "description": "Dành cho học sinh tiểu học & THCS", "url": "https://hanngusotam.com/course/tre-em" },
+            { "@type": "Course", "name": "Hán ngữ 1", "description": "HSK 1 — Khởi đầu", "url": "https://www.hanngusotam.com/course/han1" },
+            { "@type": "Course", "name": "Hán ngữ 2", "description": "HSK 2 — Tiếp nối", "url": "https://www.hanngusotam.com/course/han2" },
+            { "@type": "Course", "name": "Hán ngữ 3", "description": "HSK 3 — Mở rộng vốn từ", "url": "https://www.hanngusotam.com/course/han3" },
+            { "@type": "Course", "name": "Hán ngữ 4", "description": "HSK 4 — Đọc · Nói · Tranh luận", "url": "https://www.hanngusotam.com/course/han4" },
+            { "@type": "Course", "name": "Tiếng Trung Thương mại", "description": "Giao tiếp kinh doanh & đàm phán", "url": "https://www.hanngusotam.com/course/thuong-mai" },
+            { "@type": "Course", "name": "Tiếng Trung Trẻ em", "description": "Dành cho học sinh tiểu học & THCS", "url": "https://www.hanngusotam.com/course/tre-em" },
           ],
         },
       }} />
