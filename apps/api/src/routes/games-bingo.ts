@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply } from "fastify";
 import { z } from "zod";
-import { authenticate } from "../middleware/authenticate.js";
+import { authenticate, tryAuthenticate } from "../middleware/authenticate.js";
 import { requireRole } from "../middleware/authorize.js";
 import { getSetting } from "../services/settings.js";
 import * as bingo from "../games/bingo.js";
@@ -56,8 +56,7 @@ export async function bingoRoutes(app: FastifyInstance) {
     const game = bingo.getGame(req.params.id);
     if (!game) return reply.status(404).send({ error: "GAME_NOT_FOUND" });
 
-    // Try authenticated join first
-    try { await authenticate(req, reply); } catch { /* guest path */ }
+    await tryAuthenticate(req);
 
     if (req.user) {
       try {
@@ -105,7 +104,7 @@ export async function bingoRoutes(app: FastifyInstance) {
     if (!parsed.success) return reply.status(400).send({ error: "Invalid body" });
 
     let playerUid: string;
-    try { await authenticate(req, reply); } catch { /* guest */ }
+    await tryAuthenticate(req);
 
     if (req.user) {
       playerUid = req.user.uid;

@@ -14,30 +14,26 @@ declare module "fastify" {
 }
 
 export async function authenticate(req: FastifyRequest, reply: FastifyReply) {
+  const ok = await tryAuthenticate(req);
+  if (!ok) return reply.status(401).send({ error: "Missing Authorization header" });
+}
+
+/** Tries to authenticate without touching reply. Returns true if successful. */
+export async function tryAuthenticate(req: FastifyRequest): Promise<boolean> {
   const bearer = req.headers.authorization;
   const sessionToken = req.headers["x-session-token"] as string | undefined;
 
-  if (!bearer?.startsWith("Bearer ")) {
-    return reply.status(401).send({ error: "Missing Authorization header" });
-  }
-  if (!sessionToken) {
-    return reply.status(401).send({ error: "Missing X-Session-Token header" });
-  }
+  if (!bearer?.startsWith("Bearer ") || !sessionToken) return false;
 
   let payload;
   try {
     payload = verifyJwt(bearer.slice(7));
   } catch {
-    return reply.status(401).send({ error: "Invalid or expired token" });
+    return false;
   }
 
   const session = await getSessionByToken(sessionToken);
-  if (!session || session.userId !== payload.sub) {
-    return reply.status(401).send({
-      error: "Session invalidated — sign in again",
-      code: "SESSION_INVALID",
-    });
-  }
+  if (!session || session.userId !== payload.sub) return false;
 
   touchSession(sessionToken).catch(() => {});
 
@@ -47,4 +43,5 @@ export async function authenticate(req: FastifyRequest, reply: FastifyReply) {
     role: payload.role,
     sessionToken,
   };
+  return true;
 }
