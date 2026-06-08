@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchCourseLessons } from "../lib/lessons";
 import type { Lesson, CourseId } from "@hanai/shared";
 import { INTERACTION_LABELS, COURSES, CHAPTERS_BY_COURSE } from "@hanai/shared";
+import { useHead } from "../lib/useHead";
 import { useAuth } from "../lib/auth-context";
 
 export function CoursePage() {
@@ -20,6 +21,14 @@ export function CoursePage() {
 
   const course = COURSES.find((c) => c.id === courseId);
   const chapters = courseId ? CHAPTERS_BY_COURSE[courseId as CourseId] ?? [] : [];
+
+  useHead({
+    title: course ? `${course.title} · Hán ngữ Sơ Tâm` : "Khoá học · Hán ngữ Sơ Tâm",
+    description: course
+      ? `Học ${course.title} — ${course.subtitle ?? ""}. Chương trình chuẩn hoá, học liệu tương tác từ Hán ngữ Sơ Tâm.`
+      : "Khoá học tiếng Trung tại Hán ngữ Sơ Tâm.",
+    canonical: courseId ? `https://hanngusotam.com/course/${courseId}` : undefined,
+  });
 
   // Group lessons by their order field (treated as the bài number).
   const lessonsByBai = useMemo(() => {

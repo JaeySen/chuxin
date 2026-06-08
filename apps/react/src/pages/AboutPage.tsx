@@ -1,3 +1,5 @@
+import { useHead } from "../lib/useHead";
+
 const TEACHERS = [
   {
     name: "Thầy Nguyễn Đức Trung",
@@ -14,6 +16,11 @@ const TEACHERS = [
 ];
 
 export function AboutPage() {
+  useHead({
+    title: "Về chúng tôi · Hán ngữ Sơ Tâm",
+    description: "Tìm hiểu về Hán ngữ Sơ Tâm — sứ mệnh, tinh thần Chuxin, và đội ngũ giảng viên giàu kinh nghiệm. Trung tâm tiếng Trung uy tín tại Việt Nam.",
+    canonical: "https://hanngusotam.com/ve-chung-toi",
+  });
   return (
     <div className="container" style={{ padding: "28px 20px 80px" }}>
       <h1 style={{ color: "var(--c-red-dark)", marginTop: 0 }}>Về chúng tôi</h1>

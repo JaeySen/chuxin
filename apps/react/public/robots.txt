@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /me
+Disallow: /admin
+Disallow: /pinyin
+Disallow: /word-search
+Disallow: /bingo
+
+Sitemap: https://hanngusotam.com/sitemap.xml

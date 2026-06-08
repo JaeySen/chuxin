@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetch } from "../lib/api";
 import { useAuth } from "../lib/auth-context";
+import { useHead } from "../lib/useHead";
 
 const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:4000";
 
@@ -43,6 +44,12 @@ export function DocumentsPage() {
   const { role } = useAuth();
   const [docs, setDocs] = useState<ApiDocument[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
+
+  useHead({
+    title: "Thư viện tài liệu · Hán ngữ Sơ Tâm",
+    description: "Tài liệu học tiếng Trung miễn phí từ Hán ngữ Sơ Tâm — giáo án, bài tập, từ vựng HSK và học liệu bổ trợ.",
+    canonical: "https://hanngusotam.com/thu-vien",
+  });
 
   const canCreate = role === "teacher" || role === "admin";
 
