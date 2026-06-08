@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   useBingoGame, joinBingo, startBingo, callNextWord, markCell, endBingo, expireBingoGuestLink,
 } from "../lib/bingoGame";
@@ -20,6 +20,7 @@ function findBingoLine(board: string[][], marked: Set<string>): [number, number]
 
 export function BingoGame() {
   const { gameId } = useParams<{ gameId: string }>();
+  const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { game, error } = useBingoGame(gameId);
   const [joined, setJoined] = useState(false);
@@ -54,6 +55,14 @@ export function BingoGame() {
   useEffect(() => {
     if (game?.winner?.uid === myUid) setShowCelebration(true);
   }, [game?.winner?.uid, myUid]);
+
+  // Redirect home if game is already ended on load (e.g. page refresh after game finished)
+  useEffect(() => {
+    if (!authLoading && game?.status === "ended" && !showCelebration) {
+      const timer = setTimeout(() => navigate("/", { replace: true }), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [authLoading, game?.status, showCelebration, navigate]);
 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href);
@@ -187,6 +196,19 @@ export function BingoGame() {
           ) : (
             <div className="feedback feedback-info">Đang chờ giáo viên bắt đầu…</div>
           )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Already ended on load (refresh after game finished) ─────
+  if (game.status === "ended" && !showCelebration) {
+    return (
+      <div className="bingo-shell ws-center-col">
+        <div className="ws-lobby-card">
+          <h2>Trò chơi đã kết thúc</h2>
+          {game.winner && <p>🎊 {game.winner.name} đã BINGO!</p>}
+          <p className="muted" style={{ fontSize: 13 }}>Đang chuyển về trang chủ…</p>
         </div>
       </div>
     );
@@ -335,7 +357,7 @@ function PlayerBoard({
             let cls = "bingo-cell";
             if (isWin) cls += " bingo-cell--win";
             else if (isMarked) cls += " bingo-cell--marked";
-            else if (isCalled) cls += " bingo-cell--callable";
+            // no callable highlight — would reveal which cells to mark before student reads the word
             if (isNew && !isMarked) cls += " bingo-cell--new";
             return (
               <button key={`${r}-${c}`} className={cls}
@@ -350,7 +372,6 @@ function PlayerBoard({
         )}
       </div>
       <div className="bingo-board-legend">
-        <span className="bingo-legend-item bingo-legend--callable">Có thể đánh dấu</span>
         <span className="bingo-legend-item bingo-legend--marked">Đã đánh dấu</span>
         {winCells.size > 0 && <span className="bingo-legend-item bingo-legend--win">Bingo!</span>}
       </div>

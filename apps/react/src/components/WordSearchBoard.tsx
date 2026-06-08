@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { getCellsOnLine, type Cell, type Placement, type WordEntry } from "../utils/wordSearchGen";
 import type { FoundInfo } from "../lib/wordSearchGame";
 
@@ -16,19 +16,21 @@ function arrEq(a: string[], b: string[]): boolean {
 }
 
 export function WordSearchBoard({ grid, found, wordList, placements, onWordFound, active }: Props) {
+  // Use refs for drag state so touch handlers always see current values
+  const startRef = useRef<Cell | null>(null);
+  const endRef   = useRef<Cell | null>(null);
+
+  // Separate display state — only used for rendering
   const [selStart, setSelStart] = useState<Cell | null>(null);
-  const [selEnd, setSelEnd] = useState<Cell | null>(null);
+  const [selEnd,   setSelEnd]   = useState<Cell | null>(null);
   const [flashCells, setFlashCells] = useState<Set<string>>(new Set());
-  const dragging = useRef(false);
 
   const selCells = selStart && selEnd ? getCellsOnLine(selStart, selEnd) : [];
-  const selSet = new Set(selCells.map(([r, c]) => `${r},${c}`));
+  const selSet   = new Set(selCells.map(([r, c]) => `${r},${c}`));
 
   const foundCellMap = new Map<string, FoundInfo>();
   for (const info of Object.values(found)) {
-    for (const [r, c] of info.positions) {
-      foundCellMap.set(`${r},${c}`, info);
-    }
+    for (const [r, c] of info.positions) foundCellMap.set(`${r},${c}`, info);
   }
 
   const placedIdxSet = new Set(placements.map((p) => p.wordIndex));
@@ -36,11 +38,10 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
   function validate(cells: Cell[]) {
     if (cells.length < 2) return;
     const picked = cells.map(([r, c]) => grid[r][c]);
-    const rev = [...picked].reverse();
+    const rev    = [...picked].reverse();
 
     for (const [i, word] of wordList.entries()) {
-      if (!placedIdxSet.has(i)) continue;
-      if (found[String(i)]) continue;
+      if (!placedIdxSet.has(i) || found[String(i)]) continue;
       if (arrEq(picked, word.pinyinChars) || arrEq(rev, word.pinyinChars)) {
         onWordFound(i, cells as [number, number][]);
         return;
@@ -51,29 +52,34 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
     setTimeout(() => setFlashCells(new Set()), 400);
   }
 
-  const startSel = useCallback((r: number, c: number) => {
+  function startSel(r: number, c: number) {
     if (!active) return;
-    dragging.current = true;
+    startRef.current = [r, c];
+    endRef.current   = [r, c];
     setSelStart([r, c]);
     setSelEnd([r, c]);
-  }, [active]);
+  }
 
-  const moveSel = useCallback((r: number, c: number) => {
-    if (!dragging.current) return;
+  function moveSel(r: number, c: number) {
+    if (!startRef.current) return;
+    endRef.current = [r, c];
     setSelEnd([r, c]);
-  }, []);
+  }
 
-  const endSel = useCallback(() => {
-    if (!dragging.current) return;
-    dragging.current = false;
-    if (selStart && selEnd) validate(getCellsOnLine(selStart, selEnd));
+  function endSel() {
+    if (!startRef.current) return;
+    const s = startRef.current;
+    const e = endRef.current ?? s;
+    startRef.current = null;
+    endRef.current   = null;
     setSelStart(null);
     setSelEnd(null);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selStart, selEnd]);
+    validate(getCellsOnLine(s, e));
+  }
 
   function cellFromTouch(e: React.TouchEvent): Cell | null {
     const t = e.touches[0];
+    if (!t) return null;
     const el = document.elementFromPoint(t.clientX, t.clientY) as HTMLElement | null;
     if (!el) return null;
     const r = el.dataset.r;
@@ -83,17 +89,21 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
   }
 
   return (
-    <div className="wsb-grid" onMouseUp={endSel} onMouseLeave={endSel}>
+    <div
+      className="wsb-grid"
+      onMouseUp={endSel}
+      onMouseLeave={endSel}
+    >
       {grid.map((row, r) =>
         row.map((ch, c) => {
-          const key = `${r},${c}`;
-          const isSel = selSet.has(key);
-          const isFlash = flashCells.has(key);
+          const key       = `${r},${c}`;
+          const isSel     = selSet.has(key);
+          const isFlash   = flashCells.has(key);
           const foundInfo = foundCellMap.get(key);
 
           let cls = "wsb-cell";
-          if (isSel) cls += " wsb-cell--sel";
-          else if (isFlash) cls += " wsb-cell--flash";
+          if (isSel)          cls += " wsb-cell--sel";
+          else if (isFlash)   cls += " wsb-cell--flash";
           else if (foundInfo) cls += " wsb-cell--found";
 
           const style = foundInfo && !isSel
@@ -101,7 +111,9 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
             : undefined;
 
           return (
-            <div key={key} data-r={r} data-c={c} className={cls} style={style}
+            <div
+              key={key} data-r={r} data-c={c}
+              className={cls} style={style}
               onMouseDown={() => startSel(r, c)}
               onMouseEnter={() => moveSel(r, c)}
               onTouchStart={(e) => { e.preventDefault(); startSel(r, c); }}
@@ -110,7 +122,8 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
                 const cell = cellFromTouch(e);
                 if (cell) moveSel(cell[0], cell[1]);
               }}
-              onTouchEnd={(e) => { e.preventDefault(); endSel(); }}>
+              onTouchEnd={(e) => { e.preventDefault(); endSel(); }}
+            >
               {ch}
             </div>
           );
