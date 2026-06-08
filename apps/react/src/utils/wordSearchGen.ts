@@ -27,7 +27,6 @@ export interface BoardResult {
 
 const DIRS: Cell[] = [
   [0, 1], [0, -1], [1, 0], [-1, 0],
-  [1, 1], [1, -1], [-1, 1], [-1, -1],
 ];
 
 const FILL_POOL_DEFAULT = "abcdefghijklmnopqrstuvwxyzāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü".split("");
@@ -94,15 +93,15 @@ export function generateBoard(
 }
 
 /**
- * Return the straight line of cells from start → end if it's a valid
- * horizontal / vertical / diagonal selection; otherwise just [start].
+ * Return the straight line of cells from start → end for horizontal or
+ * vertical selections only. Diagonal selections return just [start].
  */
 export function getCellsOnLine(start: Cell, end: Cell): Cell[] {
   const [r1, c1] = start;
   const [r2, c2] = end;
   const dr = r2 - r1;
   const dc = c2 - c1;
-  if (dr !== 0 && dc !== 0 && Math.abs(dr) !== Math.abs(dc)) return [start];
+  if (dr !== 0 && dc !== 0) return [start];
   const len = Math.max(Math.abs(dr), Math.abs(dc)) + 1;
   const stepR = dr === 0 ? 0 : dr / Math.abs(dr);
   const stepC = dc === 0 ? 0 : dc / Math.abs(dc);

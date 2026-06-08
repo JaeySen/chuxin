@@ -15,12 +15,19 @@ function arrEq(a: string[], b: string[]): boolean {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 }
 
+function cellFromPoint(x: number, y: number): Cell | null {
+  const el = document.elementFromPoint(x, y) as HTMLElement | null;
+  if (!el) return null;
+  const r = el.dataset.r;
+  const c = el.dataset.c;
+  if (r == null || c == null) return null;
+  return [+r, +c];
+}
+
 export function WordSearchBoard({ grid, found, wordList, placements, onWordFound, active }: Props) {
-  // Use refs for drag state so touch handlers always see current values
   const startRef = useRef<Cell | null>(null);
   const endRef   = useRef<Cell | null>(null);
 
-  // Separate display state — only used for rendering
   const [selStart, setSelStart] = useState<Cell | null>(null);
   const [selEnd,   setSelEnd]   = useState<Cell | null>(null);
   const [flashCells, setFlashCells] = useState<Set<string>>(new Set());
@@ -47,8 +54,7 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
         return;
       }
     }
-    const flashKey = new Set(cells.map(([r, c]) => `${r},${c}`));
-    setFlashCells(flashKey);
+    setFlashCells(new Set(cells.map(([r, c]) => `${r},${c}`)));
     setTimeout(() => setFlashCells(new Set()), 400);
   }
 
@@ -77,22 +83,35 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
     validate(getCellsOnLine(s, e));
   }
 
-  function cellFromTouch(e: React.TouchEvent): Cell | null {
-    const t = e.touches[0];
-    if (!t) return null;
-    const el = document.elementFromPoint(t.clientX, t.clientY) as HTMLElement | null;
-    if (!el) return null;
-    const r = el.dataset.r;
-    const c = el.dataset.c;
-    if (r == null || c == null) return null;
-    return [+r, +c];
-  }
-
   return (
     <div
       className="wsb-grid"
+      onMouseDown={(e) => {
+        const cell = cellFromPoint(e.clientX, e.clientY);
+        if (cell) startSel(cell[0], cell[1]);
+      }}
+      onMouseMove={(e) => {
+        if (!startRef.current) return;
+        const cell = cellFromPoint(e.clientX, e.clientY);
+        if (cell) moveSel(cell[0], cell[1]);
+      }}
       onMouseUp={endSel}
       onMouseLeave={endSel}
+      onTouchStart={(e) => {
+        const t = e.touches[0];
+        if (!t) return;
+        e.preventDefault();
+        const cell = cellFromPoint(t.clientX, t.clientY);
+        if (cell) startSel(cell[0], cell[1]);
+      }}
+      onTouchMove={(e) => {
+        const t = e.touches[0];
+        if (!t) return;
+        e.preventDefault();
+        const cell = cellFromPoint(t.clientX, t.clientY);
+        if (cell) moveSel(cell[0], cell[1]);
+      }}
+      onTouchEnd={(e) => { e.preventDefault(); endSel(); }}
     >
       {grid.map((row, r) =>
         row.map((ch, c) => {
@@ -114,15 +133,6 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
             <div
               key={key} data-r={r} data-c={c}
               className={cls} style={style}
-              onMouseDown={() => startSel(r, c)}
-              onMouseEnter={() => moveSel(r, c)}
-              onTouchStart={(e) => { e.preventDefault(); startSel(r, c); }}
-              onTouchMove={(e) => {
-                e.preventDefault();
-                const cell = cellFromTouch(e);
-                if (cell) moveSel(cell[0], cell[1]);
-              }}
-              onTouchEnd={(e) => { e.preventDefault(); endSel(); }}
             >
               {ch}
             </div>
