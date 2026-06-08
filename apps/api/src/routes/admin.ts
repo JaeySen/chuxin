@@ -11,6 +11,7 @@ const SettingsPatchBody = z.object({
   allow_signup:          z.boolean().optional(),
   disable_email_login:   z.boolean().optional(),
   allow_phone_login:     z.boolean().optional(),
+  guest_games_enabled:   z.boolean().optional(),
 });
 
 interface AuthEventRow {

@@ -43,6 +43,7 @@ export interface WordSearchGame {
   maxPlayers: number;
   teacherUid: string;
   createdAt: number;
+  guestExpired: boolean;
 }
 
 const PLAYER_COLORS = [
@@ -90,6 +91,7 @@ export async function createGame(input: {
     maxPlayers: input.maxPlayers,
     teacherUid: input.teacherUid,
     createdAt: Date.now(),
+    guestExpired: false,
   };
   games.set(id, game);
   await persist(game);
@@ -133,6 +135,15 @@ export async function endGame(id: string, requesterUid: string): Promise<WordSea
   if (game.teacherUid !== requesterUid) throw new Error("NOT_TEACHER");
   game.status = "ended";
   game.endAt = Date.now();
+  await persist(game);
+  return game;
+}
+
+export async function expireGuestLink(id: string, requesterUid: string): Promise<WordSearchGame> {
+  const game = games.get(id);
+  if (!game) throw new Error("GAME_NOT_FOUND");
+  if (game.teacherUid !== requesterUid) throw new Error("NOT_TEACHER");
+  game.guestExpired = true;
   await persist(game);
   return game;
 }

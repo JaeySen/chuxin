@@ -31,6 +31,7 @@ export interface BingoGame {
   winner: { uid: string; name: string } | null;
   players: Record<string, BingoPlayer>;
   createdAt: number;
+  guestExpired: boolean;
 }
 
 const games = new Map<string, BingoGame>();
@@ -99,6 +100,7 @@ export async function createGame(input: {
     winner: null,
     players: {},
     createdAt: Date.now(),
+    guestExpired: false,
   };
   games.set(id, game);
   await persist(game);
@@ -182,6 +184,15 @@ export async function endGame(id: string, requesterUid: string): Promise<BingoGa
   if (!game) throw new Error("GAME_NOT_FOUND");
   if (game.teacherUid !== requesterUid) throw new Error("NOT_TEACHER");
   game.status = "ended";
+  await persist(game);
+  return game;
+}
+
+export async function expireGuestLink(id: string, requesterUid: string): Promise<BingoGame> {
+  const game = games.get(id);
+  if (!game) throw new Error("GAME_NOT_FOUND");
+  if (game.teacherUid !== requesterUid) throw new Error("NOT_TEACHER");
+  game.guestExpired = true;
   await persist(game);
   return game;
 }

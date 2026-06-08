@@ -8,6 +8,7 @@ interface Settings {
   allow_signup?: boolean;
   disable_email_login?: boolean;
   allow_phone_login?: boolean;
+  guest_games_enabled?: boolean;
 }
 
 interface AuthEvent {
@@ -121,10 +122,11 @@ export function AdminDashboard() {
     } finally { setBusyKey(null); }
   }
 
-  const enforce   = !!settings?.enforce_cross_ip_lock;
+  const enforce         = !!settings?.enforce_cross_ip_lock;
   const allowSignup     = settings?.allow_signup !== false;
   const disableEmail    = !!settings?.disable_email_login;
   const allowPhone      = settings?.allow_phone_login !== false;
+  const guestGames      = !!settings?.guest_games_enabled;
 
   const TOGGLES: Array<{
     key: keyof Settings;
@@ -160,6 +162,13 @@ export function AdminDashboard() {
       onDesc: "BẬT: người dùng có thể đặt mật khẩu và đăng nhập bằng số điện thoại.",
       offDesc: "TẮT: tùy chọn đăng nhập bằng số điện thoại bị ẩn.",
       value: allowPhone,
+    },
+    {
+      key: "guest_games_enabled",
+      label: "Cho phép khách (không cần tài khoản) tham gia trò chơi qua link mời",
+      onDesc: "BẬT: học viên và khách có thể vào Bingo / Tìm từ bằng link mời, chỉ cần nhập tên.",
+      offDesc: "TẮT: bắt buộc đăng nhập mới được tham gia trò chơi.",
+      value: guestGames,
     },
   ];
 

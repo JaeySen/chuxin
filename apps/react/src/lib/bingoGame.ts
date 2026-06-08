@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "./api";
 
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:4000";
+
 export type BoardSize = 3 | 4 | 5;
 export type GameStatus = "lobby" | "active" | "ended";
 
@@ -31,6 +33,7 @@ export interface BingoGame {
   winner: { uid: string; name: string } | null;
   players: Record<string, BingoPlayer>;
   createdAt: number;
+  guestExpired: boolean;
 }
 
 export function createBingoGame(input: {
@@ -45,12 +48,29 @@ export function createBingoGame(input: {
   });
 }
 
-export function getBingoGame(id: string): Promise<BingoGame> {
-  return apiFetch<BingoGame>(`/games/bingo/${id}`);
+export async function getBingoGame(id: string): Promise<BingoGame> {
+  const res = await fetch(`${API_BASE}/games/bingo/${id}`);
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `HTTP ${res.status}`);
+  return res.json();
 }
 
-export function joinBingo(id: string): Promise<BingoGame> {
-  return apiFetch<BingoGame>(`/games/bingo/${id}/join`, { method: "POST" });
+export async function joinBingo(id: string, guest?: { name: string }): Promise<{ game: BingoGame; guestUid?: string }> {
+  if (guest) {
+    const res = await fetch(`${API_BASE}/games/bingo/${id}/join`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: guest.name }),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({})) as Record<string, unknown>;
+      throw new Error((body.error as string) ?? `HTTP ${res.status}`);
+    }
+    const game = await res.json() as BingoGame;
+    // The returned game has the guest's player entry; find uid by name (they just joined, last entry)
+    const entry = Object.values(game.players).find((p) => p.name === guest.name && p.uid.startsWith("guest_"));
+    return { game, guestUid: entry?.uid };
+  }
+  return { game: await apiFetch<BingoGame>(`/games/bingo/${id}/join`, { method: "POST" }) };
 }
 
 export function startBingo(id: string): Promise<BingoGame> {
@@ -61,7 +81,16 @@ export function callNextWord(id: string): Promise<BingoGame> {
   return apiFetch<BingoGame>(`/games/bingo/${id}/call`, { method: "POST" });
 }
 
-export function markCell(id: string, char: string): Promise<BingoGame> {
+export async function markCell(id: string, char: string, guestUid?: string): Promise<BingoGame> {
+  if (guestUid) {
+    const res = await fetch(`${API_BASE}/games/bingo/${id}/mark`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ char, guestUid }),
+    });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `HTTP ${res.status}`);
+    return res.json();
+  }
   return apiFetch<BingoGame>(`/games/bingo/${id}/mark`, {
     method: "POST",
     body: JSON.stringify({ char }),
@@ -70,6 +99,10 @@ export function markCell(id: string, char: string): Promise<BingoGame> {
 
 export function endBingo(id: string): Promise<BingoGame> {
   return apiFetch<BingoGame>(`/games/bingo/${id}/end`, { method: "POST" });
+}
+
+export function expireBingoGuestLink(id: string): Promise<BingoGame> {
+  return apiFetch<BingoGame>(`/games/bingo/${id}/expire-guest`, { method: "POST" });
 }
 
 /** Poll game state. Slows down to 2s while in lobby/ended, 1s while active. */
