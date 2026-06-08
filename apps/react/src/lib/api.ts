@@ -32,11 +32,11 @@ export function clearCredentials(): void {
   localStorage.removeItem(SESSION_KEY);
 }
 
-function buildHeaders(extra?: HeadersInit): HeadersInit {
+function buildHeaders(hasBody: boolean, extra?: HeadersInit): HeadersInit {
   const jwt = getStoredJwt();
   const sessionToken = getStoredSessionToken();
   return {
-    "Content-Type": "application/json",
+    ...(hasBody && { "Content-Type": "application/json" }),
     ...(jwt && { Authorization: `Bearer ${jwt}` }),
     ...(sessionToken && { "X-Session-Token": sessionToken }),
     ...extra,
@@ -51,7 +51,7 @@ export class SessionExpiredError extends Error {
 }
 
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { ...init, headers: buildHeaders(init.headers) });
+  const res = await fetch(`${API_BASE}${path}`, { ...init, headers: buildHeaders(!!init.body, init.headers) });
 
   if (res.status === 401) {
     clearCredentials();
