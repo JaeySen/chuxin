@@ -1,15 +1,9 @@
-# SPA fallback + www canonical redirect
-# Works on both Apache and LiteSpeed (LiteSpeed reads .htaccess natively).
-# Note: HTTPS is enforced by DirectAdmin/LiteSpeed at server level, not here.
+# SPA fallback for React Router — works on Apache and LiteSpeed.
+# www/HTTPS redirects are handled in DirectAdmin, not here.
 
 Options -MultiViews
 RewriteEngine On
 
-# 1. Force www — redirect non-www to www
-RewriteCond %{HTTP_HOST} ^hanngusotam\.com$ [NC]
-RewriteRule ^ https://www.hanngusotam.com%{REQUEST_URI} [R=301,L]
-
-# 2. SPA fallback — serve index.html for any path that isn't a real file/dir
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L]
