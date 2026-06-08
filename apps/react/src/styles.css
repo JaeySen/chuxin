@@ -539,6 +539,14 @@ body {
   font-weight: 700;
   transform: scale(1.06);
 }
+.wsb-cell--anchor {
+  background: #bfdbfe !important;
+  border-color: var(--c-blue) !important;
+  color: var(--c-blue) !important;
+  font-weight: 700;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 2px var(--c-blue);
+}
 .wsb-cell--flash {
   background: var(--c-wrong-bg) !important;
   border-color: var(--c-wrong) !important;

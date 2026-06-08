@@ -25,15 +25,25 @@ function cellFromPoint(x: number, y: number): Cell | null {
 }
 
 export function WordSearchBoard({ grid, found, wordList, placements, onWordFound, active }: Props) {
-  const startRef = useRef<Cell | null>(null);
-  const endRef   = useRef<Cell | null>(null);
+  // Mouse: click-to-start, hover-to-preview, click-to-end
+  const [mouseStart, setMouseStart] = useState<Cell | null>(null);
+  const [mouseHover, setMouseHover] = useState<Cell | null>(null);
 
-  const [selStart, setSelStart] = useState<Cell | null>(null);
-  const [selEnd,   setSelEnd]   = useState<Cell | null>(null);
+  // Touch: drag (refs so touch handlers never go stale)
+  const touchStartRef = useRef<Cell | null>(null);
+  const touchEndRef   = useRef<Cell | null>(null);
+  const [touchSel, setTouchSel] = useState<{ start: Cell; end: Cell } | null>(null);
+
   const [flashCells, setFlashCells] = useState<Set<string>>(new Set());
 
-  const selCells = selStart && selEnd ? getCellsOnLine(selStart, selEnd) : [];
-  const selSet   = new Set(selCells.map(([r, c]) => `${r},${c}`));
+  // Which cells are currently highlighted
+  const selCells = (() => {
+    if (touchSel) return getCellsOnLine(touchSel.start, touchSel.end);
+    if (mouseStart && mouseHover) return getCellsOnLine(mouseStart, mouseHover);
+    if (mouseStart) return [mouseStart];
+    return [];
+  })();
+  const selSet = new Set(selCells.map(([r, c]) => `${r},${c}`));
 
   const foundCellMap = new Map<string, FoundInfo>();
   for (const info of Object.values(found)) {
@@ -46,7 +56,6 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
     if (cells.length < 2) return;
     const picked = cells.map(([r, c]) => grid[r][c]);
     const rev    = [...picked].reverse();
-
     for (const [i, word] of wordList.entries()) {
       if (!placedIdxSet.has(i) || found[String(i)]) continue;
       if (arrEq(picked, word.pinyinChars) || arrEq(rev, word.pinyinChars)) {
@@ -58,82 +67,105 @@ export function WordSearchBoard({ grid, found, wordList, placements, onWordFound
     setTimeout(() => setFlashCells(new Set()), 400);
   }
 
-  function startSel(r: number, c: number) {
+  // ── Mouse handlers (click-click model) ──────────────────────────────────
+
+  function handleMouseClick(e: React.MouseEvent) {
     if (!active) return;
-    startRef.current = [r, c];
-    endRef.current   = [r, c];
-    setSelStart([r, c]);
-    setSelEnd([r, c]);
+    const cell = cellFromPoint(e.clientX, e.clientY);
+    if (!cell) return;
+
+    if (!mouseStart) {
+      // First click: set start
+      setMouseStart(cell);
+      setMouseHover(cell);
+    } else {
+      // Second click: commit
+      const cells = getCellsOnLine(mouseStart, cell);
+      setMouseStart(null);
+      setMouseHover(null);
+      validate(cells);
+    }
   }
 
-  function moveSel(r: number, c: number) {
-    if (!startRef.current) return;
-    endRef.current = [r, c];
-    setSelEnd([r, c]);
+  function handleMouseMove(e: React.MouseEvent) {
+    if (!mouseStart) return;
+    const cell = cellFromPoint(e.clientX, e.clientY);
+    if (cell) setMouseHover(cell);
   }
 
-  function endSel() {
-    if (!startRef.current) return;
-    const s = startRef.current;
-    const e = endRef.current ?? s;
-    startRef.current = null;
-    endRef.current   = null;
-    setSelStart(null);
-    setSelEnd(null);
-    validate(getCellsOnLine(s, e));
+  function handleMouseLeave() {
+    // Don't cancel selection on leave — user may move outside briefly
+    // but keep mouseStart so they can come back or click elsewhere
+  }
+
+  // ── Touch handlers (drag model) ──────────────────────────────────────────
+
+  function handleTouchStart(e: React.TouchEvent) {
+    const t = e.touches[0];
+    if (!t) return;
+    e.preventDefault();
+    const cell = cellFromPoint(t.clientX, t.clientY);
+    if (!cell) return;
+    touchStartRef.current = cell;
+    touchEndRef.current   = cell;
+    setTouchSel({ start: cell, end: cell });
+    // Cancel any pending mouse selection when touch starts
+    setMouseStart(null);
+    setMouseHover(null);
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    const t = e.touches[0];
+    if (!t || !touchStartRef.current) return;
+    e.preventDefault();
+    const cell = cellFromPoint(t.clientX, t.clientY);
+    if (cell) {
+      touchEndRef.current = cell;
+      setTouchSel({ start: touchStartRef.current, end: cell });
+    }
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    e.preventDefault();
+    if (!touchStartRef.current) return;
+    const s = touchStartRef.current;
+    const en = touchEndRef.current ?? s;
+    touchStartRef.current = null;
+    touchEndRef.current   = null;
+    setTouchSel(null);
+    validate(getCellsOnLine(s, en));
   }
 
   return (
     <div
       className="wsb-grid"
-      onMouseDown={(e) => {
-        const cell = cellFromPoint(e.clientX, e.clientY);
-        if (cell) startSel(cell[0], cell[1]);
-      }}
-      onMouseMove={(e) => {
-        if (!startRef.current) return;
-        const cell = cellFromPoint(e.clientX, e.clientY);
-        if (cell) moveSel(cell[0], cell[1]);
-      }}
-      onMouseUp={endSel}
-      onMouseLeave={endSel}
-      onTouchStart={(e) => {
-        const t = e.touches[0];
-        if (!t) return;
-        e.preventDefault();
-        const cell = cellFromPoint(t.clientX, t.clientY);
-        if (cell) startSel(cell[0], cell[1]);
-      }}
-      onTouchMove={(e) => {
-        const t = e.touches[0];
-        if (!t) return;
-        e.preventDefault();
-        const cell = cellFromPoint(t.clientX, t.clientY);
-        if (cell) moveSel(cell[0], cell[1]);
-      }}
-      onTouchEnd={(e) => { e.preventDefault(); endSel(); }}
+      onClick={handleMouseClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {grid.map((row, r) =>
         row.map((ch, c) => {
-          const key       = `${r},${c}`;
-          const isSel     = selSet.has(key);
-          const isFlash   = flashCells.has(key);
-          const foundInfo = foundCellMap.get(key);
+          const key        = `${r},${c}`;
+          const isSel      = selSet.has(key);
+          const isFlash    = flashCells.has(key);
+          const foundInfo  = foundCellMap.get(key);
+          const isAnchor   = mouseStart && mouseStart[0] === r && mouseStart[1] === c;
 
           let cls = "wsb-cell";
           if (isSel)          cls += " wsb-cell--sel";
           else if (isFlash)   cls += " wsb-cell--flash";
           else if (foundInfo) cls += " wsb-cell--found";
+          if (isAnchor)       cls += " wsb-cell--anchor";
 
           const style = foundInfo && !isSel
             ? { background: foundInfo.color + "44", borderColor: foundInfo.color, color: "#111", fontWeight: 700 }
             : undefined;
 
           return (
-            <div
-              key={key} data-r={r} data-c={c}
-              className={cls} style={style}
-            >
+            <div key={key} data-r={r} data-c={c} className={cls} style={style}>
               {ch}
             </div>
           );

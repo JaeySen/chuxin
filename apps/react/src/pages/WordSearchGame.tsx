@@ -196,7 +196,7 @@ export function WordSearchGame() {
           />
           <div className="bingo-board-legend">
             <span className="muted">
-              Kéo để chọn dãy ô ngang hoặc dọc. Tìm chữ Hán bằng cách ghép pinyin.
+              Click chữ đầu, di chuột để xem trước, click chữ cuối để xác nhận. Trên điện thoại: vuốt chọn. Chỉ ngang và dọc.
             </span>
           </div>
         </div>
