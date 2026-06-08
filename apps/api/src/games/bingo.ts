@@ -76,8 +76,16 @@ async function persist(game: BingoGame): Promise<void> {
   );
 }
 
-export function getGame(id: string): BingoGame | null {
-  return games.get(id) ?? null;
+export async function getGame(id: string): Promise<BingoGame | null> {
+  if (games.has(id)) return games.get(id)!;
+  // Cache miss — server may have restarted; reload from DB
+  const { rows } = await query<{ state: BingoGame }>(
+    "SELECT state FROM bingo_games WHERE id = $1", [id],
+  );
+  if (!rows[0]) return null;
+  const game = rows[0].state;
+  games.set(id, game);
+  return game;
 }
 
 export async function createGame(input: {

@@ -66,8 +66,15 @@ async function persist(game: WordSearchGame): Promise<void> {
   );
 }
 
-export function getGame(id: string): WordSearchGame | null {
-  return games.get(id) ?? null;
+export async function getGame(id: string): Promise<WordSearchGame | null> {
+  if (games.has(id)) return games.get(id)!;
+  const { rows } = await query<{ state: WordSearchGame }>(
+    "SELECT state FROM word_search_games WHERE id = $1", [id],
+  );
+  if (!rows[0]) return null;
+  const game = rows[0].state;
+  games.set(id, game);
+  return game;
 }
 
 export async function createGame(input: {

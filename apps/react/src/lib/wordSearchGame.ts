@@ -127,7 +127,8 @@ export function useWordSearchGame(id: string | undefined): {
         if (cancelled) return;
         setGame(g);
         setError(null);
-        const interval = g.status === "active" ? 1200 : 2000;
+        if (g.status === "ended") return;
+        const interval = g.status === "active" ? 2000 : 3000;
         timer = setTimeout(loop, interval);
       } catch (e: unknown) {
         if (cancelled) return;

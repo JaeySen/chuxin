@@ -46,14 +46,14 @@ export async function bingoRoutes(app: FastifyInstance) {
 
   // Read — public (guests need to poll state)
   app.get<{ Params: { id: string } }>("/:id", async (req, reply) => {
-    const game = bingo.getGame(req.params.id);
+    const game = await bingo.getGame(req.params.id);
     if (!game) return reply.status(404).send({ error: "GAME_NOT_FOUND" });
     return reply.send(game);
   });
 
   // Join — auth OR guest with name
   app.post<{ Params: { id: string }; Body: unknown }>("/:id/join", async (req, reply) => {
-    const game = bingo.getGame(req.params.id);
+    const game = await bingo.getGame(req.params.id);
     if (!game) return reply.status(404).send({ error: "GAME_NOT_FOUND" });
 
     await tryAuthenticate(req);
