@@ -51,9 +51,9 @@ export function parsePinyin(pinyin: string): PinyinParts | null {
 }
 
 export const TONE_LABELS: Record<number, string> = {
-  1: '— (thanh 1)',
-  2: '/ (thanh 2)',
-  3: 'ˇ (thanh 3)',
-  4: '\\ (thanh 4)',
-  5: '· (khinh thanh)',
+  1: 'ˉ',
+  2: 'ˊ',
+  3: 'ˇ',
+  4: 'ˋ',
+  5: '·',
 };

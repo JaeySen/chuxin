@@ -383,6 +383,73 @@ body {
   padding-top: 4px;
 }
 
+/* Assembled pinyin preview */
+.pe-preview {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  min-height: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--c-text-soft);
+  transition: color 0.2s;
+}
+.pe-preview--correct { color: var(--c-correct); }
+.pe-preview--wrong   { color: var(--c-wrong); }
+.pe-preview--empty   { opacity: 0.4; }
+.pe-preview-part     { color: var(--c-text-muted); }
+.pe-preview-part--set { color: var(--c-blue); }
+.pe-preview-sep      { color: var(--c-divider); font-weight: 400; font-size: 0.85rem; }
+.pe-preview-placeholder { font-size: 0.85rem; font-weight: 400; font-style: italic; }
+
+/* Inline feedback (inside card, after auto-check) */
+.pe-inline-feedback {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+}
+.pe-inline-feedback--ok  { background: var(--c-correct-bg); color: #166534; }
+.pe-inline-feedback--bad { background: var(--c-wrong-bg);   color: #991b1b; }
+
+/* Batch end screen */
+.pe-batch-end {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px 24px;
+  text-align: center;
+}
+.pe-batch-end-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--c-blue-dark);
+}
+.pe-batch-end-score {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.pe-batch-end-pct {
+  font-size: 1.1rem;
+  color: var(--c-text-soft);
+  margin-left: 8px;
+}
+.pe-batch-end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}
+
 /* ── Word Search Game ────────────────────────────────────────── */
 .ws-shell {
   max-width: 1000px;

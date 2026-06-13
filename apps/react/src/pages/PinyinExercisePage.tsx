@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import hsk1Raw from "../data/hsk1.json";
 import { parsePinyin, TONE_LABELS, type PinyinParts } from "../utils/pinyinParser";
 
@@ -8,7 +8,6 @@ interface WordEntry extends PinyinParts {
   en: string;
 }
 
-// Build flat list of single-syllable words with parsed parts
 const ALL_WORDS: WordEntry[] = Object.entries(hsk1Raw)
   .filter(([, v]) => !v.pinyin.includes(" "))
   .flatMap(([char, v]) => {
@@ -17,9 +16,7 @@ const ALL_WORDS: WordEntry[] = Object.entries(hsk1Raw)
     return [{ char, pinyin: v.pinyin, en: v.en, ...parts }];
   });
 
-// Stable pools of all unique initials and finals across the word list
-const ALL_INITIALS = [...new Set(ALL_WORDS.map((w) => w.initial))];
-const ALL_FINALS = [...new Set(ALL_WORDS.map((w) => w.final))];
+const BATCH_SIZE = 7;
 
 function seededShuffle<T>(arr: T[], seed: number): T[] {
   const copy = [...arr];
@@ -35,56 +32,144 @@ function makeChoices(correct: string, pool: string[], count: number, seed: numbe
   return seededShuffle([correct, ...others], seed + 1);
 }
 
-type Selection = { initial: string | null; final: string | null; tone: number | null };
+const ALL_INITIALS = [...new Set(ALL_WORDS.map((w) => w.initial))];
+const ALL_FINALS = [...new Set(ALL_WORDS.map((w) => w.final))];
+
+type Sel = { initial: string | null; final: string | null; tone: number | null };
+
+function BatchEndScreen({
+  batchIdx,
+  score,
+  hasMore,
+  onNext,
+  onRestart,
+}: {
+  batchIdx: number;
+  score: { correct: number; total: number };
+  hasMore: boolean;
+  onNext: () => void;
+  onRestart: () => void;
+}) {
+  const pct = score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
+  return (
+    <div className="pe-shell">
+      <div className="pe-batch-end">
+        <div className="pe-batch-end-title">Bài tập {batchIdx + 1} xong!</div>
+        <div className="pe-batch-end-score">
+          <span style={{ color: "var(--c-correct)" }}>✓ {score.correct}</span>
+          <span style={{ color: "var(--c-text-muted)" }}>/{score.total}</span>
+          <span className="pe-batch-end-pct">{pct}%</span>
+        </div>
+        <div className="pe-batch-end-actions">
+          {hasMore ? (
+            <button className="btn btn-primary" onClick={onNext}>
+              Bài tập tiếp theo →
+            </button>
+          ) : (
+            <div style={{ color: "var(--c-text-soft)", fontWeight: 600, fontSize: "1.1rem" }}>
+              Bạn đã hoàn thành tất cả HSK1!
+            </div>
+          )}
+          <button className="btn btn-ghost" onClick={onRestart}>
+            Làm lại từ đầu
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function PinyinExercisePage() {
-  const [idx, setIdx] = useState(0);
-  const [sel, setSel] = useState<Selection>({ initial: null, final: null, tone: null });
+  const [batchIdx, setBatchIdx] = useState(0);
+  const [posInBatch, setPosInBatch] = useState(0);
+  const [batchScore, setBatchScore] = useState({ correct: 0, total: 0 });
+  const [showBatchEnd, setShowBatchEnd] = useState(false);
+  const [sel, setSel] = useState<Sel>({ initial: null, final: null, tone: null });
   const [checked, setChecked] = useState(false);
-  const [score, setScore] = useState({ correct: 0, total: 0 });
+  const [isCorrect, setIsCorrect] = useState(false);
 
-  const word = ALL_WORDS[idx % ALL_WORDS.length];
-  const seed = idx * 31337;
+  const batchStart = batchIdx * BATCH_SIZE;
+  const batchWords = ALL_WORDS.slice(batchStart, batchStart + BATCH_SIZE);
+  const word = batchWords[posInBatch] ?? batchWords[0];
+  const seed = (batchIdx * BATCH_SIZE + posInBatch) * 31337;
 
-  const initialChoices = useMemo(
-    () => makeChoices(word.initial, ALL_INITIALS, 5, seed),
-    [word, seed]
-  );
-  const finalChoices = useMemo(
-    () => makeChoices(word.final, ALL_FINALS, 5, seed + 7),
-    [word, seed]
-  );
+  const initialChoices = makeChoices(word.initial, ALL_INITIALS, 5, seed);
+  const finalChoices = makeChoices(word.final, ALL_FINALS, 5, seed + 7);
   const toneChoices = [1, 2, 3, 4, 5];
 
-  const allCorrect =
-    sel.initial === word.initial &&
-    sel.final === word.final &&
-    sel.tone === word.tone;
+  // Auto-check when all 3 are selected
+  useEffect(() => {
+    if (sel.initial !== null && sel.final !== null && sel.tone !== null && !checked) {
+      const ok =
+        sel.initial === word.initial && sel.final === word.final && sel.tone === word.tone;
+      setChecked(true);
+      setIsCorrect(ok);
+      setBatchScore((s) => ({ correct: s.correct + (ok ? 1 : 0), total: s.total + 1 }));
+    }
+  }, [sel, checked, word]);
 
-  const canCheck = sel.initial !== null && sel.final !== null && sel.tone !== null;
+  function toggle<K extends keyof Sel>(key: K, value: Sel[K]) {
+    if (checked) return;
+    setSel((s) => ({ ...s, [key]: s[key] === value ? null : value }));
+  }
 
-  const handleCheck = useCallback(() => {
-    setChecked(true);
-    setScore((s) => ({ correct: s.correct + (allCorrect ? 1 : 0), total: s.total + 1 }));
-  }, [allCorrect]);
+  function handleNext() {
+    const nextPos = posInBatch + 1;
+    if (nextPos >= batchWords.length) {
+      setShowBatchEnd(true);
+    } else {
+      setPosInBatch(nextPos);
+      setSel({ initial: null, final: null, tone: null });
+      setChecked(false);
+      setIsCorrect(false);
+    }
+  }
 
-  const handleNext = useCallback(() => {
-    setIdx((i) => i + 1);
+  function handleNextBatch() {
+    setBatchIdx((b) => b + 1);
+    setPosInBatch(0);
+    setBatchScore({ correct: 0, total: 0 });
     setSel({ initial: null, final: null, tone: null });
     setChecked(false);
-  }, []);
-
-  function btnClass(value: string | number, correct: string | number) {
-    const isSelected = value === (typeof value === "number" ? sel.tone : value === sel.initial || value === sel.final ? value : null);
-    // We check per-row below instead
-    return "";
+    setIsCorrect(false);
+    setShowBatchEnd(false);
   }
-  void btnClass; // suppress unused warning — using inline logic below
 
-  function choiceClass(value: string | number, correctValue: string | number, selectedValue: string | number | null) {
+  function handleRestart() {
+    setBatchIdx(0);
+    setPosInBatch(0);
+    setBatchScore({ correct: 0, total: 0 });
+    setSel({ initial: null, final: null, tone: null });
+    setChecked(false);
+    setIsCorrect(false);
+    setShowBatchEnd(false);
+  }
+
+  if (showBatchEnd) {
+    return (
+      <BatchEndScreen
+        batchIdx={batchIdx}
+        score={batchScore}
+        hasMore={batchStart + BATCH_SIZE < ALL_WORDS.length}
+        onNext={handleNextBatch}
+        onRestart={handleRestart}
+      />
+    );
+  }
+
+  // Assembled preview
+  const previewInitial = sel.initial !== null ? (sel.initial || "∅") : "·";
+  const previewFinal = sel.final !== null ? sel.final : "·";
+  const previewTone = sel.tone !== null ? TONE_LABELS[sel.tone] : "·";
+  const hasAnySelection = sel.initial !== null || sel.final !== null || sel.tone !== null;
+
+  function choiceClass(
+    value: string | number,
+    correctValue: string | number,
+    selectedValue: string | number | null,
+  ) {
     const isSelected = value === selectedValue;
-    if (!isSelected && !checked) return "pe-btn";
-    if (!checked) return "pe-btn pe-btn--selected";
+    if (!checked) return isSelected ? "pe-btn pe-btn--selected" : "pe-btn";
     if (value === correctValue) return "pe-btn pe-btn--correct";
     if (isSelected) return "pe-btn pe-btn--wrong";
     return "pe-btn";
@@ -92,36 +177,62 @@ export function PinyinExercisePage() {
 
   return (
     <div className="pe-shell">
-      {/* Score strip */}
+      {/* Header */}
       <div className="pe-score">
-        <span>Bài {score.total + 1} / {ALL_WORDS.length}</span>
+        <span>
+          Bài tập {batchIdx + 1} · Câu {posInBatch + 1}/{batchWords.length}
+        </span>
         <span className="pe-score-sep">·</span>
-        <span style={{ color: "var(--c-correct)" }}>✓ {score.correct}</span>
+        <span style={{ color: "var(--c-correct)" }}>✓ {batchScore.correct}</span>
         <span className="pe-score-sep">·</span>
-        <span style={{ color: "var(--c-wrong)" }}>✗ {score.total - score.correct}</span>
+        <span style={{ color: "var(--c-wrong)" }}>✗ {batchScore.total - batchScore.correct}</span>
       </div>
 
-      {/* Character card — top half */}
+      {/* Card: preview + character + meaning */}
       <div className="pe-card">
+        {/* Assembled preview line */}
+        <div className={`pe-preview ${!hasAnySelection ? "pe-preview--empty" : ""} ${checked ? (isCorrect ? "pe-preview--correct" : "pe-preview--wrong") : ""}`}>
+          {checked ? (
+            word.pinyin
+          ) : hasAnySelection ? (
+            <>
+              <span className={sel.initial !== null ? "pe-preview-part pe-preview-part--set" : "pe-preview-part"}>
+                {previewInitial}
+              </span>
+              <span className="pe-preview-sep">+</span>
+              <span className={sel.final !== null ? "pe-preview-part pe-preview-part--set" : "pe-preview-part"}>
+                {previewFinal}
+              </span>
+              <span className="pe-preview-sep">+</span>
+              <span className={sel.tone !== null ? "pe-preview-part pe-preview-part--set" : "pe-preview-part"}>
+                {previewTone}
+              </span>
+            </>
+          ) : (
+            <span className="pe-preview-placeholder">chọn bên dưới…</span>
+          )}
+        </div>
+
         <div className="pe-hanzi">{word.char}</div>
         <div className="pe-meaning">{word.en}</div>
+
         {checked && (
-          <div className="pe-pinyin-reveal">{word.pinyin}</div>
+          <div className={`pe-inline-feedback ${isCorrect ? "pe-inline-feedback--ok" : "pe-inline-feedback--bad"}`}>
+            {isCorrect ? "Đúng rồi! 🎉" : `Đáp án đúng: ${word.initial || "∅"} + ${word.final} + ${TONE_LABELS[word.tone]}`}
+          </div>
         )}
       </div>
 
-      {/* Choice rows — bottom half */}
+      {/* Choice rows */}
       <div className="pe-choices">
-        {/* Row 1: Initial */}
         <div className="pe-row">
           <div className="pe-row-label">声母 · Thanh mẫu (initial)</div>
           <div className="pe-row-buttons">
             {initialChoices.map((opt) => (
               <button
                 key={opt}
-                disabled={checked}
                 className={choiceClass(opt, word.initial, sel.initial)}
-                onClick={() => setSel((s) => ({ ...s, initial: opt }))}
+                onClick={() => toggle("initial", opt)}
               >
                 {opt || "∅"}
               </button>
@@ -129,16 +240,14 @@ export function PinyinExercisePage() {
           </div>
         </div>
 
-        {/* Row 2: Final */}
         <div className="pe-row">
           <div className="pe-row-label">韵母 · Vận mẫu (final)</div>
           <div className="pe-row-buttons">
             {finalChoices.map((opt) => (
               <button
                 key={opt}
-                disabled={checked}
                 className={choiceClass(opt, word.final, sel.final)}
-                onClick={() => setSel((s) => ({ ...s, final: opt }))}
+                onClick={() => toggle("final", opt)}
               >
                 {opt}
               </button>
@@ -146,43 +255,30 @@ export function PinyinExercisePage() {
           </div>
         </div>
 
-        {/* Row 3: Tone */}
         <div className="pe-row">
           <div className="pe-row-label">声调 · Dấu thanh (tone)</div>
           <div className="pe-row-buttons">
             {toneChoices.map((t) => (
               <button
                 key={t}
-                disabled={checked}
                 className={choiceClass(t, word.tone, sel.tone)}
-                onClick={() => setSel((s) => ({ ...s, tone: t }))}
+                onClick={() => toggle("tone", t)}
               >
                 {TONE_LABELS[t]}
               </button>
             ))}
           </div>
         </div>
-
-        {/* Action */}
-        <div className="pe-actions">
-          {!checked ? (
-            <button className="btn btn-primary" disabled={!canCheck} onClick={handleCheck}>
-              Kiểm tra
-            </button>
-          ) : (
-            <>
-              <div className={`feedback ${allCorrect ? "feedback-ok" : "feedback-bad"}`}>
-                {allCorrect
-                  ? "Đúng rồi!"
-                  : `Chưa đúng — đáp án: ${word.initial || "∅"} + ${word.final} + tone ${word.tone}`}
-              </div>
-              <button className="btn btn-primary" onClick={handleNext}>
-                Tiếp theo →
-              </button>
-            </>
-          )}
-        </div>
       </div>
+
+      {/* Next button — only after checked */}
+      {checked && (
+        <div className="pe-actions">
+          <button className="btn btn-primary" onClick={handleNext}>
+            {posInBatch + 1 < batchWords.length ? "Tiếp theo →" : "Xem kết quả"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
