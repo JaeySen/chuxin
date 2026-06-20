@@ -100,10 +100,18 @@ function Header() {
 
         {/* Desktop nav */}
         <nav className="hanai-nav hanai-nav--desktop">
-          {PUBLIC_LINKS.map((l) => <Link key={l.to} to={l.to}>{l.label}</Link>)}
-          {user && <GamesDropdown />}
-          {role === "admin" && (
-            <Link to="/admin" style={{ color: "var(--c-red)", fontWeight: 700 }}>⚙ Quản trị</Link>
+          {role === "student" ? (
+            <Link to="/" className="nav-class-tab">
+              {user?.classes?.[0]?.name ?? "Lớp học"}
+            </Link>
+          ) : (
+            <>
+              {PUBLIC_LINKS.map((l) => <Link key={l.to} to={l.to}>{l.label}</Link>)}
+              {user && <GamesDropdown />}
+              {role === "admin" && (
+                <Link to="/admin" style={{ color: "var(--c-red)", fontWeight: 700 }}>⚙ Quản trị</Link>
+              )}
+            </>
           )}
         </nav>
 
@@ -137,17 +145,26 @@ function Header() {
       {menuOpen && (
         <nav className="hanai-nav--mobile">
           <div className="hanai-nav--mobile-grid">
-            {mobileTiles.map((l) => (
-              <Link key={l.to} to={l.to} className="nav-tile">
-                <span className="nav-tile-icon">{l.icon}</span>
-                <span className="nav-tile-label">{l.label}</span>
+            {role === "student" ? (
+              <Link to="/" className="nav-tile">
+                <span className="nav-tile-icon">🏫</span>
+                <span className="nav-tile-label">{user?.classes?.[0]?.name ?? "Lớp học"}</span>
               </Link>
-            ))}
-            {role === "admin" && (
-              <Link to="/admin" className="nav-tile nav-tile--admin">
-                <span className="nav-tile-icon">⚙</span>
-                <span className="nav-tile-label">Quản trị</span>
-              </Link>
+            ) : (
+              <>
+                {mobileTiles.map((l) => (
+                  <Link key={l.to} to={l.to} className="nav-tile">
+                    <span className="nav-tile-icon">{l.icon}</span>
+                    <span className="nav-tile-label">{l.label}</span>
+                  </Link>
+                ))}
+                {role === "admin" && (
+                  <Link to="/admin" className="nav-tile nav-tile--admin">
+                    <span className="nav-tile-icon">⚙</span>
+                    <span className="nav-tile-label">Quản trị</span>
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </nav>

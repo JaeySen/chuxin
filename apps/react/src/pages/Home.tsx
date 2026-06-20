@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { fetchAllLessons } from "../lib/lessons";
-import type { Lesson } from "@hanai/shared";
-import { INTERACTION_LABELS, COURSES, type CourseStatus } from "@hanai/shared";
+import { COURSES, type CourseStatus } from "@hanai/shared";
 import { useAuth } from "../lib/auth-context";
-import { ScheduleTable } from "../components/ScheduleTable";
 import { useHead } from "../lib/useHead";
 import { JsonLd } from "../components/JsonLd";
 
@@ -24,54 +20,49 @@ const STATUS_CLASS: Record<CourseStatus, string> = {
   "coming-soon":  "status-coming-soon",
 };
 
+const OLD_EXERCISES = [
+  { title: "Ngữ âm Pinyin", icon: "🔊", to: "/pinyin" },
+  { title: "Tìm từ",        icon: "🔍", to: "/word-search" },
+  { title: "Bingo",         icon: "🎯", to: "/bingo" },
+];
+
 export function Home() {
-  const { user } = useAuth();
-  const [lessons, setLessons] = useState<Lesson[] | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-  useEffect(() => {
-    if (!user) { setLessons(null); return; }
-    fetchAllLessons().then(setLessons).catch((e) => setErr(e.message));
-  }, [user]);
+  const { role, loading } = useAuth();
 
   useHead({
     title: "Hán ngữ Sơ Tâm · Học tiếng Trung tại Việt Nam",
-    description: "Trung tâm tiếng Trung Sơ Tâm — Các khoá học Hán ngữ từ HSK 1 đến HSK 6, Tiếng Trung Thương mại và Tiếng Trung Trẻ em. Phương pháp học tương tác, giáo viên giàu kinh nghiệm.",
+    description: "Trung tâm tiếng Trung Sơ Tâm — Các khoá học Hán ngữ từ HSK 1 đến HSK 6.",
     canonical: "https://www.hanngusotam.com/",
   });
 
+  if (loading) return null;
+
+  if (role === "student") return <StudentHome />;
+  if (role === "teacher" || role === "admin") return <TeacherHome />;
+  return <GuestHome />;
+}
+
+// ── Guest ─────────────────────────────────────────────────────────────────────
+
+function GuestHome() {
   return (
     <div className="container" style={{ padding: "12px 16px 80px" }}>
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
         "name": "Hán ngữ Sơ Tâm",
-        "alternateName": "Chuxin",
         "url": "https://www.hanngusotam.com",
         "logo": "https://www.hanngusotam.com/chuxin-logo.jpg",
-        "description": "Trung tâm tiếng Trung Sơ Tâm — các khoá học Hán ngữ từ HSK 1 đến HSK 6, Tiếng Trung Thương mại và Tiếng Trung Trẻ em tại Việt Nam.",
-        "inLanguage": "vi",
-        "sameAs": [],
-        "hasOfferCatalog": {
-          "@type": "OfferCatalog",
-          "name": "Các khoá học tiếng Trung",
-          "itemListElement": [
-            { "@type": "Course", "name": "Hán ngữ 1", "description": "HSK 1 — Khởi đầu", "url": "https://www.hanngusotam.com/course/han1" },
-            { "@type": "Course", "name": "Hán ngữ 2", "description": "HSK 2 — Tiếp nối", "url": "https://www.hanngusotam.com/course/han2" },
-            { "@type": "Course", "name": "Hán ngữ 3", "description": "HSK 3 — Mở rộng vốn từ", "url": "https://www.hanngusotam.com/course/han3" },
-            { "@type": "Course", "name": "Hán ngữ 4", "description": "HSK 4 — Đọc · Nói · Tranh luận", "url": "https://www.hanngusotam.com/course/han4" },
-            { "@type": "Course", "name": "Tiếng Trung Thương mại", "description": "Giao tiếp kinh doanh & đàm phán", "url": "https://www.hanngusotam.com/course/thuong-mai" },
-            { "@type": "Course", "name": "Tiếng Trung Trẻ em", "description": "Dành cho học sinh tiểu học & THCS", "url": "https://www.hanngusotam.com/course/tre-em" },
-          ],
-        },
+        "description": "Trung tâm tiếng Trung Sơ Tâm — Hán ngữ HSK 1–6.",
       }} />
+
       {/* Hero */}
       <section className="hero">
         <div className="hero-copy">
-          <h1>
-            Học tiếng Trung cùng <span className="hero-accent">Sơ Tâm</span>
-          </h1>
+          <h1>Học tiếng Trung cùng <span className="hero-accent">Sơ Tâm</span></h1>
           <p>
-            Các khóa học được chuẩn hóa với trải nghiệm học tương tác: Flashcard, đố vui, ghép cặp, thực hành nghe - nói và trò chơi đồng đội. Hệ thống tự động đồng bộ tiến độ và điểm số sau mỗi phiên đăng nhập.
+            Các khóa học được chuẩn hóa với trải nghiệm học tương tác: Flashcard, đố vui,
+            ghép cặp, thực hành nghe - nói và trò chơi đồng đội.
           </p>
           <div className="hero-cta">
             <Link to="/courses" className="btn btn-primary">Xem các khoá học</Link>
@@ -83,7 +74,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* Courses */}
+      {/* Courses — static, no auth gate */}
       <h2 className="section-h">Các khoá học</h2>
       <div className="course-grid">
         {COURSES.map((c) => (
@@ -99,40 +90,85 @@ export function Home() {
           </Link>
         ))}
       </div>
+    </div>
+  );
+}
 
-      {/* Schedule */}
-      <h2 className="section-h">Lịch khai giảng</h2>
-      <ScheduleTable />
+// ── Student ───────────────────────────────────────────────────────────────────
 
-      {/* All lessons — only for authenticated users */}
-      {user ? (
-        <>
-          <h2 className="section-h">Tất cả bài học</h2>
-          {err && <div className="feedback feedback-bad">{err}</div>}
-          {!lessons && !err && <div className="muted">Đang tải…</div>}
-          {lessons?.length === 0 && (
-            <div className="feedback feedback-info">
-              Chưa có bài học nào. Hãy chạy <code>pnpm sync</code> để nạp dữ liệu.
-            </div>
-          )}
-          <div className="lesson-list">
-            {lessons?.map((l) => (
-              <Link key={l.id} to={`/lesson/${l.id}`} className="lesson-row">
-                <div>
-                  <strong>{l.title}</strong>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    {l.course} · ~{l.estimatedMinutes ?? 10} phút
-                  </div>
-                </div>
-                <span className="badge">{INTERACTION_LABELS[l.interactionType]}</span>
-              </Link>
-            ))}
-          </div>
-        </>
+function StudentHome() {
+  const { user } = useAuth();
+  const classes = user?.classes ?? [];
+  const primaryClass = classes[0];
+
+  return (
+    <div className="container" style={{ padding: "24px 16px 80px" }}>
+      <div className="sh-greeting">
+        Xin chào, <strong>{user?.displayName}</strong>
+        {primaryClass && (
+          <span className="sh-class-badge">{primaryClass.name}</span>
+        )}
+      </div>
+
+      {/* New exercises — from teacher uploads */}
+      <h2 className="section-h" style={{ marginTop: 28 }}>Bài tập</h2>
+      {classes.length === 0 ? (
+        <div className="feedback feedback-info">
+          Bạn chưa được xếp lớp. Liên hệ giáo viên để được thêm vào lớp học.
+        </div>
       ) : (
-        <div className="feedback feedback-info" style={{ marginTop: 32 }}>
-          <strong>Đăng nhập để xem nội dung bài học.</strong>{" "}
-          Tất cả khoá học, danh sách bài, và phòng game đều mở sau khi đăng nhập.
+        <div className="sh-exercise-empty muted">
+          Giáo viên chưa thêm bài tập mới. Hãy kiểm tra lại sau.
+        </div>
+      )}
+
+      {/* Old exercises — disabled */}
+      <h2 className="section-h" style={{ marginTop: 36 }}>Hoạt động học tập</h2>
+      <p className="muted" style={{ marginBottom: 16, fontSize: 14 }}>
+        Các hoạt động sau đang tạm thời không khả dụng. Giáo viên sẽ mở khi cần thiết.
+      </p>
+      <div className="sh-old-grid">
+        {OLD_EXERCISES.map((ex) => (
+          <div key={ex.to} className="sh-old-card sh-old-card--disabled">
+            <span className="sh-old-icon">{ex.icon}</span>
+            <span className="sh-old-title">{ex.title}</span>
+            <span className="sh-old-badge">Tạm khóa</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Teacher / Admin ───────────────────────────────────────────────────────────
+
+function TeacherHome() {
+  const { role } = useAuth();
+
+  return (
+    <div className="container" style={{ padding: "24px 16px 80px" }}>
+      <h2 className="section-h">Quản lý khoá học</h2>
+      <p className="muted" style={{ marginBottom: 20, fontSize: 14 }}>
+        Chọn khoá học để xem bài tập, tải lên đề thi và quản lý nội dung.
+      </p>
+      <div className="course-grid">
+        {COURSES.map((c) => (
+          <Link key={c.id} className="course-tile" to={`/course/${c.id}`}>
+            {c.status && (
+              <span className={`course-status-badge ${STATUS_CLASS[c.status]}`}>
+                {STATUS_LABEL[c.status]}
+              </span>
+            )}
+            <h3>{c.title}</h3>
+            <div className="muted">{c.subtitle}</div>
+            <div className="tile-bar" style={{ background: c.color }} />
+          </Link>
+        ))}
+      </div>
+
+      {role === "admin" && (
+        <div style={{ marginTop: 32 }}>
+          <Link to="/admin" className="btn btn-ghost btn-sm">⚙ Bảng quản trị</Link>
         </div>
       )}
     </div>

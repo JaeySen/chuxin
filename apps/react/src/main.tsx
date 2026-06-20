@@ -12,6 +12,7 @@ import { WordSearchGame } from "./pages/WordSearchGame";
 import { BingoTeacher } from "./pages/BingoTeacher";
 import { BingoGame } from "./pages/BingoGame";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import { QuizImportPage } from "./pages/QuizImportPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { DocumentDetailPage } from "./pages/DocumentDetailPage";
 import { AboutPage } from "./pages/AboutPage";
@@ -39,6 +40,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="documents/:id" element={<DocumentDetailPage />} />
           <Route path="ve-chung-toi" element={<AboutPage />} />
           <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/quiz-import" element={<QuizImportPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
