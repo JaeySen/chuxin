@@ -1,11 +1,18 @@
 const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:4000";
 
+export interface EnrolledClass {
+  id: string;
+  name: string;
+  courseId: string;
+}
+
 export interface AuthUser {
   id: string;
   email: string;
   phone: string | null;
   displayName: string;
   role: "student" | "teacher" | "admin";
+  classes?: EnrolledClass[];
 }
 
 export interface AuthConfig {

@@ -4,6 +4,12 @@ import { query } from "../db/index.js";
 
 export type Role = "student" | "teacher" | "admin" | "staff" | "assistant";
 
+export interface EnrolledClass {
+  id: string;
+  name: string;
+  courseId: string;
+}
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -11,6 +17,7 @@ export interface AuthUser {
   displayName: string;
   role: Role;
   locked?: boolean;
+  classes?: EnrolledClass[];
 }
 
 interface UserRow {

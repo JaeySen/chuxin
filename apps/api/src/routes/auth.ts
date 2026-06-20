@@ -19,6 +19,8 @@ import {
 } from "../services/session.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { getSetting } from "../services/settings.js";
+import { query } from "../db/index.js";
+import type { EnrolledClass } from "../services/auth.js";
 
 const SignupBody = z.object({
   email: z.string().email().optional(),
@@ -162,6 +164,20 @@ export async function authRoutes(app: FastifyInstance) {
   app.get("/me", { preHandler: [authenticate] }, async (req, reply) => {
     const user = await findUserById(req.user.uid);
     if (!user) return reply.status(404).send({ error: "User not found" });
-    return reply.send(user);
+
+    let classes: EnrolledClass[] = [];
+    if (user.role === "student") {
+      const { rows } = await query<EnrolledClass>(
+        `SELECT c.id, c.name, c.course_id AS "courseId"
+           FROM classes c
+           JOIN enrollments e ON e.class_id = c.id
+          WHERE e.student_id = $1 AND e.status = 'active'
+          ORDER BY c.created_at DESC`,
+        [user.id],
+      );
+      classes = rows;
+    }
+
+    return reply.send({ ...user, classes });
   });
 }
