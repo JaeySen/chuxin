@@ -1,0 +1,265 @@
+{
+  "source": "Bài-3-HSK1.pdf",
+  "title": "BÀI TẬP ÔN TẬP TOÀN DIỆN: BÀI 3",
+  "slug": "bài-3-hsk1",
+  "questions": [
+    {
+      "num": 1,
+      "text": "Phiên âm đúng của từ chữ Hán \"人\" (người) là:\n| A. rěn  | B. rén  | C. rèn  | D. nén  |",
+      "type": "mcq",
+      "options": {
+        "A": "rěn",
+        "B": "rén",
+        "C": "rèn",
+        "D": "nén"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 2,
+      "text": "Phiên âm đúng của từ chữ Hán \"工作\" (công việc / làm việc) là:\n| A. gōngzuò  | B. gōngzuó  | C. hōngzuò  | D. gōngzhuò  |",
+      "type": "mcq",
+      "options": {
+        "A": "gōngzuò",
+        "B": "gōngzuó",
+        "C": "hōngzuò",
+        "D": "gōngzhuò"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 3,
+      "text": "Phiên âm đúng của danh từ riêng quốc gia \"法国\" (Pháp) là:\n| A. Fāguó  | B. Fǎguǒ  | C. Fǎguó  | D. Fàguó  |",
+      "type": "mcq",
+      "options": {
+        "A": "Fāguó",
+        "B": "Fǎguǒ",
+        "C": "Fǎguó",
+        "D": "Fàguó"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 4,
+      "text": "Phiên âm đúng của từ chữ Hán \"女朋友\" (bạn gái) là:\n| A. nǚpèngyǒu  | B. nǔpéngyǒu  | C. lǚpéngyǒu  | D. nǚpéngyǒu  |",
+      "type": "mcq",
+      "options": {
+        "A": "nǚpèngyǒu",
+        "B": "nǔpéngyǒu",
+        "C": "lǚpéngyǒu",
+        "D": "nǚpéngyǒu"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 5,
+      "text": "Phiên âm đúng của từ chữ Hán \"姐姐\" là:",
+      "type": "mcq",
+      "options": {
+        "A": "jiějie                   B. jǐejǐe                   C. Jiejie                   D. qiěqie"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 6,
+      "text": "Từ chữ Hán \"谁\" trong câu \"这是谁？\" có ý nghĩa là gì?\n| A. Cái gì  |     | C. Ai  | D. Nào  |",
+      "type": "mcq",
+      "options": {
+        "A": "Cái gì",
+        "C": "Ai",
+        "D": "Nào"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 7,
+      "text": "Phó từ \"还\" trong câu \"你工作还忙吗？\" mang nghĩa là gì?\n| A. Đã  | B. Vẫn, còn  | C. Rất  | D. Quá, lắm  |",
+      "type": "mcq",
+      "options": {
+        "A": "Đã",
+        "B": "Vẫn, còn",
+        "C": "Rất",
+        "D": "Quá, lắm"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 8,
+      "text": "Động từ \"想\" trong ngữ cảnh câu \"我们很想你。\" có nghĩa là gì?\n| A. Nhớ  | B. Muốn  | C. Nghĩ  | D. Gọi là  |",
+      "type": "mcq",
+      "options": {
+        "A": "Nhớ",
+        "B": "Muốn",
+        "C": "Nghĩ",
+        "D": "Gọi là"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 9,
+      "text": "Danh từ chỉ quốc gia \"泰国\" có nghĩa tiếng Việt là gì?\n| A. Đài Loan  | B. Hàn Quốc  | C. Anh Quốc  | D. Thái Lan  |\n\n  Tài liệu ôn tập Tiếng Trung Sơ Cấp  Trang 1 / 6",
+      "type": "mcq",
+      "options": {
+        "A": "Đài Loan",
+        "B": "Hàn Quốc",
+        "C": "Anh Quốc",
+        "D": "Thái Lan"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 10,
+      "text": "Từ chữ Hán \"中文\" có nghĩa tiếng Việt là gì?",
+      "type": "mcq",
+      "options": {
+        "A": "Tiếng Trung B. Trung Quốc C. Văn học D. Chữ viết"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 11,
+      "text": "\"Đây là bạn gái của tôi. Cô ấy là người Trung Quốc.\"\n ():",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 12,
+      "text": "\"Bạn gái của bạn là người nước nào?\"\n ():",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 13,
+      "text": "\"Công việc của chị gái tôi rất bận.\"\n ():",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 14,
+      "text": "\"Tôi không bận lắm. Chúng tôi rất nhớ bạn.\"\n ():\nTài liệu ôn tập Tiếng Trung Sơ Cấp Trang 2 / 6",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 15,
+      "text": "Cụm từ \"Thầy giáo tiếng Trung của Bạch Gia Nguyệt\" viết bằng\ntiếng Trung đúng quy tắc ngữ pháp là:",
+      "type": "mcq",
+      "options": {
+        "A": "白家月中文老师",
+        "B": "中文老师的白家月",
+        "C": "白家月的中文老师",
+        "D": "白家月的是中文老师"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 16,
+      "text": "Cụm từ nào sau đây đã lược bỏ trợ từ kết cấu \"的\" một cách\nchính xác theo bài học?",
+      "type": "mcq",
+      "options": {
+        "A": "中国老师",
+        "B": "我姐姐",
+        "C": "白家月老师",
+        "D": "中文老师"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 17,
+      "text": "Chọn câu sử dụng chữ \"的\" bị SAI ngữ pháp hoặc không tự\nnhiên:",
+      "type": "mcq",
+      "options": {
+        "A": "这是谁的书？",
+        "B": "她的工作很忙。",
+        "C": "我的是中文老师。",
+        "D": "白家月的女朋友。"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 18,
+      "text": "Chọn câu sử dụng cấu trúc trợ từ ngữ khí \"吗\" bị SAI vị trí ngữ\npháp:",
+      "type": "mcq",
+      "options": {
+        "A": "还 (hái)",
+        "B": "也 (yě)",
+        "C": "太 (tài)",
+        "D": "没 (méi)"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 20,
+      "text": "Điền từ vào chỗ trống: \"你女朋友是 国人？\"",
+      "type": "mcq",
+      "options": {
+        "A": "谁 (shéi) B. 什么 (shénme) C. 哪 (nǎ) D. 这 (zhè)"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 21,
+      "text": "Điền từ vào chỗ trống trong đoạn hội thoại:\nA: 你工作忙吗？\nB: 对, 忙。",
+      "type": "mcq",
+      "options": {
+        "A": "不 (bù) B. 吗 (ma) C. 谁 (shéi) D. 很"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 22,
+      "text": "Điền từ vào chỗ trống: \"A: 这是谁？ - B: 这是 女朋友。\"",
+      "type": "mcq",
+      "options": {
+        "A": "我 (wǑ) B. 谁 (shéi) C. 什么 (shénme) D. 也 (yě)"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 23,
+      "text": "Cho câu trần thuật: \"① 泰国人 / ② 也 / ③ 她 / ④ 是\". Trật tự\nsắp xếp đúng ngữ pháp nhất là:",
+      "type": "mcq",
+      "options": {
+        "A": "③ ② ④ ① (她 占 是 泰国人。)",
+        "B": "③ ④ ② ① (她 是 也 泰国人。)",
+        "C": "② ③ ④ ① (也 她 是 泰国人。)",
+        "D": "③ ② ① ④ (她 也 泰国人 是。)"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 24,
+      "text": "Cho câu hỏi: \"① 忙 / ② 吗 / ③ 工作 / ④ 你 / ⑤ 也\". Trật tự sắp\nxếp đúng cấu trúc là:",
+      "type": "mcq",
+      "options": {
+        "A": "④ ⑤ ③ ① ② (你 也 工作 忙 吗？)",
+        "B": "④ ③ ⑤ ① ② (你 工作 也 忙 吗？)",
+        "C": "⑤ ④ ③ ① ② (也 你 工作 忙 吗？)",
+        "D": "④ ⑤ ① ③ ② (你 也 忙 工作 吗？)"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 25,
+      "text": "Phản xạ hội thoại: Với câu hỏi \"你是安妮吗？\", nếu phản hồi phủ\nđịnh một cách chính xác ngữ pháp thì đáp án là:",
+      "type": "mcq",
+      "options": {
+        "A": "我是安妮。",
+        "B": "我不忙。",
+        "C": "我不是安妮。",
+        "D": "我没有姐姐。"
+      },
+      "answer": "B"
+    }
+  ],
+  "meta": {
+    "total": 24,
+    "mcq": 20,
+    "open": 4,
+    "missing_answers": 0
+  }
+}

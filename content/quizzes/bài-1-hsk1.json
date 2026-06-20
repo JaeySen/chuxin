@@ -1,0 +1,193 @@
+{
+  "source": "Bài-1-HSK1.pdf",
+  "title": "第一课：AI 小语，你好 ！",
+  "slug": "bài-1-hsk1",
+  "questions": [
+    {
+      "num": 1,
+      "text": "Phiên âm đúng của từ 你好 là:",
+      "type": "mcq",
+      "options": {
+        "A": "Nǐhǎo",
+        "B": "Nǐhào",
+        "C": "Níhǎo",
+        "D": "Nìhǎo"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 2,
+      "text": "Chào mọi người trong tiếng Trung là:",
+      "type": "mcq",
+      "options": {
+        "A": "大家好",
+        "B": "老师好",
+        "C": "你们好",
+        "D": "再见"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 3,
+      "text": "Tốt, được trong tiếng Trung là:",
+      "type": "mcq",
+      "options": {
+        "A": "你",
+        "B": "好",
+        "C": "我",
+        "D": "们"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 4,
+      "text": "Phiên âm đúng của 学生 là:",
+      "type": "mcq",
+      "options": {
+        "A": "xuéshēng",
+        "B": "xuěshēng",
+        "C": "xuéshéng",
+        "D": "xuèshēng"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 5,
+      "text": "Khi muốn chỉ số nhiều của đại từ nhân xưng (từ để xưng hô), ta thêm chữ:",
+      "type": "mcq",
+      "options": {
+        "A": "门",
+        "B": "们",
+        "C": "谢",
+        "D": "好"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 6,
+      "text": "\"Chào các thầy cô!\" dịch sang tiếng Trung là:",
+      "type": "mcq",
+      "options": {
+        "A": "同学们好！",
+        "B": "老师们好！",
+        "C": "大家好！",
+        "D": "你们好！"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 7,
+      "text": "Khi xưng hô tôn trọng với đối phương, ta sẽ dùng chữ .... để xưng hô:",
+      "type": "mcq",
+      "options": {
+        "A": "你们",
+        "B": "我们",
+        "C": "您",
+        "D": "我"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 8,
+      "text": "\"Cảm ơn\" trong tiếng Trung là:",
+      "type": "mcq",
+      "options": {
+        "A": "不客气",
+        "B": "大家好",
+        "C": "再见",
+        "D": "谢谢"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 9,
+      "text": "Từ dùng để đáp lại 谢谢 là:",
+      "type": "mcq",
+      "options": {
+        "A": "你好",
+        "B": "大家好",
+        "C": "不客气",
+        "D": "再见"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 10,
+      "text": "Phiên âm đúng của 同学 là:",
+      "type": "mcq",
+      "options": {
+        "A": "tóngxué",
+        "B": "tóngxuě",
+        "C": "tóngxuē",
+        "D": "tǒngxuē"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 11,
+      "text": "Nghĩa của 再见 là:",
+      "type": "mcq",
+      "options": {
+        "A": "Xin lỗi",
+        "B": "Cảm ơn",
+        "C": "Tạm biệt",
+        "D": "Xin mời"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 12,
+      "text": "Chữ 你 có nghĩa là:",
+      "type": "mcq",
+      "options": {
+        "A": "Bạn",
+        "B": "Tôi",
+        "C": "Họ",
+        "D": "Chúng tôi"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 13,
+      "text": "Chữ 老师 có nghĩa là:",
+      "type": "mcq",
+      "options": {
+        "A": "Học sinh",
+        "B": "Giáo viên",
+        "C": "Bạn học",
+        "D": "Bác sĩ"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 14,
+      "text": "Từ nào dưới đây là cách chào hỏi thể hiện sự tôn trọng?",
+      "type": "mcq",
+      "options": {
+        "A": "你好",
+        "B": "同学好",
+        "C": "您好",
+        "D": "大家好"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 15,
+      "text": "Từ nào dưới đây có nghĩa là \"bạn học\"?",
+      "type": "mcq",
+      "options": {
+        "A": "老师",
+        "B": "大家",
+        "C": "同学",
+        "D": "学生"
+      },
+      "answer": "C"
+    }
+  ],
+  "meta": {
+    "total": 15,
+    "mcq": 15,
+    "open": 0,
+    "missing_answers": 0
+  }
+}

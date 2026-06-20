@@ -1,0 +1,268 @@
+{
+  "source": "Bài-4-HSK1.pdf",
+  "title": "第四课：我有两个孩子",
+  "slug": "bài-4-hsk1",
+  "questions": [
+    {
+      "num": 1,
+      "text": "Phiên âm đúng của từ chữ Hán \"多少\" (bao nhiêu) là:",
+      "type": "mcq",
+      "options": {
+        "A": "duōshào",
+        "B": "duōshao",
+        "C": "duōsháo",
+        "D": "tuōshǎo"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 2,
+      "text": "Phiên âm đúng của từ chữ Hán \"孩子\" (con cái/đứa trẻ) là:",
+      "type": "mcq",
+      "options": {
+        "A": "háizì",
+        "B": "hǎizi",
+        "C": "háizi",
+        "D": "hāizi"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 3,
+      "text": "Phiên âm đúng của từ chữ Hán \"女儿\" (con gái) là:",
+      "type": "mcq",
+      "options": {
+        "A": "nǚ'ér",
+        "B": "lǚ'ér",
+        "C": "nǔ'ér",
+        "D": "nǚ'ré"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 4,
+      "text": "Phiên âm đúng của từ chữ Hán \"今年\" (năm nay) là:",
+      "type": "mcq",
+      "options": {
+        "A": "jīngnián",
+        "B": "jīnnián",
+        "C": "jǐnnián",
+        "D": "qīnnián"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 5,
+      "text": "Phiên âm đúng của số \"二百零八\" (208) là:",
+      "type": "mcq",
+      "options": {
+        "A": "èrbǎi líng bā",
+        "B": "liǎngbǎi líng bā",
+        "C": "èrbǎi lín bā",
+        "D": "liǎngbǎi lín bā"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 6,
+      "text": "Lượng từ \"口\" (kǒu) trong câu \"我家有四口人\" được dùng\n\nchuyên biệt cho nhóm đối tượng nào?",
+      "type": "mcq",
+      "options": {
+        "A": "Đồ vật như sách vở",
+        "B": "Con vật nuôi trong nhà",
+        "C": "Thành viên trong gia đình",
+        "D": "Giáo viên và học sinh"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 7,
+      "text": "Từ chữ Hán \"哥哥\" có ý nghĩa tiếng Việt là gì?",
+      "type": "mcq",
+      "options": {
+        "A": "Em trai",
+        "B": "Anh trai",
+        "C": "Bố",
+        "D": "Con trai"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 8,
+      "text": "Cụm từ \"多大\" (duō dà) trong câu \"您女儿多大？\" dùng để\n\nhỏi về điều gì?",
+      "type": "mcq",
+      "options": {
+        "A": "Hỏi số lượng người",
+        "B": "Hỏi chiều cao",
+        "C": "Hỏi cân nặng",
+        "D": "Hỏi tuổi tác"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 9,
+      "text": "Từ chữ Hán \"没有\" (méiyǒu) mang ý nghĩa là gì?",
+      "type": "mcq",
+      "options": {
+        "A": "Không bận",
+        "B": "Không phải là",
+        "C": "Không có",
+        "D": "Không nhớ"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 10,
+      "text": "Từ chữ Hán \"妹妹\" có ý nghĩa tiếng Việt là gì?",
+      "type": "mcq",
+      "options": {
+        "A": "Em gái",
+        "B": "Chị gái",
+        "C": "Con gái",
+        "D": "Bạn gái"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 11,
+      "text": "\"Cô ấy có bao nhiêu học sinh? Cô ấy có hai mươi học sinh.\"\n\n•   ():",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 12,
+      "text": "\"Tôi có hai anh trai, còn bạn thì sao?\"\n\n•   ():",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 13,
+      "text": "\"Nhà tôi có bốn người: bố, mẹ, em gái và tôi.\"\n\n•   ():",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 14,
+      "text": "\"Con trai của bạn năm nay mấy tuổi? Nó năm nay năm tuổi.\"\n\n•   ():",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 15,
+      "text": "Chọn câu sử dụng dạng PHỦ ĐỊNH của động từ \"有\" ĐÚNG\n\nngữ pháp nhất:",
+      "type": "mcq",
+      "options": {
+        "A": "我不哥哥。",
+        "B": "我不有哥哥。",
+        "C": "我没哥哥。",
+        "D": "我没有哥哥。"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 16,
+      "text": "Cách viết chữ Hán của số \"999\" dựa theo bài học là:",
+      "type": "mcq",
+      "options": {
+        "A": "九百九十九",
+        "B": "九十九百九",
+        "C": "九百九十",
+        "D": "九千九百九"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 17,
+      "text": "Điền số \"2\" thích hợp vào cụm lượng từ sau: \" 本书\"\n\n(hai quyển sách)",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 18,
+      "text": "Chọn câu dùng chữ \"呢\" bị SAI ngữ pháp hoặc không tự\n\nnhiên:",
+      "type": "mcq",
+      "options": {
+        "A": "我是 中国人，你呢？",
+        "B": "呢你爸爸忙吗？",
+        "C": "我叫 白家月, 你呢？",
+        "D": "我有两个哥哥，你呢？"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 19,
+      "text": "Điền từ thích hợp: \"王一雪：一飞忙吗？ - 刘明：她\n\n 忙。\"",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 20,
+      "text": "Điền lượng từ thích hợp: \"你有几  人？\"",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 21,
+      "text": "Điền từ thích hợp: \"这是您儿子吗？ -  ，我有两个\n\n孩子。\"",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 22,
+      "text": "Điền từ thích hợp: \"您女儿今年  ？ - 她今年十\n\n二 。\"",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 23,
+      "text": "Cho câu: \"① 学生 / ② 二十个 / ③ 她 / ④ 有\". Trật tự đúng\n\nlà:",
+      "type": "mcq",
+      "options": {
+        "A": "③ ④ ② ① (她 有 二十个 学生。)",
+        "B": "③ ② ④ ① (她 二十个 有 学生。)",
+        "C": "④ ③ ② ① (有 她 二十个 学生。)",
+        "D": "③ ④ ① ② (她 有 学生 二十个。)"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 24,
+      "text": "Cho câu: \"① 几岁 / ② 今年 / ③ 儿子 / ④ 您\". Trật tự đúng\n\nlà:",
+      "type": "mcq",
+      "options": {
+        "A": "④ ② ③ ① (您 今年 儿子 几岁？)",
+        "B": "④ ③ ② ① (您 儿子 今年 几岁？)",
+        "C": "② ④ ③ ① (今年 您 儿子 几岁？)",
+        "D": "④ ③ ① ② (您 儿子 几岁 今年？)"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 25,
+      "text": "Cho câu: \"① 一个 / ② 女儿 / ③ 有 / ④ 一个 / ⑤\n\n儿子 / ⑥ 我\". Chọn cách sắp xếp đúng:",
+      "type": "mcq",
+      "options": {
+        "A": "⑥ ③ ① ② ④ ⑤ (我 有 一个 女儿 一个 儿子。)",
+        "B": "⑥ ① ⑤ ③ ④ ② (我 一个 儿子 有 一个 女儿。)",
+        "C": "⑥ ③ ① ⑤ ，② ④ (我 有 一个 儿子，女儿一个。)",
+        "D": "① ⑤ ④ ② ⑥ ③ (一个 儿子 一个 女儿 我 有。)"
+      },
+      "answer": "D"
+    }
+  ],
+  "meta": {
+    "total": 25,
+    "mcq": 16,
+    "open": 9,
+    "missing_answers": 0
+  }
+}

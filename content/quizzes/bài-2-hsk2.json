@@ -1,0 +1,228 @@
+{
+  "source": "Bài-2-HSK2.pdf",
+  "title": "第二课：我叫李文 ！",
+  "slug": "bài-2-hsk2",
+  "questions": [
+    {
+      "num": 1,
+      "text": "Phiên âm đúng của 请问 là:",
+      "type": "mcq",
+      "options": {
+        "A": "qǐngwèn",
+        "B": "qīngwèn",
+        "C": "qǐngwén",
+        "D": "qíngwèn"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 2,
+      "text": "Từ 什么 có nghĩa là:",
+      "type": "mcq",
+      "options": {
+        "A": "Ai",
+        "B": "Ở đâu",
+        "C": "Cái gì",
+        "D": "Khi nào"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 3,
+      "text": "Phiên âm đúng của 名字 là:",
+      "type": "mcq",
+      "options": {
+        "A": "míngzi",
+        "B": "míngzǐ",
+        "C": "mǐngzi",
+        "D": "míngzí"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 4,
+      "text": "Từ 我 có nghĩa là:",
+      "type": "mcq",
+      "options": {
+        "A": "Bạn",
+        "B": "Chúng tôi",
+        "C": "Tôi",
+        "D": "Họ"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 5,
+      "text": "Phiên âm đúng của 对不起 là:",
+      "type": "mcq",
+      "options": {
+        "A": "duìbùqǐ",
+        "B": "duíbùqǐ",
+        "C": "duìbùqí",
+        "D": "duǐbùqǐ"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 6,
+      "text": "Nghĩa của 没关系 là:",
+      "type": "mcq",
+      "options": {
+        "A": "Cảm ơn",
+        "B": "Không sao đâu",
+        "C": "Xin lỗi",
+        "D": "Tạm biệt"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 7,
+      "text": "Phiên âm đúng của 高兴 là:",
+      "type": "mcq",
+      "options": {
+        "A": "gāoxìng",
+        "B": "gāoxing",
+        "C": "gǎoxìng",
+        "D": "gāoxīn"
+      },
+      "answer": "A"
+    },
+    {
+      "num": 8,
+      "text": "Từ 认识 có nghĩa là:",
+      "type": "mcq",
+      "options": {
+        "A": "Giới thiệu",
+        "B": "Học tập",
+        "C": "Gặp mặt",
+        "D": "Biết, quen biết"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 9,
+      "text": "Điền từ thích hợp vào chỗ trống:\n\n请问，你叫什么？",
+      "type": "open",
+      "options": {},
+      "answer": "C"
+    },
+    {
+      "num": 10,
+      "text": "Điền từ thích hợp:\n\n我李文。",
+      "type": "open",
+      "options": {},
+      "answer": "A"
+    },
+    {
+      "num": 11,
+      "text": "Điền từ thích hợp:\n\n高兴认识你。",
+      "type": "open",
+      "options": {},
+      "answer": "D"
+    },
+    {
+      "num": 12,
+      "text": "Điền từ thích hợp:\n\n认识你我很高兴。",
+      "type": "open",
+      "options": {},
+      "answer": "C"
+    },
+    {
+      "num": 13,
+      "text": "Khi nghe người khác nói 对不起, ta nên đáp:",
+      "type": "mcq",
+      "options": {
+        "A": "谢谢",
+        "B": "没关系",
+        "C": "再见",
+        "D": "你好"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 14,
+      "text": "Câu nào dùng để hỏi tên người khác?",
+      "type": "mcq",
+      "options": {
+        "A": "你好！",
+        "B": "请问，你叫什么名字？",
+        "C": "对不起！",
+        "D": "很高兴认识你。"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 15,
+      "text": "\"Rất vui được làm quen với bạn\" trong tiếng Trung là:",
+      "type": "mcq",
+      "options": {
+        "A": "我叫李文。",
+        "B": "对不起。",
+        "C": "很高兴认识你。",
+        "D": "没关系。"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 16,
+      "text": "Từ nào dưới đây có nghĩa là \"cũng\"?",
+      "type": "mcq",
+      "options": {
+        "A": "很",
+        "B": "也",
+        "C": "不",
+        "D": "叫"
+      },
+      "answer": "B"
+    },
+    {
+      "num": 17,
+      "text": "Từ nào dưới đây có nghĩa là \"không\"?",
+      "type": "mcq",
+      "options": {
+        "A": "很",
+        "B": "是",
+        "C": "不",
+        "D": "也"
+      },
+      "answer": "C"
+    },
+    {
+      "num": 18,
+      "text": "Câu nào có nghĩa là \"Tôi không phải là Annie\"?",
+      "type": "mcq",
+      "options": {
+        "A": "我是安妮。",
+        "B": "我叫安妮。",
+        "C": "我不叫安妮。",
+        "D": "我不是安妮。"
+      },
+      "answer": "D"
+    },
+    {
+      "num": 19,
+      "text": "Dịch câu sau sang tiếng Trung:\n\nA:  Xin chào, bạn tên là Lý Văn đúng không ?\n\nB: Không phải, tôi tên là Bạch Gia Nguyệt.\n\nA: ------------------------------------\n\nB: ------------------------------------",
+      "type": "open",
+      "options": {},
+      "answer": null
+    },
+    {
+      "num": 20,
+      "text": "Từ nào đồng nghĩa với từ 没关系:",
+      "type": "mcq",
+      "options": {
+        "A": "请问",
+        "B": "没事",
+        "C": "很高兴",
+        "D": "不是"
+      },
+      "answer": "B"
+    }
+  ],
+  "meta": {
+    "total": 20,
+    "mcq": 15,
+    "open": 5,
+    "missing_answers": 0
+  }
+}
