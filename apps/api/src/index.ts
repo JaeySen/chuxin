@@ -1,6 +1,7 @@
 import "dotenv/config";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import multipart from "@fastify/multipart";
 import { authRoutes } from "./routes/auth.js";
 import { courseRoutes } from "./routes/courses.js";
 import { lessonRoutes } from "./routes/lessons.js";
@@ -12,6 +13,7 @@ import { adminRoutes } from "./routes/admin.js";
 import { scheduleRoutes } from "./routes/schedule.js";
 import { documentRoutes } from "./routes/documents.js";
 import { giaoVuRoutes } from "./routes/giaovu.js";
+import { quizImportRoutes } from "./routes/quiz-import.js";
 
 const app = Fastify({ logger: true, trustProxy: true });
 
@@ -28,6 +30,8 @@ const DEFAULT_ORIGINS = [
 ];
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS?.split(",").map((s) => s.trim()).filter(Boolean))
   ?? DEFAULT_ORIGINS;
+
+await app.register(multipart, { limits: { fileSize: 20 * 1024 * 1024 } });
 
 await app.register(cors, {
   origin: (origin, done) => {
@@ -47,6 +51,7 @@ app.register(worksheetRoutes, { prefix: "/worksheets" });
 app.register(bingoRoutes, { prefix: "/games/bingo" });
 app.register(wordSearchRoutes, { prefix: "/games/word-search" });
 app.register(adminRoutes, { prefix: "/admin" });
+app.register(quizImportRoutes, { prefix: "/admin/quiz" });
 app.register(scheduleRoutes, { prefix: "/schedule" });
 app.register(documentRoutes, { prefix: "/documents" });
 app.register(giaoVuRoutes, { prefix: "/giaovu" });
