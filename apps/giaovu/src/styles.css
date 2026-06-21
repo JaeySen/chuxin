@@ -329,3 +329,26 @@ body {
   .gv-calendar { grid-template-columns: repeat(7, 1fr); font-size: 10px; }
   .gv-cal-cell { min-height: 50px; }
 }
+
+/* ── Day-of-week picker ──────────────────────────────────────────── */
+.gv-day-row {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px;
+}
+.gv-day-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1.5px solid var(--c-divider);
+  background: #f8fafc; color: var(--c-text-soft);
+  font-size: 0.78rem; font-weight: 700; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.gv-day-btn--on { background: var(--c-red); border-color: var(--c-red); color: #fff; }
+.gv-day-btn:hover:not(.gv-day-btn--on) { background: var(--c-divider); }
+.gv-time-field {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--c-text-soft);
+}
+.gv-time-input {
+  padding: 6px 8px; border: 1.5px solid var(--c-divider); border-radius: 8px;
+  font-size: 13px; width: 88px;
+}
+.gv-time-input:focus { outline: none; border-color: var(--c-red); }

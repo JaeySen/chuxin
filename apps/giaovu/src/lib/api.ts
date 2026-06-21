@@ -58,15 +58,23 @@ export async function apiLogin(email: string, password: string): Promise<{ user:
 export interface GvClass {
   id: string;
   name: string;
+  class_code: string | null;
   course_id: string;
   teacher_id: string | null;
   teacher_name: string | null;
-  schedule: Array<{ day: string; start: string; end: string }> | null;
+  schedule: { days: string[]; clock_in: string; clock_out: string } | null;
   start_date: string | null;
   end_date: string | null;
   status: "active" | "completed" | "cancelled";
   max_students: number;
   student_count: number;
+}
+
+export interface GvStudentSearch {
+  id: string;
+  displayName: string;
+  email: string;
+  phone: string | null;
 }
 
 export interface GvSession {

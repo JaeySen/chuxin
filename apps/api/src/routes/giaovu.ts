@@ -215,7 +215,14 @@ export async function giaoVuRoutes(app: FastifyInstance) {
     return rows;
   });
 
-  app.post<{ Params: { id: string } }>("/classes/:id/students", { preHandler: [authenticate, requireRole("staff", "admin")] }, async (req, reply) => {
+  app.post<{ Params: { id: string } }>("/classes/:id/students", { preHandler: [authenticate, requireRole("teacher", "staff", "admin")] }, async (req, reply) => {
+    // Teachers may only enroll into their own classes
+    if (req.user.role === "teacher") {
+      const cls = await getClass(req.params.id);
+      if (!cls || (cls as { teacher_id?: string }).teacher_id !== req.user.uid) {
+        return reply.status(403).send({ error: "Not your class" });
+      }
+    }
     const { studentId, notes } = req.body as { studentId: string; notes?: string };
     if (!studentId) return reply.status(400).send({ error: "studentId required" });
     const { rows } = await query(
@@ -227,9 +234,31 @@ export async function giaoVuRoutes(app: FastifyInstance) {
     return reply.status(201).send(rows[0]);
   });
 
-  app.delete<{ Params: { id: string; studentId: string } }>("/classes/:id/students/:studentId", { preHandler: [authenticate, requireRole("staff", "admin")] }, async (req, reply) => {
+  app.delete<{ Params: { id: string; studentId: string } }>("/classes/:id/students/:studentId", { preHandler: [authenticate, requireRole("teacher", "staff", "admin")] }, async (req, reply) => {
+    if (req.user.role === "teacher") {
+      const cls = await getClass(req.params.id);
+      if (!cls || (cls as { teacher_id?: string }).teacher_id !== req.user.uid) {
+        return reply.status(403).send({ error: "Not your class" });
+      }
+    }
     await query(`UPDATE enrollments SET status = 'dropped' WHERE class_id = $1 AND student_id = $2`, [req.params.id, req.params.studentId]);
     return { ok: true };
+  });
+
+  // Student search — find by name, email, or phone (for enrollment UI)
+  app.get<{ Querystring: { q?: string } }>("/students/search", { preHandler: [authenticate, requireRole("teacher", "staff", "admin")] }, async (req) => {
+    const q = (req.query.q ?? "").trim();
+    if (q.length < 2) return [];
+    const { rows } = await query<{ id: string; display_name: string; email: string; phone: string | null }>(
+      `SELECT id, display_name, email, phone
+         FROM users
+        WHERE role = 'student'
+          AND (display_name ILIKE $1 OR email ILIKE $1 OR phone LIKE $2)
+        ORDER BY display_name
+        LIMIT 10`,
+      [`%${q}%`, `%${q}%`],
+    );
+    return rows.map((r) => ({ id: r.id, displayName: r.display_name, email: r.email, phone: r.phone }));
   });
 
   // ── Check-ins ────────────────────────────────────────────────────────────

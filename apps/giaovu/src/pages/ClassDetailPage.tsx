@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Shell } from "../components/Shell";
-import { apiFetch, type GvClass, type GvStudent, type GvMaterial, type GvSession } from "../lib/api";
+import { apiFetch, type GvClass, type GvStudent, type GvMaterial, type GvSession, type GvStudentSearch } from "../lib/api";
 import { useAuth } from "../lib/auth-context";
 
 function fmtDate(s: string | null) {
@@ -117,17 +117,24 @@ export function ClassDetailPage() {
       {/* Roster */}
       {tab === "roster" && (
         <div className="gv-card">
-          <div className="gv-card-title">Danh sách học viên ({students.length})</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+            <div className="gv-card-title" style={{ margin: 0 }}>Danh sách học viên ({students.length})</div>
+          </div>
+
+          <AddStudentToClass classId={id!} onAdded={load} />
+
           {students.length === 0
-            ? <div className="muted">Chưa có học viên nào.</div>
-            : <div className="gv-table-wrap">
+            ? <div className="muted" style={{ marginTop: 16 }}>Chưa có học viên nào.</div>
+            : <div className="gv-table-wrap" style={{ marginTop: 16 }}>
                 <table className="gv-table">
                   <thead><tr>
-                    <th>Họ tên</th><th>SĐT</th><th>Phụ huynh</th><th>Ngày sinh</th><th>Trạng thái</th>
+                    <th>#</th><th>Họ tên</th><th>SĐT</th><th>Phụ huynh</th>
+                    <th>Ngày sinh</th><th>Trạng thái</th><th></th>
                   </tr></thead>
                   <tbody>
-                    {students.map((s) => (
+                    {students.map((s, i) => (
                       <tr key={s.id}>
+                        <td className="muted">{i + 1}</td>
                         <td>
                           <div style={{ fontWeight: 600 }}>{s.display_name}</div>
                           <div className="muted" style={{ fontSize: 12 }}>{s.email}</div>
@@ -139,6 +146,9 @@ export function ClassDetailPage() {
                         </td>
                         <td>{s.date_of_birth ? fmtDate(s.date_of_birth) : "—"}</td>
                         <td><span className={`gv-badge gv-badge-${s.enrollment_status}`}>{s.enrollment_status}</span></td>
+                        <td>
+                          <DropStudentButton classId={id!} student={s} onDropped={load} />
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -293,5 +303,100 @@ export function ClassDetailPage() {
         </div>
       )}
     </Shell>
+  );
+}
+
+// ── Add student search + enroll ────────────────────────────────────────────────
+
+function AddStudentToClass({ classId, onAdded }: { classId: string; onAdded: () => void }) {
+  const [q, setQ]             = useState("");
+  const [results, setResults] = useState<GvStudentSearch[]>([]);
+  const [msg, setMsg]         = useState<{ text: string; ok: boolean } | null>(null);
+  const [busy, setBusy]       = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function handleInput(val: string) {
+    setQ(val); setMsg(null);
+    if (timer.current) clearTimeout(timer.current);
+    if (val.trim().length < 2) { setResults([]); return; }
+    timer.current = setTimeout(async () => {
+      try {
+        setResults(await apiFetch<GvStudentSearch[]>(`/students/search?q=${encodeURIComponent(val.trim())}`));
+      } catch { setResults([]); }
+    }, 300);
+  }
+
+  async function enroll(s: GvStudentSearch) {
+    setBusy(true); setMsg(null);
+    try {
+      await apiFetch(`/classes/${classId}/students`, {
+        method: "POST",
+        body: JSON.stringify({ studentId: s.id }),
+      });
+      setMsg({ text: `✓ Đã thêm ${s.displayName}`, ok: true });
+      setQ(""); setResults([]);
+      onAdded();
+    } catch (e: unknown) {
+      setMsg({ text: e instanceof Error ? e.message : String(e), ok: false });
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <div style={{ marginBottom: 4 }}>
+      <input
+        placeholder="Tìm học viên theo tên, email hoặc SĐT…"
+        value={q}
+        onChange={(e) => handleInput(e.target.value)}
+        style={{ padding: "8px 12px", border: "1.5px solid var(--c-divider)", borderRadius: 8,
+          fontSize: 14, fontFamily: "inherit", width: "100%", maxWidth: 360, boxSizing: "border-box" }}
+      />
+      {results.length > 0 && (
+        <div style={{ border: "1.5px solid var(--c-divider)", borderRadius: 8, overflow: "hidden",
+          maxWidth: 360, marginTop: 4 }}>
+          {results.map((r) => (
+            <button key={r.id} disabled={busy} onClick={() => enroll(r)}
+              style={{ display: "flex", flexDirection: "column", gap: 2, width: "100%",
+                padding: "10px 14px", background: "#fff", border: "none",
+                borderBottom: "1px solid var(--c-divider)", cursor: "pointer",
+                textAlign: "left", fontFamily: "inherit" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}>
+              <span style={{ fontWeight: 600, fontSize: 14 }}>{r.displayName}</span>
+              <span style={{ fontSize: 12, color: "var(--c-text-soft)" }}>
+                {r.email}{r.phone ? ` · ${r.phone}` : ""}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+      {msg && (
+        <div style={{ marginTop: 6, fontSize: 13, fontWeight: 600,
+          color: msg.ok ? "#15803d" : "#991b1b" }}>
+          {msg.text}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Drop student button ───────────────────────────────────────────────────────
+
+function DropStudentButton({ classId, student, onDropped }: { classId: string; student: GvStudent; onDropped: () => void }) {
+  const { user } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const canDrop = user?.role === "teacher" || user?.role === "staff" || user?.role === "admin";
+  if (!canDrop || student.enrollment_status !== "active") return null;
+
+  async function drop() {
+    if (!confirm(`Xoá ${student.display_name} khỏi lớp?`)) return;
+    setBusy(true);
+    try {
+      await apiFetch(`/classes/${classId}/students/${student.id}`, { method: "DELETE" });
+      onDropped();
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <button className="btn btn-ghost btn-sm" disabled={busy} onClick={drop}>Xoá</button>
   );
 }
