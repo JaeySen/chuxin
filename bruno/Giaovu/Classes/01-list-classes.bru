@@ -1,0 +1,20 @@
+meta {
+  name: List Classes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/giaovu/classes
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+docs {
+  Teachers see only their own classes.
+  Staff/admin see all classes.
+}

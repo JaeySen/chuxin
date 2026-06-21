@@ -1,0 +1,35 @@
+meta {
+  name: Update User Profile
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/giaovu/users/:id
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: USER_ID_HERE
+}
+
+body:json {
+  {
+    "displayName": "Trần Thị B",
+    "phone": "0907654321",
+    "parentName": "Trần Văn C",
+    "parentPhone": "0901111222",
+    "address": "123 Lê Lợi, Q1",
+    "notes": "Ghi chú mới"
+  }
+}
+
+docs {
+  Requires staff or admin role.
+  Allowed: displayName, phone, role, dateOfBirth, parentName, parentPhone, address, notes.
+}

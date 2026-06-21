@@ -1,0 +1,26 @@
+meta {
+  name: Create Bingo Game
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/games/bingo
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+body:json {
+  {
+    "lessonId": "LESSON_ID_HERE",
+    "gridSize": 5
+  }
+}
+
+docs {
+  Requires teacher or admin role.
+}

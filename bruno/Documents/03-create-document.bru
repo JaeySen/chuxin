@@ -1,0 +1,30 @@
+meta {
+  name: Create Document
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/documents
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+body:json {
+  {
+    "heading": "Giáo trình HSK1",
+    "googleUrl": "https://docs.google.com/document/d/DOCID/edit",
+    "description": "Tài liệu chính thức khoá HSK1"
+  }
+}
+
+docs {
+  Requires teacher or admin role.
+  Extracts Google Doc ID from URL automatically.
+  Triggers best-effort initial content fetch.
+  Error 400 INVALID_URL if URL format not recognised.
+}

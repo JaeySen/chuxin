@@ -1,0 +1,22 @@
+meta {
+  name: Report Found Word
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/games/word-search/:id/found
+  body: json
+  auth: none
+}
+
+params:path {
+  id: GAME_ID_HERE
+}
+
+body:json {
+  {
+    "playerId": "PLAYER_ID_HERE",
+    "wordIndex": 0
+  }
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Get Document
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/documents/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: DOCUMENT_ID_HERE
+}

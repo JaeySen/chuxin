@@ -1,0 +1,20 @@
+meta {
+  name: Refresh Schedule Cache
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/schedule/refresh
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+docs {
+  Busts the 5-min cache and re-fetches from Google Sheet immediately.
+  Requires admin role.
+}

@@ -1,0 +1,19 @@
+meta {
+  name: End Bingo Game
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/games/bingo/:id/end
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: GAME_ID_HERE
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Create Check-in
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/giaovu/sessions/:sessionId/checkins
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  sessionId: SESSION_ID_HERE
+}
+
+body:json {
+  {
+    "studentId": "STUDENT_UUID_HERE",
+    "status": "present",
+    "note": ""
+  }
+}
+
+docs {
+  status: present | absent | late | excused
+  Upserts on (session_id, student_id).
+  Requires teacher, assistant, staff, or admin role.
+}

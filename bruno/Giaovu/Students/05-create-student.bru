@@ -1,0 +1,35 @@
+meta {
+  name: Create Student / Staff User
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/giaovu/users
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+body:json {
+  {
+    "email": "hocvien@example.com",
+    "displayName": "Trần Thị B",
+    "password": "password123",
+    "role": "student",
+    "phone": "0907654321",
+    "dateOfBirth": "2010-05-15",
+    "parentName": "Trần Văn C",
+    "parentPhone": "0901111222",
+    "address": "123 Lê Lợi, Q1, TP.HCM",
+    "notes": ""
+  }
+}
+
+docs {
+  Requires staff or admin role.
+  Role: teacher | assistant | staff | student.
+}

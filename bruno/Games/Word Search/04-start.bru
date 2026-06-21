@@ -1,0 +1,19 @@
+meta {
+  name: Start Word Search
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/games/word-search/:id/start
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: GAME_ID_HERE
+}

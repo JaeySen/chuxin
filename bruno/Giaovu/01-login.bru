@@ -1,0 +1,31 @@
+meta {
+  name: Login (Giaovu portal)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/giaovu/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "giaovien@hanngusotam.com",
+    "password": "password123"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("jwt", res.body.jwt);
+    bru.setVar("sessionToken", res.body.sessionToken);
+  }
+}
+
+docs {
+  Domain-restricted: email must be @hanngusotam.io.vn or @hanngusotam.com.
+  Role must be teacher | admin | staff | assistant.
+  Errors: 403 DOMAIN_RESTRICTED | 403 ROLE_FORBIDDEN | 423 ACCOUNT_LOCKED
+}

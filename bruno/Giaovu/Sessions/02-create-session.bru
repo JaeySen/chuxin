@@ -1,0 +1,33 @@
+meta {
+  name: Create Session
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/giaovu/classes/:id/sessions
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+}
+
+body:json {
+  {
+    "sessionDate": "2026-07-07",
+    "startTime": "19:30",
+    "endTime": "21:00",
+    "topic": "Bài 1: Chào hỏi",
+    "notes": ""
+  }
+}
+
+docs {
+  Requires teacher, staff, or admin role.
+}

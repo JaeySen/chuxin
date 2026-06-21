@@ -1,0 +1,33 @@
+meta {
+  name: Review Submission
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/giaovu/submissions/:id/review
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: SUBMISSION_ID_HERE
+}
+
+body:json {
+  {
+    "status": "reviewed",
+    "score": 85,
+    "feedback": "Bài làm tốt, cần chú ý thanh điệu."
+  }
+}
+
+docs {
+  status: reviewed | needs_revision
+  score: 0–100 (optional)
+  Requires assistant, teacher, or admin role.
+}

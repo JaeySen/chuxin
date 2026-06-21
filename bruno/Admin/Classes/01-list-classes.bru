@@ -1,0 +1,15 @@
+meta {
+  name: List Classes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/admin/classes
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}

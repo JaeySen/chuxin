@@ -1,0 +1,21 @@
+meta {
+  name: Call Complete
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/games/word-search/:id/callable
+  body: json
+  auth: none
+}
+
+params:path {
+  id: GAME_ID_HERE
+}
+
+body:json {
+  {
+    "playerId": "PLAYER_ID_HERE"
+  }
+}

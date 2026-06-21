@@ -1,0 +1,35 @@
+meta {
+  name: Update Class
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/giaovu/classes/:id
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+}
+
+body:json {
+  {
+    "name": "HSK1 Thứ 3/5 19h30",
+    "status": "active",
+    "teacherId": "TEACHER_UUID_HERE",
+    "startDate": "2026-07-01",
+    "endDate": "2026-12-31",
+    "maxStudents": 25
+  }
+}
+
+docs {
+  Requires staff or admin role.
+  Allowed fields: name, courseId, teacherId, status, startDate, endDate, maxStudents, schedule.
+}

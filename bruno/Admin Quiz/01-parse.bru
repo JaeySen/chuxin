@@ -1,0 +1,26 @@
+meta {
+  name: Parse Quiz PDF
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/admin/quiz/parse
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+body:multipart {
+  file: @file(/path/to/quiz.pdf)
+}
+
+docs {
+  Accepts PDF or DOCX (max 20 MB).
+  Calls Python parse_quiz.py subprocess.
+  Returns { title, slug, questions: [{ num, text, type, options, answer }] }.
+  Requires admin role.
+}

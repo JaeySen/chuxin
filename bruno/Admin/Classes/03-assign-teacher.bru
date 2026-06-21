@@ -1,0 +1,25 @@
+meta {
+  name: Assign Teacher
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/admin/classes/:id/teacher
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+}
+
+body:json {
+  {
+    "teacherId": "TEACHER_UUID_HERE"
+  }
+}

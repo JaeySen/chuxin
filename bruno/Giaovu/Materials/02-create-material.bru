@@ -1,0 +1,36 @@
+meta {
+  name: Create Material
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/giaovu/classes/:id/materials
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+}
+
+body:json {
+  {
+    "title": "Bài tập về nhà tuần 1",
+    "type": "homework",
+    "googleUrl": "https://docs.google.com/document/d/DOCID/edit",
+    "description": "Hoàn thành bài tập trang 5-6",
+    "sessionId": null,
+    "dueDate": "2026-07-14"
+  }
+}
+
+docs {
+  type: lesson | homework | reference | announcement
+  googleUrl and sessionId are optional.
+  Requires teacher, staff, or admin role.
+}

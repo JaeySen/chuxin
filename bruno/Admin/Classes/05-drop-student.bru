@@ -1,0 +1,20 @@
+meta {
+  name: Drop Student
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/admin/classes/:id/enrollments/:studentId
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+  studentId: STUDENT_UUID_HERE
+}

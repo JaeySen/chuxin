@@ -1,0 +1,23 @@
+meta {
+  name: Delete Document
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/documents/:id
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: DOCUMENT_ID_HERE
+}
+
+docs {
+  Requires teacher or admin role.
+}

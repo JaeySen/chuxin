@@ -1,0 +1,15 @@
+meta {
+  name: Me (Giaovu)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/giaovu/me
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}

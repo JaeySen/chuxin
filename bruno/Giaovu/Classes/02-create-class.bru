@@ -1,0 +1,30 @@
+meta {
+  name: Create Class
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/giaovu/classes
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+body:json {
+  {
+    "name": "HSK1 Thứ 2/4/6 19h30",
+    "courseId": "han1",
+    "teacherId": null,
+    "startDate": "2026-07-01",
+    "endDate": "2026-12-31",
+    "maxStudents": 30
+  }
+}
+
+docs {
+  Requires staff or admin role.
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Unlock via Auth Event
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/admin/auth-events/:id/unlock
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: EVENT_ID_HERE
+}
+
+body:json {
+  {
+    "note": "Unlocked by admin after verification"
+  }
+}

@@ -1,0 +1,20 @@
+meta {
+  name: List Auth Events
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/admin/auth-events
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:query {
+  resolved: false
+  limit: 100
+}

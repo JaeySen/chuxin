@@ -1,0 +1,15 @@
+meta {
+  name: Get Word Search
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/games/word-search/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: GAME_ID_HERE
+}

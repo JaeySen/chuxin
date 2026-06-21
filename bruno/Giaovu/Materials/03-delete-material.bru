@@ -1,0 +1,19 @@
+meta {
+  name: Delete Material
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/giaovu/materials/:id
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: MATERIAL_ID_HERE
+}

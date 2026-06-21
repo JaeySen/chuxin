@@ -1,0 +1,27 @@
+meta {
+  name: Bulk Check-in
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/giaovu/sessions/:sessionId/checkins/bulk
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  sessionId: SESSION_ID_HERE
+}
+
+body:json {
+  [
+    { "studentId": "UUID_1", "status": "present" },
+    { "studentId": "UUID_2", "status": "absent", "note": "Bệnh" },
+    { "studentId": "UUID_3", "status": "late" }
+  ]
+}

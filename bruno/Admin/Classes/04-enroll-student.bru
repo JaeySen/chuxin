@@ -1,0 +1,25 @@
+meta {
+  name: Enroll Student
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/admin/classes/:id/enroll
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+}
+
+body:json {
+  {
+    "studentId": "STUDENT_UUID_HERE"
+  }
+}

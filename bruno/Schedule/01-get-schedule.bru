@@ -1,0 +1,16 @@
+meta {
+  name: Get Schedule
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/schedule
+  body: none
+  auth: none
+}
+
+docs {
+  Public endpoint. Fetches schedule from Google Sheet (SCHEDULE_CSV_URL env) with 5-min cache.
+  Returns { rows, source: "sheet" | "empty" }.
+}

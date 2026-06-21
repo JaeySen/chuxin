@@ -1,0 +1,15 @@
+meta {
+  name: List Progress
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/progress
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}

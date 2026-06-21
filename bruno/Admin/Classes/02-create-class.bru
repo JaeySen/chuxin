@@ -1,0 +1,37 @@
+meta {
+  name: Create Class
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/admin/classes
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+body:json {
+  {
+    "name": "HSK1 Thứ 2/4/6 19h30",
+    "classCode": "HSK1-A",
+    "courseId": "han1",
+    "teacherId": null,
+    "schedule": {
+      "days": ["Mon", "Wed", "Fri"],
+      "clock_in": "19:30",
+      "clock_out": "21:00"
+    },
+    "startDate": "2026-07-01",
+    "endDate": "2026-12-31"
+  }
+}
+
+docs {
+  days: Mon | Tue | Wed | Thu | Fri | Sat | Sun
+  schedule is optional — omit for unscheduled classes.
+  teacherId is optional UUID.
+}

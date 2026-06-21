@@ -1,0 +1,15 @@
+meta {
+  name: Summary by Course
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/progress/summary/courses
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Join Word Search
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/games/word-search/:id/join
+  body: json
+  auth: none
+}
+
+params:path {
+  id: GAME_ID_HERE
+}
+
+body:json {
+  {
+    "displayName": "Nguyễn Văn A"
+  }
+}

@@ -1,0 +1,19 @@
+meta {
+  name: List Submissions
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/giaovu/materials/:materialId/submissions
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  materialId: MATERIAL_ID_HERE
+}

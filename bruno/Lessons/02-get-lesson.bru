@@ -1,0 +1,19 @@
+meta {
+  name: Get Lesson
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/lessons/:id
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: LESSON_ID_HERE
+}

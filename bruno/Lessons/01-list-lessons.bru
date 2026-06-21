@@ -1,0 +1,15 @@
+meta {
+  name: List Lessons
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/lessons
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}

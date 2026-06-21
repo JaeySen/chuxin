@@ -1,0 +1,36 @@
+meta {
+  name: Put Lesson (upsert)
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/lessons/:id
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: LESSON_ID_HERE
+}
+
+body:json {
+  {
+    "id": "LESSON_ID_HERE",
+    "course": "han1",
+    "order": 1,
+    "title": "Bài 1: Chào hỏi",
+    "subtitle": "你好",
+    "interactionType": "flashcard",
+    "cards": []
+  }
+}
+
+docs {
+  Requires teacher or admin role.
+  interactionType is required.
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Create User
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/admin/users
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+body:json {
+  {
+    "displayName": "Nguyễn Văn A",
+    "email": "nguyenvana@example.com",
+    "phone": "0901234567",
+    "password": "password123",
+    "role": "student"
+  }
+}
+
+docs {
+  Requires both email AND phone. Role: student | teacher | admin.
+  On success returns the created user with phone set.
+  Errors: 409 EMAIL_TAKEN | 409 PHONE_TAKEN
+}

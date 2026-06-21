@@ -1,0 +1,19 @@
+meta {
+  name: List Check-ins
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/giaovu/sessions/:sessionId/checkins
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  sessionId: SESSION_ID_HERE
+}

@@ -1,0 +1,20 @@
+meta {
+  name: List Staff
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/giaovu/staff
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+docs {
+  Returns users with role: staff | assistant | teacher.
+  Requires admin role.
+}

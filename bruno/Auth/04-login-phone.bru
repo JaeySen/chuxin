@@ -1,0 +1,25 @@
+meta {
+  name: Login (phone)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "phone": "0901234567",
+    "password": "password123"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("jwt", res.body.jwt);
+    bru.setVar("sessionToken", res.body.sessionToken);
+  }
+}

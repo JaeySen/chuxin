@@ -1,0 +1,21 @@
+meta {
+  name: Calendar
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/giaovu/calendar
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+docs {
+  Returns all upcoming sessions.
+  Teachers see only sessions for their own classes.
+  Staff/admin see all sessions.
+}

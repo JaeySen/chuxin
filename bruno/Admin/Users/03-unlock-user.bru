@@ -1,0 +1,19 @@
+meta {
+  name: Unlock User
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/admin/users/:id/unlock
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: USER_ID_HERE
+}

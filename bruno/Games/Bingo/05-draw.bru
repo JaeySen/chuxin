@@ -1,0 +1,19 @@
+meta {
+  name: Draw Next Word
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/games/bingo/:id/draw
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: GAME_ID_HERE
+}

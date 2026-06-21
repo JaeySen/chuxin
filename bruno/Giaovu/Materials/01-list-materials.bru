@@ -1,0 +1,19 @@
+meta {
+  name: List Materials
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/giaovu/classes/:id/materials
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+}

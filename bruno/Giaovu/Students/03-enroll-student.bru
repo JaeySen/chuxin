@@ -1,0 +1,31 @@
+meta {
+  name: Enroll Student into Class
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/giaovu/classes/:id/students
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: CLASS_ID_HERE
+}
+
+body:json {
+  {
+    "studentId": "STUDENT_UUID_HERE",
+    "notes": ""
+  }
+}
+
+docs {
+  Teachers may only enroll into their own classes.
+  Upserts: if already enrolled, reactivates with 'active' status.
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Refresh Document Content
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/documents/:id/refresh
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  id: DOCUMENT_ID_HERE
+}
+
+docs {
+  Re-fetches content from Google Docs and updates content_hash + content_bytes.
+  Returns { document, changed: bool, error }.
+  Requires teacher or admin role.
+}

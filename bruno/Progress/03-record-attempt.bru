@@ -1,0 +1,31 @@
+meta {
+  name: Record Attempt
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/progress/:lessonId
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{jwt}}
+}
+
+params:path {
+  lessonId: LESSON_ID_HERE
+}
+
+body:json {
+  {
+    "score": 90,
+    "durationSec": 120,
+    "completed": true
+  }
+}
+
+docs {
+  All fields optional. Upserts progress row; appends to score_history (max 20 entries).
+}
