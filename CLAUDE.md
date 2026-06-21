@@ -1,13 +1,31 @@
 # CLAUDE.md
 
-## Deploy (VPS: `sotam-vps`)
+## Deploy (FTP: `hanngusotam.com` subdomains)
+
+Credentials in `.env.deploy` (host `112.213.89.77`, port 21, FTPS).
+Script: `scripts/ftp-deploy.sh` — builds then uploads, **excludes `.map` files**.
 
 ```bash
-pnpm --filter shared build && pnpm --filter react build
-rsync -avz --delete /Users/tranngochienlong/chuxin/apps/react/dist/ sotam-vps:/var/www/sotam/
+# giaovu portal (apps/giaovu/ → giaovu.hanngusotam.com/public_html/)
+./scripts/ftp-deploy.sh giaovu
+
+# testpage (apps/vanilla/ static → testpage.hanngusotam.com/public_html/)
+./scripts/ftp-deploy.sh testpage
+
+# both at once
+./scripts/ftp-deploy.sh all
 ```
 
+- `giaovu`: runs `pnpm --filter shared build && pnpm --filter giaovu build` first, then uploads `apps/giaovu/dist/`
+- `testpage`: runs `pnpm --filter shared build && pnpm --filter react build` first, then uploads `apps/react/dist/`
+- `.map` files are always skipped on upload
+
+## Deploy (VPS: `sotam-vps`)
+
+**Frontend is deployed via FTP only** (see FTP section above). Never use rsync for React/giaovu frontend.
+
 API changes:
+
 ```bash
 pnpm --filter api build
 rsync -avz apps/api/dist/ sotam-vps:/home/sotam/sotam/apps/api/dist/
@@ -57,6 +75,7 @@ shows Vietnamese-first definitions for now.
 - **Parser script**: `scripts/parse_quiz.py` — run inside
   `/Users/tranngochienlong/chuxin-docs/.venv` (has `markitdown` installed).
   Use `--stdout` flag to get JSON on stdout instead of saving to file.
+
   ```bash
   cd /Users/tranngochienlong/chuxin-docs
   source .venv/bin/activate
@@ -64,6 +83,7 @@ shows Vietnamese-first definitions for now.
   # or batch:
   python /path/to/chuxin/scripts/parse_quiz.py --dir .
   ```
+
 - **Output**: `content/quizzes/<slug>.json` per PDF. Schema:
   `{ title, slug, source, questions: [{ num, text, type, options:{A,B,C,D}, answer }] }`
   where `type` is `"mcq"` or `"open"`.
