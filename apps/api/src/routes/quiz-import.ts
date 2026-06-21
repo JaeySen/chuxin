@@ -86,27 +86,33 @@ export async function quizImportRoutes(app: FastifyInstance) {
         questions: { num: number; text: string; type: string; options: Record<string, string>; answer: string | null }[];
       };
       courseId?: string;
+      customTitle?: string;   // teacher-supplied name; overrides parsed title if non-empty
+      shared?: boolean;       // share with all teachers
     };
 
-    const { quiz, courseId } = body;
+    const { quiz, courseId, customTitle, shared } = body;
     if (!quiz?.slug || !quiz?.title) {
       return reply.code(400).send({ error: "Invalid quiz payload" });
     }
 
-    // Upsert quiz row (re-upload replaces existing slug)
+    const finalTitle = customTitle?.trim() || quiz.title;
+    // Derive slug from custom title if provided
+    const finalSlug = customTitle?.trim()
+      ? customTitle.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").slice(0, 80) || quiz.slug
+      : quiz.slug;
+
     const { rows } = await query<{ id: string }>(
-      `INSERT INTO quizzes (slug, title, source, course_id, created_by)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO quizzes (slug, title, source, course_id, created_by, shared)
+       VALUES ($1, $2, $3, $4, $5, $6)
        ON CONFLICT (slug) DO UPDATE
          SET title = EXCLUDED.title, source = EXCLUDED.source,
-             course_id = EXCLUDED.course_id
+             course_id = EXCLUDED.course_id, shared = EXCLUDED.shared
        RETURNING id`,
-      [quiz.slug, quiz.title, quiz.source ?? null, courseId ?? null, request.user.uid],
+      [finalSlug, finalTitle, quiz.source ?? null, courseId ?? null, request.user.uid, shared ?? false],
     );
 
     const quizId = rows[0].id;
 
-    // Replace all questions for this quiz
     await query("DELETE FROM quiz_questions WHERE quiz_id = $1", [quizId]);
     for (const q of quiz.questions) {
       await query(
@@ -116,6 +122,37 @@ export async function quizImportRoutes(app: FastifyInstance) {
       );
     }
 
-    return reply.send({ id: quizId, slug: quiz.slug });
+    return reply.send({ id: quizId, slug: finalSlug, title: finalTitle });
+  });
+
+  // Fetch full quiz (with questions) by id.
+  app.get("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const { rows: [quiz] } = await query<{ id: string; slug: string; title: string }>(
+      `SELECT id, slug, title FROM quizzes WHERE id = $1`,
+      [id],
+    );
+    if (!quiz) return reply.code(404).send({ error: "Not found" });
+
+    const { rows: questions } = await query<{
+      num: number; text: string; type: string; options: unknown; answer: string | null;
+    }>(
+      `SELECT num, text, type, options, answer FROM quiz_questions WHERE quiz_id = $1 ORDER BY num`,
+      [id],
+    );
+    return reply.send({ ...quiz, questions });
+  });
+
+  // Rename a quiz.
+  app.patch("/:id/title", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const { title } = request.body as { title: string };
+    if (!title?.trim()) return reply.code(400).send({ error: "title required" });
+    const { rows: [row] } = await query<{ id: string; title: string }>(
+      `UPDATE quizzes SET title = $1 WHERE id = $2 RETURNING id, title`,
+      [title.trim(), id],
+    );
+    if (!row) return reply.code(404).send({ error: "Not found" });
+    return reply.send(row);
   });
 }
