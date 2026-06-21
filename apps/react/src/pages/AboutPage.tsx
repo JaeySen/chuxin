@@ -5,13 +5,13 @@ const TEACHERS = [
     name: "Thầy Nguyễn Đức Trung",
     role: "Founder · Giảng viên trưởng",
     photo: "/founder.jpg",
-    bio: "Thạc sĩ ngôn ngữ Trung, hơn 10 năm kinh nghiệm giảng dạy HSK 1 → HSK 6.",
+    bio: "",
   },
   {
     name: "Cô Lê Thiên Giao Hạ",
     role: "Co-founder · Phụ trách chuyên môn",
     photo: "/co-founder.jpg",
-    bio: "Cử nhân Hán ngữ Đại học Bắc Kinh, chuyên luyện thi HSKK và phiên dịch.",
+    bio: "",
   },
 ];
 

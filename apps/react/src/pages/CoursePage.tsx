@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import type { CourseId, Chapter } from "@hanai/shared";
-import { COURSES, CHAPTERS_BY_COURSE } from "@hanai/shared";
+import type { CourseId, Chapter } from "@sotam/shared";
+import { COURSES, CHAPTERS_BY_COURSE } from "@sotam/shared";
 import { useHead } from "../lib/useHead";
 import { useAuth } from "../lib/auth-context";
 import { QuizImportPage } from "./QuizImportPage";

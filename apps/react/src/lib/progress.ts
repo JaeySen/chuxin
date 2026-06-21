@@ -1,5 +1,5 @@
 import { apiFetch, getStoredJwt } from "./api";
-import type { Progress } from "@hanai/shared";
+import type { Progress } from "@sotam/shared";
 
 interface ProgressRow extends Progress {
   lessonId: string;

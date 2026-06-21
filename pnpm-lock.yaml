@@ -100,7 +100,7 @@ importers:
 
   apps/react:
     dependencies:
-      '@hanai/shared':
+      '@sotam/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       react:
@@ -165,7 +165,7 @@ importers:
 
   scripts:
     dependencies:
-      '@hanai/shared':
+      '@sotam/shared':
         specifier: workspace:*
         version: link:../packages/shared
       dotenv:

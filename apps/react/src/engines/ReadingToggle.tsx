@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Lesson } from "@hanai/shared";
+import type { Lesson } from "@sotam/shared";
 import { recordAttempt } from "../lib/progress";
 
 type Props = { lesson: Extract<Lesson, { interactionType: "reading-toggle" }> };

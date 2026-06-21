@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchLesson } from "../lib/lessons";
-import type { Lesson } from "@hanai/shared";
+import type { Lesson } from "@sotam/shared";
 import { useAuth } from "../lib/auth-context";
 import { LessonRenderer } from "../engines/LessonRenderer";
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Lesson } from "@hanai/shared";
+import type { Lesson } from "@sotam/shared";
 import { saveWorksheet, loadWorksheet, recordAttempt } from "../lib/progress";
 
 type Props = { lesson: Extract<Lesson, { interactionType: "worksheet" }> };

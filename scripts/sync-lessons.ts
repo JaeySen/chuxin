@@ -18,7 +18,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "yaml";
 import pg from "pg";
-import { LessonSchema, COURSES, type Lesson } from "@hanai/shared";
+import { LessonSchema, COURSES, type Lesson } from "@sotam/shared";
 
 const { Pool } = pg;
 

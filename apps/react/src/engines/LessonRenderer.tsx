@@ -1,4 +1,4 @@
-import type { Lesson } from "@hanai/shared";
+import type { Lesson } from "@sotam/shared";
 import { Flashcard } from "./Flashcard";
 import { Mcq } from "./Mcq";
 import { FillBlank } from "./FillBlank";

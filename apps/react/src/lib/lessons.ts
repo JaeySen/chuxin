@@ -1,5 +1,5 @@
 import { apiFetch } from "./api";
-import type { Lesson } from "@hanai/shared";
+import type { Lesson } from "@sotam/shared";
 
 export async function fetchLesson(id: string): Promise<Lesson | null> {
   try {

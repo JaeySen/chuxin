@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { Lesson } from "@hanai/shared";
-import { answerMatches } from "@hanai/shared";
+import type { Lesson } from "@sotam/shared";
+import { answerMatches } from "@sotam/shared";
 import { ScoreStrip, Summary, useTimer } from "./shared";
 import { recordAttempt } from "../lib/progress";
 

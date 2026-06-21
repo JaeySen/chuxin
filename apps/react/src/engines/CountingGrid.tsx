@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Lesson } from "@hanai/shared";
+import type { Lesson } from "@sotam/shared";
 import { useTimer } from "./shared";
 import { recordAttempt } from "../lib/progress";
 
