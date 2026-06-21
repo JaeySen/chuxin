@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/auth-context";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -71,6 +71,12 @@ function Header() {
   const [modalOpen, setModalOpen] = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
   const location = useLocation();
+  const nav = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    nav("/");
+  }
 
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
@@ -78,7 +84,7 @@ function Header() {
     if (!menuOpen) return;
     const handler = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest(".hanai-header")) setMenuOpen(false);
+      if (!target.closest(".sotam-header")) setMenuOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -90,8 +96,8 @@ function Header() {
   ];
 
   return (
-    <header className="hanai-header">
-      <div className="hanai-header-inner">
+    <header className="sotam-header">
+      <div className="sotam-header-inner">
         {/* Brand */}
         <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
           <img src="/chuxin-logo.jpg" alt="Sơ Tâm" className="brand-mark" />
@@ -99,8 +105,16 @@ function Header() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hanai-nav hanai-nav--desktop">
-          {role === "student" ? (
+        <nav className="sotam-nav sotam-nav--desktop">
+          {role === "admin" ? (
+            <Link to="/admin" style={{ color: "var(--c-red)", fontWeight: 700 }}>⚙ Quản trị</Link>
+          ) : role === "teacher" ? (
+            <>
+              <Link to="/" className="nav-class-tab">Trang chủ</Link>
+              <Link to="/giaovu" className="nav-class-tab">Lớp học</Link>
+              <GamesDropdown />
+            </>
+          ) : role === "student" ? (
             <Link to="/" className="nav-class-tab">
               {user?.classes?.[0]?.name ?? "Lớp học"}
             </Link>
@@ -108,20 +122,17 @@ function Header() {
             <>
               {PUBLIC_LINKS.map((l) => <Link key={l.to} to={l.to}>{l.label}</Link>)}
               {user && <GamesDropdown />}
-              {role === "admin" && (
-                <Link to="/admin" style={{ color: "var(--c-red)", fontWeight: 700 }}>⚙ Quản trị</Link>
-              )}
             </>
           )}
         </nav>
 
         {/* Right cluster: auth + hamburger */}
-        <div className="hanai-header-right">
-          <div className="hanai-auth">
+        <div className="sotam-header-right">
+          <div className="sotam-auth">
             {user ? (
-              <div className="hanai-user">
-                <span className="hanai-user-name">{user.displayName ?? user.email}</span>
-                <button className="btn btn-ghost btn-sm" onClick={logout}>Đăng xuất</button>
+              <div className="sotam-user">
+                <span className="sotam-user-name">{user.displayName ?? user.email}</span>
+                <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Đăng xuất</button>
               </div>
             ) : (
               <button className="btn btn-primary btn-sm" onClick={() => setModalOpen(true)}>
@@ -143,28 +154,44 @@ function Header() {
 
       {/* Mobile nav drawer — absolute overlay, doesn't push content */}
       {menuOpen && (
-        <nav className="hanai-nav--mobile">
-          <div className="hanai-nav--mobile-grid">
-            {role === "student" ? (
+        <nav className="sotam-nav--mobile">
+          <div className="sotam-nav--mobile-grid">
+            {role === "admin" ? (
+              <Link to="/admin" className="nav-tile nav-tile--admin">
+                <span className="nav-tile-icon">⚙</span>
+                <span className="nav-tile-label">Quản trị</span>
+              </Link>
+            ) : role === "teacher" ? (
+              <>
+                <Link to="/giaovu" className="nav-tile" onClick={() => setMenuOpen(false)}>
+                  <span className="nav-tile-icon">🏫</span>
+                  <span className="nav-tile-label">Lớp học</span>
+                </Link>
+                <Link to="/word-search" className="nav-tile" onClick={() => setMenuOpen(false)}>
+                  <span className="nav-tile-icon">🔍</span>
+                  <span className="nav-tile-label">Tìm từ</span>
+                </Link>
+                <Link to="/bingo" className="nav-tile" onClick={() => setMenuOpen(false)}>
+                  <span className="nav-tile-icon">🎯</span>
+                  <span className="nav-tile-label">Bingo</span>
+                </Link>
+                <Link to="/pinyin" className="nav-tile" onClick={() => setMenuOpen(false)}>
+                  <span className="nav-tile-icon">🔊</span>
+                  <span className="nav-tile-label">Pinyin</span>
+                </Link>
+              </>
+            ) : role === "student" ? (
               <Link to="/" className="nav-tile">
                 <span className="nav-tile-icon">🏫</span>
                 <span className="nav-tile-label">{user?.classes?.[0]?.name ?? "Lớp học"}</span>
               </Link>
             ) : (
-              <>
-                {mobileTiles.map((l) => (
-                  <Link key={l.to} to={l.to} className="nav-tile">
-                    <span className="nav-tile-icon">{l.icon}</span>
-                    <span className="nav-tile-label">{l.label}</span>
-                  </Link>
-                ))}
-                {role === "admin" && (
-                  <Link to="/admin" className="nav-tile nav-tile--admin">
-                    <span className="nav-tile-icon">⚙</span>
-                    <span className="nav-tile-label">Quản trị</span>
-                  </Link>
-                )}
-              </>
+              mobileTiles.map((l) => (
+                <Link key={l.to} to={l.to} className="nav-tile">
+                  <span className="nav-tile-icon">{l.icon}</span>
+                  <span className="nav-tile-label">{l.label}</span>
+                </Link>
+              ))
             )}
           </div>
         </nav>
@@ -216,8 +243,8 @@ function SignInModal({ close }: { close: () => void }) {
   }
 
   const modal = (
-    <div className="hanai-modal" role="dialog" aria-modal="true" onClick={close}>
-      <div className="hanai-modal-card" ref={cardRef} onClick={(e) => e.stopPropagation()}>
+    <div className="sotam-modal" role="dialog" aria-modal="true" onClick={close}>
+      <div className="sotam-modal-card" ref={cardRef} onClick={(e) => e.stopPropagation()}>
         <h3>Đăng nhập</h3>
 
         {config === null && <div className="muted" style={{ fontSize: 14 }}>Đang tải…</div>}
