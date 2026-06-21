@@ -70,18 +70,18 @@ body {
   padding: 8px 16px; border-radius: 999px;
 }
 
-.hanai-header {
+.sotam-header {
   position: sticky; top: 0; z-index: 50;
   background: rgba(255,255,255,0.85);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--c-divider);
 }
-.hanai-header-inner {
+.sotam-header-inner {
   max-width: 1080px; margin: 0 auto; padding: 12px 20px;
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
 }
-.hanai-header-inner .brand {
+.sotam-header-inner .brand {
   display: flex; align-items: center; gap: 10px;
   text-decoration: none; color: var(--c-blue-dark);
   font-weight: 700; font-size: 18px;
@@ -92,46 +92,46 @@ body {
   display: inline-flex; align-items: center; justify-content: center;
   font-family: "Noto Sans SC", sans-serif; font-weight: 700;
 }
-.hanai-nav { display: flex; gap: 16px; }
-.hanai-nav a {
+.sotam-nav { display: flex; gap: 16px; }
+.sotam-nav a {
   text-decoration: none; color: var(--c-text-soft);
   font-weight: 500; padding: 6px 10px; border-radius: 8px;
 }
-.hanai-nav a:hover { background: rgba(0,0,0,0.04); color: var(--c-text); }
-.hanai-user { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.sotam-nav a:hover { background: rgba(0,0,0,0.04); color: var(--c-text); }
+.sotam-user { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 
-.hanai-modal {
+.sotam-modal {
   position: fixed; inset: 0; background: rgba(15,23,42,0.45);
   display: flex; align-items: center; justify-content: center;
   z-index: 100;
 }
-.hanai-modal-card {
+.sotam-modal-card {
   background: white; border-radius: 20px; padding: 28px;
   width: min(420px, 92vw);
   display: flex; flex-direction: column; gap: 12px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.2);
   position: relative;
 }
-.hanai-modal-card h3 { margin: 0 0 4px; }
-.hanai-modal-card input {
+.sotam-modal-card h3 { margin: 0 0 4px; }
+.sotam-modal-card input {
   padding: 11px 14px; border: 1.5px solid var(--c-divider);
   border-radius: 10px; font-size: 15px;
 }
-.hanai-modal-card .divider {
+.sotam-modal-card .divider {
   text-align: center; color: var(--c-text-muted); font-size: 13px;
   margin: 8px 0;
 }
 .close-x { position: absolute; top: 12px; right: 14px; }
 
-#hanai-toast {
+#sotam-toast {
   position: fixed; left: 50%; bottom: 36px; transform: translateX(-50%);
   background: var(--c-text); color: white; padding: 10px 18px;
   border-radius: 999px; font-size: 14px; opacity: 0;
   transition: opacity 0.2s ease, transform 0.2s ease;
   pointer-events: none; z-index: 200;
 }
-#hanai-toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
-#hanai-toast.toast-error { background: var(--c-wrong); }
+#sotam-toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+#sotam-toast.toast-error { background: var(--c-wrong); }
 
 .lesson-shell {
   max-width: 920px; margin: 32px auto; padding: 0 20px;
