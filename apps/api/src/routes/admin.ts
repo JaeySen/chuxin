@@ -132,14 +132,107 @@ export async function adminRoutes(app: FastifyInstance) {
     return { ok: true };
   });
 
+  // ── Class management (admin only) ──────────────────────────────────────────
+
+  const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
+  type WeekDay = typeof WEEK_DAYS[number];
+
+  const ClassSchedule = z.object({
+    days:      z.array(z.enum(WEEK_DAYS)).min(1),
+    clock_in:  z.string().regex(/^\d{2}:\d{2}$/),
+    clock_out: z.string().regex(/^\d{2}:\d{2}$/),
+  });
+
+  const CreateClassBody = z.object({
+    name:       z.string().min(1).max(120),
+    classCode:  z.string().min(1).max(20).optional(),
+    courseId:   z.string().min(1),
+    teacherId:  z.string().uuid().optional(),
+    schedule:   ClassSchedule.optional(),
+    startDate:  z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+    endDate:    z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  });
+
+  app.get("/classes", async () => {
+    const { rows } = await query<{
+      id: string; name: string; class_code: string | null; course_id: string; status: string;
+      teacher_id: string | null; teacher_name: string | null;
+      schedule: { days: WeekDay[]; clock_in: string; clock_out: string } | null;
+      start_date: string | null; end_date: string | null;
+      enrolled: number; created_at: Date;
+    }>(
+      `SELECT c.id, c.name, c.class_code, c.course_id, c.status, c.teacher_id,
+              u.display_name AS teacher_name,
+              c.schedule, c.start_date, c.end_date,
+              COUNT(e.id)::int AS enrolled
+         FROM classes c
+         LEFT JOIN users u ON u.id = c.teacher_id
+         LEFT JOIN enrollments e ON e.class_id = c.id AND e.status = 'active'
+        GROUP BY c.id, u.display_name
+        ORDER BY c.created_at DESC`,
+    );
+    return rows.map((r) => ({
+      id: r.id, name: r.name, classCode: r.class_code, courseId: r.course_id,
+      status: r.status, teacherId: r.teacher_id, teacherName: r.teacher_name,
+      schedule: r.schedule, startDate: r.start_date, endDate: r.end_date,
+      enrolled: r.enrolled, createdAt: r.created_at,
+    }));
+  });
+
+  app.post("/classes", async (req, reply) => {
+    const parsed = CreateClassBody.safeParse(req.body);
+    if (!parsed.success) return reply.status(400).send({ error: "Invalid body", details: parsed.error.format() });
+    const { name, classCode, courseId, teacherId, schedule, startDate, endDate } = parsed.data;
+    const { rows } = await query<{ id: string }>(
+      `INSERT INTO classes (name, class_code, course_id, teacher_id, schedule, start_date, end_date, created_by)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+      [name, classCode ?? null, courseId, teacherId ?? null,
+       schedule ? JSON.stringify(schedule) : null,
+       startDate ?? null, endDate ?? null, req.user.uid],
+    );
+    return reply.status(201).send({ id: rows[0].id, name, classCode, courseId });
+  });
+
+  app.patch<{ Params: { id: string }; Body: { teacherId: string | null } }>(
+    "/classes/:id/teacher", async (req, reply) => {
+      await query(
+        `UPDATE classes SET teacher_id = $1, updated_at = now() WHERE id = $2`,
+        [req.body.teacherId, req.params.id],
+      );
+      return { ok: true };
+    },
+  );
+
+  app.post<{ Params: { id: string }; Body: { studentId: string } }>(
+    "/classes/:id/enroll", async (req, reply) => {
+      await query(
+        `INSERT INTO enrollments (class_id, student_id)
+         VALUES ($1, $2)
+         ON CONFLICT (class_id, student_id) DO UPDATE SET status = 'active'`,
+        [req.params.id, req.body.studentId],
+      );
+      return { ok: true };
+    },
+  );
+
+  app.delete<{ Params: { id: string; studentId: string } }>(
+    "/classes/:id/enrollments/:studentId", async (req) => {
+      await query(
+        `UPDATE enrollments SET status = 'dropped' WHERE class_id = $1 AND student_id = $2`,
+        [req.params.id, req.params.studentId],
+      );
+      return { ok: true };
+    },
+  );
+
   // ── Admin creates a new user (bypasses allow_signup flag) ────
   const CreateUserBody = z.object({
     displayName: z.string().min(1).max(80),
     password:    z.string().min(8),
     role:        z.enum(["student", "teacher", "admin"]),
-    email:       z.string().email().optional(),
-    phone:       z.string().min(8).max(20).optional(),
-  }).refine((d) => d.email || d.phone, { message: "email or phone is required" });
+    email:       z.string().email(),
+    phone:       z.string().min(8).max(20),
+  });
 
   app.post("/users", async (req, reply) => {
     const parsed = CreateUserBody.safeParse(req.body);
@@ -148,25 +241,27 @@ export async function adminRoutes(app: FastifyInstance) {
 
     let user;
     try {
-      if (phone) {
-        user = await signupWithPhone({ phone: normalizePhone(phone), password, displayName });
-      } else {
-        user = await signupWithPassword({ email: email!, password, displayName });
-      }
+      user = await signupWithPassword({ email, password, displayName });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (msg === "EMAIL_TAKEN" || msg === "PHONE_TAKEN") {
-        return reply.status(409).send({ error: msg });
-      }
+      if (msg === "EMAIL_TAKEN") return reply.status(409).send({ error: msg });
       throw err;
     }
 
-    // Update role if not student (signupWithPassword defaults to student/teacher via allowlist)
+    const normalised = normalizePhone(phone);
+    try {
+      await query(`UPDATE users SET phone = $1 WHERE id = $2`, [normalised, user.id]);
+    } catch {
+      // phone unique violation
+      await query(`DELETE FROM users WHERE id = $1`, [user.id]);
+      return reply.status(409).send({ error: "PHONE_TAKEN" });
+    }
+
     if (role !== user.role) {
       await query(`UPDATE users SET role = $1 WHERE id = $2`, [role, user.id]);
       user = { ...user, role };
     }
 
-    return reply.send(user);
+    return reply.send({ ...user, phone: normalised });
   });
 }
