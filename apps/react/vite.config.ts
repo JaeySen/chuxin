@@ -75,7 +75,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@hanai/shared": path.resolve(__dirname, "../../packages/shared/src/index.ts"),
+      "@sotam/shared": path.resolve(__dirname, "../../packages/shared/src/index.ts"),
     },
   },
   server: { port: 5173 },
