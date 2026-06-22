@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { getStoredJwt, getStoredSessionToken } from "../lib/api";
+import { COURSES } from "@sotam/shared";
 
 const API = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
 
@@ -129,17 +130,18 @@ function QuizPlayer({ quiz, onClose }: { quiz: ParsedQuiz; onClose: () => void }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
-export function QuizImportPage({ standalone = true, courseId }: { standalone?: boolean; courseId?: string }) {
+export function QuizImportPage({ standalone = true, courseId: propCourseId }: { standalone?: boolean; courseId?: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [dragging, setDragging]     = useState(false);
-  const [loading, setLoading]       = useState(false);
-  const [error, setError]           = useState<string | null>(null);
-  const [result, setResult]         = useState<ParsedQuiz | null>(null);
+  const [dragging, setDragging]       = useState(false);
+  const [loading, setLoading]         = useState(false);
+  const [error, setError]             = useState<string | null>(null);
+  const [result, setResult]           = useState<ParsedQuiz | null>(null);
   const [customTitle, setCustomTitle] = useState("");
-  const [shared, setShared]         = useState(false);
-  const [saving, setSaving]         = useState(false);
-  const [saved, setSaved]           = useState<{ slug: string; title: string } | null>(null);
-  const [playing, setPlaying]       = useState(false);
+  const [courseId, setCourseId]       = useState(propCourseId ?? COURSES[0]?.id ?? "");
+  const [shared, setShared]           = useState(false);
+  const [saving, setSaving]           = useState(false);
+  const [saved, setSaved]             = useState<{ slug: string; title: string } | null>(null);
+  const [playing, setPlaying]         = useState(false);
 
   async function upload(file: File) {
     setLoading(true); setError(null); setResult(null); setSaved(null); setCustomTitle(""); setShared(false);
@@ -267,6 +269,24 @@ export function QuizImportPage({ standalone = true, courseId }: { standalone?: b
                   <span className="qi-warn"> · {result.meta.missing_answers} thiếu đáp án</span>
                 )}
               </div>
+
+              {/* Course picker */}
+              {!propCourseId && (
+                <label className="qi-share-label" style={{ marginTop: 8 }}>
+                  <span style={{ flexShrink: 0, fontWeight: 600 }}>Khoá học:</span>
+                  <select
+                    className="adm-select"
+                    value={courseId}
+                    onChange={(e) => { setCourseId(e.target.value); setSaved(null); }}
+                    style={{ flex: 1 }}
+                  >
+                    <option value="">— Không gán —</option>
+                    {COURSES.map((c) => (
+                      <option key={c.id} value={c.id}>{c.title}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
 
               {/* Share toggle */}
               <label className="qi-share-label">

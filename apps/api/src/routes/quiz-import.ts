@@ -155,4 +155,16 @@ export async function quizImportRoutes(app: FastifyInstance) {
     if (!row) return reply.code(404).send({ error: "Not found" });
     return reply.send(row);
   });
+
+  // Update a quiz's course assignment.
+  app.patch("/:id/course", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const { courseId } = request.body as { courseId: string | null };
+    const { rows: [row] } = await query<{ id: string; course_id: string | null }>(
+      `UPDATE quizzes SET course_id = $1 WHERE id = $2 RETURNING id, course_id`,
+      [courseId ?? null, id],
+    );
+    if (!row) return reply.code(404).send({ error: "Not found" });
+    return reply.send({ id: row.id, courseId: row.course_id });
+  });
 }
