@@ -185,7 +185,12 @@ export function AdminDashboard() {
       {/* Classes */}
       <section className="lesson-card" style={{ marginTop: 20 }}>
         <h3 style={{ marginTop: 0 }}>Quản lý lớp học ({classes?.length ?? 0})</h3>
-        <ClassesSection classes={classes ?? []} teachers={teachers} onChanged={refresh} />
+        <ClassesSection
+          classes={classes ?? []}
+          teachers={teachers}
+          allStudents={(users ?? []).filter((u) => u.role === "student")}
+          onChanged={refresh}
+        />
       </section>
 
       {/* Settings */}
@@ -638,7 +643,113 @@ function ClassDots({ schedule, startDate, endDate }: {
 
 // ── Classes management section ────────────────────────────────────────────────
 
-function ClassesSection({ classes, teachers, onChanged }: { classes: ClassRow[]; teachers: { id: string; displayName: string }[]; onChanged: () => void }) {
+interface StudentEnrolled { id: string; displayName: string; email: string; status: string; }
+
+function ClassStudentsPanel({ classId, allStudents, onChanged }: {
+  classId: string;
+  allStudents: { id: string; displayName: string; email: string }[];
+  onChanged: () => void;
+}) {
+  const [enrolled, setEnrolled] = useState<StudentEnrolled[] | null>(null);
+  const [search, setSearch] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
+
+  useEffect(() => {
+    apiFetch<StudentEnrolled[]>(`/admin/classes/${classId}/students`).then(setEnrolled).catch(() => setEnrolled([]));
+  }, [classId]);
+
+  const enrolledIds = new Set((enrolled ?? []).filter((e) => e.status === "active").map((e) => e.id));
+
+  const filtered = allStudents.filter((s) => {
+    if (!search.trim()) return !enrolledIds.has(s.id);
+    const q = search.toLowerCase();
+    return !enrolledIds.has(s.id) && (
+      s.displayName.toLowerCase().includes(q) || s.email.toLowerCase().includes(q)
+    );
+  });
+
+  async function enroll(studentId: string) {
+    setBusy(studentId);
+    try {
+      await apiFetch(`/admin/classes/${classId}/enroll`, { method: "POST", body: JSON.stringify({ studentId }) });
+      setEnrolled((prev) => prev ? [...prev.filter((e) => e.id !== studentId), { ...allStudents.find((s) => s.id === studentId)!, status: "active" }] : prev);
+      onChanged();
+    } catch {}
+    setBusy(null);
+  }
+
+  async function drop(studentId: string) {
+    setBusy(studentId);
+    try {
+      await apiFetch(`/admin/classes/${classId}/enrollments/${studentId}`, { method: "DELETE" });
+      setEnrolled((prev) => prev ? prev.map((e) => e.id === studentId ? { ...e, status: "dropped" } : e) : prev);
+      onChanged();
+    } catch {}
+    setBusy(null);
+  }
+
+  const activeEnrolled = (enrolled ?? []).filter((e) => e.status === "active");
+
+  return (
+    <div className="adm-students-panel">
+      {/* Current students */}
+      {enrolled === null ? (
+        <div className="muted" style={{ fontSize: 13 }}>Đang tải…</div>
+      ) : activeEnrolled.length === 0 ? (
+        <div className="muted" style={{ fontSize: 13 }}>Chưa có học viên.</div>
+      ) : (
+        <div className="adm-enrolled-list">
+          {activeEnrolled.map((s) => (
+            <div key={s.id} className="adm-enrolled-row">
+              <span className="adm-enrolled-name">{s.displayName}</span>
+              <span className="adm-enrolled-email muted">{s.email}</span>
+              <button
+                className="adm-enrolled-drop"
+                onClick={() => drop(s.id)}
+                disabled={busy === s.id}
+                title="Xoá khỏi lớp"
+              >✕</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Add student */}
+      <div className="adm-add-student">
+        <input
+          className="adm-input"
+          placeholder="Tìm học viên theo tên hoặc email…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ flex: 1 }}
+        />
+      </div>
+      {(search.trim() || allStudents.length <= 10) && filtered.length > 0 && (
+        <div className="adm-student-results">
+          {filtered.slice(0, 8).map((s) => (
+            <div key={s.id} className="adm-student-result-row">
+              <span className="adm-enrolled-name">{s.displayName}</span>
+              <span className="adm-enrolled-email muted">{s.email}</span>
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => enroll(s.id)}
+                disabled={busy === s.id}
+              >{busy === s.id ? "…" : "Thêm"}</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ClassesSection({ classes, teachers, allStudents, onChanged }: {
+  classes: ClassRow[];
+  teachers: { id: string; displayName: string }[];
+  allStudents: { id: string; displayName: string; email: string }[];
+  onChanged: () => void;
+}) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [name, setName]           = useState("");
   const [classCode, setClassCode] = useState("");
@@ -697,21 +808,37 @@ function ClassesSection({ classes, teachers, onChanged }: { classes: ClassRow[];
               <tr>
                 <th>Mã</th><th>Tên lớp</th><th>Khoá</th>
                 <th>Lịch học</th><th>Buổi học</th>
-                <th>Giáo viên</th><th>HV</th><th>TT</th>
+                <th>Giáo viên</th><th>HV</th><th>TT</th><th></th>
               </tr>
             </thead>
             <tbody>
               {classes.map((c) => (
-                <tr key={c.id}>
-                  <td><code style={{ fontWeight: 700, fontSize: 11 }}>{c.classCode ?? "—"}</code></td>
-                  <td style={{ fontWeight: 600 }}>{c.name}</td>
-                  <td style={{ fontSize: 12 }}>{COURSE_LABEL[c.courseId] ?? c.courseId}</td>
-                  <td style={{ whiteSpace: "nowrap", fontSize: 12 }}>{formatSchedule(c.schedule)}</td>
-                  <td><ClassDots schedule={c.schedule} startDate={c.startDate} endDate={c.endDate} /></td>
-                  <td>{c.teacherName ?? <span className="muted">—</span>}</td>
-                  <td>{c.enrolled}</td>
-                  <td><span className={`adm-status adm-status--${c.status}`}>{c.status}</span></td>
-                </tr>
+                <>
+                  <tr key={c.id} className={expandedId === c.id ? "adm-row--expanded" : ""}>
+                    <td><code style={{ fontWeight: 700, fontSize: 11 }}>{c.classCode ?? "—"}</code></td>
+                    <td style={{ fontWeight: 600 }}>{c.name}</td>
+                    <td style={{ fontSize: 12 }}>{COURSE_LABEL[c.courseId] ?? c.courseId}</td>
+                    <td style={{ whiteSpace: "nowrap", fontSize: 12 }}>{formatSchedule(c.schedule)}</td>
+                    <td><ClassDots schedule={c.schedule} startDate={c.startDate} endDate={c.endDate} /></td>
+                    <td>{c.teacherName ?? <span className="muted">—</span>}</td>
+                    <td>{c.enrolled}</td>
+                    <td><span className={`adm-status adm-status--${c.status}`}>{c.status}</span></td>
+                    <td>
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        title="Quản lý học viên"
+                        onClick={() => setExpandedId(expandedId === c.id ? null : c.id)}
+                      >{expandedId === c.id ? "▲" : "👥"}</button>
+                    </td>
+                  </tr>
+                  {expandedId === c.id && (
+                    <tr key={`${c.id}-students`}>
+                      <td colSpan={9} style={{ padding: 0 }}>
+                        <ClassStudentsPanel classId={c.id} allStudents={allStudents} onChanged={onChanged} />
+                      </td>
+                    </tr>
+                  )}
+                </>
               ))}
             </tbody>
           </table>

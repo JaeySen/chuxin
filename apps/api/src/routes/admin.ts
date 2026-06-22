@@ -225,6 +225,18 @@ export async function adminRoutes(app: FastifyInstance) {
     },
   );
 
+  app.get<{ Params: { id: string } }>("/classes/:id/students", async (req) => {
+    const { rows } = await query<{ id: string; display_name: string; email: string; status: string }>(
+      `SELECT u.id, u.display_name, u.email, e.status
+         FROM enrollments e
+         JOIN users u ON u.id = e.student_id
+        WHERE e.class_id = $1
+        ORDER BY u.display_name`,
+      [req.params.id],
+    );
+    return rows.map((r) => ({ id: r.id, displayName: r.display_name, email: r.email, status: r.status }));
+  });
+
   // ── Admin creates a new user (bypasses allow_signup flag) ────
   const CreateUserBody = z.object({
     displayName: z.string().min(1).max(80),
