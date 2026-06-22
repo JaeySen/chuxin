@@ -4,6 +4,7 @@ export interface EnrolledClass {
   id: string;
   name: string;
   courseId: string;
+  teacherId: string | null;
 }
 
 export interface AuthUser {

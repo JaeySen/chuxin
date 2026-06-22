@@ -168,7 +168,7 @@ export async function authRoutes(app: FastifyInstance) {
     let classes: EnrolledClass[] = [];
     if (user.role === "student") {
       const { rows } = await query<EnrolledClass>(
-        `SELECT c.id, c.name, c.course_id AS "courseId"
+        `SELECT c.id, c.name, c.course_id AS "courseId", c.teacher_id AS "teacherId"
            FROM classes c
            JOIN enrollments e ON e.class_id = c.id
           WHERE e.student_id = $1 AND e.status = 'active'

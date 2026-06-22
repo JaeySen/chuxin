@@ -44,15 +44,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function signIn(input: { email?: string; phone?: string; password: string }) {
-    const u = await apiLogin(input);
-    setUser(u);
-    return u;
+    await apiLogin(input);
+    const full = await apiMe();
+    setUser(full);
+    return full!;
   }
 
   async function signUp(input: { email?: string; phone?: string; password: string; displayName: string }) {
-    const u = await apiSignup(input);
-    setUser(u);
-    return u;
+    await apiSignup(input);
+    const full = await apiMe();
+    setUser(full);
+    return full!;
   }
 
   async function signInWithGoogle(): Promise<never> {
