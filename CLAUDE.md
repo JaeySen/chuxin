@@ -29,17 +29,19 @@ API changes:
 ```bash
 pnpm --filter api build
 rsync -avz apps/api/dist/ sotam-vps:/home/sotam/sotam/apps/api/dist/
-rsync -avz apps/api/src/db/migrations/ sotam-vps:/home/sotam/sotam/apps/api/src/db/migrations/
 ssh sotam-vps "cd /home/sotam/sotam/apps/api && node dist/db/migrate.js"
 ssh sotam-vps "systemctl restart sotam-api"
 ```
 
-**Always run the migrations step** — `apps/api/src/db/migrations/*.sql` is
-NOT covered by the `dist/` rsync, so a new migration silently sits unapplied
-until some route 500s on a missing column/table. `dist/db/migrate.js` is the
-compiled migration runner (`apps/api/src/db/migrate.ts`) — it tracks applied
-versions in the `schema_migrations` table and only runs new files, using the
-same `.env` DB config as the API (no Postgres peer-auth issues).
+**Always run the migrations step.** `apps/api/package.json`'s `build` script
+is `tsc && cp -r src/db/migrations dist/db/migrations` — the copy is required
+because `dist/db/migrate.js` resolves its migrations dir *relative to itself*
+(`dist/db/migrations/`, not `src/db/migrations/`). Don't rsync
+`src/db/migrations/` to the VPS expecting `migrate.js` to find it there — it
+won't; it only reads `dist/db/migrations/`, which the build step now
+populates automatically. `migrate.js` tracks applied versions in the
+`schema_migrations` table and only runs new files, using the same `.env` DB
+config as the API (no Postgres peer-auth issues).
 
 CORS: `apps/api/src/index.ts` (`DEFAULT_ORIGINS`), or override on VPS via
 `ALLOWED_ORIGINS` env var (comma-separated) in `/home/sotam/sotam/apps/api/.env`
