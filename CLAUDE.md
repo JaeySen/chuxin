@@ -104,3 +104,57 @@ shows Vietnamese-first definitions for now.
   `/home/sotam/sotam/apps/api/.env`.
 - **Next**: DB migration for `quiz`/`quiz_question` tables, sync script
   to upload parsed JSON to DB, student quiz page at `/quiz/:slug`.
+
+## Quiz visibility (student-side) — debugging notes
+
+Quiz visibility rule: a quiz is shown to a student only if
+`quiz.course_id = class.course_id AND quiz.created_by = class.teacher_id`
+for the class the student is enrolled in (`GET /quiz?courseId=&teacherId=`
+in `apps/api/src/routes/quiz.ts`). This is intentional — quizzes belong
+to the teacher who uploaded them, not just to a course level.
+
+When a student reports "no exercises" despite being enrolled and the
+teacher having uploaded quizzes, check **in this order** (each layer
+silently produces an empty list if wrong, with no obvious error):
+
+1. **`/auth/me` not returning classes after login.** `signIn`/`signUp` in
+   `apps/react/src/lib/auth-context.tsx` must call `apiMe()` after
+   login/signup — the login/signup response itself never includes
+   `classes` (only `GET /auth/me` queries enrollments). Without this,
+   the student sees "chưa được xếp lớp" until a hard page refresh.
+2. **Bruno 401 on `/me` despite Authorization header.** The
+   `authenticate` middleware (`apps/api/src/middleware/authenticate.ts`)
+   requires **both** `Authorization: Bearer <jwt>` AND
+   `X-Session-Token: <token>` — missing either returns 401. Both come
+   from the `/auth/login` response.
+3. **`quiz.created_by` ≠ `class.teacher_id` mismatch.** This is the
+   most common real cause. Quizzes uploaded while testing under one
+   teacher account (or a demo/admin account) won't show for a class
+   managed by a *different* teacher account, even if `course_id`
+   matches. Diagnose with:
+
+   ```sql
+   SELECT c.id, c.course_id, c.teacher_id,
+          (SELECT array_agg(DISTINCT created_by) FROM quizzes WHERE course_id = c.course_id) AS quiz_creators
+   FROM classes c WHERE c.course_id = '<course>';
+   ```
+
+   Fix by reassigning either the quiz's `created_by` or the class's
+   `teacher_id` to match — pick based on who the *real* teacher is,
+   don't blindly reassign (other classes may legitimately share that
+   `course_id` with a different teacher).
+4. **Frontend crash masking the real error.** Any fetch that does
+   `.then(setX)` without checking `res.ok` / `Array.isArray` will, on a
+   401/500, set state to an error object instead of `[]`, then crash
+   with `t.map is not a function` on render. `StudentQuizList` and
+   `QuizStatsPanel` in `apps/react/src/pages/Home.tsx` guard against
+   this — keep that pattern for any new list-fetching component here.
+5. **Migration not run on VPS.** `apps/api/src/db/migrations/*.sql`
+   files are NOT included in the `rsync .../dist/` API deploy — they
+   must be rsync'd and run separately. Forgetting this makes any route
+   touching the new tables 500 (e.g. `quiz_attempts`/`quiz_attempt_answers`
+   from `009_quiz_attempts.sql`).
+6. **VPS Postgres peer auth.** DB role/database is `sotamhsk`, but the
+   Linux login user may be `sotam` (or another name) — peer auth fails
+   if they don't match. Force TCP instead: `psql -h localhost -U
+   sotamhsk -d sotamhsk -f file.sql`, or run as `sudo -u postgres psql`.
