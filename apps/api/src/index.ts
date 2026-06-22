@@ -14,6 +14,7 @@ import { scheduleRoutes } from "./routes/schedule.js";
 import { documentRoutes } from "./routes/documents.js";
 import { giaoVuRoutes } from "./routes/giaovu.js";
 import { quizImportRoutes } from "./routes/quiz-import.js";
+import { quizRoutes } from "./routes/quiz.js";
 
 const app = Fastify({ logger: true, trustProxy: true });
 
@@ -52,6 +53,7 @@ app.register(bingoRoutes, { prefix: "/games/bingo" });
 app.register(wordSearchRoutes, { prefix: "/games/word-search" });
 app.register(adminRoutes, { prefix: "/admin" });
 app.register(quizImportRoutes, { prefix: "/admin/quiz" });
+app.register(quizRoutes, { prefix: "/quiz" });
 app.register(scheduleRoutes, { prefix: "/schedule" });
 app.register(documentRoutes, { prefix: "/documents" });
 app.register(giaoVuRoutes, { prefix: "/giaovu" });
