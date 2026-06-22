@@ -2087,10 +2087,13 @@ body {
 
 /* ── Teacher home: uploaded quiz list ───────────────────────────────────── */
 .th-quiz-list { display: flex; flex-direction: column; gap: 8px; }
+.th-quiz-item {
+  background: white; border: 1.5px solid var(--c-border); border-radius: 10px;
+  box-shadow: 0 1px 4px var(--c-shadow); overflow: hidden;
+}
 .th-quiz-row {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  background: white; border: 1.5px solid var(--c-border); border-radius: 10px;
-  padding: 12px 14px; box-shadow: 0 1px 4px var(--c-shadow);
+  padding: 12px 14px;
 }
 .th-quiz-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
 .th-quiz-title { font-weight: 700; font-size: 0.95rem; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -2105,6 +2108,31 @@ body {
   flex: 1; font-size: 0.95rem; font-weight: 600; color: var(--c-text);
   border: 1.5px solid var(--c-red); border-radius: 6px; padding: 4px 8px; outline: none;
 }
+.th-quiz-course {
+  font-size: 0.72rem; font-weight: 600; padding: 2px 7px; border-radius: 99px;
+  background: var(--c-red-bg); color: var(--c-red); flex-shrink: 0;
+}
+.th-quiz-meta-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.th-quiz-course-select {
+  font-size: 0.75rem; color: var(--c-text-soft); border: 1px solid var(--c-border);
+  border-radius: 6px; padding: 2px 6px; background: white; cursor: pointer;
+  max-width: 160px;
+}
+.th-quiz-course-select:focus { outline: none; border-color: var(--c-red); }
+.th-quiz-course-select:disabled { opacity: 0.5; cursor: default; }
+.btn-ghost--active { background: var(--c-red-bg); color: var(--c-red); }
+.th-stats-panel { border-top: 1.5px solid var(--c-border); background: #f8fafc; padding: 12px 14px; }
+.th-stats-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.th-stats-table th {
+  text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--c-text-muted); padding: 4px 8px 6px;
+}
+.th-stats-table td { padding: 6px 8px; border-top: 1px solid var(--c-border); vertical-align: middle; }
+.th-stats-badge {
+  font-size: 0.72rem; font-weight: 600; padding: 2px 7px; border-radius: 99px;
+}
+.th-stats-badge--done { background: #dcfce7; color: #15803d; }
+.th-stats-badge--prog { background: #fef9c3; color: #92400e; }
 
 /* ── Admin dashboard: class & user creation ─────────────────────────────── */
 .adm-class-assign {
@@ -2234,6 +2262,29 @@ body {
 }
 .adm-status--active { background: #dcfce7; color: #15803d; }
 .adm-status--archived { background: #f1f5f9; color: #64748b; }
+
+.adm-row--expanded td { background: #fafafa; }
+.adm-students-panel {
+  padding: 14px 18px 16px;
+  background: #f8fafc;
+  border-top: 1.5px solid var(--c-border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.adm-enrolled-list { display: flex; flex-direction: column; gap: 4px; }
+.adm-enrolled-row, .adm-student-result-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px; border-radius: 8px; background: white;
+  border: 1px solid var(--c-border);
+}
+.adm-enrolled-name { font-weight: 600; font-size: 0.88rem; flex-shrink: 0; }
+.adm-enrolled-email { font-size: 0.8rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.adm-enrolled-drop {
+  background: none; border: none; cursor: pointer; font-size: 0.85rem;
+  color: #94a3b8; padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+}
+.adm-enrolled-drop:hover { background: #fee2e2; color: #dc2626; }
+.adm-add-student { display: flex; gap: 8px; align-items: center; }
+.adm-student-results { display: flex; flex-direction: column; gap: 4px; }
 
 /* ── Giaovu portal ──────────────────────────────────────────────────────── */
 .gv-class-list {
