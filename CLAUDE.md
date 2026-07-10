@@ -160,12 +160,30 @@ silently produces an empty list if wrong, with no obvious error):
    with `t.map is not a function` on render. `StudentQuizList` and
    `QuizStatsPanel` in `apps/react/src/pages/Home.tsx` guard against
    this — keep that pattern for any new list-fetching component here.
-5. **Migration not run on VPS.** `apps/api/src/db/migrations/*.sql`
-   files are NOT included in the `rsync .../dist/` API deploy — they
-   must be rsync'd and run separately. Forgetting this makes any route
-   touching the new tables 500 (e.g. `quiz_attempts`/`quiz_attempt_answers`
-   from `009_quiz_attempts.sql`).
+5. **Migration not run on VPS.** `dist/db/migrate.js` reads from
+   `dist/db/migrations/` (relative to itself), NOT `src/db/migrations/`.
+   The build script (`tsc && cp -r src/db/migrations dist/db/migrations`)
+   handles this — **never rsync `src/db/migrations/` separately**, it
+   won't be found. If you manually ran a migration outside `migrate.js`
+   (e.g. via `psql -f`), the `schema_migrations` table won't know about
+   it and `migrate.js` will fail trying to re-apply it. Fix by inserting
+   the version manually:
+
+   ```sql
+   INSERT INTO schema_migrations(version) VALUES ('009_quiz_attempts') ON CONFLICT DO NOTHING;
+   ```
+
 6. **VPS Postgres peer auth.** DB role/database is `sotamhsk`, but the
    Linux login user may be `sotam` (or another name) — peer auth fails
    if they don't match. Force TCP instead: `psql -h localhost -U
    sotamhsk -d sotamhsk -f file.sql`, or run as `sudo -u postgres psql`.
+   There is now a `sotamhsk` Linux account too — `sudo -u sotamhsk psql`
+   also works.
+7. **PDF upload returns 413 (shows as CORS error in browser).** nginx
+   sits in front of the API and defaults to `client_max_body_size 1m`.
+   The Fastify multipart limit is 20 MB but nginx rejects the request
+   first, and since the rejection happens before Fastify's CORS plugin
+   runs, the browser reports it as a CORS failure. Fix: set
+   `client_max_body_size 25m;` in the nginx server block for
+   `hanngusotam.io.vn` (`/etc/nginx/sites-enabled/`) and reload:
+   `sudo nginx -t && sudo systemctl reload nginx`.
