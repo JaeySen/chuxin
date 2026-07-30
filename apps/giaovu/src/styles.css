@@ -352,3 +352,96 @@ body {
   font-size: 13px; width: 88px;
 }
 .gv-time-input:focus { outline: none; border-color: var(--c-red); }
+
+/* ── Course tabs (browser-tab style, used on /homework quiz list) ─────────── */
+.gv-course-tabs {
+  display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 14px;
+  border-bottom: 2px solid var(--c-divider); padding-bottom: 0;
+}
+.gv-course-tab {
+  background: none; border: none; cursor: pointer;
+  font-size: 0.85rem; font-weight: 600; color: var(--c-text-soft);
+  padding: 8px 16px; border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color 0.15s, background 0.15s; font-family: inherit;
+}
+.gv-course-tab:hover { color: var(--c-text); background: var(--c-red-bg); }
+.gv-course-tab--active { color: var(--c-red-dark); border-bottom-color: var(--c-red); }
+
+.gv-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.gv-view-toggle {
+  display: inline-flex; border: 1.5px solid var(--c-divider); border-radius: 9px; overflow: hidden;
+}
+.gv-view-btn {
+  border: none; background: white; color: var(--c-text-muted);
+  width: 34px; height: 32px; font-size: 15px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.gv-view-btn + .gv-view-btn { border-left: 1.5px solid var(--c-divider); }
+.gv-view-btn:hover { background: var(--c-red-bg); }
+.gv-view-btn--active { background: var(--c-red); color: white; }
+
+/* Draggable row states for the quiz list-view table */
+.gv-table tr.gv-row--dragging { opacity: 0.4; }
+.gv-table tr.gv-row--dragover td { background: var(--c-red-bg); }
+
+/* ── Quiz grid view (mirrors apps/react .cp-quiz-*) ────────────────────────── */
+.cp-quiz-grid {
+  display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px;
+  max-height: 520px; overflow-y: auto; padding-right: 4px;
+}
+.cp-quiz-card {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 1.5px solid var(--c-border);
+  border-left: 4px solid var(--c-red);
+  border-radius: 10px; padding: 14px 16px;
+  box-shadow: 0 1px 4px var(--c-shadow);
+  transition: opacity 0.15s, border-color 0.15s, background 0.15s;
+}
+.cp-quiz-card--dragging { opacity: 0.4; }
+.cp-quiz-card--dragover { border-color: var(--c-red); background: var(--c-red-bg); }
+.cp-quiz-drag {
+  cursor: grab; color: var(--c-text-muted); font-size: 1.1rem;
+  flex-shrink: 0; user-select: none; line-height: 1;
+}
+.cp-quiz-drag:active { cursor: grabbing; }
+.cp-quiz-body { flex: 1; min-width: 0; }
+.cp-quiz-title { font-weight: 700; font-size: 0.95rem; color: var(--c-text); }
+.cp-quiz-meta { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+.cp-quiz-meta span { font-size: 0.8rem; color: var(--c-text-soft); }
+.cp-quiz-source { font-size: 0.75rem; color: var(--c-text-muted); margin-top: 4px; }
+
+/* ── Upload modal (mirrors apps/react .ru-*) ───────────────────────────────── */
+.ru-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9000; padding: 16px;
+}
+.ru-modal {
+  background: #fff; border-radius: 14px; width: 100%; max-width: 640px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  display: flex; flex-direction: column; gap: 0;
+}
+.ru-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; padding: 20px 20px 0;
+}
+.ru-title  { font-size: 1.1rem; font-weight: 700; color: var(--c-text); }
+.ru-subtitle { font-size: 0.85rem; color: var(--c-text-muted); margin-top: 2px; }
+.ru-dropzone {
+  margin: 16px 20px; border: 2px dashed var(--c-divider); border-radius: 10px;
+  padding: 40px 24px; text-align: center; cursor: pointer;
+  transition: border-color .15s, background .15s; color: var(--c-text-muted);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.ru-dropzone:hover, .ru-dropzone--active {
+  border-color: var(--c-red); background: #fffbf0;
+}
+.ru-loading { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
+.ru-drop-label { font-size: 0.95rem; color: var(--c-text); }
+.ru-drop-hint  { font-size: 0.8rem; color: var(--c-text-muted); }
