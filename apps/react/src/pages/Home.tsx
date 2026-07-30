@@ -1,10 +1,11 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { COURSES, type CourseStatus } from "@sotam/shared";
 import { useAuth } from "../lib/auth-context";
 import { useHead } from "../lib/useHead";
 import { JsonLd } from "../components/JsonLd";
 import { useEffect, useRef, useState } from "react";
 import { getStoredJwt, getStoredSessionToken } from "../lib/api";
+import { SignInModal } from "../lib/SignInModal";
 
 const STATUS_LABEL: Record<CourseStatus, string> = {
   "ongoing":      "Đang học",
@@ -45,9 +46,46 @@ export function Home() {
   return <GuestHome />;
 }
 
+const GAMES_INFO = [
+  {
+    icon: "🎯",
+    title: "Bingo từ vựng",
+    desc: "Giáo viên đọc từ, học viên đánh dấu ô tương ứng trên bảng Bingo cá nhân. Trò chơi rèn kỹ năng nghe — nhận diện từ nhanh trong môi trường áp lực vui vẻ, buộc học viên phải tập trung liên tục suốt tiết học.",
+  },
+  {
+    icon: "🔍",
+    title: "Tìm từ (Word Search)",
+    desc: "Học viên tìm và khoanh từ tiếng Trung ẩn trong ô chữ. Hoạt động củng cố nhận diện mặt chữ Hán, phân biệt nét tương đồng và ghi nhớ hình dạng ký tự — đặc biệt hiệu quả cho người mới bắt đầu.",
+  },
+  {
+    icon: "🔊",
+    title: "Luyện Pinyin",
+    desc: "Bài tập tương tác chọn thanh điệu và âm vần cho từng từ. Phản hồi tức thì giúp học viên sửa lỗi phát âm ngay lập tức, xây dựng nền tảng ngữ âm vững chắc trước khi chuyển sang hội thoại.",
+  },
+];
+
 // ── Guest ─────────────────────────────────────────────────────────────────────
 
+type LoginTarget = null | "student" | "teacher";
+
 function GuestHome() {
+  const location = useLocation();
+  const [loginTarget, setLoginTarget] = useState<LoginTarget>(null);
+
+  useEffect(() => {
+    if (location.pathname === "/courses") {
+      setTimeout(() => {
+        document.getElementById("courses")?.scrollIntoView({ behavior: "smooth" });
+      }, 80);
+    }
+  }, [location.pathname]);
+
+  function scrollToCourses(e: React.MouseEvent) {
+    e.preventDefault();
+    document.getElementById("courses")?.scrollIntoView({ behavior: "smooth" });
+    window.history.pushState({}, "", "/courses");
+  }
+
   return (
     <div className="container" style={{ padding: "12px 16px 80px" }}>
       <JsonLd data={{
@@ -68,7 +106,7 @@ function GuestHome() {
             ghép cặp, thực hành nghe - nói và trò chơi đồng đội.
           </p>
           <div className="hero-cta">
-            <Link to="/courses" className="btn btn-primary">Xem các khoá học</Link>
+            <a href="#courses" className="btn btn-primary" onClick={scrollToCourses}>Xem các khoá học</a>
             <Link to="/ve-chung-toi" className="btn btn-secondary">Về chúng tôi</Link>
           </div>
         </div>
@@ -77,8 +115,72 @@ function GuestHome() {
         </div>
       </section>
 
-      {/* Courses — static, no auth gate */}
-      <h2 className="section-h">Các khoá học</h2>
+      {/* Games section */}
+      <section className="games-section">
+        <h2 className="section-h">Học qua trò chơi — hiệu quả hơn bạn nghĩ</h2>
+        <p className="games-intro">
+          Nghiên cứu giáo dục cho thấy học qua trò chơi giúp ghi nhớ từ vựng lâu hơn 40% so với
+          phương pháp truyền thống. Tại Sơ Tâm, trò chơi không phải phần thưởng — chúng
+          <em> là</em> bài học.
+        </p>
+        <div className="games-grid">
+          {GAMES_INFO.map((g) => (
+            <div key={g.title} className="game-card">
+              <div className="game-card-icon">{g.icon}</div>
+              <h3 className="game-card-title">{g.title}</h3>
+              <p className="game-card-desc">{g.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Portal cards */}
+      <section className="portal-section">
+        <div className="portal-grid">
+          {/* Student card */}
+          <div className="portal-card portal-card--student">
+            <div className="portal-card-icon">📚</div>
+            <h3 className="portal-card-title">Bài tập trực tuyến</h3>
+            <p className="portal-card-desc">
+              Học viên đăng nhập để truy cập bài tập, theo dõi tiến trình học tập
+              và tham gia các hoạt động tương tác trong lớp.
+            </p>
+            <button
+              className="btn btn-primary portal-card-btn"
+              onClick={() => setLoginTarget("student")}
+            >
+              Đăng nhập học viên
+            </button>
+          </div>
+
+          {/* Teacher card */}
+          <div className="portal-card portal-card--teacher">
+            <div className="portal-card-icon">🏫</div>
+            <h3 className="portal-card-title">Tham gia với chúng tôi</h3>
+            <p className="portal-card-desc">
+              Giáo viên đăng nhập để quản lý lớp học, tạo bài tập và theo dõi
+              kết quả học viên qua bảng điều khiển giáo vụ.
+            </p>
+            <button
+              className="btn btn-secondary portal-card-btn"
+              onClick={() => setLoginTarget("teacher")}
+            >
+              Đăng nhập giáo viên
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {loginTarget && (
+        <SignInModal
+          close={() => setLoginTarget(null)}
+          redirectTo={loginTarget === "teacher" ? "/giaovu" : undefined}
+          heading={loginTarget === "teacher" ? "Đăng nhập giáo viên" : "Đăng nhập học viên"}
+        />
+      )}
+
+      {/* Courses */}
+      <h2 className="section-h" id="courses">Các khoá học</h2>
       <div className="course-grid">
         {COURSES.map((c) => (
           <Link key={c.id} className="course-tile" to={`/course/${c.id}`}>
@@ -97,14 +199,33 @@ function GuestHome() {
   );
 }
 
+// ── Pinyin helper ─────────────────────────────────────────────────────────────
+
+export type PinyinPairs = [string, string][];
+export type QuestionMeta = { text_pairs?: PinyinPairs; options_pairs?: Record<string, PinyinPairs> } | null;
+
+export function RubyText({ pairs, fallback }: { pairs?: PinyinPairs; fallback: string }) {
+  if (!pairs || pairs.length === 0) return <>{fallback}</>;
+  return (
+    <>
+      {pairs.map(([ch, py], i) =>
+        py
+          ? <ruby key={i}>{ch}<rt>{py}</rt></ruby>
+          : <span key={i}>{ch}</span>
+      )}
+    </>
+  );
+}
+
 // ── Student ───────────────────────────────────────────────────────────────────
 
 interface SQQuestion {
   num: number; text: string; type: string;
   options: Record<string, string>; answer: string | null;
+  meta?: QuestionMeta;
 }
 interface StudentQuiz { id: string; title: string; mcq: number; total: number; }
-interface StudentQuizDetail extends StudentQuiz {
+export interface StudentQuizDetail extends StudentQuiz {
   slug: string; created_at: string; questions: SQQuestion[];
 }
 interface AttemptAnswer { questionNum: number; selected: string; isCorrect: boolean; }
@@ -113,11 +234,14 @@ interface AttemptState {
 }
 
 // Student quiz player with full progress tracking.
-function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose: () => void }) {
-  const mcq = (quiz.questions ?? []).filter((q) => q.type === "mcq");
+export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose: () => void }) {
+  const allQ = [...(quiz.questions ?? [])].sort((a, b) => a.num - b.num);
+  const mcqCount = allQ.filter((q) => q.type === "mcq").length;
   const [attempt, setAttempt] = useState<AttemptState | null>(null);
   const [idx, setIdx] = useState(0);
   const [picks, setPicks] = useState<Record<number, { selected: string; isCorrect: boolean }>>({});
+  const [essays, setEssays] = useState<Record<number, string>>({});
+  const [essaySubmitted, setEssaySubmitted] = useState<Record<number, boolean>>({});
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -139,7 +263,7 @@ function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose
         setPicks(restored);
         // Resume from last shown question
         if (data.lastQuestionNum > 0) {
-          const resumeIdx = mcq.findIndex((q) => q.num >= data.lastQuestionNum);
+          const resumeIdx = allQ.findIndex((q) => q.num >= data.lastQuestionNum);
           if (resumeIdx !== -1) setIdx(resumeIdx);
         }
       })
@@ -151,16 +275,18 @@ function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose
   // Reset timer whenever question changes
   useEffect(() => { questionStartRef.current = Date.now(); }, [idx]);
 
-  const q = mcq[idx];
+  const q = allQ[idx];
   const picked = q ? picks[q.num] : undefined;
   const correct = q?.answer ?? null;
+  const isAnswered = q
+    ? (q.type === "mcq" ? !!picks[q.num] : !!essaySubmitted[q.num])
+    : false;
 
   async function pick(letter: string) {
     if (!attempt || picks[q.num] || saving) return;
     const reactionMs = Date.now() - questionStartRef.current;
     const isCorrect = letter === correct;
-    const isLast = idx + 1 >= mcq.length;
-    const nextQ = !isLast ? mcq[idx + 1] : null;
+    const nextQ = idx + 1 < allQ.length ? allQ[idx + 1] : null;
 
     setSaving(true);
     setPicks((p) => ({ ...p, [q.num]: { selected: letter, isCorrect } }));
@@ -171,10 +297,7 @@ function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose
         method: "POST", credentials: "include",
         headers: { "Content-Type": "application/json", ...authHeaders() },
         body: JSON.stringify({
-          questionNum: q.num,
-          selected: letter,
-          isCorrect,
-          reactionMs,
+          questionNum: q.num, selected: letter, isCorrect, reactionMs,
           nextQuestionNum: nextQ?.num ?? null,
         }),
       });
@@ -182,11 +305,32 @@ function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose
     setSaving(false);
   }
 
+  async function submitEssay() {
+    if (!attempt || essaySubmitted[q.num] || saving) return;
+    const text = essays[q.num] ?? "";
+    const reactionMs = Date.now() - questionStartRef.current;
+    const nextQ = idx + 1 < allQ.length ? allQ[idx + 1] : null;
+
+    setSaving(true);
+    setEssaySubmitted((e) => ({ ...e, [q.num]: true }));
+
+    try {
+      await fetch(`${API}/quiz/attempts/${attempt.attemptId}/answer`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify({
+          questionNum: q.num, selected: text, isCorrect: false, reactionMs,
+          nextQuestionNum: nextQ?.num ?? null,
+        }),
+      });
+    } catch {}
+    setSaving(false);
+  }
+
   async function next() {
-    if (idx + 1 < mcq.length) {
+    if (idx + 1 < allQ.length) {
       setIdx((i) => i + 1);
     } else {
-      // Complete
       if (attempt) {
         try {
           await fetch(`${API}/quiz/attempts/${attempt.attemptId}/complete`, {
@@ -215,25 +359,37 @@ function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose
     );
   }
 
-  if (mcq.length === 0) {
+  if (allQ.length === 0) {
     return (
       <div className="qp-shell">
-        <div className="qp-empty">Bài này không có câu trắc nghiệm.</div>
+        <div className="qp-empty">Bài này chưa có câu hỏi.</div>
         <button className="btn btn-ghost" onClick={onClose}>← Quay lại</button>
       </div>
     );
   }
 
   if (done) {
-    const pct = mcq.length > 0 ? Math.round((score / mcq.length) * 100) : 0;
+    const essayCount = allQ.length - mcqCount;
+    const pct = mcqCount > 0 ? Math.round((score / mcqCount) * 100) : 0;
     return (
       <div className="qp-shell">
         <div className="qp-result">
-          <div className="qp-score">{score} / {mcq.length}</div>
-          <div className="qp-pct">{pct}%</div>
-          <div className="qp-result-label">
-            {pct >= 80 ? "Xuất sắc! 🎉" : pct >= 60 ? "Khá tốt! 👍" : "Cần ôn luyện thêm 💪"}
-          </div>
+          {mcqCount > 0 ? (
+            <>
+              <div className="qp-score">{score} / {mcqCount}</div>
+              <div className="qp-pct">{pct}%</div>
+              <div className="qp-result-label">
+                {pct >= 80 ? "Xuất sắc! 🎉" : pct >= 60 ? "Khá tốt! 👍" : "Cần ôn luyện thêm 💪"}
+              </div>
+            </>
+          ) : (
+            <div className="qp-result-label">Hoàn thành bài tập! 🎉</div>
+          )}
+          {essayCount > 0 && (
+            <div style={{ marginTop: 10, fontSize: 13, color: "var(--c-text-muted)" }}>
+              + {essayCount} câu tự luận (không tính điểm tự động)
+            </div>
+          )}
           <button className="btn btn-ghost" style={{ marginTop: 20 }} onClick={onClose}>← Quay lại</button>
         </div>
       </div>
@@ -244,43 +400,81 @@ function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose
     <div className="qp-shell">
       <div className="qp-top">
         <button className="btn btn-ghost btn-sm" onClick={onClose}>← Quay lại</button>
-        <span className="qp-progress">{idx + 1} / {mcq.length}</span>
+        <span className="qp-progress">{idx + 1} / {allQ.length}</span>
       </div>
       <div className="qp-bar-track">
-        <div className="qp-bar-fill" style={{ width: `${(idx / mcq.length) * 100}%` }} />
+        <div className="qp-bar-fill" style={{ width: `${(idx / allQ.length) * 100}%` }} />
       </div>
       <div className="qp-card">
-        <div className="qp-num">Câu {q.num}</div>
-        <div className="qp-text">{q.text}</div>
-        <div className="qp-options">
-          {(["A", "B", "C", "D"] as const).map((letter) => {
-            const text = q.options[letter];
-            if (!text) return null;
-            const isCorrect = letter === correct;
-            const isPicked = letter === picked?.selected;
-            let cls = "qp-opt";
-            if (picked) {
-              if (isPicked && isCorrect) cls += " qp-opt--correct";
-              else if (isPicked && !isCorrect) cls += " qp-opt--wrong";
-              else if (isCorrect) cls += " qp-opt--reveal";
-            }
-            return (
-              <button key={letter} className={cls} onClick={() => pick(letter)} disabled={!!picked || saving}>
-                <span className="qp-opt-letter">{letter}</span>
-                <span className="qp-opt-text">{text}</span>
-              </button>
-            );
-          })}
+        <div className="qp-num">
+          Câu {q.num}
+          {q.type === "open" && <span className="qp-type-badge">Tự luận</span>}
         </div>
-        {picked && (
-          <div className={`qp-feedback ${picked.isCorrect ? "qp-feedback--correct" : "qp-feedback--wrong"}`}>
-            {picked.isCorrect ? "✓ Chính xác!" : `✗ Đáp án đúng: ${correct}`}
-          </div>
+        <div className="qp-text">
+          <RubyText pairs={q.meta?.text_pairs ?? undefined} fallback={q.text} />
+        </div>
+        {q.type === "mcq" ? (
+          <>
+            <div className={`qp-options${isShortOptionSet(q.options) ? " qp-options--grid" : ""}`}>
+              {(["A", "B", "C", "D"] as const).map((letter) => {
+                const text = q.options[letter];
+                if (!text) return null;
+                const isCorrect = letter === correct;
+                const isPicked = letter === picked?.selected;
+                let cls = "qp-opt";
+                if (picked) {
+                  if (isPicked && isCorrect) cls += " qp-opt--correct";
+                  else if (isPicked && !isCorrect) cls += " qp-opt--wrong";
+                  else if (isCorrect) cls += " qp-opt--reveal";
+                }
+                return (
+                  <button key={letter} className={cls} onClick={() => pick(letter)} disabled={!!picked || saving}>
+                    <span className="qp-opt-letter">{letter}</span>
+                    <span className="qp-opt-text">
+                      <RubyText pairs={q.meta?.options_pairs?.[letter] ?? undefined} fallback={text} />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {picked && (
+              <div className={`qp-feedback ${picked.isCorrect ? "qp-feedback--correct" : "qp-feedback--wrong"}`}>
+                {picked.isCorrect ? "✓ Chính xác!" : `✗ Đáp án đúng: ${correct}`}
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <textarea
+              className="qp-essay-area"
+              placeholder="Nhập câu trả lời của bạn…"
+              value={essays[q.num] ?? ""}
+              onChange={(e) => setEssays((es) => ({ ...es, [q.num]: e.target.value }))}
+              disabled={!!essaySubmitted[q.num]}
+              rows={4}
+            />
+            {!essaySubmitted[q.num] && (
+              <button
+                className="btn btn-primary"
+                style={{ marginTop: 12 }}
+                onClick={submitEssay}
+                disabled={saving || !(essays[q.num] ?? "").trim()}
+              >
+                Nộp câu trả lời
+              </button>
+            )}
+            {essaySubmitted[q.num] && (
+              <div className="qp-essay-reveal">
+                <div className="qp-essay-reveal-label">Đáp án tham khảo</div>
+                <div className="qp-essay-reveal-text">{correct ?? "—"}</div>
+              </div>
+            )}
+          </>
         )}
       </div>
-      {picked && (
+      {isAnswered && (
         <button className="btn btn-primary qp-next" onClick={next}>
-          {idx + 1 < mcq.length ? "Câu tiếp →" : "Xem kết quả"}
+          {idx + 1 < allQ.length ? "Câu tiếp →" : "Xem kết quả"}
         </button>
       )}
     </div>
@@ -373,7 +567,7 @@ function StudentHome() {
 
 // ── Teacher ───────────────────────────────────────────────────────────────────
 
-const API = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+export const API = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
 
 const TEACHER_EXERCISES = [
   { title: "Ngữ âm Pinyin", icon: "🔊", to: "/pinyin",     desc: "Luyện thanh mẫu / vận mẫu / thanh điệu" },
@@ -382,11 +576,17 @@ const TEACHER_EXERCISES = [
 ];
 
 interface QuizSummary { id: string; slug: string; title: string; mcq: number; total: number; created_at: string; course_id?: string; }
-interface QuizDetail extends QuizSummary {
-  questions: { num: number; text: string; type: string; options: Record<string, string>; answer: string | null }[];
+export interface QuizDetail extends QuizSummary {
+  questions: { num: number; text: string; type: string; options: Record<string, string>; answer: string | null; meta?: QuestionMeta }[];
 }
 
-function authHeaders() {
+function isShortOptionSet(options: Record<string, string>): boolean {
+  const vals = (["A", "B", "C", "D"] as const).map((l) => options[l]).filter(Boolean) as string[];
+  if (vals.length < 2) return false;
+  return vals.every((v) => v.trim().split(/\s+/).length <= 3 && v.length <= 12);
+}
+
+export function authHeaders() {
   const jwt = getStoredJwt();
   const sessionToken = getStoredSessionToken();
   return {
@@ -395,47 +595,73 @@ function authHeaders() {
   };
 }
 
-function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose: () => void }) {
-  const mcq = (quiz.questions ?? []).filter((q) => q.type === "mcq");
+export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose: () => void }) {
+  const allQ = [...(quiz.questions ?? [])].sort((a, b) => a.num - b.num);
+  const mcqCount = allQ.filter((q) => q.type === "mcq").length;
   const [idx, setIdx] = useState(0);
   const [picks, setPicks] = useState<Record<number, string>>({});
+  const [essays, setEssays] = useState<Record<number, string>>({});
+  const [essaySubmitted, setEssaySubmitted] = useState<Record<number, boolean>>({});
   const [done, setDone] = useState(false);
 
-  const q = mcq[idx];
+  const q = allQ[idx];
   const picked = q ? picks[q.num] : undefined;
   const correct = q?.answer ?? null;
+  const isAnswered = q
+    ? (q.type === "mcq" ? !!picks[q.num] : !!essaySubmitted[q.num])
+    : false;
 
   function pick(letter: string) {
     if (picks[q.num]) return;
     setPicks((p) => ({ ...p, [q.num]: letter }));
   }
+  function submitEssay() {
+    if (essaySubmitted[q.num] || !(essays[q.num] ?? "").trim()) return;
+    setEssaySubmitted((e) => ({ ...e, [q.num]: true }));
+  }
   function next() {
-    if (idx + 1 < mcq.length) setIdx((i) => i + 1);
+    if (idx + 1 < allQ.length) setIdx((i) => i + 1);
     else setDone(true);
   }
-  const score = mcq.filter((q) => picks[q.num] === q.answer).length;
+  function reset() {
+    setPicks({}); setEssays({}); setEssaySubmitted({}); setIdx(0); setDone(false);
+  }
 
-  if (mcq.length === 0) {
+  const score = allQ.filter((q) => q.type === "mcq" && picks[q.num] === q.answer).length;
+
+  if (allQ.length === 0) {
     return (
       <div className="qp-shell">
         <button className="btn btn-ghost btn-sm" onClick={onClose}>← Quay lại</button>
-        <div className="qp-empty">Bài này không có câu trắc nghiệm.</div>
+        <div className="qp-empty">Bài này chưa có câu hỏi.</div>
       </div>
     );
   }
 
   if (done) {
-    const pct = Math.round((score / mcq.length) * 100);
+    const essayCount = allQ.length - mcqCount;
+    const pct = mcqCount > 0 ? Math.round((score / mcqCount) * 100) : 0;
     return (
       <div className="qp-shell">
         <div className="qp-result">
-          <div className="qp-score">{score} / {mcq.length}</div>
-          <div className="qp-pct">{pct}%</div>
-          <div className="qp-result-label">
-            {pct >= 80 ? "Xuất sắc! 🎉" : pct >= 60 ? "Khá tốt! 👍" : "Cần ôn luyện thêm 💪"}
-          </div>
+          {mcqCount > 0 ? (
+            <>
+              <div className="qp-score">{score} / {mcqCount}</div>
+              <div className="qp-pct">{pct}%</div>
+              <div className="qp-result-label">
+                {pct >= 80 ? "Xuất sắc! 🎉" : pct >= 60 ? "Khá tốt! 👍" : "Cần ôn luyện thêm 💪"}
+              </div>
+            </>
+          ) : (
+            <div className="qp-result-label">Hoàn thành bài tập! 🎉</div>
+          )}
+          {essayCount > 0 && (
+            <div style={{ marginTop: 10, fontSize: 13, color: "var(--c-text-muted)" }}>
+              + {essayCount} câu tự luận (không tính điểm tự động)
+            </div>
+          )}
           <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
-            <button className="btn btn-primary" onClick={() => { setPicks({}); setIdx(0); setDone(false); }}>Làm lại</button>
+            <button className="btn btn-primary" onClick={reset}>Làm lại</button>
             <button className="btn btn-ghost" onClick={onClose}>← Quay lại</button>
           </div>
         </div>
@@ -447,41 +673,79 @@ function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose: () => 
     <div className="qp-shell">
       <div className="qp-top">
         <button className="btn btn-ghost btn-sm" onClick={onClose}>← Quay lại</button>
-        <span className="qp-progress">{idx + 1} / {mcq.length}</span>
+        <span className="qp-progress">{idx + 1} / {allQ.length}</span>
       </div>
-      <div className="qp-bar-track"><div className="qp-bar-fill" style={{ width: `${(idx / mcq.length) * 100}%` }} /></div>
+      <div className="qp-bar-track"><div className="qp-bar-fill" style={{ width: `${(idx / allQ.length) * 100}%` }} /></div>
       <div className="qp-card">
-        <div className="qp-num">Câu {q.num}</div>
-        <div className="qp-text">{q.text}</div>
-        <div className="qp-options">
-          {(["A", "B", "C", "D"] as const).map((letter) => {
-            const text = q.options[letter];
-            if (!text) return null;
-            const isCorrect = letter === correct;
-            const isPicked = letter === picked;
-            let cls = "qp-opt";
-            if (picked) {
-              if (isPicked && isCorrect) cls += " qp-opt--correct";
-              else if (isPicked && !isCorrect) cls += " qp-opt--wrong";
-              else if (isCorrect) cls += " qp-opt--reveal";
-            }
-            return (
-              <button key={letter} className={cls} onClick={() => pick(letter)} disabled={!!picked}>
-                <span className="qp-opt-letter">{letter}</span>
-                <span className="qp-opt-text">{text}</span>
-              </button>
-            );
-          })}
+        <div className="qp-num">
+          Câu {q.num}
+          {q.type === "open" && <span className="qp-type-badge">Tự luận</span>}
         </div>
-        {picked && (
-          <div className={`qp-feedback ${picked === correct ? "qp-feedback--correct" : "qp-feedback--wrong"}`}>
-            {picked === correct ? "✓ Chính xác!" : `✗ Đáp án đúng: ${correct}`}
-          </div>
+        <div className="qp-text">
+          <RubyText pairs={q.meta?.text_pairs ?? undefined} fallback={q.text} />
+        </div>
+        {q.type === "mcq" ? (
+          <>
+            <div className={`qp-options${isShortOptionSet(q.options) ? " qp-options--grid" : ""}`}>
+              {(["A", "B", "C", "D"] as const).map((letter) => {
+                const text = q.options[letter];
+                if (!text) return null;
+                const isCorrect = letter === correct;
+                const isPicked = letter === picked;
+                let cls = "qp-opt";
+                if (picked) {
+                  if (isPicked && isCorrect) cls += " qp-opt--correct";
+                  else if (isPicked && !isCorrect) cls += " qp-opt--wrong";
+                  else if (isCorrect) cls += " qp-opt--reveal";
+                }
+                return (
+                  <button key={letter} className={cls} onClick={() => pick(letter)} disabled={!!picked}>
+                    <span className="qp-opt-letter">{letter}</span>
+                    <span className="qp-opt-text">
+                      <RubyText pairs={q.meta?.options_pairs?.[letter] ?? undefined} fallback={text} />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {picked && (
+              <div className={`qp-feedback ${picked === correct ? "qp-feedback--correct" : "qp-feedback--wrong"}`}>
+                {picked === correct ? "✓ Chính xác!" : `✗ Đáp án đúng: ${correct}`}
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <textarea
+              className="qp-essay-area"
+              placeholder="Nhập câu trả lời của bạn…"
+              value={essays[q.num] ?? ""}
+              onChange={(e) => setEssays((es) => ({ ...es, [q.num]: e.target.value }))}
+              disabled={!!essaySubmitted[q.num]}
+              rows={4}
+            />
+            {!essaySubmitted[q.num] && (
+              <button
+                className="btn btn-primary"
+                style={{ marginTop: 12 }}
+                onClick={submitEssay}
+                disabled={!(essays[q.num] ?? "").trim()}
+              >
+                Nộp câu trả lời
+              </button>
+            )}
+            {essaySubmitted[q.num] && (
+              <div className="qp-essay-reveal">
+                <div className="qp-essay-reveal-label">Đáp án tham khảo</div>
+                <div className="qp-essay-reveal-text">{correct ?? "—"}</div>
+              </div>
+            )}
+          </>
         )}
       </div>
-      {picked && (
+      {isAnswered && (
         <button className="btn btn-primary qp-next" onClick={next}>
-          {idx + 1 < mcq.length ? "Câu tiếp →" : "Xem kết quả"}
+          {idx + 1 < allQ.length ? "Câu tiếp →" : "Xem kết quả"}
         </button>
       )}
     </div>
@@ -544,16 +808,180 @@ function QuizStatsPanel({ quizId }: { quizId: string }) {
   );
 }
 
+// ── Re-upload modal ──────────────────────────────────────────────────────────
+
+interface ReuploadPreview {
+  questions: { num: number; text: string; type: string; options: Record<string, string>; answer: string | null }[];
+  meta: { total: number; mcq: number; open: number };
+  previous: { total: number; mcq: number; open: number };
+  revisionSaved: boolean;
+}
+
+function ReuploadModal({
+  quiz,
+  onClose,
+  onDone,
+}: {
+  quiz: QuizSummary;
+  onClose: () => void;
+  onDone: (updated: { mcq: number; total: number }) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging]   = useState(false);
+  const [parsing, setParsing]     = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [preview, setPreview]     = useState<ReuploadPreview | null>(null);
+  const [error, setError]         = useState<string | null>(null);
+  const [done, setDone]           = useState(false);
+
+  async function upload(file: File) {
+    setParsing(true); setError(null); setPreview(null);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch(`${API}/admin/quiz/${quiz.id}/reupload`, {
+        method: "POST", body: form, credentials: "include",
+        headers: authHeaders(),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+      setPreview(body as ReuploadPreview);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload thất bại");
+    } finally {
+      setParsing(false);
+    }
+  }
+
+  function handleFiles(files: FileList | null) {
+    const file = files?.[0];
+    if (!file) return;
+    upload(file);
+  }
+
+  if (done && preview) {
+    return (
+      <div className="ru-overlay" onClick={onClose}>
+        <div className="ru-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="ru-success">
+            <div className="ru-success-icon">✓</div>
+            <div className="ru-success-title">Cập nhật thành công!</div>
+            <div className="ru-success-body">
+              <b>{quiz.title}</b> đã được cập nhật.
+              Phiên bản cũ ({preview.previous.mcq} TN · {preview.previous.total - preview.previous.mcq} TL)
+              đã được lưu vào lịch sử.
+            </div>
+            <div className="ru-success-new">
+              Phiên bản mới: <b>{preview.meta.mcq} trắc nghiệm · {preview.meta.open} tự luận</b>
+            </div>
+            <button className="btn btn-primary" style={{ marginTop: 16 }} onClick={onClose}>
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ru-overlay" onClick={onClose}>
+      <div className="ru-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className="ru-header">
+          <div>
+            <div className="ru-title">🔄 Tải lại PDF</div>
+            <div className="ru-subtitle">{quiz.title}</div>
+          </div>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
+        </div>
+
+        {/* Step 1 — file drop */}
+        {!preview && (
+          <div
+            className={`ru-dropzone${dragging ? " ru-dropzone--active" : ""}`}
+            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={(e) => { e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files); }}
+            onClick={() => !parsing && inputRef.current?.click()}
+            role="button" tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
+          >
+            <input ref={inputRef} type="file" accept=".pdf,.docx" style={{ display: "none" }}
+              onChange={(e) => handleFiles(e.target.files)} />
+            {parsing ? (
+              <div className="ru-loading"><span className="qi-spinner" />Đang phân tích…</div>
+            ) : (
+              <>
+                <div style={{ fontSize: 32 }}>📄</div>
+                <div className="ru-drop-label">Kéo thả PDF / DOCX hoặc <span className="qi-link">chọn file</span></div>
+                <div className="ru-drop-hint">Dữ liệu cũ sẽ được lưu vào lịch sử trước khi thay thế</div>
+              </>
+            )}
+          </div>
+        )}
+
+        {error && <div className="qi-error">{error}</div>}
+
+        {/* Step 2 — preview diff */}
+        {preview && !confirming && (
+          <div className="ru-diff">
+            <div className="ru-diff-title">Xem lại thay đổi</div>
+
+            <div className="ru-diff-row">
+              <div className="ru-diff-col ru-diff-col--old">
+                <div className="ru-diff-label">Phiên bản cũ</div>
+                <div className="ru-diff-count">
+                  <span>{preview.previous.mcq}</span> TN &nbsp;·&nbsp; <span>{preview.previous.total - preview.previous.mcq}</span> TL
+                </div>
+              </div>
+              <div className="ru-diff-arrow">→</div>
+              <div className="ru-diff-col ru-diff-col--new">
+                <div className="ru-diff-label">Phiên bản mới</div>
+                <div className="ru-diff-count">
+                  <span>{preview.meta.mcq}</span> TN &nbsp;·&nbsp; <span>{preview.meta.open}</span> TL
+                </div>
+              </div>
+            </div>
+
+            {/* Question type breakdown */}
+            <div className="ru-q-list">
+              {preview.questions.map((q) => (
+                <div key={q.num} className={`ru-q-row${q.type === "open" ? " ru-q-row--open" : ""}`}>
+                  <span className="ru-q-num">Câu {q.num}</span>
+                  <span className={`ru-q-badge ru-q-badge--${q.type}`}>
+                    {q.type === "mcq" ? "TN" : "TL"}
+                  </span>
+                  <span className="ru-q-text">{q.text.slice(0, 80)}{q.text.length > 80 ? "…" : ""}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="ru-diff-actions">
+              <button className="btn btn-ghost" onClick={() => { setPreview(null); setError(null); }}>
+                ← Chọn file khác
+              </button>
+              <button className="btn btn-primary" onClick={() => { setConfirming(true); setDone(true); onDone({ mcq: preview.meta.mcq, total: preview.meta.total }); }}>
+                ✓ Xác nhận cập nhật
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Teacher quiz list ─────────────────────────────────────────────────────────
+
 function TeacherQuizList() {
   const [quizzes, setQuizzes] = useState<QuizSummary[]>([]);
   const [loading, setLoading] = useState(true);
-  const [playing, setPlaying] = useState<QuizDetail | null>(null);
-  const [loadingId, setLoadingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [savingTitle, setSavingTitle] = useState(false);
   const [statsId, setStatsId] = useState<string | null>(null);
   const [savingCourseId, setSavingCourseId] = useState<string | null>(null);
+  const [reuploadQuiz, setReuploadQuiz] = useState<QuizSummary | null>(null);
   const editRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -567,20 +995,6 @@ function TeacherQuizList() {
   useEffect(() => {
     if (editingId) setTimeout(() => editRef.current?.focus(), 50);
   }, [editingId]);
-
-  async function openPlay(id: string) {
-    setLoadingId(id);
-    try {
-      const res = await fetch(`${API}/admin/quiz/${id}`, { credentials: "include", headers: authHeaders() });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
-      if (!Array.isArray(data.questions)) throw new Error("Dữ liệu bài tập không hợp lệ");
-      setPlaying(data);
-    } catch (e) {
-      alert(e instanceof Error ? e.message : "Không tải được bài tập");
-    }
-    setLoadingId(null);
-  }
 
   async function saveTitle(id: string) {
     if (!editTitle.trim()) return;
@@ -615,8 +1029,6 @@ function TeacherQuizList() {
     } catch {}
     setSavingCourseId(null);
   }
-
-  if (playing) return <QuizPlayerInline quiz={playing} onClose={() => setPlaying(null)} />;
 
   if (loading) return <div className="muted" style={{ fontSize: 14 }}>Đang tải…</div>;
 
@@ -680,15 +1092,21 @@ function TeacherQuizList() {
             </div>
             <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
               <button
+                className="btn btn-ghost btn-sm"
+                title="Tải lại PDF (re-upload)"
+                onClick={() => setReuploadQuiz(q)}
+              >🔄</button>
+              <button
                 className={`btn btn-ghost btn-sm${statsId === q.id ? " btn-ghost--active" : ""}`}
                 title="Xem thống kê học viên"
                 onClick={() => setStatsId(statsId === q.id ? null : q.id)}
               >📊</button>
-              <button
+              <Link
+                to={`/admin/quiz/${q.id}/play`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-secondary btn-sm"
-                onClick={() => openPlay(q.id)}
-                disabled={loadingId === q.id}
-              >{loadingId === q.id ? "…" : "▶ Thử làm"}</button>
+              >▶ Thử làm</Link>
             </div>
           </div>
           {statsId === q.id && <QuizStatsPanel quizId={q.id} />}
@@ -697,6 +1115,21 @@ function TeacherQuizList() {
       <div style={{ marginTop: 8 }}>
         <Link to="/admin/quiz-import" className="btn btn-ghost btn-sm">+ Tải lên bài mới</Link>
       </div>
+
+      {/* Re-upload modal */}
+      {reuploadQuiz && (
+        <ReuploadModal
+          quiz={reuploadQuiz}
+          onClose={() => setReuploadQuiz(null)}
+          onDone={({ mcq, total }) => {
+            setQuizzes((prev) =>
+              prev.map((q) =>
+                q.id === reuploadQuiz.id ? { ...q, mcq, total } : q
+              )
+            );
+          }}
+        />
+      )}
     </div>
   );
 }

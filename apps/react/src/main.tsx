@@ -14,6 +14,7 @@ import { BingoGame } from "./pages/BingoGame";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { GiaovuPage } from "./pages/GiaovuPage";
 import { QuizImportPage } from "./pages/QuizImportPage";
+import { QuizPlayerPage } from "./pages/QuizPlayerPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { DocumentDetailPage } from "./pages/DocumentDetailPage";
 import { AboutPage } from "./pages/AboutPage";
@@ -44,6 +45,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/quiz-import" element={<QuizImportPage />} />
         </Route>
+        {/* Standalone (no shared app chrome) — opened in a new tab from "▶ Thử làm" */}
+        <Route path="admin/quiz/:id/play" element={<QuizPlayerPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

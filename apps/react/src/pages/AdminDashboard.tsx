@@ -29,6 +29,18 @@ interface AuthEvent {
   createdAt: string;
 }
 
+interface UnassignedQuiz {
+  id: string;
+  slug: string;
+  title: string;
+  source: string | null;
+  created_at: string;
+  created_by_name: string | null;
+  total: number;
+  mcq: number;
+  open: number;
+}
+
 interface UserRow {
   id: string;
   email: string;
@@ -246,6 +258,12 @@ export function AdminDashboard() {
             </table>
           </div>
         )}
+      </section>
+
+      {/* Unassigned quizzes (orphans — no course) */}
+      <section className="lesson-card" style={{ marginTop: 20 }}>
+        <h3 style={{ marginTop: 0 }}>Bài tập chưa gán khóa học</h3>
+        <UnassignedQuizzesSection />
       </section>
 
       {/* Users */}
@@ -923,6 +941,102 @@ function ClassesSection({ classes, teachers, allStudents, onChanged }: {
         <button className="btn btn-secondary btn-sm" style={{ alignSelf: "flex-start" }} onClick={() => setShowCreate(true)}>
           + Tạo lớp mới
         </button>
+      )}
+    </div>
+  );
+}
+
+// ── Unassigned quizzes (orphans with no course_id) ──────────────────────────
+
+function UnassignedQuizzesSection() {
+  const [quizzes, setQuizzes] = useState<UnassignedQuiz[] | null>(null);
+  const [err, setErr]         = useState<string | null>(null);
+  const [busyId, setBusyId]   = useState<string | null>(null);
+  const [courseSel, setCourseSel] = useState<Record<string, string>>({});
+
+  const load = useCallback(async () => {
+    setErr(null);
+    try {
+      const rows = await apiFetch<UnassignedQuiz[]>("/admin/quiz/unassigned");
+      setQuizzes(rows);
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e));
+    }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  async function assignCourse(id: string) {
+    const courseId = courseSel[id];
+    if (!courseId) return;
+    setBusyId(id);
+    try {
+      await apiFetch(`/admin/quiz/${id}/course`, { method: "PATCH", body: JSON.stringify({ courseId }) });
+      await load();
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally { setBusyId(null); }
+  }
+
+  async function removeQuiz(id: string) {
+    if (!confirm("Xoá bài tập này? (chuyển vào thùng rác)")) return;
+    setBusyId(id);
+    try {
+      await apiFetch(`/admin/quiz/${id}`, { method: "DELETE" });
+      await load();
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally { setBusyId(null); }
+  }
+
+  if (!quizzes) return <div className="muted">Đang tải…</div>;
+
+  return (
+    <div>
+      {err && <div className="feedback feedback-bad" style={{ marginBottom: 12 }}>{err}</div>}
+      {quizzes.length === 0 ? (
+        <div className="feedback feedback-info">Không có bài tập nào chưa gán khóa học.</div>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Tiêu đề</th><th>Nguồn</th><th>Số câu</th><th>Người tạo</th><th>Ngày tạo</th>
+                <th>Gán khóa học</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {quizzes.map((q) => (
+                <tr key={q.id}>
+                  <td>{q.title}</td>
+                  <td className="muted" style={{ fontSize: 12 }}>{q.source ?? "—"}</td>
+                  <td>{q.total} ({q.mcq} MCQ, {q.open} tự luận)</td>
+                  <td className="muted">{q.created_by_name ?? "—"}</td>
+                  <td className="muted" style={{ fontSize: 12 }}>{new Date(q.created_at).toLocaleDateString("vi-VN")}</td>
+                  <td>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <select
+                        value={courseSel[q.id] ?? ""}
+                        onChange={(e) => setCourseSel((prev) => ({ ...prev, [q.id]: e.target.value }))}
+                        style={{ padding: "6px 8px", border: "1.5px solid var(--c-divider)", borderRadius: 8, fontSize: 13 }}>
+                        <option value="">— chọn —</option>
+                        {COURSES.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+                      </select>
+                      <button className="btn btn-secondary btn-sm"
+                        disabled={busyId === q.id || !courseSel[q.id]}
+                        onClick={() => assignCourse(q.id)}>Gán</button>
+                    </div>
+                  </td>
+                  <td>
+                    <button className="btn btn-danger btn-sm"
+                      disabled={busyId === q.id}
+                      onClick={() => removeQuiz(q.id)}>Xoá</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

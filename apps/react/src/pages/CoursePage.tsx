@@ -114,11 +114,56 @@ function TeacherCourseView({
 }) {
   const [tab, setTab] = useState<"exercises" | "upload" | "curriculum">("exercises");
   const [quizzes, setQuizzes] = useState<SavedQuiz[]>([]);
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+  const [reorderError, setReorderError] = useState<string | null>(null);
 
   useEffect(() => {
     const qs = courseId ? `?courseId=${courseId}` : "";
     apiFetch<SavedQuiz[]>(`/admin/quiz${qs}`).then(setQuizzes).catch(() => {});
   }, [courseId, tab]); // re-fetch when switching back to exercises after upload
+
+  function handleDragStart(id: string) {
+    setDragId(id);
+    setReorderError(null);
+  }
+
+  function handleDragOver(e: React.DragEvent, id: string) {
+    e.preventDefault();
+    if (id !== dragOverId) setDragOverId(id);
+  }
+
+  function handleDrop(targetId: string) {
+    if (!dragId || dragId === targetId) {
+      setDragId(null);
+      setDragOverId(null);
+      return;
+    }
+    const fromIdx = quizzes.findIndex((q) => q.id === dragId);
+    const toIdx = quizzes.findIndex((q) => q.id === targetId);
+    if (fromIdx === -1 || toIdx === -1) {
+      setDragId(null);
+      setDragOverId(null);
+      return;
+    }
+    const next = [...quizzes];
+    const [moved] = next.splice(fromIdx, 1);
+    next.splice(toIdx, 0, moved);
+    setQuizzes(next);
+    setDragId(null);
+    setDragOverId(null);
+
+    if (!courseId) return; // reorder is per-course only
+    apiFetch("/admin/quiz/reorder", {
+      method: "POST",
+      body: JSON.stringify({ courseId, quizIds: next.map((q) => q.id) }),
+    }).catch(() => setReorderError("Không lưu được thứ tự mới. Vui lòng thử lại."));
+  }
+
+  function handleDragEnd() {
+    setDragId(null);
+    setDragOverId(null);
+  }
 
   return (
     <div className="container" style={{ padding: "28px 20px 80px" }}>
@@ -145,18 +190,34 @@ function TeacherCourseView({
               Chưa có bài tập mới. Dùng tab <strong>Tải lên đề thi</strong> để thêm bài tập từ PDF/DOCX.
             </div>
           ) : (
-            <div className="cp-quiz-grid">
-              {quizzes.map((q) => (
-                <div key={q.id} className="cp-quiz-card">
-                  <div className="cp-quiz-title">{q.title}</div>
-                  <div className="cp-quiz-meta">
-                    {q.mcq > 0 && <span>{q.mcq} trắc nghiệm</span>}
-                    {q.open > 0 && <span>{q.open} tự luận</span>}
+            <>
+              {reorderError && (
+                <div className="feedback feedback-error" style={{ marginBottom: 12 }}>{reorderError}</div>
+              )}
+              <div className="cp-quiz-grid">
+                {quizzes.map((q) => (
+                  <div
+                    key={q.id}
+                    className={`cp-quiz-card${dragId === q.id ? " cp-quiz-card--dragging" : ""}${dragOverId === q.id && dragId !== q.id ? " cp-quiz-card--dragover" : ""}`}
+                    draggable={!!courseId}
+                    onDragStart={() => handleDragStart(q.id)}
+                    onDragOver={(e) => handleDragOver(e, q.id)}
+                    onDrop={() => handleDrop(q.id)}
+                    onDragEnd={handleDragEnd}
+                  >
+                    {courseId && <span className="cp-quiz-drag" title="Kéo để sắp xếp lại">⠿</span>}
+                    <div className="cp-quiz-body">
+                      <div className="cp-quiz-title">{q.title}</div>
+                      <div className="cp-quiz-meta">
+                        {q.mcq > 0 && <span>{q.mcq} trắc nghiệm</span>}
+                        {q.open > 0 && <span>{q.open} tự luận</span>}
+                      </div>
+                      {q.source && <div className="cp-quiz-source">{q.source}</div>}
+                    </div>
                   </div>
-                  {q.source && <div className="cp-quiz-source">{q.source}</div>}
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           )}
 
           <h3 className="cp-section-label">Hoạt động cũ (đang tắt cho học sinh)</h3>

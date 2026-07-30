@@ -2,7 +2,14 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/auth-context";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { apiAuthConfig, type AuthConfig } from "./lib/api";
+
+// ── Contact details — update here only ───────────────────────────────────────
+const CONTACT = {
+  phone:    "0989175437",
+  zalo:     "https://zalo.me/0989175437",
+  facebook: "https://www.facebook.com/profile.php?id=61588907533663",
+  tiktok:   "https://www.tiktok.com/@hanngusotam",
+};
 
 export function App() {
   return (
@@ -11,6 +18,7 @@ export function App() {
       <main>
         <Outlet />
       </main>
+      <FloatingContact />
     </AuthProvider>
   );
 }
@@ -68,8 +76,8 @@ function GamesDropdown() {
 
 function Header() {
   const { user, role, logout } = useAuth();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
+  const [consultOpen, setConsultOpen] = useState(false);
+  const [menuOpen, setMenuOpen]       = useState(false);
   const location = useLocation();
   const nav = useNavigate();
 
@@ -135,8 +143,8 @@ function Header() {
                 <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Đăng xuất</button>
               </div>
             ) : (
-              <button className="btn btn-primary btn-sm" onClick={() => setModalOpen(true)}>
-                Đăng nhập
+              <button className="btn btn-consult btn-sm" onClick={() => setConsultOpen(true)}>
+                Tư vấn: {CONTACT.phone}
               </button>
             )}
           </div>
@@ -197,103 +205,92 @@ function Header() {
         </nav>
       )}
 
-      {modalOpen && <SignInModal close={() => setModalOpen(false)} />}
+      {consultOpen && <ConsultModal close={() => setConsultOpen(false)} />}
     </header>
   );
 }
 
-// ── Phone helpers ─────────────────────────────────────────────────
-function stripNonDigits(v: string) {
-  return v.replace(/\D/g, "");
-}
-
-// ── Sign-in only modal (signup removed — admin creates accounts) ──
-function SignInModal({ close }: { close: () => void }) {
-  const { signIn } = useAuth();
-  const [config, setConfig] = useState<AuthConfig | null>(null);
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [pw, setPw]       = useState("");
-  const [err, setErr]     = useState<string | null>(null);
-  const [busy, setBusy]   = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { apiAuthConfig().then(setConfig); }, []);
-
+// ── Consultation / Zalo modal ────────────────────────────────────────────────
+function ConsultModal({ close }: { close: () => void }) {
   useEffect(() => {
     const h = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
     document.addEventListener("keydown", h);
     return () => document.removeEventListener("keydown", h);
   }, [close]);
 
-  useEffect(() => {
-    cardRef.current?.querySelector<HTMLElement>("input")?.focus();
-  }, [config]);
-
-  const usePhone = !!(config?.disableEmailLogin && config?.allowPhoneLogin);
-
-  async function handleSignIn() {
-    setBusy(true); setErr(null);
-    try {
-      await signIn(usePhone ? { phone, password: pw } : { email, password: pw });
-      close();
-    } catch (e: unknown) {
-      setErr(e instanceof Error ? e.message : String(e));
-    } finally { setBusy(false); }
+  function openZalo() {
+    window.open(CONTACT.zalo, "_blank", "noopener,noreferrer");
+    close();
   }
 
   const modal = (
     <div className="sotam-modal" role="dialog" aria-modal="true" onClick={close}>
-      <div className="sotam-modal-card" ref={cardRef} onClick={(e) => e.stopPropagation()}>
-        <h3>Đăng nhập</h3>
-
-        {config === null && <div className="muted" style={{ fontSize: 14 }}>Đang tải…</div>}
-
-        {config !== null && (
-          <>
-            {usePhone ? (
-              <input
-                type="tel"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                placeholder="Số điện thoại (VD: 0901234567)"
-                value={phone}
-                onChange={(e) => setPhone(stripNonDigits(e.target.value))}
-                autoComplete="tel"
-              />
-            ) : (
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-              />
-            )}
-
-            <input
-              type="password"
-              placeholder="Mật khẩu"
-              value={pw}
-              onChange={(e) => setPw(e.target.value)}
-              autoComplete="current-password"
-              onKeyDown={(e) => { if (e.key === "Enter") handleSignIn(); }}
-            />
-
-            {err && <div className="feedback feedback-bad" style={{ marginTop: 0 }}>{err}</div>}
-
-            <div className="modal-actions">
-              <button className="btn btn-primary" disabled={busy} onClick={handleSignIn}>
-                {busy ? "Đang đăng nhập…" : "Đăng nhập"}
-              </button>
-            </div>
-          </>
-        )}
-
+      <div className="sotam-modal-card consult-modal-card" onClick={(e) => e.stopPropagation()}>
+        <p className="consult-modal-label">Liên hệ tư vấn khoá học</p>
+        <p className="consult-modal-phone">{CONTACT.phone}</p>
+        <p className="consult-modal-hint">Nhắn tin qua Zalo để được tư vấn nhanh nhất.</p>
+        <div className="modal-actions" style={{ flexDirection: "column", gap: 10 }}>
+          <button className="btn btn-consult" style={{ width: "100%", justifyContent: "center" }} onClick={openZalo}>
+            Mở Zalo nhắn tin
+          </button>
+          <a href={`tel:${CONTACT.phone}`} className="btn btn-secondary" style={{ width: "100%", justifyContent: "center", textDecoration: "none" }}>
+            Gọi điện trực tiếp
+          </a>
+        </div>
         <button className="btn btn-text close-x" onClick={close} aria-label="Đóng">✕</button>
       </div>
     </div>
   );
-
   return createPortal(modal, document.body);
 }
+
+// ── Floating contact bar ──────────────────────────────────────────────────────
+function FloatingContact() {
+  const buttons = [
+    { label: "TikTok",    href: CONTACT.tiktok,   className: "fc-btn--tiktok",    svg: <TikTokIcon /> },
+    { label: "Facebook",  href: CONTACT.facebook,  className: "fc-btn--facebook",  svg: <FacebookIcon /> },
+    { label: "Zalo",      href: CONTACT.zalo,      className: "fc-btn--zalo",      svg: <ZaloIcon /> },
+    { label: "Điện thoại", href: `tel:${CONTACT.phone}`, className: "fc-btn--phone", svg: <PhoneIcon /> },
+  ];
+  return (
+    <div className="floating-contact" aria-label="Liên hệ">
+      {buttons.map((b) => (
+        <a key={b.label} href={b.href} className={`fc-btn ${b.className}`}
+           target={b.href.startsWith("tel:") ? undefined : "_blank"}
+           rel="noopener noreferrer" aria-label={b.label}>
+          {b.svg}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function TikTokIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
+    </svg>
+  );
+}
+function FacebookIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+      <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.885v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+    </svg>
+  );
+}
+function ZaloIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.01 16.492c-.23.336-.57.508-.96.508-.19 0-.386-.046-.567-.143l-2.44-1.373c-.44-.247-.714-.71-.714-1.213V9.63c0-.776.63-1.406 1.406-1.406.777 0 1.407.63 1.407 1.406v3.696l1.822 1.026c.672.378.912 1.232.534 1.904l.512.236zm-7.874.1c-2.95 0-5.346-2.395-5.346-5.346s2.395-5.346 5.346-5.346c1.475 0 2.81.598 3.782 1.566l-1.992 1.992a2.584 2.584 0 0 0-1.79-.714c-1.43 0-2.592 1.161-2.592 2.592s1.161 2.592 2.592 2.592c1.103 0 2.045-.693 2.424-1.668H9.136v-2.5h5.518c.063.322.096.655.096.996 0 2.95-2.395 5.346-5.346 5.346l-.268-.51z"/>
+    </svg>
+  );
+}
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+    </svg>
+  );
+}
+
