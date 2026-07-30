@@ -34,7 +34,7 @@ export async function quizRoutes(app: FastifyInstance) {
         WHERE ($1::text IS NULL OR q.course_id = $1)
           AND ($2::uuid IS NULL OR q.created_by = $2::uuid)
         GROUP BY q.id
-        ORDER BY q.created_at DESC`,
+        ORDER BY q.sort_order NULLS LAST, q.created_at ASC`,
       [courseId ?? null, createdByFilter ?? null],
     );
     return reply.send(rows.map((r) => ({
@@ -55,9 +55,9 @@ export async function quizRoutes(app: FastifyInstance) {
     if (!quiz) return reply.code(404).send({ error: "Not found" });
 
     const { rows: questions } = await query<{
-      num: number; text: string; type: string; options: unknown; answer: string | null;
+      num: number; text: string; type: string; options: unknown; answer: string | null; meta: unknown;
     }>(
-      `SELECT num, text, type, options, answer FROM quiz_questions WHERE quiz_id = $1 ORDER BY num`,
+      `SELECT num, text, type, options, answer, meta FROM quiz_questions WHERE quiz_id = $1 ORDER BY num`,
       [id],
     );
     return reply.send({ ...quiz, courseId: quiz.course_id, questions });
@@ -185,7 +185,7 @@ export async function quizRoutes(app: FastifyInstance) {
   });
 
   // ── Teacher: per-student stats for a quiz ────────────────────────────────────
-  app.get("/:id/stats", { preHandler: requireRole("teacher", "admin") }, async (request, reply) => {
+  app.get("/:id/stats", { preHandler: requireRole("teacher", "admin", "staff", "assistant") }, async (request, reply) => {
     const { id: quizId } = request.params as { id: string };
 
     const { rows } = await query<{

@@ -25,7 +25,76 @@ OUTPUT_DIR = REPO_ROOT / "content" / "quizzes"
 
 # ── Extraction ────────────────────────────────────────────────────────────────
 
+def extract_text_docx(path: str) -> str:
+    """
+    Extract plain text from a .docx directly via python-docx, walking the body
+    in document order (paragraphs + table cells interleaved) so question
+    numbering / answer-line ordering is preserved exactly as authored.
+
+    Deliberately NOT using markitdown for .docx: real-world quiz templates
+    store "pinyin" as a font-substitution trick (w:rFonts w:eastAsia=
+    "FZKTPY0x" applied directly to hanzi runs, no dedicated style) and mark
+    answers via inline "Đáp án: X" text runs (bold/yellow-highlight/red —
+    no checkboxes, no tables for Q/A layout). Reading paragraph.text straight
+    from python-docx is simpler and more faithful than round-tripping through
+    markitdown's PDF-oriented markdown conversion.
+
+    FIX (pinyin leak): some templates instead use Word's built-in "Phonetic
+    Guide" feature (格式 > 拼音指南), which serializes as a <w:ruby> element
+    containing <w:rt> (the pinyin annotation text) alongside <w:rubyBase>
+    (the actual hanzi being annotated). Naively iterating every descendant
+    <w:t> in document order — which is what `p.iter(qn("w:t"))` does — picks
+    up the <w:rt> pinyin syllables interleaved with the hanzi, so extracted
+    sentences end up with stray pinyin (e.g. "wǒ我men们…") leaking into the
+    quiz text/options. We must skip any <w:t> that lives inside a <w:rt>
+    ruby-text run and only keep the <w:rubyBase> (or plain, non-ruby) text.
+    """
+    import docx
+    from docx.oxml.ns import qn
+
+    document = docx.Document(path)
+    body = document.element.body
+    lines = []
+
+    RT_TAG = qn("w:rt")
+
+    def is_ruby_annotation(t):
+        """True if this <w:t> sits inside a <w:rt> (pinyin phonetic-guide) run."""
+        el = t.getparent()
+        while el is not None:
+            if el.tag == RT_TAG:
+                return True
+            if el.tag == qn("w:p"):
+                break
+            el = el.getparent()
+        return False
+
+    def para_text(p):
+        return "".join(
+            t.text or "" for t in p.iter(qn("w:t")) if not is_ruby_annotation(t)
+        )
+
+    def cell_text(tc):
+        texts = []
+        for p in tc.findall(qn("w:p")):
+            texts.append(para_text(p))
+        return "\n".join(texts)
+
+    for child in body.iterchildren():
+        tag = child.tag.split("}")[-1]
+        if tag == "p":
+            lines.append(para_text(child))
+        elif tag == "tbl":
+            for tr in child.findall(qn("w:tr")):
+                cells = [cell_text(tc) for tc in tr.findall(qn("w:tc"))]
+                lines.append(" | ".join(cells))
+
+    return "\n".join(lines)
+
+
 def extract_text(path: str) -> str:
+    if str(path).lower().endswith(".docx"):
+        return extract_text_docx(path)
     from markitdown import MarkItDown
     md = MarkItDown()
     result = md.convert(path)
@@ -46,11 +115,35 @@ OPTION_RE = re.compile(
     re.MULTILINE,
 )
 
-# Inline answer: "Đáp án: A" or "Đáp án:A"
-INLINE_ANS = re.compile(r"Đáp\s+án\s*:\s*([A-D])", re.IGNORECASE)
+# Inline answer: "Đáp án: A" or "Đáp án:A"  — MCQ single letter only
+# Supports half-width (:) and full-width (：) colon
+INLINE_ANS = re.compile(r"Đáp\s+án\s*[：:]\s*([A-D])\s*$", re.IGNORECASE | re.MULTILINE)
 
-# Open-ended marker
-OPEN_MARKER = re.compile(r"Đáp\s+án\s+của\s+bạn|Gõ\s+chữ\s+Hán|_{5,}", re.IGNORECASE)
+# Essay answer: "Đáp án: <Chinese / long text>" — anything that is NOT a lone A-D letter.
+# FIX: supports full-width colon (：) and answer on the NEXT line after the label
+#   "Đáp án: 我们的飞机…"  — same-line answer
+#   "Đáp án:\n我们的飞机…" — next-line answer (common in some PDFs)
+ESSAY_ANS = re.compile(
+    r"Đáp\s+án\s*[：:]\s*"            # label (half or full-width colon)
+    r"(?![A-D][ \t]*(?:\r?\n|$))"     # negative look-ahead: not a lone MCQ letter
+    r"\r?\n?[ \t]*"                    # optional newline + indent before answer
+    r"([^\n]+)",                       # capture: rest of line (the actual answer)
+    re.IGNORECASE | re.MULTILINE,
+)
+
+# Open-ended marker — detects essay/open questions.
+# NOTE: _{5,} is anchored to a standalone line so that fill-in-the-blank MCQ
+# questions whose sentence text contains embedded underscores (e.g. "你们_______吃哪个菜？")
+# are NOT incorrectly classified as open-ended.
+# FIX: standalone underscores alone are weak evidence — MCQ options + inline answer
+#      will override this flag in parse_question().
+OPEN_MARKER = re.compile(
+    r"Đáp\s+án\s+của\s+bạn"          # explicit student-answer label
+    r"|Gõ\s+chữ\s+Hán"               # explicit Hán writing prompt
+    r"|Chỗ\s+trống\s+làm\s+bài[^\n]*" # essay writing-space label (+ trailing colon/text)
+    r"|^_{5,}\s*$",                   # standalone line of underscores (fill-in blank)
+    re.IGNORECASE | re.MULTILINE,
+)
 
 # Answer summary section
 ANS_SECTION = re.compile(r"BẢNG\s+ĐÁP\s+ÁN|ĐÁP\s+ÁN\s+THAM\s+KHẢO", re.IGNORECASE)
@@ -89,7 +182,7 @@ def parse_options(block: str) -> dict:
     return opts
 
 
-def extract_end_answer_key(text: str, mcq_nums: set | None = None) -> dict:
+def extract_end_answer_key(text: str, mcq_nums: "set | None" = None) -> dict:
     """
     Parse the MCQ answer key at the end of Bài 3/4-style PDFs.
 
@@ -181,24 +274,36 @@ def split_questions(text: str) -> list:
     return blocks
 
 
-def parse_question(num: int, block: str) -> dict | None:
+def parse_question(num: int, block: str) -> "dict | None":
     """Parse a single question block into a structured dict."""
     # Remove the "Câu N:" header from the start
     block_body = re.sub(r"^Câu\s+\d+\s*[.:\s]*", "", block, count=1).strip()
 
-    # Check for open-ended marker before parsing options
+    # Check for open-ended marker BEFORE any stripping
     is_open = bool(OPEN_MARKER.search(block_body))
 
-    # Extract inline answer if present
+    # Extract MCQ inline answer: "Đáp án: A"  (single letter)
     ans_m = INLINE_ANS.search(block_body)
     inline_answer = ans_m.group(1) if ans_m else None
 
-    # Strip inline answer line and open-ended answer lines from body
+    # Extract essay answer: "Đáp án: 大家多吃点儿。"  (non-letter text)
+    essay_m = ESSAY_ANS.search(block_body)
+    essay_answer = essay_m.group(1).strip() if essay_m else None
+
+    # Strip ALL answer lines and open-ended noise from the display body
     block_body_clean = INLINE_ANS.sub("", block_body)
+    block_body_clean = ESSAY_ANS.sub("", block_body_clean)
     block_body_clean = OPEN_MARKER.sub("", block_body_clean)
 
-    # Extract options
-    options = parse_options(block_body_clean) if not is_open else {}
+    # Always attempt to parse options — even if is_open is set.
+    # Reason: fill-in-the-blank MCQ questions (e.g. "___很好看 A.也 B.都 C.再 D.又")
+    # can trigger OPEN_MARKER via standalone underscores yet still have A-D choices.
+    options = parse_options(block_body_clean)
+
+    # FIX Bug 1: if we have clear MCQ evidence (options + inline letter answer),
+    # override the open marker — standalone underscores were just the blank placeholder.
+    if options and inline_answer:
+        is_open = False
 
     # Extract question text: everything before the first option
     first_opt = re.search(r"^[•\s]*[A-D]\.", block_body_clean, re.MULTILINE)
@@ -222,7 +327,9 @@ def parse_question(num: int, block: str) -> dict | None:
         "text": q_text,
         "type": q_type,
         "options": options if q_type == "mcq" else {},
-        "answer": inline_answer,  # may be filled from end key after
+        # MCQ: inline letter; open: extracted Chinese/text answer; both: may be
+        # supplemented from the end-of-doc answer key in pass 2
+        "answer": inline_answer if q_type == "mcq" else essay_answer,
     }
 
 
