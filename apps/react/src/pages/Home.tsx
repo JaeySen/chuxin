@@ -202,7 +202,11 @@ function GuestHome() {
 // ── Pinyin helper ─────────────────────────────────────────────────────────────
 
 export type PinyinPairs = [string, string][];
-export type QuestionMeta = { text_pairs?: PinyinPairs; options_pairs?: Record<string, PinyinPairs> } | null;
+export type QuestionMeta = {
+  text_pairs?: PinyinPairs;
+  options_pairs?: Record<string, PinyinPairs>;
+  areAllAnswerPinyin?: boolean;
+} | null;
 
 export function RubyText({ pairs, fallback }: { pairs?: PinyinPairs; fallback: string }) {
   if (!pairs || pairs.length === 0) return <>{fallback}</>;
@@ -215,6 +219,31 @@ export function RubyText({ pairs, fallback }: { pairs?: PinyinPairs; fallback: s
       )}
     </>
   );
+}
+
+// A string is "pinyin-only" when it has no CJK characters and contains at
+// least one Latin/pinyin letter (tone marks included) — i.e. it reads as a
+// pinyin transcription rather than Hán tự or Vietnamese meaning text.
+const CJK_RE = /[一-鿿㐀-䶿豈-﫿]/;
+const PINYIN_LETTER_RE = /[a-zA-ZüÜāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/;
+function isPinyinOnlyText(s: string | null | undefined): boolean {
+  if (!s) return false;
+  const t = s.trim();
+  if (!t || CJK_RE.test(t)) return false;
+  return PINYIN_LETTER_RE.test(t);
+}
+
+// Detect "find the pinyin of <hán tự>" style MCQ questions: every option is
+// a pinyin transcription. Showing ruby pinyin above the Chinese characters
+// in the question text would hand the student the answer, so callers should
+// suppress RubyText pairs for the question text in that case.
+function isPinyinAnswerQuestion(q: { type: string; options: Record<string, string> }): boolean {
+  if (q.type !== "mcq") return false;
+  const vals = (["A", "B", "C", "D"] as const)
+    .map((l) => q.options[l])
+    .filter((v): v is string => !!v && v.trim().length > 0);
+  if (vals.length < 2) return false;
+  return vals.every(isPinyinOnlyText);
 }
 
 // ── Student ───────────────────────────────────────────────────────────────────
@@ -237,8 +266,11 @@ interface AttemptState {
 export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; onClose: () => void }) {
   const allQ = [...(quiz.questions ?? [])].sort((a, b) => a.num - b.num);
   const mcqCount = allQ.filter((q) => q.type === "mcq").length;
+  const openCount = allQ.length - mcqCount;
+  const hasMixed = mcqCount > 0 && openCount > 0;
   const [attempt, setAttempt] = useState<AttemptState | null>(null);
   const [idx, setIdx] = useState(0);
+  const [activeTab, setActiveTab] = useState<"mcq" | "open">(mcqCount > 0 ? "mcq" : "open");
   const [picks, setPicks] = useState<Record<number, { selected: string; isCorrect: boolean }>>({});
   const [essays, setEssays] = useState<Record<number, string>>({});
   const [essaySubmitted, setEssaySubmitted] = useState<Record<number, boolean>>({});
@@ -264,7 +296,10 @@ export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; 
         // Resume from last shown question
         if (data.lastQuestionNum > 0) {
           const resumeIdx = allQ.findIndex((q) => q.num >= data.lastQuestionNum);
-          if (resumeIdx !== -1) setIdx(resumeIdx);
+          if (resumeIdx !== -1) {
+            setIdx(resumeIdx);
+            setActiveTab(allQ[resumeIdx].type === "open" ? "open" : "mcq");
+          }
         }
       })
       .catch(() => { if (!cancelled) setStartError("Không kết nối được máy chủ."); });
@@ -281,6 +316,37 @@ export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; 
   const isAnswered = q
     ? (q.type === "mcq" ? !!picks[q.num] : !!essaySubmitted[q.num])
     : false;
+
+  function isDoneAt(i: number): boolean {
+    const qq = allQ[i];
+    return qq.type === "mcq" ? !!picks[qq.num] : !!essaySubmitted[qq.num];
+  }
+  const sectionIndices = hasMixed
+    ? allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === activeTab) acc.push(i); return acc; }, [])
+    : allQ.map((_, i) => i);
+  const posInSection = sectionIndices.indexOf(idx);
+  const otherTabType: "mcq" | "open" = activeTab === "mcq" ? "open" : "mcq";
+  const otherIndices = hasMixed
+    ? allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === otherTabType) acc.push(i); return acc; }, [])
+    : [];
+  const mcqDoneCount = allQ.reduce((n, qq, i) => n + (qq.type === "mcq" && isDoneAt(i) ? 1 : 0), 0);
+  const openDoneCount = allQ.reduce((n, qq, i) => n + (qq.type === "open" && isDoneAt(i) ? 1 : 0), 0);
+  const otherSectionDone = otherIndices.length === 0 || otherIndices.every(isDoneAt);
+  const isLastInSection = hasMixed && posInSection !== -1 && posInSection === sectionIndices.length - 1;
+  const nextLabel = hasMixed
+    ? (isLastInSection
+        ? (otherSectionDone ? "Xem kết quả" : `Xong phần này · Sang ${otherTabType === "mcq" ? "Trắc nghiệm" : "Tự luận"} →`)
+        : "Câu tiếp →")
+    : (idx + 1 < allQ.length ? "Câu tiếp →" : "Xem kết quả");
+
+  function switchTab(type: "mcq" | "open") {
+    if (type === activeTab) return;
+    const indices = allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === type) acc.push(i); return acc; }, []);
+    if (indices.length === 0) return;
+    const target = indices.find((i) => !isDoneAt(i)) ?? indices[0];
+    setActiveTab(type);
+    setIdx(target);
+  }
 
   async function pick(letter: string) {
     if (!attempt || picks[q.num] || saving) return;
@@ -327,18 +393,37 @@ export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; 
     setSaving(false);
   }
 
+  async function completeAttempt() {
+    if (attempt) {
+      try {
+        await fetch(`${API}/quiz/attempts/${attempt.attemptId}/complete`, {
+          method: "POST", credentials: "include", headers: authHeaders(),
+        });
+      } catch {}
+    }
+    setDone(true);
+  }
+
   async function next() {
+    if (hasMixed) {
+      const pos = sectionIndices.indexOf(idx);
+      if (pos !== -1 && pos + 1 < sectionIndices.length) {
+        setIdx(sectionIndices[pos + 1]);
+        return;
+      }
+      if (!otherSectionDone) {
+        const target = otherIndices.find((i) => !isDoneAt(i)) ?? otherIndices[0];
+        setActiveTab(otherTabType);
+        setIdx(target);
+        return;
+      }
+      await completeAttempt();
+      return;
+    }
     if (idx + 1 < allQ.length) {
       setIdx((i) => i + 1);
     } else {
-      if (attempt) {
-        try {
-          await fetch(`${API}/quiz/attempts/${attempt.attemptId}/complete`, {
-            method: "POST", credentials: "include", headers: authHeaders(),
-          });
-        } catch {}
-      }
-      setDone(true);
+      await completeAttempt();
     }
   }
 
@@ -400,10 +485,31 @@ export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; 
     <div className="qp-shell">
       <div className="qp-top">
         <button className="btn btn-ghost btn-sm" onClick={onClose}>← Quay lại</button>
-        <span className="qp-progress">{idx + 1} / {allQ.length}</span>
+        <span className="qp-progress">
+          {hasMixed ? `${posInSection + 1} / ${sectionIndices.length}` : `${idx + 1} / ${allQ.length}`}
+        </span>
       </div>
+      {hasMixed && (
+        <div className="qp-tabs">
+          <button
+            className={`qp-tab${activeTab === "mcq" ? " qp-tab--active" : ""}`}
+            onClick={() => switchTab("mcq")}
+          >
+            Trắc nghiệm <span className="qp-section-badge">{mcqDoneCount}/{mcqCount}</span>
+          </button>
+          <button
+            className={`qp-tab${activeTab === "open" ? " qp-tab--active" : ""}`}
+            onClick={() => switchTab("open")}
+          >
+            Tự luận <span className="qp-section-badge">{openDoneCount}/{openCount}</span>
+          </button>
+        </div>
+      )}
       <div className="qp-bar-track">
-        <div className="qp-bar-fill" style={{ width: `${(idx / allQ.length) * 100}%` }} />
+        <div
+          className="qp-bar-fill"
+          style={{ width: `${hasMixed ? (posInSection / sectionIndices.length) * 100 : (idx / allQ.length) * 100}%` }}
+        />
       </div>
       <div className="qp-card">
         <div className="qp-num">
@@ -411,7 +517,7 @@ export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; 
           {q.type === "open" && <span className="qp-type-badge">Tự luận</span>}
         </div>
         <div className="qp-text">
-          <RubyText pairs={q.meta?.text_pairs ?? undefined} fallback={q.text} />
+          <RubyText pairs={(q.meta?.areAllAnswerPinyin ?? isPinyinAnswerQuestion(q)) ? undefined : (q.meta?.text_pairs ?? undefined)} fallback={q.text} />
         </div>
         {q.type === "mcq" ? (
           <>
@@ -474,7 +580,7 @@ export function StudentQuizPlayer({ quiz, onClose }: { quiz: StudentQuizDetail; 
       </div>
       {isAnswered && (
         <button className="btn btn-primary qp-next" onClick={next}>
-          {idx + 1 < allQ.length ? "Câu tiếp →" : "Xem kết quả"}
+          {nextLabel}
         </button>
       )}
     </div>
@@ -598,7 +704,10 @@ export function authHeaders() {
 export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose: () => void }) {
   const allQ = [...(quiz.questions ?? [])].sort((a, b) => a.num - b.num);
   const mcqCount = allQ.filter((q) => q.type === "mcq").length;
+  const openCount = allQ.length - mcqCount;
+  const hasMixed = mcqCount > 0 && openCount > 0;
   const [idx, setIdx] = useState(0);
+  const [activeTab, setActiveTab] = useState<"mcq" | "open">(mcqCount > 0 ? "mcq" : "open");
   const [picks, setPicks] = useState<Record<number, string>>({});
   const [essays, setEssays] = useState<Record<number, string>>({});
   const [essaySubmitted, setEssaySubmitted] = useState<Record<number, boolean>>({});
@@ -611,6 +720,37 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
     ? (q.type === "mcq" ? !!picks[q.num] : !!essaySubmitted[q.num])
     : false;
 
+  function isDoneAt(i: number): boolean {
+    const qq = allQ[i];
+    return qq.type === "mcq" ? !!picks[qq.num] : !!essaySubmitted[qq.num];
+  }
+  const sectionIndices = hasMixed
+    ? allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === activeTab) acc.push(i); return acc; }, [])
+    : allQ.map((_, i) => i);
+  const posInSection = sectionIndices.indexOf(idx);
+  const otherTabType: "mcq" | "open" = activeTab === "mcq" ? "open" : "mcq";
+  const otherIndices = hasMixed
+    ? allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === otherTabType) acc.push(i); return acc; }, [])
+    : [];
+  const mcqDoneCount = allQ.reduce((n, qq, i) => n + (qq.type === "mcq" && isDoneAt(i) ? 1 : 0), 0);
+  const openDoneCount = allQ.reduce((n, qq, i) => n + (qq.type === "open" && isDoneAt(i) ? 1 : 0), 0);
+  const otherSectionDone = otherIndices.length === 0 || otherIndices.every(isDoneAt);
+  const isLastInSection = hasMixed && posInSection !== -1 && posInSection === sectionIndices.length - 1;
+  const nextLabel = hasMixed
+    ? (isLastInSection
+        ? (otherSectionDone ? "Xem kết quả" : `Xong phần này · Sang ${otherTabType === "mcq" ? "Trắc nghiệm" : "Tự luận"} →`)
+        : "Câu tiếp →")
+    : (idx + 1 < allQ.length ? "Câu tiếp →" : "Xem kết quả");
+
+  function switchTab(type: "mcq" | "open") {
+    if (type === activeTab) return;
+    const indices = allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === type) acc.push(i); return acc; }, []);
+    if (indices.length === 0) return;
+    const target = indices.find((i) => !isDoneAt(i)) ?? indices[0];
+    setActiveTab(type);
+    setIdx(target);
+  }
+
   function pick(letter: string) {
     if (picks[q.num]) return;
     setPicks((p) => ({ ...p, [q.num]: letter }));
@@ -620,11 +760,26 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
     setEssaySubmitted((e) => ({ ...e, [q.num]: true }));
   }
   function next() {
+    if (hasMixed) {
+      const pos = sectionIndices.indexOf(idx);
+      if (pos !== -1 && pos + 1 < sectionIndices.length) {
+        setIdx(sectionIndices[pos + 1]);
+        return;
+      }
+      if (!otherSectionDone) {
+        const target = otherIndices.find((i) => !isDoneAt(i)) ?? otherIndices[0];
+        setActiveTab(otherTabType);
+        setIdx(target);
+        return;
+      }
+      setDone(true);
+      return;
+    }
     if (idx + 1 < allQ.length) setIdx((i) => i + 1);
     else setDone(true);
   }
   function reset() {
-    setPicks({}); setEssays({}); setEssaySubmitted({}); setIdx(0); setDone(false);
+    setPicks({}); setEssays({}); setEssaySubmitted({}); setIdx(0); setDone(false); setActiveTab(mcqCount > 0 ? "mcq" : "open");
   }
 
   const score = allQ.filter((q) => q.type === "mcq" && picks[q.num] === q.answer).length;
@@ -673,16 +828,39 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
     <div className="qp-shell">
       <div className="qp-top">
         <button className="btn btn-ghost btn-sm" onClick={onClose}>← Quay lại</button>
-        <span className="qp-progress">{idx + 1} / {allQ.length}</span>
+        <span className="qp-progress">
+          {hasMixed ? `${posInSection + 1} / ${sectionIndices.length}` : `${idx + 1} / ${allQ.length}`}
+        </span>
       </div>
-      <div className="qp-bar-track"><div className="qp-bar-fill" style={{ width: `${(idx / allQ.length) * 100}%` }} /></div>
+      {hasMixed && (
+        <div className="qp-tabs">
+          <button
+            className={`qp-tab${activeTab === "mcq" ? " qp-tab--active" : ""}`}
+            onClick={() => switchTab("mcq")}
+          >
+            Trắc nghiệm <span className="qp-section-badge">{mcqDoneCount}/{mcqCount}</span>
+          </button>
+          <button
+            className={`qp-tab${activeTab === "open" ? " qp-tab--active" : ""}`}
+            onClick={() => switchTab("open")}
+          >
+            Tự luận <span className="qp-section-badge">{openDoneCount}/{openCount}</span>
+          </button>
+        </div>
+      )}
+      <div className="qp-bar-track">
+        <div
+          className="qp-bar-fill"
+          style={{ width: `${hasMixed ? (posInSection / sectionIndices.length) * 100 : (idx / allQ.length) * 100}%` }}
+        />
+      </div>
       <div className="qp-card">
         <div className="qp-num">
           Câu {q.num}
           {q.type === "open" && <span className="qp-type-badge">Tự luận</span>}
         </div>
         <div className="qp-text">
-          <RubyText pairs={q.meta?.text_pairs ?? undefined} fallback={q.text} />
+          <RubyText pairs={(q.meta?.areAllAnswerPinyin ?? isPinyinAnswerQuestion(q)) ? undefined : (q.meta?.text_pairs ?? undefined)} fallback={q.text} />
         </div>
         {q.type === "mcq" ? (
           <>
@@ -745,7 +923,7 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
       </div>
       {isAnswered && (
         <button className="btn btn-primary qp-next" onClick={next}>
-          {idx + 1 < allQ.length ? "Câu tiếp →" : "Xem kết quả"}
+          {nextLabel}
         </button>
       )}
     </div>
