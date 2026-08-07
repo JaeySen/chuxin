@@ -7,6 +7,11 @@ import { CoursePage } from "./pages/CoursePage";
 import { LessonPage } from "./pages/LessonPage";
 import { MePage } from "./pages/MePage";
 import { PinyinExercisePage } from "./pages/PinyinExercisePage";
+import { InteractiveExercisesPage } from "./pages/InteractiveExercisesPage";
+import { WeatherForecastPage } from "./pages/WeatherForecastPage";
+import { MarketComparisonPage } from "./pages/MarketComparisonPage";
+import { RestaurantOrderPage } from "./pages/RestaurantOrderPage";
+import { ShoppingPricePage } from "./pages/ShoppingPricePage";
 import { WordSearchTeacher } from "./pages/WordSearchTeacher";
 import { WordSearchGame } from "./pages/WordSearchGame";
 import { BingoTeacher } from "./pages/BingoTeacher";
@@ -31,6 +36,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="lesson/:lessonId" element={<LessonPage />} />
           <Route path="me" element={<MePage />} />
           <Route path="pinyin" element={<PinyinExercisePage />} />
+          <Route path="bai-tap-tuong-tac" element={<InteractiveExercisesPage />} />
+          <Route path="bai-tap-tuong-tac/du-bao-thoi-tiet" element={<WeatherForecastPage />} />
+          <Route path="bai-tap-tuong-tac/di-cho-sang" element={<MarketComparisonPage />} />
+          <Route path="bai-tap-tuong-tac/goi-mon-an" element={<RestaurantOrderPage />} />
+          <Route path="bai-tap-tuong-tac/hoc-gia-tien" element={<ShoppingPricePage />} />
           <Route path="word-search" element={<WordSearchTeacher />} />
           <Route path="word-search/:gameId" element={<WordSearchGame />} />
           <Route path="bingo" element={<BingoTeacher />} />

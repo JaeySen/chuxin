@@ -32,9 +32,10 @@ const PUBLIC_LINKS = [
 
 // Games submenu — only rendered when logged in
 const GAME_LINKS = [
-  { to: "/pinyin",      label: "Ngữ âm",  icon: "🔊" },
-  { to: "/word-search", label: "Tìm từ",  icon: "🔍" },
-  { to: "/bingo",       label: "Bingo",   icon: "🎯" },
+  { to: "/pinyin",              label: "Ngữ âm",             icon: "🔊" },
+  { to: "/word-search",         label: "Tìm từ",              icon: "🔍" },
+  { to: "/bingo",                label: "Bingo",               icon: "🎯" },
+  { to: "/bai-tap-tuong-tac",   label: "Bài tập tương tác",  icon: "🎮" },
 ];
 
 function GamesDropdown() {
@@ -186,6 +187,10 @@ function Header() {
                 <Link to="/pinyin" className="nav-tile" onClick={() => setMenuOpen(false)}>
                   <span className="nav-tile-icon">🔊</span>
                   <span className="nav-tile-label">Pinyin</span>
+                </Link>
+                <Link to="/bai-tap-tuong-tac" className="nav-tile" onClick={() => setMenuOpen(false)}>
+                  <span className="nav-tile-icon">🎮</span>
+                  <span className="nav-tile-label">Bài tập tương tác</span>
                 </Link>
               </>
             ) : role === "student" ? (
