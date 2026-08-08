@@ -338,6 +338,17 @@ body {
   justify-content: center;
 }
 
+.pe-row--disabled .pe-row-buttons {
+  opacity: 0.4;
+}
+
+.pe-row-hint {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--c-text-muted);
+}
+
 .pe-btn {
   padding: 16px 28px;
   border-radius: 14px;

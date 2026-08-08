@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import hsk1Raw from "../data/hsk1.json";
 import { parsePinyin, TONE_LABELS, type PinyinParts } from "../utils/pinyinParser";
 
@@ -28,30 +28,30 @@ const FAKE_FILLERS = ["v", "ee", "oo", "aa", "uu", "ai", "ei", "ao"];
 const ALL_INITIALS = [...new Set(ALL_WORDS.map((w) => w.initial))];
 const ALL_FINALS = [...new Set(ALL_WORDS.map((w) => w.final))];
 
-function seededShuffle<T>(arr: T[], seed: number): T[] {
+function shuffle<T>(arr: T[]): T[] {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
-    const j = (((seed * (i + 1)) ^ 0x9e3779b9) >>> 0) % (i + 1);
+    const j = Math.floor(Math.random() * (i + 1));
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
 }
 
-function makeChoices(correct: string, pool: string[], count: number, seed: number, useFillers = false): string[] {
-  let others = seededShuffle(pool.filter((o) => o !== correct), seed).slice(0, count - 1);
+function makeChoices(correct: string, pool: string[], count: number, useFillers = false): string[] {
+  let others = shuffle(pool.filter((o) => o !== correct)).slice(0, count - 1);
   if (useFillers) {
-    others = others.map((o, i) => {
+    others = others.map((o) => {
       if (o !== "") return o;
       const candidates = FAKE_FILLERS.filter((f) => f !== correct && !others.includes(f));
-      return seededShuffle(candidates, seed + i + 17)[0] ?? "v";
+      return shuffle(candidates)[0] ?? "v";
     });
   }
-  return seededShuffle([correct, ...others], seed + 1);
+  return shuffle([correct, ...others]);
 }
 
-function makeToneChoices(correct: number, count: number, seed: number): number[] {
-  const others = seededShuffle([1, 2, 3, 4, 5].filter((t) => t !== correct), seed).slice(0, count - 1);
-  return seededShuffle([correct, ...others], seed + 1);
+function makeToneChoices(correct: number, count: number): number[] {
+  const others = shuffle([1, 2, 3, 4, 5].filter((t) => t !== correct)).slice(0, count - 1);
+  return shuffle([correct, ...others]);
 }
 
 type Sel = { initial: string | null; final: string | null; tone: number | null };
@@ -142,11 +142,27 @@ function ExerciseView({
   const [showEnd, setShowEnd] = useState(false);
 
   const word = batchWords[posInBatch];
-  const seed = (batchIdx * BATCH_SIZE + posInBatch) * 31337;
 
-  const initialChoices = makeChoices(word.initial, ALL_INITIALS, choiceCount, seed, true);
-  const finalChoices = makeChoices(word.final, ALL_FINALS, choiceCount, seed + 7);
-  const toneChoices = makeToneChoices(word.tone, choiceCount, seed + 13);
+  // Memoized so the button order stays put across re-renders of the same
+  // question (selection/checked-state changes), but re-shuffles for every
+  // new word.
+  const initialChoices = useMemo(
+    () => makeChoices(word.initial, ALL_INITIALS, choiceCount, true),
+    [word, choiceCount],
+  );
+  const finalChoices = useMemo(
+    () => makeChoices(word.final, ALL_FINALS, choiceCount),
+    [word, choiceCount],
+  );
+  const toneChoices = useMemo(
+    () => makeToneChoices(word.tone, choiceCount),
+    [word, choiceCount],
+  );
+
+  // Thanh điệu (tone) row is locked until the learner has picked both the
+  // thanh mẫu (initial) and vận mẫu (final) — forces them to build the
+  // syllable in order instead of guessing the tone first.
+  const toneDisabled = sel.initial === null || sel.final === null;
 
   // Auto-check when all 3 are selected
   useEffect(() => {
@@ -162,6 +178,7 @@ function ExerciseView({
 
   function toggle<K extends keyof Sel>(key: K, value: Sel[K]) {
     if (checked) return;
+    if (key === "tone" && toneDisabled) return;
     setSel((s) => ({ ...s, [key]: s[key] === value ? null : value }));
   }
 
@@ -328,14 +345,18 @@ function ExerciseView({
           </div>
         </div>
 
-        <div className="pe-row">
+        <div className={`pe-row ${toneDisabled ? "pe-row--disabled" : ""}`}>
           {/* <div className="pe-row-label">声调 · Dấu thanh (tone)</div> */}
+          {toneDisabled && (
+            <div className="pe-row-hint">Chọn thanh mẫu &amp; vận mẫu trước</div>
+          )}
           <div className="pe-row-buttons">
             {toneChoices.map((t) => (
               <button
                 key={t}
                 className={`${choiceClass(t, word.tone, sel.tone)} pe-btn--tone`}
                 onClick={() => toggle("tone", t)}
+                disabled={toneDisabled}
               >
                 {TONE_LABELS[t]}
               </button>
