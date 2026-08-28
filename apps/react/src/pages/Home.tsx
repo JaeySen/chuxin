@@ -221,15 +221,65 @@ export function RubyText({ pairs, fallback }: { pairs?: PinyinPairs; fallback: s
   );
 }
 
-// A string is "pinyin-only" when it has no CJK characters and contains at
-// least one Latin/pinyin letter (tone marks included) — i.e. it reads as a
-// pinyin transcription rather than Hán tự or Vietnamese meaning text.
-const CJK_RE = /[一-鿿㐀-䶿豈-﫿]/;
+// A string is "pinyin-only" when it has no CJK characters, no Vietnamese-only
+// sound marks, and contains at least one Latin/pinyin letter (tone marks
+// included) — i.e. it reads as a pinyin transcription rather than Hán tự or
+// Vietnamese meaning text.
+const CJK_RE = /[一-鿿㐀-䶿豐-﫿]/;
 const PINYIN_LETTER_RE = /[a-zA-ZüÜāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/;
+// Vietnamese tone marks (dấu sắc, huyền, hỏi, ngã, nặng) are diacritics on a
+// base vowel. Pinyin only ever uses macron (tone 1), acute (tone 2), caron
+// (tone 3) or grave (tone 4) on the plain vowels a/e/i/o/u/ü — it never uses
+// Vietnamese's hỏi (hook above, U+0309), ngã (tilde, U+0303) or nặng (dot
+// below, U+0323) marks, and never marks a breve/circumflex/horn vowel
+// (ă/â/ê/ô/ơ/ư) or the letter "đ". Any of those mean the text is
+// Vietnamese, not pinyin — even though sắc/huyền (acute/grave) alone are
+// ambiguous with pinyin's tones 2/4.
+const VN_ONLY_DIACRITIC_RE = /[đĐ̛̣̆̂̉̃]/;
+function hasVietnameseOnlySounds(s: string): boolean {
+  return VN_ONLY_DIACRITIC_RE.test(s.normalize("NFD"));
+}
+// dấu sắc (´) and dấu huyền (`) alone are ambiguous — pinyin uses acute for
+// tone 2 and grave for tone 4 on the same plain vowels Vietnamese uses for
+// sắc/huyền, and both languages have short syllables that are individually
+// well-formed either way (e.g. "chào" is also a valid pinyin reading, chāo,
+// and "ma" is a valid toneless pinyin particle as well as a Vietnamese
+// word). A single ambiguous syllable is therefore left classified as
+// pinyin (the pre-existing behaviour) — but a multi-word *phrase*
+// containing a common Vietnamese function/grammar word is a strong signal
+// this is Vietnamese prose, not a pinyin transcription (real pinyin
+// annotations don't read like Vietnamese sentences with words like
+// "chào", "của", "được"...). Only accented entries are listed on purpose:
+// bare ASCII Vietnamese spellings collide with real toneless pinyin
+// syllables (e.g. "la", "co", "ma", "the") and would cause false
+// positives.
+const VN_COMMON_WORDS = new Set([
+  "chào", "cảm", "ơn", "không", "có", "là", "của", "và", "những", "các",
+  "một", "người", "này", "kia", "đó", "rất", "cũng", "thì", "nhưng", "vì",
+  "nếu", "trước", "trong", "ngoài", "với", "được", "bị", "sẽ", "đã", "đang",
+  "nữa", "chỉ", "còn", "hoặc", "mà", "nên", "ở", "đi", "về", "lại", "vào",
+  "lên", "xuống", "đến", "từ", "như", "vậy", "thế", "à", "ạ", "nhé", "nhá",
+  "ừ", "vâng", "dạ", "tôi", "bạn", "chị", "chúng", "mình", "gì", "đâu",
+  "nào", "nhiêu", "làm", "nói", "biết", "muốn", "cần", "phải", "bằng",
+  "trên", "dưới",
+]);
+function hasVietnameseCommonWord(s: string): boolean {
+  const tokens = s
+    .toLowerCase()
+    .split(/[^\p{L}\u0300-\u036f]+/u)
+    .filter(Boolean);
+  // Require an actual multi-word phrase — a single ambiguous token (e.g.
+  // just "mà" or "chào" on its own) stays classified as pinyin, matching
+  // the character-level ambiguity tradeoff above.
+  if (tokens.length < 2) return false;
+  return tokens.some((tok) => VN_COMMON_WORDS.has(tok));
+}
 function isPinyinOnlyText(s: string | null | undefined): boolean {
   if (!s) return false;
   const t = s.trim();
-  if (!t || CJK_RE.test(t)) return false;
+  if (!t || CJK_RE.test(t) || hasVietnameseOnlySounds(t) || hasVietnameseCommonWord(t)) {
+    return false;
+  }
   return PINYIN_LETTER_RE.test(t);
 }
 
@@ -692,7 +742,26 @@ function isShortOptionSet(options: Record<string, string>): boolean {
   return vals.every((v) => v.trim().split(/\s+/).length <= 3 && v.length <= 12);
 }
 
-export function authHeaders() {
+// Cross-origin auth handoff: when another origin (e.g. giaovu.hanngusotam.com)
+// opens a page here in a new tab via "Thử làm", it has no access to this
+// domain's localStorage, so it passes its own JWT/session token via the URL
+// hash fragment instead (#jwt=...&session=..., never sent to any server, not
+// persisted in browser/server logs). Checked first so shared exercises work
+// for teachers who've never logged into this app directly; falls back to this
+// app's own stored credentials for normal same-origin use.
+function hashAuthHeaders(): Record<string, string> | null {
+  const hash = window.location.hash.replace(/^#/, "");
+  if (!hash) return null;
+  const params = new URLSearchParams(hash);
+  const jwt = params.get("jwt");
+  const sessionToken = params.get("session");
+  if (!jwt || !sessionToken) return null;
+  return { Authorization: `Bearer ${jwt}`, "X-Session-Token": sessionToken };
+}
+
+export function authHeaders(): Record<string, string> {
+  const fromHash = hashAuthHeaders();
+  if (fromHash) return fromHash;
   const jwt = getStoredJwt();
   const sessionToken = getStoredSessionToken();
   return {
@@ -701,29 +770,95 @@ export function authHeaders() {
   };
 }
 
+const QP_TIME_PER_Q = 15; // seconds given per question before it's auto-skipped
+
+function qpFmtDuration(totalSec: number): string {
+  const m = Math.floor(Math.max(0, totalSec) / 60);
+  const s = Math.max(0, totalSec) % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+interface QpMeStats {
+  playCount: number;
+  last: { score: number; totalMcq: number; unansweredCount: number; durationMs: number; completedAt: string } | null;
+}
+
 export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose: () => void }) {
   const allQ = [...(quiz.questions ?? [])].sort((a, b) => a.num - b.num);
   const mcqCount = allQ.filter((q) => q.type === "mcq").length;
   const openCount = allQ.length - mcqCount;
   const hasMixed = mcqCount > 0 && openCount > 0;
+
+  const [attempt, setAttempt] = useState<AttemptState | null>(null);
+  const [startError, setStartError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
   const [idx, setIdx] = useState(0);
+  const [visited, setVisited] = useState<Set<number>>(() => new Set([0]));
   const [activeTab, setActiveTab] = useState<"mcq" | "open">(mcqCount > 0 ? "mcq" : "open");
-  const [picks, setPicks] = useState<Record<number, string>>({});
+  const [picks, setPicks] = useState<Record<number, { selected: string; isCorrect: boolean }>>({});
   const [essays, setEssays] = useState<Record<number, string>>({});
   const [essaySubmitted, setEssaySubmitted] = useState<Record<number, boolean>>({});
   const [done, setDone] = useState(false);
 
+  // Per-question 15s countdown + two-pass skip/revisit tracking.
+  const [timeLeft, setTimeLeft] = useState(QP_TIME_PER_Q);
+  const [timedOnce, setTimedOnce] = useState<Set<number>>(() => new Set());       // question nums that timed out once (queued for a revisit)
+  const [finalUnanswered, setFinalUnanswered] = useState<Set<number>>(() => new Set()); // timed out twice — locked, counts as unanswered
+  const [pendingAdvanceFrom, setPendingAdvanceFrom] = useState<number | null>(null);
+
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const sessionStartRef = useRef<number>(Date.now());
+
+  const [meStats, setMeStats] = useState<QpMeStats | null>(null);
+
+  function loadAttempt() {
+    setStartError(null);
+    fetch(`${API}/quiz/${quiz.id}/start`, { method: "POST", credentials: "include", headers: authHeaders() })
+      .then((r) => r.json())
+      .then((data: AttemptState) => {
+        setAttempt(data);
+        const restoredPicks: Record<number, { selected: string; isCorrect: boolean }> = {};
+        const restoredEssaySubmitted: Record<number, boolean> = {};
+        const restoredEssayText: Record<number, string> = {};
+        for (const a of data.answers) {
+          const qq = allQ.find((x) => x.num === a.questionNum);
+          if (qq?.type === "open") { restoredEssaySubmitted[a.questionNum] = true; restoredEssayText[a.questionNum] = a.selected; }
+          else restoredPicks[a.questionNum] = { selected: a.selected, isCorrect: a.isCorrect };
+        }
+        setPicks(restoredPicks);
+        setEssaySubmitted(restoredEssaySubmitted);
+        setEssays((e) => ({ ...e, ...restoredEssayText }));
+        if (data.lastQuestionNum > 0) {
+          const resumeIdx = allQ.findIndex((qq) => qq.num >= data.lastQuestionNum);
+          if (resumeIdx !== -1) {
+            setIdx(resumeIdx);
+            setVisited((v) => new Set(v).add(resumeIdx));
+            setActiveTab(allQ[resumeIdx].type === "open" ? "open" : "mcq");
+          }
+        }
+      })
+      .catch(() => setStartError("Không kết nối được máy chủ."));
+  }
+
+  // Start / resume attempt on mount.
+  useEffect(() => {
+    loadAttempt();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quiz.id]);
+
   const q = allQ[idx];
   const picked = q ? picks[q.num] : undefined;
   const correct = q?.answer ?? null;
-  const isAnswered = q
-    ? (q.type === "mcq" ? !!picks[q.num] : !!essaySubmitted[q.num])
-    : false;
 
   function isDoneAt(i: number): boolean {
     const qq = allQ[i];
+    if (finalUnanswered.has(qq.num)) return true;
     return qq.type === "mcq" ? !!picks[qq.num] : !!essaySubmitted[qq.num];
   }
+  const isAnswered = q ? isDoneAt(idx) : false;
+
   const sectionIndices = hasMixed
     ? allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === activeTab) acc.push(i); return acc; }, [])
     : allQ.map((_, i) => i);
@@ -735,60 +870,204 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
   const mcqDoneCount = allQ.reduce((n, qq, i) => n + (qq.type === "mcq" && isDoneAt(i) ? 1 : 0), 0);
   const openDoneCount = allQ.reduce((n, qq, i) => n + (qq.type === "open" && isDoneAt(i) ? 1 : 0), 0);
   const otherSectionDone = otherIndices.length === 0 || otherIndices.every(isDoneAt);
-  const isLastInSection = hasMixed && posInSection !== -1 && posInSection === sectionIndices.length - 1;
-  const nextLabel = hasMixed
-    ? (isLastInSection
-        ? (otherSectionDone ? "Xem kết quả" : `Xong phần này · Sang ${otherTabType === "mcq" ? "Trắc nghiệm" : "Tự luận"} →`)
-        : "Câu tiếp →")
-    : (idx + 1 < allQ.length ? "Câu tiếp →" : "Xem kết quả");
+
+  function sectionIndicesFor(type: "mcq" | "open"): number[] {
+    return hasMixed
+      ? allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === type) acc.push(i); return acc; }, [])
+      : allQ.map((_, i) => i);
+  }
+  // Finds the next question to show within `indices`, walking forward from
+  // `fromPos` and wrapping around. Pass 1: any never-attempted question.
+  // Pass 2 (only once pass 1 is exhausted): questions that timed out once —
+  // giving each one a single revisit before it's finalized as unanswered.
+  function findTarget(indices: number[], fromPos: number): number | null {
+    if (indices.length === 0) return null;
+    for (let step = 1; step <= indices.length; step++) {
+      const i = indices[(fromPos + step + indices.length) % indices.length];
+      if (!isDoneAt(i) && !timedOnce.has(allQ[i].num)) return i;
+    }
+    for (let step = 1; step <= indices.length; step++) {
+      const i = indices[(fromPos + step + indices.length) % indices.length];
+      if (!isDoneAt(i)) return i;
+    }
+    return null;
+  }
+  const nextTarget = findTarget(sectionIndices, posInSection);
+  const nextLabel = nextTarget !== null
+    ? "Câu tiếp →"
+    : (hasMixed && !otherSectionDone
+        ? `Sang ${otherTabType === "mcq" ? "Trắc nghiệm" : "Tự luận"} →`
+        : "Xem kết quả");
+
+  function goTo(i: number) {
+    setPendingAdvanceFrom(null);
+    setIdx(i);
+    setVisited((v) => (v.has(i) ? v : new Set(v).add(i)));
+  }
 
   function switchTab(type: "mcq" | "open") {
     if (type === activeTab) return;
-    const indices = allQ.reduce<number[]>((acc, qq, i) => { if (qq.type === type) acc.push(i); return acc; }, []);
+    const indices = sectionIndicesFor(type);
     if (indices.length === 0) return;
-    const target = indices.find((i) => !isDoneAt(i)) ?? indices[0];
+    const target = findTarget(indices, -1) ?? indices[0];
     setActiveTab(type);
-    setIdx(target);
+    goTo(target);
   }
 
-  function pick(letter: string) {
-    if (picks[q.num]) return;
-    setPicks((p) => ({ ...p, [q.num]: letter }));
+  function advanceFrom(fromIdx: number) {
+    const type: "mcq" | "open" = allQ[fromIdx].type === "open" ? "open" : "mcq";
+    const indices = sectionIndicesFor(hasMixed ? activeTab : type);
+    const fromPos = indices.indexOf(fromIdx);
+    const target = findTarget(indices, fromPos);
+    if (target !== null) { goTo(target); return; }
+    if (hasMixed) {
+      const otherType: "mcq" | "open" = activeTab === "mcq" ? "open" : "mcq";
+      const oIndices = sectionIndicesFor(otherType);
+      const oTarget = findTarget(oIndices, -1);
+      if (oTarget !== null) {
+        setActiveTab(otherType);
+        goTo(oTarget);
+        return;
+      }
+    }
+    void finishAttempt();
   }
-  function submitEssay() {
-    if (essaySubmitted[q.num] || !(essays[q.num] ?? "").trim()) return;
+
+  async function pick(letter: string) {
+    if (!attempt || !q || picks[q.num] || saving) return;
+    const isCorrect = letter === correct;
+    setSaving(true);
+    setPicks((p) => ({ ...p, [q.num]: { selected: letter, isCorrect } }));
+    try {
+      await fetch(`${API}/quiz/attempts/${attempt.attemptId}/answer`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify({ questionNum: q.num, selected: letter, isCorrect, reactionMs: null, nextQuestionNum: null }),
+      });
+    } catch {} // persists optimistically; server reconciles on next start
+    setSaving(false);
+  }
+  async function submitEssay() {
+    if (!attempt || !q || essaySubmitted[q.num] || saving || !(essays[q.num] ?? "").trim()) return;
+    const text = essays[q.num] ?? "";
+    setSaving(true);
     setEssaySubmitted((e) => ({ ...e, [q.num]: true }));
+    try {
+      await fetch(`${API}/quiz/attempts/${attempt.attemptId}/answer`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        body: JSON.stringify({ questionNum: q.num, selected: text, isCorrect: false, reactionMs: null, nextQuestionNum: null }),
+      });
+    } catch {}
+    setSaving(false);
   }
   function next() {
-    if (hasMixed) {
-      const pos = sectionIndices.indexOf(idx);
-      if (pos !== -1 && pos + 1 < sectionIndices.length) {
-        setIdx(sectionIndices[pos + 1]);
-        return;
-      }
-      if (!otherSectionDone) {
-        const target = otherIndices.find((i) => !isDoneAt(i)) ?? otherIndices[0];
-        setActiveTab(otherTabType);
-        setIdx(target);
-        return;
-      }
-      setDone(true);
-      return;
+    advanceFrom(idx);
+  }
+  async function finishAttempt() {
+    if (attempt) {
+      try {
+        await fetch(`${API}/quiz/attempts/${attempt.attemptId}/complete`, {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json", ...authHeaders() },
+          body: JSON.stringify({ unansweredCount: finalUnanswered.size }),
+        });
+      } catch {}
     }
-    if (idx + 1 < allQ.length) setIdx((i) => i + 1);
-    else setDone(true);
+    setDone(true);
   }
   function reset() {
-    setPicks({}); setEssays({}); setEssaySubmitted({}); setIdx(0); setDone(false); setActiveTab(mcqCount > 0 ? "mcq" : "open");
+    setPicks({}); setEssays({}); setEssaySubmitted({});
+    setTimedOnce(new Set()); setFinalUnanswered(new Set()); setPendingAdvanceFrom(null);
+    setIdx(0); setVisited(new Set([0])); setDone(false);
+    setActiveTab(mcqCount > 0 ? "mcq" : "open");
+    setMeStats(null); setShowExitConfirm(false);
+    sessionStartRef.current = Date.now(); setElapsedSec(0);
+    setAttempt(null);
+    loadAttempt();
   }
 
-  const score = allQ.filter((q) => q.type === "mcq" && picks[q.num] === q.answer).length;
+  // Timeout handling: first timeout queues the question for a single revisit;
+  // a second timeout on the same question locks it in as unanswered.
+  function onTimeUp() {
+    if (!q) return;
+    const num = q.num;
+    const fromIdx = idx;
+    if (timedOnce.has(num)) {
+      setFinalUnanswered((s) => new Set(s).add(num));
+    } else {
+      setTimedOnce((s) => new Set(s).add(num));
+    }
+    setPendingAdvanceFrom(fromIdx);
+  }
+
+  // Reset the per-question countdown whenever a fresh (not-yet-answered) question is shown.
+  useEffect(() => { setTimeLeft(QP_TIME_PER_Q); }, [idx]);
+
+  // Tick the countdown — paused while the exit-confirm modal is open or once answered.
+  useEffect(() => {
+    if (!attempt || done || !q || isAnswered || showExitConfirm) return;
+    if (timeLeft <= 0) return;
+    const t = window.setTimeout(() => setTimeLeft((v) => v - 1), 1000);
+    return () => window.clearTimeout(t);
+  }, [timeLeft, attempt, done, q, isAnswered, showExitConfirm]);
+
+  useEffect(() => {
+    if (timeLeft === 0 && !isAnswered && q && attempt && !done) onTimeUp();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft]);
+
+  // Brief pause on a timeout to let the "hết giờ" feedback register before auto-advancing.
+  useEffect(() => {
+    if (pendingAdvanceFrom === null) return;
+    const t = window.setTimeout(() => advanceFrom(pendingAdvanceFrom), 1400);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingAdvanceFrom, timedOnce, finalUnanswered]);
+
+  // Ongoing session clock — never pauses, shown inside the exit-confirm modal.
+  useEffect(() => {
+    if (done) return;
+    const iv = window.setInterval(() => setElapsedSec(Math.round((Date.now() - sessionStartRef.current) / 1000)), 1000);
+    return () => window.clearInterval(iv);
+  }, [done]);
+
+  // Fetch this user's own play-count / last-effort stats once finished.
+  useEffect(() => {
+    if (!done) return;
+    let cancelled = false;
+    fetch(`${API}/quiz/${quiz.id}/stats/me`, { credentials: "include", headers: authHeaders() })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => { if (!cancelled && data) setMeStats(data); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [done]);
+
+  const score = allQ.filter((qq) => qq.type === "mcq" && picks[qq.num]?.isCorrect).length;
+
+  if (startError) {
+    return (
+      <div className="qp-shell">
+        <div className="qp-empty">{startError}</div>
+        <button className="btn btn-ghost" onClick={onClose}>← Quay lại</button>
+      </div>
+    );
+  }
 
   if (allQ.length === 0) {
     return (
       <div className="qp-shell">
         <button className="btn btn-ghost btn-sm" onClick={onClose}>← Quay lại</button>
         <div className="qp-empty">Bài này chưa có câu hỏi.</div>
+      </div>
+    );
+  }
+
+  if (!attempt) {
+    return (
+      <div className="qp-shell">
+        <div className="qp-empty">Đang tải bài tập…</div>
       </div>
     );
   }
@@ -815,6 +1094,17 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
               + {essayCount} câu tự luận (không tính điểm tự động)
             </div>
           )}
+          {finalUnanswered.size > 0 && (
+            <div className="qp-stats-note qp-stats-note--warn">
+              ⏱ {finalUnanswered.size} câu chưa trả lời (hết giờ)
+            </div>
+          )}
+          {meStats && (
+            <div className="qp-stats-note">
+              Bạn đã làm bài này <strong>{meStats.playCount}</strong> lần
+              {meStats.last && <> · lần này mất <strong>{qpFmtDuration(Math.round(meStats.last.durationMs / 1000))}</strong></>}
+            </div>
+          )}
           <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
             <button className="btn btn-primary" onClick={reset}>Làm lại</button>
             <button className="btn btn-ghost" onClick={onClose}>← Quay lại</button>
@@ -824,10 +1114,14 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
     );
   }
 
+  const showTimeoutFlash = pendingAdvanceFrom === idx && !finalUnanswered.has(q.num);
+  const isTimedOut = finalUnanswered.has(q.num);
+  const mcqRevealed = q.type === "mcq" && (!!picked || isTimedOut);
+
   return (
     <div className="qp-shell">
       <div className="qp-top">
-        <button className="btn btn-ghost btn-sm" onClick={onClose}>← Quay lại</button>
+        <button className="btn btn-ghost btn-sm" onClick={() => setShowExitConfirm(true)}>← Quay lại</button>
         <span className="qp-progress">
           {hasMixed ? `${posInSection + 1} / ${sectionIndices.length}` : `${idx + 1} / ${allQ.length}`}
         </span>
@@ -848,11 +1142,36 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
           </button>
         </div>
       )}
-      <div className="qp-bar-track">
-        <div
-          className="qp-bar-fill"
-          style={{ width: `${hasMixed ? (posInSection / sectionIndices.length) * 100 : (idx / allQ.length) * 100}%` }}
-        />
+      <div className="qp-dots" role="list" aria-label="Trạng thái các câu hỏi">
+        {sectionIndices.map((i) => {
+          const qq = allQ[i];
+          let status: "current" | "correct" | "wrong" | "skipped" | "pending" = "pending";
+          if (i === idx) status = "current";
+          else if (finalUnanswered.has(qq.num)) status = "skipped";
+          else if (qq.type === "mcq") status = picks[qq.num] ? (picks[qq.num].isCorrect ? "correct" : "wrong") : "pending";
+          else status = essaySubmitted[qq.num] ? "correct" : "pending";
+          const clickable = i !== idx && visited.has(i);
+          return (
+            <button
+              key={i}
+              type="button"
+              className={`qp-dot qp-dot--${status}`}
+              onClick={clickable ? () => goTo(i) : undefined}
+              disabled={!clickable}
+              aria-label={`Câu ${qq.num}${status === "correct" ? " — đúng" : status === "wrong" ? " — sai" : status === "skipped" ? " — chưa trả lời" : ""}`}
+              title={`Câu ${qq.num}`}
+            />
+          );
+        })}
+      </div>
+      <div className="qp-timer-row">
+        <div className="qp-timer-track">
+          <div
+            className={`qp-timer-fill${!isAnswered && timeLeft <= 5 ? " qp-timer-fill--danger" : ""}${isAnswered ? " qp-timer-fill--done" : ""}`}
+            style={{ width: `${isAnswered ? 100 : (timeLeft / QP_TIME_PER_Q) * 100}%` }}
+          />
+        </div>
+        {!isAnswered && <span className="qp-timer-label">{timeLeft}s</span>}
       </div>
       <div className="qp-card">
         <div className="qp-num">
@@ -869,15 +1188,17 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
                 const text = q.options[letter];
                 if (!text) return null;
                 const isCorrect = letter === correct;
-                const isPicked = letter === picked;
+                const isPicked = letter === picked?.selected;
                 let cls = "qp-opt";
                 if (picked) {
                   if (isPicked && isCorrect) cls += " qp-opt--correct";
                   else if (isPicked && !isCorrect) cls += " qp-opt--wrong";
                   else if (isCorrect) cls += " qp-opt--reveal";
+                } else if (isTimedOut && isCorrect) {
+                  cls += " qp-opt--timeout-reveal";
                 }
                 return (
-                  <button key={letter} className={cls} onClick={() => pick(letter)} disabled={!!picked}>
+                  <button key={letter} className={cls} onClick={() => pick(letter)} disabled={mcqRevealed || saving}>
                     <span className="qp-opt-letter">{letter}</span>
                     <span className="qp-opt-text">
                       <RubyText pairs={q.meta?.options_pairs?.[letter] ?? undefined} fallback={text} />
@@ -887,9 +1208,15 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
               })}
             </div>
             {picked && (
-              <div className={`qp-feedback ${picked === correct ? "qp-feedback--correct" : "qp-feedback--wrong"}`}>
-                {picked === correct ? "✓ Chính xác!" : `✗ Đáp án đúng: ${correct}`}
+              <div className={`qp-feedback ${picked.isCorrect ? "qp-feedback--correct" : "qp-feedback--wrong"}`}>
+                {picked.isCorrect ? "✓ Chính xác!" : `✗ Đáp án đúng: ${correct}`}
               </div>
+            )}
+            {!picked && isTimedOut && (
+              <div className="qp-feedback qp-feedback--timeout">⏱ Hết giờ! Đáp án đúng: {correct}</div>
+            )}
+            {!picked && showTimeoutFlash && (
+              <div className="qp-feedback qp-feedback--timeout">⏱ Hết giờ! Sẽ quay lại câu này sau…</div>
             )}
           </>
         ) : (
@@ -899,22 +1226,25 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
               placeholder="Nhập câu trả lời của bạn…"
               value={essays[q.num] ?? ""}
               onChange={(e) => setEssays((es) => ({ ...es, [q.num]: e.target.value }))}
-              disabled={!!essaySubmitted[q.num]}
+              disabled={!!essaySubmitted[q.num] || isTimedOut}
               rows={4}
             />
-            {!essaySubmitted[q.num] && (
+            {!essaySubmitted[q.num] && !isTimedOut && (
               <button
                 className="btn btn-primary"
                 style={{ marginTop: 12 }}
                 onClick={submitEssay}
-                disabled={!(essays[q.num] ?? "").trim()}
+                disabled={saving || !(essays[q.num] ?? "").trim()}
               >
                 Nộp câu trả lời
               </button>
             )}
-            {essaySubmitted[q.num] && (
-              <div className="qp-essay-reveal">
-                <div className="qp-essay-reveal-label">Đáp án tham khảo</div>
+            {showTimeoutFlash && !essaySubmitted[q.num] && (
+              <div className="qp-feedback qp-feedback--timeout" style={{ marginTop: 12 }}>⏱ Hết giờ! Sẽ quay lại câu này sau…</div>
+            )}
+            {(essaySubmitted[q.num] || isTimedOut) && (
+              <div className={`qp-essay-reveal${isTimedOut && !essaySubmitted[q.num] ? " qp-essay-reveal--timeout" : ""}`}>
+                <div className="qp-essay-reveal-label">{isTimedOut && !essaySubmitted[q.num] ? "⏱ Hết giờ — Đáp án tham khảo" : "Đáp án tham khảo"}</div>
                 <div className="qp-essay-reveal-text">{correct ?? "—"}</div>
               </div>
             )}
@@ -925,6 +1255,19 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
         <button className="btn btn-primary qp-next" onClick={next}>
           {nextLabel}
         </button>
+      )}
+      {showExitConfirm && (
+        <div className="qp-exit-overlay" role="dialog" aria-modal="true" aria-label="Xác nhận thoát">
+          <div className="qp-exit-card">
+            <div className="qp-exit-title">Thoát khỏi bài làm?</div>
+            <div className="qp-exit-time">⏱ Đã làm được {qpFmtDuration(elapsedSec)}</div>
+            <div className="qp-exit-desc">Nếu thoát bây giờ, tiến trình sẽ <strong>không được lưu</strong> — bạn sẽ phải làm lại từ đầu.</div>
+            <div className="qp-exit-actions">
+              <button className="btn btn-ghost" onClick={() => setShowExitConfirm(false)}>Ở lại làm tiếp</button>
+              <button className="btn btn-sm btn-danger" onClick={onClose}>Thoát, không lưu</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

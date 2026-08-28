@@ -45,6 +45,12 @@ function QuizExercisesCard() {
   const [reorderErr, setReorderErr] = useState<string | null>(null);
   const canReorder = activeTab !== "all";
 
+  // Delete confirmation (custom modal — no browser confirm())
+  const [deleteId, setDeleteId]   = useState<string | null>(null);
+  const [deleting, setDeleting]   = useState(false);
+  const [deleteErr, setDeleteErr] = useState<string | null>(null);
+  const deleteTarget = deleteId ? quizzes.find((q) => q.id === deleteId) ?? null : null;
+
   async function loadQuizzes(tab: CourseTab) {
     setLoading(true); setErr(null);
     try {
@@ -119,12 +125,17 @@ function QuizExercisesCard() {
     finally { setSavingTitle(false); }
   }
 
-  async function remove(id: string) {
-    if (!confirm("Xoá bài tập này? (có thể khôi phục trong 2 tuần)")) return;
+  function remove(id: string) { setDeleteId(id); setDeleteErr(null); }
+
+  async function confirmDelete() {
+    if (!deleteId) return;
+    setDeleting(true); setDeleteErr(null);
     try {
-      await adminFetch(`/admin/quiz/${id}`, { method: "DELETE" });
-      setQuizzes((qs) => qs.filter((q) => q.id !== id));
-    } catch (e: unknown) { setErr(e instanceof Error ? e.message : String(e)); }
+      await adminFetch(`/admin/quiz/${deleteId}`, { method: "DELETE" });
+      setQuizzes((qs) => qs.filter((q) => q.id !== deleteId));
+      setDeleteId(null);
+    } catch (e: unknown) { setDeleteErr(e instanceof Error ? e.message : String(e)); }
+    finally { setDeleting(false); }
   }
 
   function handleDragStart(id: string) { setDragId(id); setReorderErr(null); }
@@ -239,7 +250,7 @@ function QuizExercisesCard() {
                         <button className="btn btn-sm btn-ghost" onClick={() => setEditingId(null)}>Hủy</button>
                       </div>
                     ) : (
-                      <span onClick={() => startEdit(q)} style={{ cursor: "pointer" }} title="Bấm để đổi tên">
+                      <span onClick={() => startEdit(q)} className="gv-title-edit" title="Bấm để đổi tên">
                         {q.title}
                       </span>
                     )}
@@ -291,7 +302,7 @@ function QuizExercisesCard() {
                     <button className="btn btn-sm btn-ghost" onClick={() => setEditingId(null)}>Hủy</button>
                   </div>
                 ) : (
-                  <div className="cp-quiz-title" onClick={() => startEdit(q)} style={{ cursor: "pointer" }} title="Bấm để đổi tên">
+                  <div className="cp-quiz-title gv-title-edit" onClick={() => startEdit(q)} title="Bấm để đổi tên">
                     {q.title}
                   </div>
                 )}
@@ -375,6 +386,30 @@ function QuizExercisesCard() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {deleteId && (
+        <div className="ru-overlay" onClick={() => !deleting && setDeleteId(null)}>
+          <div className="ru-modal gv-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ru-header">
+              <div>
+                <div className="ru-title">Xoá bài tập?</div>
+                <div className="ru-subtitle">
+                  {deleteTarget ? <>"{deleteTarget.title}" sẽ được chuyển vào thùng rác — có thể khôi phục trong 2 tuần.</>
+                    : "Bài tập sẽ được chuyển vào thùng rác — có thể khôi phục trong 2 tuần."}
+                </div>
+              </div>
+              <button className="btn btn-sm btn-ghost" onClick={() => setDeleteId(null)} disabled={deleting}>✕</button>
+            </div>
+            {deleteErr && <div className="feedback feedback-bad" style={{ margin: "12px 20px 0" }}>{deleteErr}</div>}
+            <div style={{ display: "flex", gap: 8, padding: "16px 20px 20px", justifyContent: "flex-end" }}>
+              <button className="btn btn-sm btn-ghost" disabled={deleting} onClick={() => setDeleteId(null)}>Hủy</button>
+              <button className="btn btn-sm btn-danger" disabled={deleting} onClick={confirmDelete}>
+                {deleting ? "Đang xoá…" : "Xoá bài tập"}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -567,31 +602,34 @@ export function HomeworkListPage() {
     <Shell title="Bài tập">
       <div className="gv-page-header"><h1>Bài tập</h1></div>
       {err && <div className="feedback feedback-bad" style={{ marginBottom: 12 }}>{err}</div>}
-      <div className="gv-card">
-        {items.length === 0
-          ? <div className="muted">Chưa có bài tập nào.</div>
-          : <div className="gv-table-wrap">
-              <table className="gv-table">
-                <thead><tr><th>Tiêu đề</th><th>Lớp</th><th>Hạn nộp</th><th>Ngày tạo</th><th></th></tr></thead>
-                <tbody>
-                  {items.map((m) => (
-                    <tr key={m.id}>
-                      <td style={{ fontWeight: 600 }}>
-                        {m.google_url
-                          ? <a href={m.google_url} target="_blank" rel="noreferrer" style={{ color: "var(--c-red-dark)" }}>{m.title}</a>
-                          : m.title}
-                      </td>
-                      <td className="muted">{m.class_name ?? "—"}</td>
-                      <td>{m.due_date ? new Date(m.due_date).toLocaleString("vi-VN") : <span className="muted">—</span>}</td>
-                      <td className="muted">{new Date(m.created_at).toLocaleDateString("vi-VN")}</td>
-                      <td><Link to={`/homework/${m.id}`} className="btn btn-sm btn-secondary">Chấm bài</Link></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-        }
-      </div>
+      {items.length > 0 && (
+        <div className="gv-card">
+          <div className="gv-table-wrap">
+            <table className="gv-table">
+              <thead><tr><th>Tiêu đề</th><th>Lớp</th><th>Hạn nộp</th><th>Ngày tạo</th><th>Người tạo</th><th></th></tr></thead>
+              <tbody>
+                {items.map((m) => (
+                  <tr key={m.id}>
+                    <td style={{ fontWeight: 600 }}>
+                      {m.google_url
+                        ? <a href={m.google_url} target="_blank" rel="noreferrer" style={{ color: "var(--c-red-dark)" }}>{m.title}</a>
+                        : m.title}
+                    </td>
+                    <td className="muted">{m.class_name ?? "—"}</td>
+                    <td>{m.due_date ? new Date(m.due_date).toLocaleString("vi-VN") : <span className="muted">—</span>}</td>
+                    <td className="muted">
+                      {new Date(m.created_at).toLocaleDateString("vi-VN")}{" "}
+                      {new Date(m.created_at).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
+                    </td>
+                    <td className="muted">{m.created_by_name ?? "—"}</td>
+                    <td><Link to={`/homework/${m.id}`} className="btn btn-sm btn-secondary">Chấm bài</Link></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       <QuizExercisesCard />
     </Shell>

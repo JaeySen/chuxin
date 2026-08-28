@@ -173,15 +173,54 @@ export async function quizRoutes(app: FastifyInstance) {
   // ── Complete an attempt ──────────────────────────────────────────────────────
   app.post("/attempts/:attemptId/complete", async (request, reply) => {
     const { attemptId } = request.params as { attemptId: string };
+    const { unansweredCount } = (request.body ?? {}) as { unansweredCount?: number };
 
-    const { rows: [attempt] } = await query<{ id: string; score: number; total_mcq: number }>(
-      `UPDATE quiz_attempts SET completed_at = now()
-        WHERE id = $1 RETURNING id, score, total_mcq`,
-      [attemptId],
+    const { rows: [attempt] } = await query<{ id: string; score: number; total_mcq: number; unanswered_count: number }>(
+      `UPDATE quiz_attempts
+          SET completed_at = now(),
+              unanswered_count = GREATEST(unanswered_count, COALESCE($2, 0))
+        WHERE id = $1 RETURNING id, score, total_mcq, unanswered_count`,
+      [attemptId, unansweredCount ?? null],
     );
     if (!attempt) return reply.code(404).send({ error: "Not found" });
 
-    return reply.send({ score: attempt.score, totalMcq: attempt.total_mcq });
+    return reply.send({ score: attempt.score, totalMcq: attempt.total_mcq, unansweredCount: attempt.unanswered_count });
+  });
+
+  // ── Own play stats for a quiz (any authenticated role) ───────────────────────
+  // Powers "Bạn đã làm bài này N lần · lần gần nhất mất Xm Ys" on the done screen.
+  app.get("/:id/stats/me", async (request, reply) => {
+    const { id: quizId } = request.params as { id: string };
+    const userId = request.user.uid;
+
+    const { rows: [agg] } = await query<{ play_count: number }>(
+      `SELECT COUNT(*)::int AS play_count
+         FROM quiz_attempts
+        WHERE quiz_id = $1 AND student_id = $2 AND completed_at IS NOT NULL`,
+      [quizId, userId],
+    );
+
+    const { rows: [last] } = await query<{
+      score: number; total_mcq: number; unanswered_count: number;
+      started_at: string; completed_at: string;
+    }>(
+      `SELECT score, total_mcq, unanswered_count, started_at, completed_at
+         FROM quiz_attempts
+        WHERE quiz_id = $1 AND student_id = $2 AND completed_at IS NOT NULL
+        ORDER BY completed_at DESC LIMIT 1`,
+      [quizId, userId],
+    );
+
+    return reply.send({
+      playCount: agg?.play_count ?? 0,
+      last: last ? {
+        score: last.score,
+        totalMcq: last.total_mcq,
+        unansweredCount: last.unanswered_count,
+        durationMs: new Date(last.completed_at).getTime() - new Date(last.started_at).getTime(),
+        completedAt: last.completed_at,
+      } : null,
+    });
   });
 
   // ── Teacher: per-student stats for a quiz ────────────────────────────────────
@@ -190,20 +229,20 @@ export async function quizRoutes(app: FastifyInstance) {
 
     const { rows } = await query<{
       student_id: string; display_name: string; email: string;
-      score: number; total_mcq: number;
+      score: number; total_mcq: number; unanswered_count: number;
       started_at: string; completed_at: string | null;
       avg_reaction_ms: number | null; answered_count: number;
     }>(
       `SELECT
           u.id AS student_id, u.display_name, u.email,
-          a.score, a.total_mcq, a.started_at, a.completed_at,
+          a.score, a.total_mcq, a.unanswered_count, a.started_at, a.completed_at,
           ROUND(AVG(ans.reaction_ms))::int  AS avg_reaction_ms,
           COUNT(ans.id)::int                AS answered_count
          FROM quiz_attempts a
          JOIN users u ON u.id = a.student_id
          LEFT JOIN quiz_attempt_answers ans ON ans.attempt_id = a.id
-        WHERE a.quiz_id = $1
-        GROUP BY u.id, u.display_name, u.email, a.score, a.total_mcq, a.started_at, a.completed_at
+        WHERE a.quiz_id = $1 AND u.role = 'student'
+        GROUP BY u.id, u.display_name, u.email, a.score, a.total_mcq, a.unanswered_count, a.started_at, a.completed_at
         ORDER BY a.completed_at DESC NULLS LAST, a.started_at DESC`,
       [quizId],
     );
@@ -214,6 +253,7 @@ export async function quizRoutes(app: FastifyInstance) {
       email: r.email,
       score: r.score,
       totalMcq: r.total_mcq,
+      unansweredCount: r.unanswered_count,
       startedAt: r.started_at,
       completedAt: r.completed_at,
       avgReactionMs: r.avg_reaction_ms,
