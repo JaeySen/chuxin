@@ -12,7 +12,19 @@ const SettingsPatchBody = z.object({
   disable_email_login:   z.boolean().optional(),
   allow_phone_login:     z.boolean().optional(),
   guest_games_enabled:   z.boolean().optional(),
+  max_concurrent_logins: z.number().int().min(1).max(5).optional(),
 });
+
+interface LoginLogRow {
+  id: number;
+  user_id: string;
+  email: string;
+  display_name: string;
+  role: string;
+  ip: string | null;
+  user_agent: string | null;
+  created_at: Date;
+}
 
 interface AuthEventRow {
   id: number;
@@ -74,6 +86,31 @@ export async function adminRoutes(app: FastifyInstance) {
       resolved: r.resolved,
       resolvedAt: r.resolved_at,
       note: r.note,
+      createdAt: r.created_at,
+    }));
+  });
+
+  // ── Login log ─────────────────────────────────────────────
+  app.get<{ Querystring: { limit?: string; userId?: string } }>("/login-log", async (req) => {
+    const limit = Math.min(Number(req.query.limit) || 100, 500);
+    const userId = req.query.userId || null;
+    const { rows } = await query<LoginLogRow>(
+      `SELECT l.id, l.user_id, u.email, u.display_name, u.role, l.ip, l.user_agent, l.created_at
+         FROM login_log l
+         JOIN users u ON u.id = l.user_id
+        WHERE ($1::uuid IS NULL OR l.user_id = $1)
+        ORDER BY l.created_at DESC
+        LIMIT $2`,
+      [userId, limit],
+    );
+    return rows.map((r) => ({
+      id: r.id,
+      userId: r.user_id,
+      email: r.email,
+      displayName: r.display_name,
+      role: r.role,
+      ip: r.ip,
+      userAgent: r.user_agent,
       createdAt: r.created_at,
     }));
   });

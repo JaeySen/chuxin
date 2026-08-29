@@ -16,6 +16,7 @@ import {
   deleteSessionByToken,
   deleteAllSessionsForUser,
   findActiveSessionsForUser,
+  recordLogin,
 } from "../services/session.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { getSetting } from "../services/settings.js";
@@ -87,7 +88,9 @@ export async function authRoutes(app: FastifyInstance) {
     }
 
     const { ip, userAgent } = getClientMeta(req);
-    const sessionToken = await createSession(user.id, ip, userAgent);
+    const maxConcurrent = await getSetting<number>("max_concurrent_logins", 1);
+    const sessionToken = await createSession(user.id, ip, userAgent, maxConcurrent);
+    await recordLogin(user.id, ip, userAgent);
     const jwt = signJwt(user);
     return reply.send({ jwt, sessionToken, user });
   });
@@ -151,7 +154,9 @@ export async function authRoutes(app: FastifyInstance) {
       }
     }
 
-    const sessionToken = await createSession(user.id, ip, userAgent);
+    const maxConcurrent = await getSetting<number>("max_concurrent_logins", 1);
+    const sessionToken = await createSession(user.id, ip, userAgent, maxConcurrent);
+    await recordLogin(user.id, ip, userAgent);
     const jwt = signJwt(user);
     return reply.send({ jwt, sessionToken, user });
   });

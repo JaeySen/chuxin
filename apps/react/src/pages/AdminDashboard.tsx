@@ -12,6 +12,18 @@ interface Settings {
   disable_email_login?: boolean;
   allow_phone_login?: boolean;
   guest_games_enabled?: boolean;
+  max_concurrent_logins?: number;
+}
+
+interface LoginLogEntry {
+  id: number;
+  userId: string;
+  email: string;
+  displayName: string;
+  role: string;
+  ip: string | null;
+  userAgent: string | null;
+  createdAt: string;
 }
 
 interface AuthEvent {
@@ -219,6 +231,28 @@ export function AdminDashboard() {
             </div>
           </label>
         ))}
+        <div className="ws-checkbox-row" style={{ gap: 12, alignItems: "flex-start" }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontWeight: 600 }}>Số phiên đăng nhập đồng thời tối đa</div>
+            <div className="muted" style={{ fontSize: 13 }}>
+              Mỗi tài khoản chỉ được đăng nhập trên tối đa N thiết bị/phiên cùng lúc. Đăng nhập mới vượt quá giới hạn sẽ đăng xuất phiên cũ nhất.
+            </div>
+          </div>
+          <select
+            value={settings?.max_concurrent_logins ?? 1}
+            disabled={busyKey === "settings" || !settings}
+            onChange={(e) => patchSettings({ max_concurrent_logins: Number(e.target.value) })}
+            style={{ marginLeft: "auto" }}
+          >
+            {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
+          </select>
+        </div>
+      </section>
+
+      {/* Login log */}
+      <section className="lesson-card" style={{ marginTop: 20 }}>
+        <h3 style={{ marginTop: 0 }}>Lịch sử đăng nhập</h3>
+        <LoginLogSection />
       </section>
 
       {/* Auth events */}
@@ -1032,6 +1066,69 @@ function UnassignedQuizzesSection() {
                       disabled={busyId === q.id}
                       onClick={() => removeQuiz(q.id)}>Xoá</button>
                   </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LoginLogSection() {
+  const [rows, setRows]     = useState<LoginLogEntry[] | null>(null);
+  const [err, setErr]       = useState<string | null>(null);
+  const [emailFilter, setEmailFilter] = useState("");
+
+  const load = useCallback(async () => {
+    setErr(null);
+    try {
+      const r = await apiFetch<LoginLogEntry[]>("/admin/login-log?limit=100");
+      setRows(r);
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : String(e));
+    }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  if (!rows) return <div className="muted">Đang tải…</div>;
+
+  const filtered = emailFilter.trim()
+    ? rows.filter((r) => r.email.toLowerCase().includes(emailFilter.trim().toLowerCase()))
+    : rows;
+
+  return (
+    <div>
+      {err && <div className="feedback feedback-bad" style={{ marginBottom: 12 }}>{err}</div>}
+      <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 12 }}>
+        <input
+          type="text"
+          placeholder="Lọc theo email…"
+          value={emailFilter}
+          onChange={(e) => setEmailFilter(e.target.value)}
+          style={{ padding: "6px 10px", border: "1.5px solid var(--c-divider)", borderRadius: 8, fontSize: 13, minWidth: 220 }}
+        />
+        <button className="btn btn-secondary btn-sm" onClick={load}>Làm mới</button>
+      </div>
+      {filtered.length === 0 ? (
+        <div className="feedback feedback-info">Không có bản ghi đăng nhập nào.</div>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table className="admin-table">
+            <thead>
+              <tr><th>Thời gian</th><th>Email</th><th>Tên</th><th>Vai trò</th><th>IP</th><th>Thiết bị</th></tr>
+            </thead>
+            <tbody>
+              {filtered.map((r) => (
+                <tr key={r.id}>
+                  <td className="muted" style={{ fontSize: 12 }}>{fmt(r.createdAt)}</td>
+                  <td>{r.email}</td>
+                  <td>{r.displayName}</td>
+                  <td>{r.role}</td>
+                  <td><code>{r.ip ?? "—"}</code></td>
+                  <td className="muted" style={{ fontSize: 12, maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={r.userAgent ?? ""}>{r.userAgent ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

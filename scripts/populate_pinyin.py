@@ -38,16 +38,44 @@ def is_cjk(ch):
             0xF900 <= cp <= 0xFAFF)
 
 def text_to_pairs(text: str) -> list:
-    """Return list of [char, pinyin_or_empty]."""
+    """Return list of [char, pinyin_or_empty].
+
+    IMPORTANT: pypinyin must be called on whole runs of consecutive CJK
+    characters (not one character at a time) so its phrase dictionary can
+    disambiguate polyphonic/heteronym characters (多音字) using surrounding
+    context — e.g. 只 is "zhǐ" in "只有" but "zhī" in "一只猫"; 的/还/会/中/长
+    etc. all have multiple valid readings that are only resolvable from
+    context. Converting character-by-character in isolation always falls
+    back to pypinyin's single "most common" reading, which is frequently
+    wrong for these characters and was the source of incorrect tone marks
+    (this is also why source Word docs encode the intended reading via a
+    font-substitution trick — FZKTPY01..FZKTPY06 — switching which of a
+    character's several pre-rendered pronunciations is shown; we don't
+    parse that font hint, we instead recover the correct reading the same
+    way pypinyin's own phrase dictionary does: from surrounding context).
+
+    Non-CJK runs (spaces, punctuation, digits, Latin letters, labels like
+    "A. ") are still emitted one character at a time with empty pinyin,
+    unchanged from before — only CJK spans are batched for conversion.
+    """
     if not text:
         return []
     result = []
+    run = []  # buffer of consecutive CJK chars
+    def flush_run():
+        if not run:
+            return
+        pys = get_pinyin(''.join(run), style=Style.TONE, errors='default')
+        for ch, py in zip(run, pys):
+            result.append([ch, py[0] if py else ''])
+        run.clear()
     for ch in text:
         if is_cjk(ch):
-            py = get_pinyin(ch, style=Style.TONE)
-            result.append([ch, py[0][0] if py else ''])
+            run.append(ch)
         else:
+            flush_run()
             result.append([ch, ''])
+    flush_run()
     return result
 
 # A string is "pinyin-only" when it has no CJK characters and contains at

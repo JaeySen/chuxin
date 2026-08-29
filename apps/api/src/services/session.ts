@@ -31,23 +31,44 @@ function toSession(row: SessionRow): ActiveSession {
 }
 
 /**
- * Create a new session and invalidate all prior sessions for the user
- * (single-device enforcement). Returns the new session token.
+ * Create a new session for the user, then evict the oldest sessions beyond
+ * `maxConcurrent` (by last_seen_at). Defaults to 1 — single-device enforcement,
+ * matching the previous "delete all prior sessions" behaviour. Returns the
+ * new session token.
  */
 export async function createSession(
   userId: string,
   ip: string,
   userAgent: string,
+  maxConcurrent = 1,
 ): Promise<string> {
   const token = crypto.randomBytes(32).toString("hex");
+  const limit = Math.max(1, Math.min(5, Math.floor(maxConcurrent) || 1));
   await withTransaction(async (client) => {
-    await client.query("DELETE FROM sessions WHERE user_id = $1", [userId]);
     await client.query(
       `INSERT INTO sessions (token, user_id, ip, user_agent) VALUES ($1, $2, $3, $4)`,
       [token, userId, ip, userAgent],
     );
+    await client.query(
+      `DELETE FROM sessions
+        WHERE token IN (
+          SELECT token FROM sessions
+           WHERE user_id = $1
+           ORDER BY last_seen_at DESC
+           OFFSET $2
+        )`,
+      [userId, limit],
+    );
   });
   return token;
+}
+
+/** Record a successful login for admin visibility ("Login log"). */
+export async function recordLogin(userId: string, ip: string, userAgent: string): Promise<void> {
+  await query(
+    `INSERT INTO login_log (user_id, ip, user_agent) VALUES ($1, $2, $3)`,
+    [userId, ip, userAgent],
+  );
 }
 
 export async function getSessionByToken(token: string): Promise<ActiveSession | null> {
