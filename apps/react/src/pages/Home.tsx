@@ -57,7 +57,7 @@ function TeacherCoverflow() {
         if (offset > Math.floor(total / 2)) offset -= total;
         
         let zIndex = 100 - Math.abs(offset);
-        let tx = offset * 180;
+        let tx = offset * 220;
         let scale = offset === 0 ? 1 : 0.8;
         let rotateY = offset === 0 ? 0 : (offset > 0 ? 45 : -45);
         let opacity = Math.abs(offset) > 2 ? 0 : 1;
@@ -74,10 +74,6 @@ function TeacherCoverflow() {
             onClick={() => setActiveIdx(idx)}
           >
             <img src={t.file} alt={t.name} />
-            <div className="coverflow-info">
-              <h4>{t.name}</h4>
-              <p>Thạc sĩ Hán ngữ Quốc tế</p>
-            </div>
             {offset === 0 && (
               <div className="coverflow-progress">
                 <div key={activeIdx} className="coverflow-progress-fill" style={{ animationPlayState: paused ? 'paused' : 'running' }} />
