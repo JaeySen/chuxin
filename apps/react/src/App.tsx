@@ -40,10 +40,14 @@ const PUBLIC_LINKS = [
     label: "Các khóa học",
     icon: "📚",
     sub: [
-      { to: "/courses#thong-tin",   label: "Thông tin khóa học" },
-      { to: "/courses#lo-trinh",    label: "Lộ trình" },
-      { to: "/courses#hoc-phi",     label: "Học phí" },
-      { to: "/courses#video",       label: "Video dạy thử" },
+      { to: "/course/han1", label: "Hán ngữ 1 (HSK 1)" },
+      { to: "/course/han2", label: "Hán ngữ 2 (HSK 2)" },
+      { to: "/course/han3", label: "Hán ngữ 3 (HSK 3)" },
+      { to: "/course/han4", label: "Hán ngữ 4 (HSK 4)" },
+      { to: "/course/han5", label: "Hán ngữ 5 (HSK 5)" },
+      { to: "/course/han6", label: "Hán ngữ 6 (HSK 6)" },
+      { to: "/course/thuong-mai", label: "Tiếng Trung Thương mại" },
+      { to: "/course/tre-em", label: "Tiếng Trung Trẻ em" },
     ],
   },
   {
@@ -82,7 +86,7 @@ function NavDropdown({ link }: { link: typeof PUBLIC_LINKS[number] }) {
   }, [open]);
 
   return (
-    <div className="nav-dropdown" ref={ref}>
+    <div className="nav-dropdown" ref={ref} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <button
         className="nav-dropdown-btn"
         onClick={() => setOpen((v) => !v)}
@@ -122,7 +126,7 @@ function GamesDropdown() {
   }, [open]);
 
   return (
-    <div className="nav-dropdown" ref={ref}>
+    <div className="nav-dropdown" ref={ref} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <button
         className="nav-dropdown-btn"
         onClick={() => setOpen((v) => !v)}
@@ -213,7 +217,7 @@ function Header() {
               </div>
             ) : (
               <button className="btn btn-consult btn-sm" onClick={() => setConsultOpen(true)}>
-                Tư vấn: {CONTACT.phone}
+                Gọi/Zalo để tư vấn: {CONTACT.phone}
               </button>
             )}
           </div>

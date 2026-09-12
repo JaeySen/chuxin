@@ -64,6 +64,7 @@ body {
   background: white;
   color: var(--c-text);
   box-shadow: 0 1px 2px var(--c-shadow);
+  text-decoration: none;
 }
 .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px var(--c-shadow); }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
@@ -1058,7 +1059,7 @@ body {
   color: var(--c-red-dark);
 }
 .hero-copy .hero-accent { color: var(--c-yellow-dark); }
-.hero-copy p { font-size: 17px; color: var(--c-text-soft); max-width: 520px; }
+.hero-copy p { font-size: 17px; color: var(--c-text-soft); max-width: 520px; line-height: 1.6; font-family: inherit; margin-top: 16px; margin-bottom: 24px; }
 .hero-cta { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
 .hero-art {
   display: flex; align-items: center; justify-content: center;

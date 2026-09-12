@@ -174,7 +174,7 @@ function GuestHome() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-copy">
-          <h1>Bắt đầu từ đam mê, <span className="hero-accent">vươn xa cùng Hán ngữ</span></h1>
+          <h1>Bắt đầu từ đam mê, <span className="hero-accent" style={{ display: "inline-block", whiteSpace: "nowrap" }}>vươn xa cùng Hán ngữ</span></h1>
           <p>
             Các khóa học được xây dựng chuẩn hoá theo phương pháp kết hợp lý thuyết và thực hành,
             cùng hệ thống bài học và trò chơi tương tác như Flashcard, đố vui, ghép cặp đến luyện nghe – nói,
