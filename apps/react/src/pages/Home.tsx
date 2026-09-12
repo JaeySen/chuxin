@@ -64,6 +64,80 @@ const GAMES_INFO = [
   },
 ];
 
+// ── Hero testimonials ──────────────────────────────────────────────────────────
+
+const HERO_TESTIMONIALS = [
+  {
+    avatar: "🎓",
+    name: "Nguyễn Thị Lan Anh",
+    course: "HSK 1-2",
+    text: "Thầy Trung dạy rất tận tâm, sửa phát âm tỉ mỉ. Chỉ 6 tháng mình đã tự tin giao tiếp cơ bản!",
+  },
+  {
+    avatar: "📚",
+    name: "Trần Minh Khôi",
+    course: "HSK 3-4",
+    text: "Flashcard và đố vui online giúp mình nhớ từ vựng cực nhanh. Được khen ngữ âm tốt khi thi HSK 4.",
+  },
+  {
+    avatar: "✨",
+    name: "Phạm Thu Hương",
+    course: "HSK 2-3",
+    text: "Lớp online qua VOOV nhưng không khí rất sôi nổi. Trò chơi Bingo từ vựng là điểm nhấn tuyệt vời!",
+  },
+  {
+    avatar: "🌟",
+    name: "Lê Quốc Huy",
+    course: "HSK 4-5",
+    text: "Sau 3 tháng mình đã xem phim Trung không cần phụ đề và giao tiếp được trong công việc.",
+  },
+  {
+    avatar: "💫",
+    name: "Nguyễn Bảo Châu",
+    course: "HSK 1-2",
+    text: "Zero tiếng Trung khi vào học, chỉ 2 tháng đã biết Pinyin và nhớ được hơn 300 từ vựng!",
+  },
+];
+
+function HeroTestimonials() {
+  const [idx, setIdx] = useState(0);
+  const t = HERO_TESTIMONIALS[idx];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIdx((i) => (i + 1) % HERO_TESTIMONIALS.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="hero-testimonials">
+      <div className="hero-testimonials-label">💬 Học viên chia sẻ</div>
+      <div className="hero-testimonial-card" key={idx}>
+        <div className="hero-testimonial-top">
+          <span className="hero-testimonial-avatar">{t.avatar}</span>
+          <div>
+            <div className="hero-testimonial-name">{t.name}</div>
+            <div className="hero-testimonial-course">Khoá {t.course}</div>
+          </div>
+          <span className="hero-testimonial-stars">⭐⭐⭐⭐⭐</span>
+        </div>
+        <p className="hero-testimonial-text">"{t.text}"</p>
+      </div>
+      <div className="hero-testimonial-dots">
+        {HERO_TESTIMONIALS.map((_, i) => (
+          <button
+            key={i}
+            className={`hero-testimonial-dot${i === idx ? " hero-testimonial-dot--active" : ""}`}
+            onClick={() => setIdx(i)}
+            aria-label={`Xem đánh giá ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Guest ─────────────────────────────────────────────────────────────────────
 
 type LoginTarget = null | "student" | "teacher";
@@ -100,19 +174,19 @@ function GuestHome() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-copy">
-          <h1>Học tiếng Trung cùng <span className="hero-accent">Sơ Tâm</span></h1>
+          <h1>Bắt đầu từ đam mê, <span className="hero-accent">vươn xa cùng Hán ngữ</span></h1>
           <p>
-            Các khóa học được chuẩn hóa với trải nghiệm học tương tác: Flashcard, đố vui,
-            ghép cặp, thực hành nghe - nói và trò chơi đồng đội.
+            Các khóa học được xây dựng chuẩn hoá theo phương pháp kết hợp lý thuyết và thực hành,
+            cùng hệ thống bài học và trò chơi tương tác như Flashcard, đố vui, ghép cặp đến luyện nghe – nói,
+            mỗi hoạt động đều được thiết kế, chọn lọc và kiểm duyệt kỹ càng bởi đội ngũ giáo viên
+            là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế.
           </p>
           <div className="hero-cta">
             <a href="#courses" className="btn btn-primary" onClick={scrollToCourses}>Xem các khoá học</a>
             <Link to="/ve-chung-toi" className="btn btn-secondary">Về chúng tôi</Link>
           </div>
         </div>
-        <div className="hero-art">
-          <img src="/chuxin-logo.jpg" alt="Hán ngữ Sơ Tâm" />
-        </div>
+        <HeroTestimonials />
       </section>
 
       {/* Games section */}
@@ -283,12 +357,22 @@ function isPinyinOnlyText(s: string | null | undefined): boolean {
   return PINYIN_LETTER_RE.test(t);
 }
 
+// A question text like "202.2元" or "6.02元" embeds a lone currency-unit
+// hanzi (元/块/毛/角/分) next to a number — that's a money-amount label, not
+// the vocabulary word being tested. MCQs like "cách đọc đúng cho số tiền
+// ... là?" give whole-phrase pinyin readings of the amount as options (e.g.
+// "èrbǎi èr kuài líng èr máo"), which happen to satisfy isPinyinOnlyText,
+// but revealing the ruby for "元" alone doesn't hand away that multi-word
+// answer — so these must never be treated as "find the pinyin" questions.
+const CURRENCY_AMOUNT_RE = /\d[\d.,]*\s*[元块毛角分]/;
+
 // Detect "find the pinyin of <hán tự>" style MCQ questions: every option is
 // a pinyin transcription. Showing ruby pinyin above the Chinese characters
 // in the question text would hand the student the answer, so callers should
 // suppress RubyText pairs for the question text in that case.
-function isPinyinAnswerQuestion(q: { type: string; options: Record<string, string> }): boolean {
+function isPinyinAnswerQuestion(q: { type: string; text?: string; options: Record<string, string> }): boolean {
   if (q.type !== "mcq") return false;
+  if (q.text && CURRENCY_AMOUNT_RE.test(q.text)) return false;
   const vals = (["A", "B", "C", "D"] as const)
     .map((l) => q.options[l])
     .filter((v): v is string => !!v && v.trim().length > 0);
@@ -770,6 +854,22 @@ export function authHeaders(): Record<string, string> {
   };
 }
 
+// Cosmetic-only role read from whichever JWT authHeaders() would send (hash
+// handoff token or this app's own stored token) — never trusted for anything
+// security-sensitive, the server independently verifies the signature on every
+// request. Used purely to flag "▶ Thử làm" runs from a teacher/admin account as
+// a non-graded preview so their test-plays don't look like real student
+// attempts (score, timer pressure, "bạn đã làm bài này N lần" stat, etc).
+function decodeJwtRoleFromAuthHeaders(): string | null {
+  const auth = authHeaders().Authorization;
+  if (!auth?.startsWith("Bearer ")) return null;
+  try {
+    const payloadB64 = auth.slice(7).split(".")[1];
+    const json = JSON.parse(atob(payloadB64.replace(/-/g, "+").replace(/_/g, "/")));
+    return typeof json.role === "string" ? json.role : null;
+  } catch { return null; }
+}
+
 const QP_TIME_PER_Q = 15; // seconds given per question before it's auto-skipped
 
 function qpFmtDuration(totalSec: number): string {
@@ -788,6 +888,15 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
   const mcqCount = allQ.filter((q) => q.type === "mcq").length;
   const openCount = allQ.length - mcqCount;
   const hasMixed = mcqCount > 0 && openCount > 0;
+
+  // Teacher/admin running "▶ Thử làm" — a non-graded preview, never persisted
+  // as a quiz_attempts row so it doesn't skew stats or count against the
+  // student play-history UI. Computed once per mount; the tester's role can't
+  // change mid-session.
+  const [isPreview] = useState(() => {
+    const r = decodeJwtRoleFromAuthHeaders();
+    return r === "teacher" || r === "admin" || r === "staff" || r === "assistant";
+  });
 
   const [attempt, setAttempt] = useState<AttemptState | null>(null);
   const [startError, setStartError] = useState<string | null>(null);
@@ -815,6 +924,13 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
 
   function loadAttempt() {
     setStartError(null);
+    // Preview runs never touch the server — a synthetic local-only attempt id
+    // is enough to satisfy the `!attempt` gate below, and pick()/submitEssay()/
+    // finishAttempt() all short-circuit on isPreview before making any request.
+    if (isPreview) {
+      setAttempt({ attemptId: "preview", lastQuestionNum: 0, score: 0, answers: [] });
+      return;
+    }
     fetch(`${API}/quiz/${quiz.id}/start`, { method: "POST", credentials: "include", headers: authHeaders() })
       .then((r) => r.json())
       .then((data: AttemptState) => {
@@ -936,13 +1052,18 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
   async function pick(letter: string) {
     if (!attempt || !q || picks[q.num] || saving) return;
     const isCorrect = letter === correct;
-    setSaving(true);
+    // Persist the current question as the furthest reached point so exiting and
+    // re-entering resumes here instead of restarting at question 1 (last_question_num
+    // is otherwise never advanced — see server route for the COALESCE fallback).
+    const nextQuestionNum = allQ[idx + 1]?.num ?? q.num;
     setPicks((p) => ({ ...p, [q.num]: { selected: letter, isCorrect } }));
+    if (isPreview) return; // never persisted — see isPreview note above
+    setSaving(true);
     try {
       await fetch(`${API}/quiz/attempts/${attempt.attemptId}/answer`, {
         method: "POST", credentials: "include",
         headers: { "Content-Type": "application/json", ...authHeaders() },
-        body: JSON.stringify({ questionNum: q.num, selected: letter, isCorrect, reactionMs: null, nextQuestionNum: null }),
+        body: JSON.stringify({ questionNum: q.num, selected: letter, isCorrect, reactionMs: null, nextQuestionNum }),
       });
     } catch {} // persists optimistically; server reconciles on next start
     setSaving(false);
@@ -950,13 +1071,15 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
   async function submitEssay() {
     if (!attempt || !q || essaySubmitted[q.num] || saving || !(essays[q.num] ?? "").trim()) return;
     const text = essays[q.num] ?? "";
-    setSaving(true);
+    const nextQuestionNum = allQ[idx + 1]?.num ?? q.num;
     setEssaySubmitted((e) => ({ ...e, [q.num]: true }));
+    if (isPreview) return;
+    setSaving(true);
     try {
       await fetch(`${API}/quiz/attempts/${attempt.attemptId}/answer`, {
         method: "POST", credentials: "include",
         headers: { "Content-Type": "application/json", ...authHeaders() },
-        body: JSON.stringify({ questionNum: q.num, selected: text, isCorrect: false, reactionMs: null, nextQuestionNum: null }),
+        body: JSON.stringify({ questionNum: q.num, selected: text, isCorrect: false, reactionMs: null, nextQuestionNum }),
       });
     } catch {}
     setSaving(false);
@@ -965,7 +1088,7 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
     advanceFrom(idx);
   }
   async function finishAttempt() {
-    if (attempt) {
+    if (attempt && !isPreview) {
       try {
         await fetch(`${API}/quiz/attempts/${attempt.attemptId}/complete`, {
           method: "POST", credentials: "include",
@@ -1033,8 +1156,10 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
   }, [done]);
 
   // Fetch this user's own play-count / last-effort stats once finished.
+  // Skipped for teacher/admin previews — nothing was ever persisted, so the
+  // real (pre-preview) play history should stay as-is instead of being masked.
   useEffect(() => {
-    if (!done) return;
+    if (!done || isPreview) return;
     let cancelled = false;
     fetch(`${API}/quiz/${quiz.id}/stats/me`, { credentials: "include", headers: authHeaders() })
       .then((r) => (r.ok ? r.json() : null))
@@ -1078,6 +1203,9 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
     return (
       <div className="qp-shell">
         <div className="qp-result">
+          {isPreview && (
+            <div className="qp-preview-banner" style={{ marginBottom: 14 }}>👁 Chế độ xem thử — kết quả không được lưu lại</div>
+          )}
           {mcqCount > 0 ? (
             <>
               <div className="qp-score">{score} / {mcqCount}</div>
@@ -1126,6 +1254,9 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
           {hasMixed ? `${posInSection + 1} / ${sectionIndices.length}` : `${idx + 1} / ${allQ.length}`}
         </span>
       </div>
+      {isPreview && (
+        <div className="qp-preview-banner">👁 Chế độ xem thử — kết quả sẽ không được lưu lại</div>
+      )}
       {hasMixed && (
         <div className="qp-tabs">
           <button
@@ -1160,7 +1291,9 @@ export function QuizPlayerInline({ quiz, onClose }: { quiz: QuizDetail; onClose:
               disabled={!clickable}
               aria-label={`Câu ${qq.num}${status === "correct" ? " — đúng" : status === "wrong" ? " — sai" : status === "skipped" ? " — chưa trả lời" : ""}`}
               title={`Câu ${qq.num}`}
-            />
+            >
+              {qq.num}
+            </button>
           );
         })}
       </div>

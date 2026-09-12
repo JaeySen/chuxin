@@ -2238,22 +2238,33 @@ body {
 .qp-essay-reveal--timeout { background: #fff7ed; border-color: #fdba74; }
 .qp-essay-reveal--timeout .qp-essay-reveal-label { color: #c2410c; }
 
+/* ── Quiz Player: teacher/admin preview-mode banner ──────────────────────── */
+.qp-preview-banner {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px; margin-bottom: 12px; border-radius: 8px;
+  background: #fef3c7; border: 1px solid #fcd34d; color: #92400e;
+  font-size: 13px; font-weight: 600;
+}
+
 /* ── Quiz Player: question dots ──────────────────────────────────────────── */
 .qp-dots { display: flex; flex-wrap: wrap; gap: 7px; }
 .qp-dot {
-  width: 12px; height: 12px; border-radius: 50%; padding: 0; flex-shrink: 0;
+  width: 26px; height: 26px; border-radius: 7px; padding: 0; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums;
+  color: #64748b;
   background: #e2e8f0; border: 2px solid #e2e8f0; cursor: default;
-  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
 }
 .qp-dot[disabled] { cursor: default; }
 .qp-dot:not([disabled]) { cursor: pointer; }
-.qp-dot:not([disabled]):hover { transform: scale(1.25); }
-.qp-dot--pending { background: #e2e8f0; border-color: #e2e8f0; }
-.qp-dot--correct { background: #22c55e; border-color: #22c55e; }
-.qp-dot--wrong { background: #f87171; border-color: #f87171; }
-.qp-dot--skipped { background: #f1f5f9; border: 2px dashed #94a3b8; }
+.qp-dot:not([disabled]):hover { transform: scale(1.12); }
+.qp-dot--pending { background: #e2e8f0; border-color: #e2e8f0; color: #64748b; }
+.qp-dot--correct { background: #22c55e; border-color: #22c55e; color: #fff; }
+.qp-dot--wrong { background: #f87171; border-color: #f87171; color: #fff; }
+.qp-dot--skipped { background: #f1f5f9; border: 2px dashed #94a3b8; color: #94a3b8; }
 .qp-dot--current {
-  background: var(--c-red); border-color: var(--c-red);
+  background: var(--c-red); border-color: var(--c-red); color: #fff;
   box-shadow: 0 0 0 4px rgba(167, 30, 34, 0.18);
   animation: qp-dot-pulse 1.4s ease-in-out infinite;
 }
@@ -2907,3 +2918,212 @@ body {
 .sp-vocab-table td { padding: 8px 4px; border-bottom: 1px solid #f5f5f5; font-size: 0.88rem; }
 .sp-vocab-zh { width: 45%; }
 .sp-vocab-mean { color: #666; }
+
+/* ── UI/LANDING/LAYOUT CUSTOM STYLES ─────────────────────────── */
+
+/* NavDropdown */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.nav-dropdown-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-dropdown-btn:hover {
+  color: var(--c-red);
+}
+.nav-dropdown-caret {
+  font-size: 0.8em;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  min-width: 220px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border-radius: 8px;
+  padding: 8px 0;
+  z-index: 100;
+  margin-top: 8px;
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 8px 16px;
+  color: var(--c-text);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.nav-dropdown-item:hover {
+  background: var(--c-red-bg);
+  color: var(--c-red-dark);
+}
+.nav-dropdown-item--header {
+  font-weight: 700;
+  color: var(--c-red-dark);
+}
+.nav-dropdown-divider {
+  height: 1px;
+  background: #eee;
+  margin: 4px 0;
+}
+
+/* Hero Testimonials */
+.hero-testimonials {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 12px 32px rgba(167, 30, 34, 0.1);
+  max-width: 440px;
+  margin: 0 auto;
+}
+.hero-testimonials-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--c-red);
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+.hero-testimonial-card {
+  animation: fadeIn 0.4s ease;
+}
+.hero-testimonial-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.hero-testimonial-avatar {
+  font-size: 2rem;
+  background: var(--c-bg);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.hero-testimonial-name {
+  font-weight: 700;
+  color: var(--c-text);
+}
+.hero-testimonial-course {
+  font-size: 0.85rem;
+  color: var(--c-text-soft);
+}
+.hero-testimonial-stars {
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+.hero-testimonial-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--c-text);
+  font-style: italic;
+  margin: 0;
+}
+.hero-testimonial-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 20px;
+  justify-content: center;
+}
+.hero-testimonial-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ddd;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s;
+}
+.hero-testimonial-dot--active {
+  background: var(--c-red);
+  transform: scale(1.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Teacher Brief Grid */
+.teacher-brief-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+.teacher-brief-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  transition: transform 0.3s;
+  background: white;
+}
+.teacher-brief-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+.teacher-brief-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Feedback Grid */
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+.feedback-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  border: 1px solid #eee;
+}
+.feedback-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.feedback-avatar {
+  font-size: 1.8rem;
+}
+.feedback-meta {
+  flex-grow: 1;
+}
+.feedback-name {
+  font-weight: 700;
+  color: var(--c-text);
+}
+.feedback-course {
+  font-size: 0.8rem;
+  color: var(--c-text-soft);
+  background: var(--c-bg);
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 4px;
+}
+.feedback-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--c-text-soft);
+  margin: 0;
+}

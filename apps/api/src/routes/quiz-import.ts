@@ -75,19 +75,21 @@ export async function quizImportRoutes(app: FastifyInstance) {
     const { courseId } = request.query as { courseId?: string };
     const { rows } = await query<{
       id: string; slug: string; title: string; source: string | null;
-      course_id: string | null; created_at: string;
+      course_id: string | null; created_at: string; created_by_name: string | null;
       total: number; mcq: number; open: number;
     }>(
       `SELECT q.id, q.slug, q.title, q.source, q.course_id, q.created_at,
+              creator.display_name AS created_by_name,
               COUNT(qq.id)::int                                    AS total,
               COUNT(qq.id) FILTER (WHERE qq.type = 'mcq')::int    AS mcq,
               COUNT(qq.id) FILTER (WHERE qq.type = 'open')::int   AS open
          FROM quizzes q
          LEFT JOIN quiz_questions qq ON qq.quiz_id = q.id
+         LEFT JOIN users creator ON creator.id = q.created_by
         WHERE ($1::text IS NULL OR q.course_id = $1)
           AND q.course_id IS NOT NULL
           AND q.deleted_at IS NULL
-        GROUP BY q.id
+        GROUP BY q.id, creator.display_name
         ORDER BY q.sort_order NULLS LAST, q.created_at ASC`,
       [courseId ?? null],
     );

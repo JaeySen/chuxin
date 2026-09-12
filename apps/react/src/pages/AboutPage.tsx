@@ -1,17 +1,55 @@
 import { useHead } from "../lib/useHead";
 
-const TEACHERS = [
+const TEACHER_BRIEFS = [
+  { file: "/chuxin-teacher-1-trungnd.jpg", name: "Nguyễn Đức Trung" },
+  { file: "/chuxin-teacher-2-haltg.jpg",  name: "Lê Thiên Giao Hạ" },
+  { file: "/chuxin-teacher-3-huetv.jpg",  name: "Triệu Văn Huệ" },
+  { file: "/chuxin-teacher-4-hantg.jpg",  name: "Trần Gia Hân" },
+  { file: "/chuxin-teacher-5-dongmv.jpg", name: "Mã Vũ Đồng" },
+];
+
+const FEEDBACKS = [
   {
-    name: "Thầy Nguyễn Đức Trung",
-    role: "Founder · Giảng viên trưởng",
-    photo: "/founder.jpg",
-    bio: "",
+    name: "Nguyễn Thị Lan Anh",
+    course: "HSK 1-2",
+    avatar: "🎓",
+    text: "Mình đã học ở Sơ Tâm được 6 tháng. Thầy Trung dạy rất tận tâm, giải thích ngữ pháp dễ hiểu và luôn sửa phát âm tỉ mỉ. Bây giờ mình tự tin nói chuyện cơ bản với người Trung rồi!",
+    rating: 5,
   },
   {
-    name: "Cô Lê Thiên Giao Hạ",
-    role: "Co-founder · Phụ trách chuyên môn",
-    photo: "/co-founder.jpg",
-    bio: "",
+    name: "Trần Minh Khôi",
+    course: "HSK 3-4",
+    avatar: "📚",
+    text: "Hệ thống bài tập online rất hay, nhất là phần flashcard và đố vui — học mà không thấy nhàm chán. Cô Hạ dạy phát âm chuẩn lắm, mình được khen ngữ âm tốt khi thi HSK 4.",
+    rating: 5,
+  },
+  {
+    name: "Phạm Thu Hương",
+    course: "HSK 2-3",
+    avatar: "✨",
+    text: "Lớp online qua VOOV nhưng không khí học vẫn rất sôi nổi. Giáo viên phản hồi bài nhanh và nhiệt tình. Mình đặc biệt thích phần trò chơi Bingo từ vựng — cả lớp cùng chơi vui lắm!",
+    rating: 5,
+  },
+  {
+    name: "Lê Quốc Huy",
+    course: "HSK 4-5",
+    avatar: "🌟",
+    text: "Đội ngũ giáo viên toàn Thạc sĩ chuyên ngành, kiến thức vững và cách dạy rất thực tế. Sau 3 tháng mình đã có thể xem phim Trung không cần phụ đề và giao tiếp được trong công việc.",
+    rating: 5,
+  },
+  {
+    name: "Nguyễn Bảo Châu",
+    course: "HSK 1-2",
+    avatar: "💫",
+    text: "Mình zero tiếng Trung khi vào học, nhưng chỉ sau 2 tháng đã biết Pinyin và nhớ được hơn 300 từ vựng. Phương pháp dạy kết hợp lý thuyết và trò chơi rất hiệu quả!",
+    rating: 5,
+  },
+  {
+    name: "Võ Thanh Tùng",
+    course: "HSK 3",
+    avatar: "🏆",
+    text: "Lộ trình học được thiết kế rất khoa học, từng bước từng bước. Giáo viên bản xứ của trung tâm phát âm chuẩn và thân thiện — được thực hành hội thoại với người bản ngữ là một lợi thế lớn.",
+    rating: 5,
   },
 ];
 
@@ -97,18 +135,42 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
+      {/* Team — show brief info-card images directly */}
       <h2 className="section-h">Đội ngũ giảng viên</h2>
-      <div className="teacher-grid">
-        {TEACHERS.map((t) => (
-          <article key={t.name} className="teacher-card">
-            <img src={t.photo} alt={t.name} className="teacher-photo" />
-            <div className="teacher-body">
-              <h3>{t.name}</h3>
-              <div className="teacher-role">{t.role}</div>
-              <p className="muted">{t.bio}</p>
+      <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
+        Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
+        được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
+      </p>
+      <div className="teacher-brief-grid">
+        {TEACHER_BRIEFS.map((t) => (
+          <div key={t.name} className="teacher-brief-card">
+            <img
+              src={t.file}
+              alt={`Giới thiệu giáo viên ${t.name}`}
+              className="teacher-brief-img"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Student Feedback */}
+      <h2 className="section-h">Học viên nói gì về Sơ Tâm?</h2>
+      <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
+        Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.
+      </p>
+      <div className="feedback-grid">
+        {FEEDBACKS.map((f) => (
+          <div key={f.name} className="feedback-card">
+            <div className="feedback-header">
+              <span className="feedback-avatar">{f.avatar}</span>
+              <div className="feedback-meta">
+                <div className="feedback-name">{f.name}</div>
+                <div className="feedback-course">Khoá {f.course}</div>
+              </div>
+              <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
             </div>
-          </article>
+            <p className="feedback-text">"{f.text}"</p>
+          </div>
         ))}
       </div>
     </div>

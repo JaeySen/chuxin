@@ -23,11 +23,39 @@ export function App() {
   );
 }
 
-// Always-visible links
+// Always-visible links (with optional sub-items for dropdown)
 const PUBLIC_LINKS = [
-  { to: "/courses",      label: "Các khoá học",  icon: "📚" },
-  { to: "/thu-vien",     label: "Thư viện",       icon: "📄" },
-  { to: "/ve-chung-toi", label: "Về chúng tôi",   icon: "🏫" },
+  {
+    to: "/ve-chung-toi",
+    label: "Về chúng tôi",
+    icon: "🏫",
+    sub: [
+      { to: "/ve-chung-toi#gioi-thieu", label: "Giới thiệu trung tâm" },
+      { to: "/ve-chung-toi#giao-vien",  label: "Giới thiệu giáo viên" },
+      { to: "/ve-chung-toi#feedback",   label: "Feedback của học viên" },
+    ],
+  },
+  {
+    to: "/courses",
+    label: "Các khóa học",
+    icon: "📚",
+    sub: [
+      { to: "/courses#thong-tin",   label: "Thông tin khóa học" },
+      { to: "/courses#lo-trinh",    label: "Lộ trình" },
+      { to: "/courses#hoc-phi",     label: "Học phí" },
+      { to: "/courses#video",       label: "Video dạy thử" },
+    ],
+  },
+  {
+    to: "/thu-vien",
+    label: "Thư viện",
+    icon: "📄",
+    sub: [
+      { to: "/thu-vien?cap=so",    label: "Sơ cấp" },
+      { to: "/thu-vien?cap=trung", label: "Trung cấp" },
+      { to: "/thu-vien?cap=cao",   label: "Cao cấp" },
+    ],
+  },
 ];
 
 // Games submenu — only rendered when logged in
@@ -38,6 +66,46 @@ const GAME_LINKS = [
   { to: "/bai-tap-tuong-tac",   label: "Bài tập tương tác",  icon: "🎮" },
 ];
 
+function NavDropdown({ link }: { link: typeof PUBLIC_LINKS[number] }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const h = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [open]);
+
+  return (
+    <div className="nav-dropdown" ref={ref}>
+      <button
+        className="nav-dropdown-btn"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        {link.label} <span className="nav-dropdown-caret">{open ? "▴" : "▾"}</span>
+      </button>
+      {open && (
+        <div className="nav-dropdown-menu">
+          <Link to={link.to} className="nav-dropdown-item nav-dropdown-item--header" onClick={() => setOpen(false)}>
+            {link.icon} {link.label}
+          </Link>
+          <div className="nav-dropdown-divider" />
+          {link.sub.map((s) => (
+            <Link key={s.to} to={s.to} className="nav-dropdown-item" onClick={() => setOpen(false)}>
+              {s.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 function GamesDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -129,7 +197,7 @@ function Header() {
             </Link>
           ) : (
             <>
-              {PUBLIC_LINKS.map((l) => <Link key={l.to} to={l.to}>{l.label}</Link>)}
+              {PUBLIC_LINKS.map((l) => <NavDropdown key={l.to} link={l} />)}
               {user && <GamesDropdown />}
             </>
           )}

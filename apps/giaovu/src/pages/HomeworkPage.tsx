@@ -10,6 +10,19 @@ import { useAuth } from "../lib/auth-context";
 
 type CourseTab = "all" | CourseId;
 
+const HOLD_TO_DRAG_MS = 2000;
+
+// Six-dot grip icon for the drag handle (replaces the old "⠿" braille glyph).
+function DragHandleIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+      <circle cx="4" cy="3" r="1.3" /><circle cx="10" cy="3" r="1.3" />
+      <circle cx="4" cy="7" r="1.3" /><circle cx="10" cy="7" r="1.3" />
+      <circle cx="4" cy="11" r="1.3" /><circle cx="10" cy="11" r="1.3" />
+    </svg>
+  );
+}
+
 // Upload → parse (server-side PDF/DOCX → questions) → review → save quiz exercises,
 // then browse/try/delete existing ones. Mirrors the teacher app's Quiz Import flow
 // but scoped to giaovu's own auth headers via adminFetch. Courses are shown as
@@ -39,17 +52,44 @@ function QuizExercisesCard() {
   const [savingTitle, setSavingTitle] = useState(false);
   const editRef = useRef<HTMLInputElement>(null);
 
-  // Drag-to-reorder (per-course only — server ordering is scoped to a course)
+  // Drag-to-reorder (per-course only — server ordering is scoped to a course).
+  // The handle requires a 2s press-and-hold before it "arms" (becomes draggable),
+  // so an accidental tap/click on the handle never yanks a row out of place.
   const [dragId, setDragId]         = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const [reorderErr, setReorderErr] = useState<string | null>(null);
+  const [armedId, setArmedId]       = useState<string | null>(null);
+  const [holdingId, setHoldingId]   = useState<string | null>(null);
+  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const canReorder = activeTab !== "all";
+
+  function clearHoldTimer() {
+    if (holdTimerRef.current) { clearTimeout(holdTimerRef.current); holdTimerRef.current = null; }
+  }
+  function startHold(id: string) {
+    if (!canReorder) return;
+    setHoldingId(id);
+    clearHoldTimer();
+    holdTimerRef.current = setTimeout(() => { setArmedId(id); setHoldingId(null); }, HOLD_TO_DRAG_MS);
+  }
+  function cancelHold() {
+    clearHoldTimer();
+    setHoldingId(null);
+  }
+  function disarm() {
+    clearHoldTimer();
+    setHoldingId(null);
+    setArmedId(null);
+  }
 
   // Delete confirmation (custom modal — no browser confirm())
   const [deleteId, setDeleteId]   = useState<string | null>(null);
   const [deleting, setDeleting]   = useState(false);
   const [deleteErr, setDeleteErr] = useState<string | null>(null);
   const deleteTarget = deleteId ? quizzes.find((q) => q.id === deleteId) ?? null : null;
+
+  // Row action menu (mobile kebab dropdown)
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
 
   async function loadQuizzes(tab: CourseTab) {
     setLoading(true); setErr(null);
@@ -138,12 +178,16 @@ function QuizExercisesCard() {
     finally { setDeleting(false); }
   }
 
-  function handleDragStart(id: string) { setDragId(id); setReorderErr(null); }
+  function handleDragStart(e: React.DragEvent, id: string) {
+    if (armedId !== id) { e.preventDefault(); return; }
+    setDragId(id); setReorderErr(null);
+  }
   function handleDragOver(e: React.DragEvent, id: string) {
     e.preventDefault();
     if (id !== dragOverId) setDragOverId(id);
   }
   function handleDrop(targetId: string) {
+    disarm();
     if (!canReorder || !dragId || dragId === targetId) { setDragId(null); setDragOverId(null); return; }
     const fromIdx = quizzes.findIndex((q) => q.id === dragId);
     const toIdx = quizzes.findIndex((q) => q.id === targetId);
@@ -158,7 +202,7 @@ function QuizExercisesCard() {
       body: JSON.stringify({ courseId: activeTab, quizIds: next.map((q) => q.id) }),
     }).catch(() => setReorderErr("Không lưu được thứ tự mới. Vui lòng thử lại."));
   }
-  function handleDragEnd() { setDragId(null); setDragOverId(null); }
+  function handleDragEnd() { setDragId(null); setDragOverId(null); disarm(); }
 
   const courseTitle = (cid: string | null) => COURSES.find((c) => c.id === cid)?.title ?? cid ?? "—";
 
@@ -217,19 +261,32 @@ function QuizExercisesCard() {
                 {canReorder && <th></th>}
                 <th>Tiêu đề</th>
                 {activeTab === "all" && <th>Khoá học</th>}
-                <th>Số câu</th><th>Ngày tạo</th><th></th>
+                <th>Số câu</th><th>Người tạo</th><th>Ngày tạo</th><th></th>
               </tr>
             </thead>
             <tbody>
               {quizzes.map((q) => (
                 <tr key={q.id} className={rowCls(q.id)}
-                  draggable={canReorder}
-                  onDragStart={() => handleDragStart(q.id)}
+                  draggable={armedId === q.id}
+                  onDragStart={(e) => handleDragStart(e, q.id)}
                   onDragOver={(e) => handleDragOver(e, q.id)}
                   onDrop={() => handleDrop(q.id)}
                   onDragEnd={handleDragEnd}
                 >
-                  {canReorder && <td style={{ width: 20 }}><span className="cp-quiz-drag" title="Kéo để sắp xếp lại">⠿</span></td>}
+                  {canReorder && (
+                    <td style={{ width: 24 }}>
+                      <span
+                        className={`cp-quiz-drag${holdingId === q.id ? " cp-quiz-drag--holding" : ""}${armedId === q.id ? " cp-quiz-drag--armed" : ""}`}
+                        title="Giữ 2 giây để kéo sắp xếp lại"
+                        onPointerDown={() => startHold(q.id)}
+                        onPointerUp={cancelHold}
+                        onPointerLeave={cancelHold}
+                        onPointerCancel={cancelHold}
+                      >
+                        <DragHandleIcon />
+                      </span>
+                    </td>
+                  )}
                   <td style={{ fontWeight: 600 }}>
                     {editingId === q.id ? (
                       <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
@@ -257,13 +314,57 @@ function QuizExercisesCard() {
                   </td>
                   {activeTab === "all" && <td className="muted">{courseTitle(q.course_id)}</td>}
                   <td className="muted">{q.total} ({q.mcq} TN, {q.open} TL)</td>
+                  <td className="muted">{q.created_by_name ?? "—"}</td>
                   <td className="muted">{new Date(q.created_at).toLocaleDateString("vi-VN")}</td>
-                  <td style={{ display: "flex", gap: 6 }}>
-                    <a className="btn btn-sm btn-secondary" href={buildTryQuizUrl(q.id)} target="_blank" rel="noreferrer">
-                      Thử làm
-                    </a>
-                    <button className="btn btn-sm btn-ghost" onClick={() => startEdit(q)}>Đổi tên</button>
-                    <button className="btn btn-sm btn-danger" onClick={() => remove(q.id)}>Xoá</button>
+                  <td className="gv-row-actions-cell">
+                    <div className="gv-row-actions">
+                      <a className="btn btn-sm btn-secondary" href={buildTryQuizUrl(q.id)} target="_blank" rel="noreferrer">
+                        Thử làm
+                      </a>
+                      <button className="btn btn-sm btn-ghost" onClick={() => startEdit(q)}>Đổi tên</button>
+                      <button className="btn btn-sm btn-danger" onClick={() => remove(q.id)}>Xoá</button>
+                    </div>
+                    <div className="gv-row-menu">
+                      <button
+                        type="button"
+                        className="gv-row-menu-btn"
+                        aria-label="Thao tác"
+                        aria-expanded={menuOpenId === q.id}
+                        onClick={() => setMenuOpenId((cur) => (cur === q.id ? null : q.id))}
+                      >
+                        ⋮
+                      </button>
+                      {menuOpenId === q.id && (
+                        <>
+                          <div className="gv-row-menu-overlay" onClick={() => setMenuOpenId(null)} />
+                          <div className="gv-row-menu-dropdown" role="menu">
+                            <a
+                              className="gv-row-menu-item"
+                              href={buildTryQuizUrl(q.id)}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={() => setMenuOpenId(null)}
+                            >
+                              Thử làm
+                            </a>
+                            <button
+                              type="button"
+                              className="gv-row-menu-item"
+                              onClick={() => { setMenuOpenId(null); startEdit(q); }}
+                            >
+                              Đổi tên
+                            </button>
+                            <button
+                              type="button"
+                              className="gv-row-menu-item gv-row-menu-item-danger"
+                              onClick={() => { setMenuOpenId(null); remove(q.id); }}
+                            >
+                              Xoá
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -275,13 +376,24 @@ function QuizExercisesCard() {
           {quizzes.map((q) => (
             <div key={q.id}
               className={`cp-quiz-card${dragId === q.id ? " cp-quiz-card--dragging" : ""}${dragOverId === q.id && dragId !== q.id ? " cp-quiz-card--dragover" : ""}`}
-              draggable={canReorder}
-              onDragStart={() => handleDragStart(q.id)}
+              draggable={armedId === q.id}
+              onDragStart={(e) => handleDragStart(e, q.id)}
               onDragOver={(e) => handleDragOver(e, q.id)}
               onDrop={() => handleDrop(q.id)}
               onDragEnd={handleDragEnd}
             >
-              {canReorder && <span className="cp-quiz-drag" title="Kéo để sắp xếp lại">⠿</span>}
+              {canReorder && (
+                <span
+                  className={`cp-quiz-drag${holdingId === q.id ? " cp-quiz-drag--holding" : ""}${armedId === q.id ? " cp-quiz-drag--armed" : ""}`}
+                  title="Giữ 2 giây để kéo sắp xếp lại"
+                  onPointerDown={() => startHold(q.id)}
+                  onPointerUp={cancelHold}
+                  onPointerLeave={cancelHold}
+                  onPointerCancel={cancelHold}
+                >
+                  <DragHandleIcon />
+                </span>
+              )}
               <div className="cp-quiz-body">
                 {editingId === q.id ? (
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }} onClick={(e) => e.stopPropagation()}>
@@ -310,6 +422,8 @@ function QuizExercisesCard() {
                   {activeTab === "all" && <span>{courseTitle(q.course_id)}</span>}
                   {q.mcq > 0 && <span>{q.mcq} trắc nghiệm</span>}
                   {q.open > 0 && <span>{q.open} tự luận</span>}
+                  {q.created_by_name && <span>{q.created_by_name}</span>}
+                  <span>{new Date(q.created_at).toLocaleDateString("vi-VN")}</span>
                 </div>
                 {q.source && <div className="cp-quiz-source">{q.source}</div>}
               </div>

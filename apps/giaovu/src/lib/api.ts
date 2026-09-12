@@ -191,6 +191,7 @@ export interface SavedQuiz {
   source: string | null;
   course_id: string | null;
   created_at: string;
+  created_by_name: string | null;
   total: number;
   mcq: number;
   open: number;

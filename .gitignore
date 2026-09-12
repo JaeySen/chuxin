@@ -17,3 +17,4 @@ emulator-data
 apps/react/dist
 packages/shared/dist
 functions/lib
+scripts/__pycache__/

@@ -212,6 +212,39 @@ body {
 .gv-table tr:last-child td { border-bottom: none; }
 .gv-table tr:hover td { background: var(--c-red-bg); }
 
+/* ── Row actions (hover-reveal desktop / kebab menu mobile) ─────────────── */
+.gv-row-actions-cell { position: relative; min-width: 96px; }
+.gv-row-actions {
+  display: flex; gap: 6px;
+  opacity: 0; transition: opacity 0.12s;
+}
+.gv-table tr:hover .gv-row-actions,
+.gv-table tr:focus-within .gv-row-actions { opacity: 1; }
+.gv-row-menu { display: none; }
+.gv-row-menu-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 8px; border: none;
+  background: transparent; color: var(--c-text-muted);
+  font-size: 18px; line-height: 1; cursor: pointer; font-family: inherit;
+}
+.gv-row-menu-btn:hover { background: rgba(0,0,0,0.06); color: var(--c-text); }
+.gv-row-menu-overlay { position: fixed; inset: 0; z-index: 20; }
+.gv-row-menu-dropdown {
+  position: absolute; right: 0; top: calc(100% + 4px); z-index: 21;
+  background: white; border: 1px solid var(--c-divider); border-radius: 10px;
+  box-shadow: 0 8px 24px var(--c-shadow); min-width: 140px;
+  display: flex; flex-direction: column; padding: 6px; gap: 2px;
+}
+.gv-row-menu-item {
+  display: block; text-align: left; width: 100%;
+  padding: 8px 10px; border-radius: 7px; border: none; background: none;
+  color: var(--c-text); font-size: 13.5px; font-family: inherit;
+  cursor: pointer; text-decoration: none;
+}
+.gv-row-menu-item:hover { background: var(--c-red-bg); }
+.gv-row-menu-item-danger { color: var(--c-wrong); }
+.gv-row-menu-item-danger:hover { background: var(--c-wrong-bg); }
+
 /* ── Forms ───────────────────────────────────────────────────────────────── */
 .gv-form { display: flex; flex-direction: column; gap: 14px; }
 .gv-form-row {
@@ -328,6 +361,8 @@ body {
   .gv-stat-row { grid-template-columns: 1fr 1fr; }
   .gv-calendar { grid-template-columns: repeat(7, 1fr); font-size: 10px; }
   .gv-cal-cell { min-height: 50px; }
+  .gv-row-actions { display: none; }
+  .gv-row-menu { display: block; position: relative; }
 }
 
 /* ── Day-of-week picker ──────────────────────────────────────────── */
@@ -407,8 +442,24 @@ body {
 .cp-quiz-drag {
   cursor: grab; color: var(--c-text-muted); font-size: 1.1rem;
   flex-shrink: 0; user-select: none; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 6px;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+  touch-action: none;
 }
 .cp-quiz-drag:active { cursor: grabbing; }
+.cp-quiz-drag--holding {
+  color: var(--c-red); background: var(--c-red-bg);
+  animation: cp-quiz-drag-hold 2s linear;
+}
+.cp-quiz-drag--armed {
+  color: #fff; background: var(--c-red); cursor: grabbing;
+  transform: scale(1.1);
+}
+@keyframes cp-quiz-drag-hold {
+  from { box-shadow: inset 0 0 0 1px var(--c-red-bg); }
+  to   { box-shadow: inset 0 0 0 2px var(--c-red); }
+}
 .cp-quiz-body { flex: 1; min-width: 0; }
 .cp-quiz-title { font-weight: 700; font-size: 0.95rem; color: var(--c-text); }
 .cp-quiz-meta { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
