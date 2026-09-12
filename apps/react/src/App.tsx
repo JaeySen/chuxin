@@ -24,15 +24,29 @@ export function App() {
             <h3 className="footer-brand">Hán ngữ Sơ Tâm</h3>
             <p>Khởi đầu từ đam mê, vươn xa cùng Hán ngữ.</p>
             <div className="footer-socials">
-              <a href={CONTACT.facebook} target="_blank" rel="noreferrer">FB</a>
-              <a href={CONTACT.tiktok} target="_blank" rel="noreferrer">TikTok</a>
+              <a href="https://zalo.me/0989175437" target="_blank" rel="noreferrer" className="social-pill">
+                <span className="social-icon">Zalo</span>
+                <span className="social-text">Chat qua Zalo</span>
+              </a>
+              <a href={CONTACT.facebook} target="_blank" rel="noreferrer" className="social-pill">
+                <span className="social-icon">FB</span>
+                <span className="social-text">Theo dõi trên Facebook</span>
+              </a>
+              <a href={CONTACT.tiktok} target="_blank" rel="noreferrer" className="social-pill">
+                <span className="social-icon">TikTok</span>
+                <span className="social-text">Theo dõi trên TikTok</span>
+              </a>
             </div>
           </div>
           <div className="footer-col">
             <h3>Liên hệ</h3>
-            <p>📍 Địa chỉ: 123 Đường Sơ Tâm, Quận Sơ Tâm, TP. HCM</p>
-            <p>📞 Điện thoại: {CONTACT.phone}</p>
-            <p>✉️ Email: lienhe@hanngusotam.com</p>
+            <p>📍 Địa chỉ: Cao Lỗ, Ho Chi Minh City, Vietnam</p>
+            <p>📞 Điện thoại: 0989 175 437</p>
+            <p>✉️ Email: hanngusotam@gmail.com</p>
+            <p>🌐 Website: hanngusotam.com</p>
+            <p style={{ marginTop: 12 }}>🕒 <strong>Giờ làm việc (UTC+7):</strong></p>
+            <p>08:00 - 22:30 (Thứ 2 - Thứ 7)</p>
+            <p>08:00 - 12:00 (Chủ nhật)</p>
           </div>
           <div className="footer-col">
             <h3>Khóa học</h3>
@@ -177,11 +191,27 @@ function GamesDropdown() {
 
 function Header() {
   const [activeMenu, setActiveMenu] = useState(0);
+  const [hidden, setHidden] = useState(false);
   const { user, role, logout } = useAuth();
   const [consultOpen, setConsultOpen] = useState(false);
   const [menuOpen, setMenuOpen]       = useState(false);
   const location = useLocation();
   const nav = useNavigate();
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY > 500 && currentY > lastY) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+      lastY = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   async function handleLogout() {
     await logout();
@@ -206,7 +236,7 @@ function Header() {
   ];
 
   return (
-    <header className="sotam-header">
+    <header className={`sotam-header ${hidden ? "header-hidden" : ""}`}>
       <div className="sotam-header-inner">
         {/* Brand */}
         <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
