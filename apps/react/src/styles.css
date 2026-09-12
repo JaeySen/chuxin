@@ -3167,7 +3167,7 @@ body {
 /* 3D Coverflow Teachers */
 .coverflow-container {
   position: relative;
-  height: 450px;
+  height: 520px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -3176,8 +3176,8 @@ body {
 }
 .coverflow-card {
   position: absolute;
-  width: 260px;
-  height: 380px;
+  width: 320px;
+  height: 440px;
   background: white;
   border-radius: 16px;
   box-shadow: 0 10px 30px var(--c-shadow);
@@ -3269,4 +3269,127 @@ body {
   width: 100%;
   height: 100%;
   border: none;
+}
+
+
+/* Progress Bar for active teacher */
+.coverflow-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+}
+.coverflow-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--c-red);
+  animation: fillProgress 2.5s linear forwards;
+}
+@keyframes fillProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Feedback Marquee */
+.feedback-marquee-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+.feedback-marquee-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+}
+.feedback-marquee-track.left {
+  animation: marqueeLeft 30s linear infinite;
+}
+.feedback-marquee-track.right {
+  animation: marqueeRight 30s linear infinite;
+  transform: translateX(-33.33%);
+}
+.feedback-marquee-track:hover {
+  animation-play-state: paused;
+}
+.marquee-card {
+  width: 350px;
+  flex-shrink: 0;
+  white-space: normal;
+}
+@keyframes marqueeLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); }
+}
+@keyframes marqueeRight {
+  from { transform: translateX(-33.333%); }
+  to { transform: translateX(0); }
+}
+
+/* Red Footer */
+.sotam-footer {
+  background: var(--c-red-dark) !important;
+  color: rgba(255,255,255,0.85) !important;
+  padding: 60px 20px 20px !important;
+  border-top: none !important;
+  text-align: left !important;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+.footer-col h3 {
+  color: white;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+.footer-brand {
+  font-size: 1.5rem !important;
+  font-weight: 800;
+}
+.footer-col p {
+  margin: 10px 0 !important;
+  line-height: 1.6;
+}
+.footer-col a {
+  display: block;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  margin: 10px 0;
+  transition: color 0.2s;
+}
+.footer-col a:hover {
+  color: white;
+}
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+.footer-socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  color: white;
+  margin: 0;
+}
+.footer-socials a:hover {
+  background: rgba(255,255,255,0.2);
+}
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.9em;
 }

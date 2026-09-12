@@ -19,12 +19,30 @@ export function App() {
         <Outlet />
       </main>
       <footer className="sotam-footer">
-        <div className="container">
-          <p><strong>Hán ngữ Sơ Tâm (Chuxin)</strong></p>
-          <p>📍 Địa chỉ: 123 Đường Sơ Tâm, Quận Sơ Tâm, TP. HCM</p>
-          <p>📞 Điện thoại: {CONTACT.phone}</p>
-          <p>✉️ Email: contact@hanngusotam.com</p>
-          <p style={{ marginTop: 8, fontSize: '0.85em', opacity: 0.7 }}>© {new Date().getFullYear()} Hán ngữ Sơ Tâm. All rights reserved.</p>
+        <div className="container footer-grid">
+          <div className="footer-col">
+            <h3 className="footer-brand">Hán ngữ Sơ Tâm</h3>
+            <p>Khởi đầu từ đam mê, vươn xa cùng Hán ngữ.</p>
+            <div className="footer-socials">
+              <a href={CONTACT.facebook} target="_blank" rel="noreferrer">FB</a>
+              <a href={CONTACT.tiktok} target="_blank" rel="noreferrer">TikTok</a>
+            </div>
+          </div>
+          <div className="footer-col">
+            <h3>Liên hệ</h3>
+            <p>📍 Địa chỉ: 123 Đường Sơ Tâm, Quận Sơ Tâm, TP. HCM</p>
+            <p>📞 Điện thoại: {CONTACT.phone}</p>
+            <p>✉️ Email: lienhe@hanngusotam.com</p>
+          </div>
+          <div className="footer-col">
+            <h3>Khóa học</h3>
+            <Link to="/course/han1-2">HSK 1-2</Link>
+            <Link to="/course/han3">HSK 3</Link>
+            <Link to="/course/han4">HSK 4</Link>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© {new Date().getFullYear()} Hán ngữ Sơ Tâm. All rights reserved.</p>
         </div>
       </footer>
       <FloatingContact />

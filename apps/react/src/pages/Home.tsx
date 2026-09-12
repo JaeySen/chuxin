@@ -59,7 +59,7 @@ function TeacherCoverflow() {
         let zIndex = 100 - Math.abs(offset);
         let tx = offset * 120;
         let scale = offset === 0 ? 1 : 0.8;
-        let rotateY = offset === 0 ? 0 : (offset > 0 ? -25 : 25);
+        let rotateY = offset === 0 ? 0 : (offset > 0 ? 45 : -45);
         let opacity = Math.abs(offset) > 2 ? 0 : 1;
 
         return (
@@ -74,7 +74,13 @@ function TeacherCoverflow() {
             onClick={() => setActiveIdx(idx)}
           >
             <img src={t.file} alt={t.name} />
+            {offset === 0 && (
+              <div className="coverflow-progress">
+                <div key={activeIdx} className="coverflow-progress-fill" style={{ animationPlayState: paused ? 'paused' : 'running' }} />
+              </div>
+            )}
           </div>
+
         );
       })}
     </div>
@@ -428,20 +434,39 @@ function GuestHome() {
         <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
           Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.
         </p>
-        <div className="feedback-grid">
-          {FEEDBACKS.map((f) => (
-            <div key={f.name} className="feedback-card">
-              <div className="feedback-header">
-                <span className="feedback-avatar">{f.avatar}</span>
-                <div className="feedback-meta">
-                  <div className="feedback-name">{f.name}</div>
-                  <div className="feedback-course">Khoá {f.course}</div>
+        <div className="feedback-marquee-wrapper">
+          <div className="feedback-marquee-track left">
+            {[...FEEDBACKS.slice(0, 3), ...FEEDBACKS.slice(0, 3), ...FEEDBACKS.slice(0, 3)].map((f, i) => (
+              <div key={i} className="feedback-card marquee-card">
+                <div className="feedback-header">
+                  <span className="feedback-avatar">{f.avatar}</span>
+                  <div className="feedback-meta">
+                    <div className="feedback-name">{f.name}</div>
+                    <div className="feedback-course">Khoá {f.course}</div>
+                  </div>
+                  <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
                 </div>
-                <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
+                <p className="feedback-text">"{f.text}"</p>
               </div>
-              <p className="feedback-text">"{f.text}"</p>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+        <div className="feedback-marquee-wrapper" style={{ marginTop: 24 }}>
+          <div className="feedback-marquee-track right">
+            {[...FEEDBACKS.slice(3, 6), ...FEEDBACKS.slice(3, 6), ...FEEDBACKS.slice(3, 6)].map((f, i) => (
+              <div key={i} className="feedback-card marquee-card">
+                <div className="feedback-header">
+                  <span className="feedback-avatar">{f.avatar}</span>
+                  <div className="feedback-meta">
+                    <div className="feedback-name">{f.name}</div>
+                    <div className="feedback-course">Khoá {f.course}</div>
+                  </div>
+                  <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
+                </div>
+                <p className="feedback-text">"{f.text}"</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -2097,20 +2122,39 @@ function TeacherHome() {
         <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
           Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.
         </p>
-        <div className="feedback-grid">
-          {FEEDBACKS.map((f) => (
-            <div key={f.name} className="feedback-card">
-              <div className="feedback-header">
-                <span className="feedback-avatar">{f.avatar}</span>
-                <div className="feedback-meta">
-                  <div className="feedback-name">{f.name}</div>
-                  <div className="feedback-course">Khoá {f.course}</div>
+        <div className="feedback-marquee-wrapper">
+          <div className="feedback-marquee-track left">
+            {[...FEEDBACKS.slice(0, 3), ...FEEDBACKS.slice(0, 3), ...FEEDBACKS.slice(0, 3)].map((f, i) => (
+              <div key={i} className="feedback-card marquee-card">
+                <div className="feedback-header">
+                  <span className="feedback-avatar">{f.avatar}</span>
+                  <div className="feedback-meta">
+                    <div className="feedback-name">{f.name}</div>
+                    <div className="feedback-course">Khoá {f.course}</div>
+                  </div>
+                  <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
                 </div>
-                <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
+                <p className="feedback-text">"{f.text}"</p>
               </div>
-              <p className="feedback-text">"{f.text}"</p>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+        <div className="feedback-marquee-wrapper" style={{ marginTop: 24 }}>
+          <div className="feedback-marquee-track right">
+            {[...FEEDBACKS.slice(3, 6), ...FEEDBACKS.slice(3, 6), ...FEEDBACKS.slice(3, 6)].map((f, i) => (
+              <div key={i} className="feedback-card marquee-card">
+                <div className="feedback-header">
+                  <span className="feedback-avatar">{f.avatar}</span>
+                  <div className="feedback-meta">
+                    <div className="feedback-name">{f.name}</div>
+                    <div className="feedback-course">Khoá {f.course}</div>
+                  </div>
+                  <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
+                </div>
+                <p className="feedback-text">"{f.text}"</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
