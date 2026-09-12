@@ -57,6 +57,11 @@ function CourseHeader({ course, courseId }: { course: typeof COURSES[number] | u
         {course?.title ?? courseId?.toUpperCase()}
       </h1>
       {course?.subtitle && <p className="muted" style={{ fontSize: 16 }}>{course.subtitle}</p>}
+      {course?.brochureUrl && (
+        <a href={course.brochureUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ marginTop: 12, textDecoration: "none" }}>
+          📄 Xem Brochure Khóa học
+        </a>
+      )}
     </>
   );
 }

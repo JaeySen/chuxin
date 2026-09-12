@@ -40,8 +40,7 @@ const PUBLIC_LINKS = [
     label: "Các khóa học",
     icon: "📚",
     sub: [
-      { to: "/course/han1", label: "Hán ngữ 1 (HSK 1)" },
-      { to: "/course/han2", label: "Hán ngữ 2 (HSK 2)" },
+      { to: "/course/han1-2", label: "Hán ngữ 1 & 2 (HSK 1-2)" },
       { to: "/course/han3", label: "Hán ngữ 3 (HSK 3)" },
       { to: "/course/han4", label: "Hán ngữ 4 (HSK 4)" },
       { to: "/course/han5", label: "Hán ngữ 5 (HSK 5)" },
