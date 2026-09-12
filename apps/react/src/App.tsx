@@ -18,6 +18,15 @@ export function App() {
       <main>
         <Outlet />
       </main>
+      <footer className="sotam-footer">
+        <div className="container">
+          <p><strong>Hán ngữ Sơ Tâm (Chuxin)</strong></p>
+          <p>📍 Địa chỉ: 123 Đường Sơ Tâm, Quận Sơ Tâm, TP. HCM</p>
+          <p>📞 Điện thoại: {CONTACT.phone}</p>
+          <p>✉️ Email: contact@hanngusotam.com</p>
+          <p style={{ marginTop: 8, fontSize: '0.85em', opacity: 0.7 }}>© {new Date().getFullYear()} Hán ngữ Sơ Tâm. All rights reserved.</p>
+        </div>
+      </footer>
       <FloatingContact />
     </AuthProvider>
   );
@@ -149,6 +158,7 @@ function GamesDropdown() {
 }
 
 function Header() {
+  const [activeMenu, setActiveMenu] = useState(0);
   const { user, role, logout } = useAuth();
   const [consultOpen, setConsultOpen] = useState(false);
   const [menuOpen, setMenuOpen]       = useState(false);
@@ -202,10 +212,12 @@ function Header() {
             </Link>
           ) : (
             <>
-              {PUBLIC_LINKS.map((l) => (
-                <Link key={l.to} to={l.to} className="nav-dropdown-btn">
-                  {l.icon} {l.label}
-                </Link>
+              {PUBLIC_LINKS.map((l, i) => (
+                <div key={l.to} onMouseEnter={() => setActiveMenu(i)}>
+                  <Link to={l.to} className="nav-dropdown-btn" style={{ background: activeMenu === i ? 'rgba(0,0,0,0.05)' : '' }}>
+                    {l.icon} {l.label}
+                  </Link>
+                </div>
               ))}
               {user && <GamesDropdown />}
             </>
@@ -289,18 +301,11 @@ function Header() {
 
       {consultOpen && <ConsultModal close={() => setConsultOpen(false)} />}
       
-      {/* Marquee sub-navbar */}
-      <div className="sotam-subnav-marquee">
-        <div className="marquee-content">
-          {ALL_SUB_LINKS.map((s, i) => (
-            <Link key={i} to={s.to} className="marquee-item">{s.label}</Link>
-          ))}
-          {/* Duplicate for seamless infinite scroll */}
-          {ALL_SUB_LINKS.map((s, i) => (
-            <Link key={i + 100} to={s.to} className="marquee-item">{s.label}</Link>
-          ))}
-          {ALL_SUB_LINKS.map((s, i) => (
-            <Link key={i + 200} to={s.to} className="marquee-item">{s.label}</Link>
+      {/* Sub-navbar with Slide Animation */}
+      <div className="sotam-subnav-bar">
+        <div key={activeMenu} className="subnav-slide-in">
+          {PUBLIC_LINKS[activeMenu].sub.map((s) => (
+            <Link key={s.to} to={s.to} className="subnav-item">{s.label}</Link>
           ))}
         </div>
       </div>

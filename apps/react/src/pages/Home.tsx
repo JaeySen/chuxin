@@ -29,6 +29,58 @@ const OLD_EXERCISES = [
   { title: "Bingo",         icon: "🎯", to: "/bingo" },
 ];
 
+
+function TeacherCoverflow() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const interval = setInterval(() => {
+      setActiveIdx((prev) => (prev + 1) % TEACHER_BRIEFS.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [paused]);
+
+  return (
+    <div 
+      className="coverflow-container" 
+      onMouseEnter={() => setPaused(true)} 
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
+    >
+      {TEACHER_BRIEFS.map((t, idx) => {
+        let offset = idx - activeIdx;
+        const total = TEACHER_BRIEFS.length;
+        if (offset < -Math.floor(total / 2)) offset += total;
+        if (offset > Math.floor(total / 2)) offset -= total;
+        
+        let zIndex = 100 - Math.abs(offset);
+        let tx = offset * 120;
+        let scale = offset === 0 ? 1 : 0.8;
+        let rotateY = offset === 0 ? 0 : (offset > 0 ? -25 : 25);
+        let opacity = Math.abs(offset) > 2 ? 0 : 1;
+
+        return (
+          <div 
+            key={t.name}
+            className={`coverflow-card ${offset === 0 ? 'coverflow-card-active' : ''}`}
+            style={{ 
+              zIndex, 
+              opacity,
+              transform: `translateX(${tx}px) scale(${scale}) perspective(800px) rotateY(${rotateY}deg)`
+            }}
+            onClick={() => setActiveIdx(idx)}
+          >
+            <img src={t.file} alt={t.name} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function Home() {
   const { role, loading } = useAuth();
 
@@ -368,19 +420,7 @@ function GuestHome() {
           Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
           được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
         </p>
-        <div className="teacher-slider-container">
-          <div className="teacher-slider">
-            {TEACHER_BRIEFS.map((t) => (
-              <div key={t.name} className="teacher-slider-card">
-                <img
-                  src={t.file}
-                  alt={`Giới thiệu giáo viên ${t.name}`}
-                  className="teacher-brief-img"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <TeacherCoverflow />
       </div>
 
       <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60 }}>
@@ -2049,19 +2089,7 @@ function TeacherHome() {
           Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
           được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
         </p>
-        <div className="teacher-slider-container">
-          <div className="teacher-slider">
-            {TEACHER_BRIEFS.map((t) => (
-              <div key={t.name} className="teacher-slider-card">
-                <img
-                  src={t.file}
-                  alt={`Giới thiệu giáo viên ${t.name}`}
-                  className="teacher-brief-img"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <TeacherCoverflow />
       </div>
 
       <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60 }}>

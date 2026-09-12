@@ -1,9 +1,8 @@
-# SPA fallback for React Router — works on Apache and LiteSpeed.
-# www/HTTPS redirects are handled in DirectAdmin, not here.
-
-Options -MultiViews
 RewriteEngine On
-
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [QSA,L]
+
+<FilesMatch "\.pdf$">
+    Header set Content-Disposition inline
+</FilesMatch>

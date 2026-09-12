@@ -106,10 +106,7 @@ function GuestCourseView({
     <div className="container" style={{ padding: "28px 20px 80px" }}>
       <CourseHeader course={course} courseId={courseId} />
 
-      {/* Chương trình tĩnh bị ẩn đi theo yêu cầu */}
-      <div className="feedback feedback-info" style={{ marginTop: 16 }}>
-        Đăng nhập tài khoản học viên để xem bài tập và nội dung chi tiết.
-      </div>
+
     </div>
   );
 }
