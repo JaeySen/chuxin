@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import type { CourseId, Chapter } from "@sotam/shared";
 import { COURSES, CHAPTERS_BY_COURSE } from "@sotam/shared";
 import { useHead } from "../lib/useHead";
@@ -47,9 +48,29 @@ export function CoursePage() {
   return <GuestCourseView courseId={courseId} course={course} chapters={chapters} />;
 }
 
+
+function BrochureModal({ url, close }: { url: string; close: () => void }) {
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
+  }, [close]);
+
+  const modal = (
+    <div className="sotam-modal" style={{ background: "rgba(0,0,0,0.85)" }} onClick={close}>
+      <button className="btn btn-ghost close-x" style={{ color: "white", fontSize: 24, top: 20, right: 20 }} onClick={close}>✕</button>
+      <div className="brochure-theatre" onClick={e => e.stopPropagation()}>
+        <iframe src={url} className="brochure-iframe" title="Brochure" />
+      </div>
+    </div>
+  );
+  return createPortal(modal, document.body);
+}
+
 // ── Shared header ────────────────────────────────────────────────────────────
 
 function CourseHeader({ course, courseId }: { course: typeof COURSES[number] | undefined; courseId?: string }) {
+  const [openBrochure, setOpenBrochure] = useState(false);
   return (
     <>
       <Link to="/" className="muted" style={{ textDecoration: "none" }}>← Tất cả khoá</Link>
@@ -58,9 +79,13 @@ function CourseHeader({ course, courseId }: { course: typeof COURSES[number] | u
       </h1>
       {course?.subtitle && <p className="muted" style={{ fontSize: 16 }}>{course.subtitle}</p>}
       {course?.brochureUrl && (
-        <a href={course.brochureUrl} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ marginTop: 12, textDecoration: "none" }}>
-          📄 Xem Brochure Khóa học
-        </a>
+        <>
+          <div className="brochure-thumbnail" onClick={() => setOpenBrochure(true)} title="Xem Brochure">
+            <div className="brochure-thumb-overlay">🔍 Xem chi tiết</div>
+            <img src="https://placehold.co/300x400/a71e22/FFF?text=Brochure" alt="Brochure Thumbnail" />
+          </div>
+          {openBrochure && <BrochureModal url={course.brochureUrl} close={() => setOpenBrochure(false)} />}
+        </>
       )}
     </>
   );
@@ -81,27 +106,10 @@ function GuestCourseView({
     <div className="container" style={{ padding: "28px 20px 80px" }}>
       <CourseHeader course={course} courseId={courseId} />
 
-      {/* Chapter list — visible to everyone, content is static */}
-      {chapters.length > 0 ? (
-        <div className="chapter-list">
-          {chapters.map((ch) => (
-            <article key={ch.bai} className="chapter-card">
-              <header className="chapter-header">
-                <span className="chapter-number">Bài {ch.bai}</span>
-                <span className="chapter-hanzi">{ch.hanzi}</span>
-                <span className="chapter-vi">{ch.vi}</span>
-              </header>
-              <div className="chapter-body">
-                <span className="chapter-stub">Nội dung sẽ cập nhật sớm</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div className="feedback feedback-info" style={{ marginTop: 16 }}>
-          Khoá học này đang được biên soạn.
-        </div>
-      )}
+      {/* Chương trình tĩnh bị ẩn đi theo yêu cầu */}
+      <div className="feedback feedback-info" style={{ marginTop: 16 }}>
+        Đăng nhập tài khoản học viên để xem bài tập và nội dung chi tiết.
+      </div>
     </div>
   );
 }

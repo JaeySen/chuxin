@@ -84,7 +84,7 @@ body {
 }
 
 .sotam-header {
-  position: sticky; top: 0; z-index: 50;
+  position: sticky; top: 0; z-index: 100;
   background: rgba(255,255,255,0.85);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--c-divider);
@@ -3130,3 +3130,134 @@ body {
 }
 
 .nav-dropdown-menu::before { content: ''; position: absolute; top: -15px; left: 0; right: 0; height: 15px; }
+
+
+/* Marquee Sub-navbar */
+.sotam-subnav-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--c-red-dark);
+  color: white;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+}
+.marquee-content {
+  display: flex;
+  animation: scrollMarquee 25s linear infinite;
+}
+.marquee-item {
+  display: inline-block;
+  padding: 0 30px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+.marquee-item:hover {
+  text-decoration: underline;
+}
+@keyframes scrollMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
+}
+
+/* Teacher Slider */
+.teacher-slider-container {
+  overflow: hidden;
+  width: 100%;
+  padding: 20px 0;
+}
+.teacher-slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.teacher-slider::-webkit-scrollbar {
+  height: 8px;
+}
+.teacher-slider::-webkit-scrollbar-thumb {
+  background: var(--c-divider);
+  border-radius: 4px;
+}
+.teacher-slider-card {
+  scroll-snap-align: center;
+  flex: 0 0 280px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px var(--c-shadow);
+  transition: transform 0.3s;
+  overflow: hidden;
+  position: relative;
+}
+.teacher-slider-card:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+.teacher-slider-card img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Game Card Image */
+.game-card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 12px;
+  border: 1px solid var(--c-divider);
+}
+
+/* Brochure Theatre */
+.brochure-thumbnail {
+  width: 150px;
+  margin-top: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 12px var(--c-shadow);
+  transition: transform 0.2s;
+}
+.brochure-thumbnail:hover {
+  transform: scale(1.05);
+}
+.brochure-thumbnail img {
+  width: 100%;
+  display: block;
+}
+.brochure-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.brochure-thumbnail:hover .brochure-thumb-overlay {
+  opacity: 1;
+}
+.brochure-theatre {
+  width: 90vw;
+  height: 90vh;
+  max-width: 1200px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.brochure-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}

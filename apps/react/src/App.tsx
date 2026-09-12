@@ -26,17 +26,17 @@ export function App() {
 // Always-visible links (with optional sub-items for dropdown)
 const PUBLIC_LINKS = [
   {
-    to: "/ve-chung-toi",
+    to: "/#gioi-thieu",
     label: "Về chúng tôi",
     icon: "🏫",
     sub: [
-      { to: "/ve-chung-toi#gioi-thieu", label: "Giới thiệu trung tâm" },
-      { to: "/ve-chung-toi#giao-vien",  label: "Giới thiệu giáo viên" },
-      { to: "/ve-chung-toi#feedback",   label: "Feedback của học viên" },
+      { to: "/#gioi-thieu", label: "Giới thiệu trung tâm" },
+      { to: "/#giao-vien",  label: "Giới thiệu giáo viên" },
+      { to: "/#feedback",   label: "Feedback của học viên" },
     ],
   },
   {
-    to: "/courses",
+    to: "/#courses",
     label: "Các khóa học",
     icon: "📚",
     sub: [
@@ -60,6 +60,8 @@ const PUBLIC_LINKS = [
     ],
   },
 ];
+
+const ALL_SUB_LINKS = PUBLIC_LINKS.flatMap(l => l.sub);
 
 // Games submenu — only rendered when logged in
 const GAME_LINKS = [
@@ -190,17 +192,21 @@ function Header() {
             <Link to="/admin" style={{ color: "var(--c-red)", fontWeight: 700 }}>⚙ Quản trị</Link>
           ) : role === "teacher" ? (
             <>
-              <Link to="/" className="nav-class-tab">Trang chủ</Link>
-              <Link to="/giaovu" className="nav-class-tab">Lớp học</Link>
+              <Link to="/" className="nav-dropdown-btn">Trang chủ</Link>
+              <Link to="/giaovu" className="nav-dropdown-btn">Lớp học</Link>
               <GamesDropdown />
             </>
           ) : role === "student" ? (
-            <Link to="/" className="nav-class-tab">
+            <Link to="/" className="nav-dropdown-btn">
               {user?.classes?.[0]?.name ?? "Lớp học"}
             </Link>
           ) : (
             <>
-              {PUBLIC_LINKS.map((l) => <NavDropdown key={l.to} link={l} />)}
+              {PUBLIC_LINKS.map((l) => (
+                <Link key={l.to} to={l.to} className="nav-dropdown-btn">
+                  {l.icon} {l.label}
+                </Link>
+              ))}
               {user && <GamesDropdown />}
             </>
           )}
@@ -282,6 +288,22 @@ function Header() {
       )}
 
       {consultOpen && <ConsultModal close={() => setConsultOpen(false)} />}
+      
+      {/* Marquee sub-navbar */}
+      <div className="sotam-subnav-marquee">
+        <div className="marquee-content">
+          {ALL_SUB_LINKS.map((s, i) => (
+            <Link key={i} to={s.to} className="marquee-item">{s.label}</Link>
+          ))}
+          {/* Duplicate for seamless infinite scroll */}
+          {ALL_SUB_LINKS.map((s, i) => (
+            <Link key={i + 100} to={s.to} className="marquee-item">{s.label}</Link>
+          ))}
+          {ALL_SUB_LINKS.map((s, i) => (
+            <Link key={i + 200} to={s.to} className="marquee-item">{s.label}</Link>
+          ))}
+        </div>
+      </div>
     </header>
   );
 }

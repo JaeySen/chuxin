@@ -46,19 +46,40 @@ export function Home() {
   return <GuestHome />;
 }
 
+
+const TEACHER_BRIEFS = [
+  { file: "/chuxin-teacher-1-trungnd.jpg", name: "Nguyễn Đức Trung" },
+  { file: "/chuxin-teacher-2-haltg.jpg",  name: "Lê Thiên Giao Hạ" },
+  { file: "/chuxin-teacher-3-huetv.jpg",  name: "Triệu Văn Huệ" },
+  { file: "/chuxin-teacher-4-hantg.jpg",  name: "Trần Gia Hân" },
+  { file: "/chuxin-teacher-5-dongmv.jpg", name: "Mã Vũ Đồng" },
+];
+
+const FEEDBACKS = [
+  { name: "Nguyễn Thị Lan Anh", course: "HSK 1-2", avatar: "🎓", text: "Mình đã học ở Sơ Tâm được 6 tháng. Thầy Trung dạy rất tận tâm, giải thích ngữ pháp dễ hiểu và luôn sửa phát âm tỉ mỉ. Bây giờ mình tự tin nói chuyện cơ bản với người Trung rồi!", rating: 5 },
+  { name: "Trần Minh Khôi", course: "HSK 3-4", avatar: "📚", text: "Hệ thống bài tập online rất hay, nhất là phần flashcard và đố vui — học mà không thấy nhàm chán. Cô Hạ dạy phát âm chuẩn lắm, mình được khen ngữ âm tốt khi thi HSK 4.", rating: 5 },
+  { name: "Phạm Thu Hương", course: "HSK 2-3", avatar: "✨", text: "Lớp online qua VOOV nhưng không khí học vẫn rất sôi nổi. Giáo viên phản hồi bài nhanh và nhiệt tình. Mình đặc biệt thích phần trò chơi Bingo từ vựng — cả lớp cùng chơi vui lắm!", rating: 5 },
+  { name: "Lê Quốc Huy", course: "HSK 4-5", avatar: "🌟", text: "Đội ngũ giáo viên toàn Thạc sĩ chuyên ngành, kiến thức vững và cách dạy rất thực tế. Sau 3 tháng mình đã có thể xem phim Trung không cần phụ đề và giao tiếp được trong công việc.", rating: 5 },
+  { name: "Nguyễn Bảo Châu", course: "HSK 1-2", avatar: "💫", text: "Mình zero tiếng Trung khi vào học, nhưng chỉ sau 2 tháng đã biết Pinyin và nhớ được hơn 300 từ vựng. Phương pháp dạy kết hợp lý thuyết và trò chơi rất hiệu quả!", rating: 5 },
+  { name: "Võ Thanh Tùng", course: "HSK 3", avatar: "🏆", text: "Lộ trình học được thiết kế rất khoa học, từng bước từng bước. Giáo viên bản xứ của trung tâm phát âm chuẩn và thân thiện — được thực hành hội thoại với người bản ngữ là một lợi thế lớn.", rating: 5 },
+];
+
 const GAMES_INFO = [
   {
     icon: "🎯",
+    image: "https://placehold.co/400x250/a71e22/FFF?text=Bingo",
     title: "Bingo từ vựng",
     desc: "Giáo viên đọc từ, học viên đánh dấu ô tương ứng trên bảng Bingo cá nhân. Trò chơi rèn kỹ năng nghe — nhận diện từ nhanh trong môi trường áp lực vui vẻ, buộc học viên phải tập trung liên tục suốt tiết học.",
   },
   {
     icon: "🔍",
+    image: "https://placehold.co/400x250/ffc60b/FFF?text=Word+Search",
     title: "Tìm từ (Word Search)",
     desc: "Học viên tìm và khoanh từ tiếng Trung ẩn trong ô chữ. Hoạt động củng cố nhận diện mặt chữ Hán, phân biệt nét tương đồng và ghi nhớ hình dạng ký tự — đặc biệt hiệu quả cho người mới bắt đầu.",
   },
   {
     icon: "🔊",
+    image: "https://placehold.co/400x250/2563eb/FFF?text=Pinyin",
     title: "Luyện Pinyin",
     desc: "Bài tập tương tác chọn thanh điệu và âm vần cho từng từ. Phản hồi tức thì giúp học viên sửa lỗi phát âm ngay lập tức, xây dựng nền tảng ngữ âm vững chắc trước khi chuyển sang hội thoại.",
   },
@@ -201,6 +222,7 @@ function GuestHome() {
           {GAMES_INFO.map((g) => (
             <div key={g.title} className="game-card">
               <div className="game-card-icon">{g.icon}</div>
+              {g.image && <img src={g.image} alt={g.title} className="game-card-img" />}
               <h3 className="game-card-title">{g.title}</h3>
               <p className="game-card-desc">{g.desc}</p>
             </div>
@@ -217,7 +239,7 @@ function GuestHome() {
             <h3 className="portal-card-title">Bài tập trực tuyến</h3>
             <p className="portal-card-desc">
               Học viên đăng nhập để truy cập bài tập, theo dõi tiến trình học tập
-              và tham gia các hoạt động tương tác trong lớp.
+              và tham gia các hoạt động tương tác trong lớp. Tại đây bạn có thể xem lại kết quả học tập, ôn luyện từ vựng qua flashcard, làm bài tập về nhà và nhận feedback trực tiếp từ giáo viên nhanh chóng.
             </p>
             <button
               className="btn btn-primary portal-card-btn"
@@ -233,7 +255,7 @@ function GuestHome() {
             <h3 className="portal-card-title">Tham gia với chúng tôi</h3>
             <p className="portal-card-desc">
               Giáo viên đăng nhập để quản lý lớp học, tạo bài tập và theo dõi
-              kết quả học viên qua bảng điều khiển giáo vụ.
+              kết quả học viên qua bảng điều khiển giáo vụ. Hệ thống cung cấp công cụ chấm điểm tự động, quản lý học viên tiện lợi và hỗ trợ tổ chức các hoạt động lớp học trực tuyến chuyên nghiệp.
             </p>
             <button
               className="btn btn-secondary portal-card-btn"
@@ -269,6 +291,120 @@ function GuestHome() {
           </Link>
         ))}
       </div>
+
+
+      <div id="gioi-thieu" style={{ paddingTop: 60 }}>
+        <h2 className="section-h" style={{ marginTop: 0 }}>Sứ mệnh</h2>
+        <div className="about-mission-body">
+          <div className="about-spirit">
+            <div className="about-spirit-label">初心 · Chuxin</div>
+            <h3 className="about-spirit-title">Tinh thần Chuxin</h3>
+            <p>
+              <strong>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
+              học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
+              một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa
+              Trung Hoa.
+            </p>
+            <p>
+              Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học
+              viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu
+              hóa cho từng mục tiêu cụ thể. Tại Chuxin, chúng tôi không chỉ giảng dạy ngôn ngữ, mà
+              còn giúp học viên xây dựng sự tự tin, làm chủ kỹ năng giao tiếp thực tế và duy trì
+              nguồn cảm hứng học tập bền bỉ.
+            </p>
+
+            <p className="about-commit-heading"><strong>Cam kết của chúng tôi:</strong></p>
+            <ul className="about-commit-list">
+              <li>
+                <span className="about-commit-icon">🤝</span>
+                <div>
+                  <strong>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
+                </div>
+              </li>
+              <li>
+                <span className="about-commit-icon">🏅</span>
+                <div>
+                  <strong>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
+                </div>
+              </li>
+              <li>
+                <span className="about-commit-icon">🚀</span>
+                <div>
+                  <strong>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả trong học tập, công việc và cuộc sống.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div className="about-values">
+            <div className="about-value-card">
+              <span className="about-value-icon">🎯</span>
+              <div>
+                <strong>Đúng trọng tâm</strong>
+                <p>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
+              </div>
+            </div>
+            <div className="about-value-card">
+              <span className="about-value-icon">💬</span>
+              <div>
+                <strong>Tương tác thật sự</strong>
+                <p>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
+              </div>
+            </div>
+            <div className="about-value-card">
+              <span className="about-value-icon">📈</span>
+              <div>
+                <strong>Theo dõi tiến độ</strong>
+                <p>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="giao-vien" style={{ paddingTop: 60 }}>
+        <h2 className="section-h">Đội ngũ giảng viên</h2>
+        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
+          Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
+          được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
+        </p>
+        <div className="teacher-slider-container">
+          <div className="teacher-slider">
+            {TEACHER_BRIEFS.map((t) => (
+              <div key={t.name} className="teacher-slider-card">
+                <img
+                  src={t.file}
+                  alt={`Giới thiệu giáo viên ${t.name}`}
+                  className="teacher-brief-img"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60 }}>
+        <h2 className="section-h">Học viên nói gì về Sơ Tâm?</h2>
+        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
+          Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.
+        </p>
+        <div className="feedback-grid">
+          {FEEDBACKS.map((f) => (
+            <div key={f.name} className="feedback-card">
+              <div className="feedback-header">
+                <span className="feedback-avatar">{f.avatar}</span>
+                <div className="feedback-meta">
+                  <div className="feedback-name">{f.name}</div>
+                  <div className="feedback-course">Khoá {f.course}</div>
+                </div>
+                <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
+              </div>
+              <p className="feedback-text">"{f.text}"</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }
@@ -1836,6 +1972,120 @@ function TeacherHome() {
           </Link>
         ))}
       </div>
+
+
+      <div id="gioi-thieu" style={{ paddingTop: 60 }}>
+        <h2 className="section-h" style={{ marginTop: 0 }}>Sứ mệnh</h2>
+        <div className="about-mission-body">
+          <div className="about-spirit">
+            <div className="about-spirit-label">初心 · Chuxin</div>
+            <h3 className="about-spirit-title">Tinh thần Chuxin</h3>
+            <p>
+              <strong>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
+              học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
+              một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa
+              Trung Hoa.
+            </p>
+            <p>
+              Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học
+              viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu
+              hóa cho từng mục tiêu cụ thể. Tại Chuxin, chúng tôi không chỉ giảng dạy ngôn ngữ, mà
+              còn giúp học viên xây dựng sự tự tin, làm chủ kỹ năng giao tiếp thực tế và duy trì
+              nguồn cảm hứng học tập bền bỉ.
+            </p>
+
+            <p className="about-commit-heading"><strong>Cam kết của chúng tôi:</strong></p>
+            <ul className="about-commit-list">
+              <li>
+                <span className="about-commit-icon">🤝</span>
+                <div>
+                  <strong>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
+                </div>
+              </li>
+              <li>
+                <span className="about-commit-icon">🏅</span>
+                <div>
+                  <strong>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
+                </div>
+              </li>
+              <li>
+                <span className="about-commit-icon">🚀</span>
+                <div>
+                  <strong>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả trong học tập, công việc và cuộc sống.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div className="about-values">
+            <div className="about-value-card">
+              <span className="about-value-icon">🎯</span>
+              <div>
+                <strong>Đúng trọng tâm</strong>
+                <p>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
+              </div>
+            </div>
+            <div className="about-value-card">
+              <span className="about-value-icon">💬</span>
+              <div>
+                <strong>Tương tác thật sự</strong>
+                <p>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
+              </div>
+            </div>
+            <div className="about-value-card">
+              <span className="about-value-icon">📈</span>
+              <div>
+                <strong>Theo dõi tiến độ</strong>
+                <p>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="giao-vien" style={{ paddingTop: 60 }}>
+        <h2 className="section-h">Đội ngũ giảng viên</h2>
+        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
+          Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
+          được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
+        </p>
+        <div className="teacher-slider-container">
+          <div className="teacher-slider">
+            {TEACHER_BRIEFS.map((t) => (
+              <div key={t.name} className="teacher-slider-card">
+                <img
+                  src={t.file}
+                  alt={`Giới thiệu giáo viên ${t.name}`}
+                  className="teacher-brief-img"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60 }}>
+        <h2 className="section-h">Học viên nói gì về Sơ Tâm?</h2>
+        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
+          Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.
+        </p>
+        <div className="feedback-grid">
+          {FEEDBACKS.map((f) => (
+            <div key={f.name} className="feedback-card">
+              <div className="feedback-header">
+                <span className="feedback-avatar">{f.avatar}</span>
+                <div className="feedback-meta">
+                  <div className="feedback-name">{f.name}</div>
+                  <div className="feedback-course">Khoá {f.course}</div>
+                </div>
+                <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
+              </div>
+              <p className="feedback-text">"{f.text}"</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 }
