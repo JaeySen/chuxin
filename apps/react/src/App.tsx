@@ -297,75 +297,43 @@ function Header() {
       {/* Mobile nav drawer — absolute overlay, doesn't push content */}
       {menuOpen && (
         <nav className="sotam-nav--mobile">
-          <div className="sotam-nav--mobile-grid">
-            {role === "admin" ? (
-              <Link to="/admin" className="nav-tile nav-tile--admin">
-                <span className="nav-tile-icon">⚙</span>
-                <span className="nav-tile-label">Quản trị</span>
-              </Link>
-            ) : role === "teacher" ? (
-              <>
-                <Link to="/giaovu" className="nav-tile" onClick={() => setMenuOpen(false)}>
-                  <span className="nav-tile-icon">🏫</span>
-                  <span className="nav-tile-label">Lớp học</span>
-                </Link>
-                <Link to="/word-search" className="nav-tile" onClick={() => setMenuOpen(false)}>
-                  <span className="nav-tile-icon">🔍</span>
-                  <span className="nav-tile-label">Tìm từ</span>
-                </Link>
-                <Link to="/bingo" className="nav-tile" onClick={() => setMenuOpen(false)}>
-                  <span className="nav-tile-icon">🎯</span>
-                  <span className="nav-tile-label">Bingo</span>
-                </Link>
-                <Link to="/pinyin" className="nav-tile" onClick={() => setMenuOpen(false)}>
-                  <span className="nav-tile-icon">🔊</span>
-                  <span className="nav-tile-label">Pinyin</span>
-                </Link>
-                <Link to="/bai-tap-tuong-tac" className="nav-tile" onClick={() => setMenuOpen(false)}>
-                  <span className="nav-tile-icon">🎮</span>
-                  <span className="nav-tile-label">Bài tập tương tác</span>
-                </Link>
-              </>
-                        ) : role === "student" ? (
-              <Link to="/" className="nav-tile">
-                <span className="nav-tile-icon">🏫</span>
-                <span className="nav-tile-label">{user?.classes?.[0]?.name ?? "Lớp học"}</span>
-              </Link>
-            ) : activeMobileSub ? (
-              <div className="mobile-sub-menu slide-in-right" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <button className="nav-tile" onClick={() => setActiveMobileSub(null)} style={{ background: "rgba(0,0,0,0.05)" }}>
-                  <span className="nav-tile-icon">←</span>
-                  <span className="nav-tile-label">Quay lại</span>
-                </button>
-                <div style={{ padding: "10px 16px", fontWeight: "bold", color: "var(--c-red-dark)" }}>{activeMobileSub.label}</div>
-                {activeMobileSub.sub?.map((s) => (
-                  <Link key={s.to} to={s.to} className="nav-tile" onClick={() => { setMenuOpen(false); setActiveMobileSub(null); }}>
-                    <span className="nav-tile-label">{s.label}</span>
-                  </Link>
-                ))}
+        <Link to="/" className="sotam-brand" onClick={() => setMenuOpen(false)}>
+          <span className="brand-primary">Hán ngữ</span> Sơ Tâm
+        </Link>
+        <button className="mobile-menu-btn" onClick={() => setMenuOpen(true)}>
+          <span className="hamburger">☰</span>
+        </button>
+
+        {menuOpen && (
+          <div className="mobile-drawer">
+            <div className="mobile-drawer-header">
+              <span className="brand-primary" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Hán ngữ Sơ Tâm</span>
+              <button className="mobile-drawer-close" onClick={() => setMenuOpen(false)}>✕</button>
+            </div>
+            
+            <div className="mobile-drawer-body">
+              <div className="sotam-nav--mobile-grid">
+                <a href="/#gioi-thieu" className="mobile-grid-item" onClick={() => setMenuOpen(false)}>
+                  <div className="grid-icon">🏫</div>
+                  <div className="grid-label">Về chúng tôi</div>
+                </a>
+                <a href="/#courses" className="mobile-grid-item" onClick={() => setMenuOpen(false)}>
+                  <div className="grid-icon">📚</div>
+                  <div className="grid-label">Các khóa học</div>
+                </a>
+                <a href={PUBLIC_LINKS[2].to} target="_blank" rel="noreferrer" className="mobile-grid-item" onClick={() => setMenuOpen(false)}>
+                  <div className="grid-icon">🎵</div>
+                  <div className="grid-label">Thư viện</div>
+                </a>
+                <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="mobile-grid-item" style={{ background: '#a71e22', color: '#FFF' }} onClick={() => setMenuOpen(false)}>
+                  <div className="grid-icon" style={{ fontSize: '1.8rem' }}>💬</div>
+                  <div className="grid-label">Tư vấn Zalo</div>
+                </a>
               </div>
-            ) : (
-              <div className="mobile-main-menu" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {PUBLIC_LINKS.map((l) => (
-                  <button key={l.to} className="nav-tile" onClick={() => l.sub ? setActiveMobileSub(l) : (setMenuOpen(false), nav(l.to))}>
-                    <span className="nav-tile-icon">{l.icon}</span>
-                    <span className="nav-tile-label">{l.label}</span>
-                    {l.sub && <span className="nav-tile-icon" style={{ marginLeft: "auto", background: "none" }}>›</span>}
-                  </button>
-                ))}
-                
-                <div className="mobile-contact-section" style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-                  <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="btn btn-consult" style={{ width: "100%", justifyContent: "center" }}>
-                    Chat qua Zalo
-                  </a>
-                  <a href={`tel:${CONTACT.phone}`} className="btn btn-primary" style={{ width: "100%", justifyContent: "center", textDecoration: "none" }}>
-                    Gọi: {CONTACT.phone}
-                  </a>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
-        </nav>
+        )}
+      </nav>
       )}
 
       {consultOpen && <ConsultModal close={() => setConsultOpen(false)} />}

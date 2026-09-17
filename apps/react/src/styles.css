@@ -3729,3 +3729,20 @@ body {
     bottom: 90px;
   }
 }
+
+@media (max-width: 768px) {
+  .course-grid {
+    grid-template-columns: 1fr;
+  }
+  .course-view-btn {
+    opacity: 1 !important;
+    position: relative !important;
+    transform: none !important;
+    margin-top: 16px;
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+  }
+}

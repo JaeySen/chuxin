@@ -114,11 +114,11 @@ const TEACHER_BRIEFS = [
 ];
 
 const FEEDBACKS = [
-  { name: "Nguyễn Thị Lan Anh", course: "HSK 1-2", avatar: "🎓", text: "Mình đã học ở Sơ Tâm được 6 tháng. Thầy Trung dạy rất tận tâm, giải thích ngữ pháp dễ hiểu và luôn sửa phát âm tỉ mỉ. Bây giờ mình tự tin nói chuyện cơ bản với người Trung rồi!", rating: 5 },
-  { name: "Trần Minh Khôi", course: "HSK 3-4", avatar: "📚", text: "Hệ thống bài tập online rất hay, nhất là phần flashcard và đố vui — học mà không thấy nhàm chán. Cô Hạ dạy phát âm chuẩn lắm, mình được khen ngữ âm tốt khi thi HSK 4.", rating: 5 },
-  { name: "Phạm Thu Hương", course: "HSK 2-3", avatar: "✨", text: "Lớp online qua VOOV nhưng không khí học vẫn rất sôi nổi. Giáo viên phản hồi bài nhanh và nhiệt tình. Mình đặc biệt thích phần trò chơi Bingo từ vựng — cả lớp cùng chơi vui lắm!", rating: 5 },
-  { name: "Lê Quốc Huy", course: "HSK 4-5", avatar: "🌟", text: "Đội ngũ giáo viên toàn Thạc sĩ chuyên ngành, kiến thức vững và cách dạy rất thực tế. Sau 3 tháng mình đã có thể xem phim Trung không cần phụ đề và giao tiếp được trong công việc.", rating: 5 },
-  { name: "Nguyễn Bảo Châu", course: "HSK 1-2", avatar: "💫", text: "Mình zero tiếng Trung khi vào học, nhưng chỉ sau 2 tháng đã biết Pinyin và nhớ được hơn 300 từ vựng. Phương pháp dạy kết hợp lý thuyết và trò chơi rất hiệu quả!", rating: 5 },
+  { name: "Nguyễn Thị Lan Anh", course: "HSK 1-2", avatar: "🎓", text: "Đã học ở Sơ Tâm được 6 tháng. Thầy Trung dạy rất tận tâm, giải thích ngữ pháp dễ hiểu và luôn sửa phát âm tỉ mỉ. Bây giờ tự tin nói chuyện cơ bản với người Trung rồi!", rating: 5 },
+  { name: "Trần Minh Khôi", course: "HSK 3-4", avatar: "📚", text: "Hệ thống bài tập online rất hay, nhất là phần flashcard và đố vui — học mà không thấy nhàm chán. Cô Hạ dạy phát âm chuẩn lắm, được khen ngữ âm tốt khi thi HSK 4.", rating: 5 },
+  { name: "Phạm Thu Hương", course: "HSK 2-3", avatar: "✨", text: "Lớp online qua VOOV nhưng không khí học vẫn rất sôi nổi. Giáo viên phản hồi bài nhanh và nhiệt tình. Đặc biệt thích phần trò chơi Bingo từ vựng — cả lớp cùng chơi vui lắm!", rating: 5 },
+  { name: "Lê Quốc Huy", course: "HSK 4-5", avatar: "🌟", text: "Đội ngũ giáo viên toàn Thạc sĩ chuyên ngành, kiến thức vững và cách dạy rất thực tế. Sau 3 tháng đã có thể xem phim Trung không cần phụ đề và giao tiếp được trong công việc.", rating: 5 },
+  { name: "Nguyễn Bảo Châu", course: "HSK 1-2", avatar: "💫", text: "Bắt đầu từ con số 0 khi vào học, nhưng chỉ sau 2 tháng đã biết Pinyin và nhớ được hơn 300 từ vựng. Phương pháp dạy kết hợp lý thuyết và trò chơi rất hiệu quả!", rating: 5 },
   { name: "Võ Thanh Tùng", course: "HSK 3", avatar: "🏆", text: "Lộ trình học được thiết kế rất khoa học, từng bước từng bước. Giáo viên bản xứ của trung tâm phát âm chuẩn và thân thiện — được thực hành hội thoại với người bản ngữ là một lợi thế lớn.", rating: 5 },
 ];
 
@@ -353,7 +353,8 @@ function GuestHome() {
 
 
       <div id="gioi-thieu" style={{ paddingTop: 60 }}>
-        <h2 className="section-h" style={{ marginTop: 0 }}>Sứ mệnh</h2>
+        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Về chúng tôi</h2>
+        <h3 style={{ textAlign: "center", fontSize: "1.3rem", marginTop: "-10px", marginBottom: "30px", color: "var(--c-text-soft)" }}>Sứ mệnh</h3>
         <div className="about-mission-body">
           <div className="about-spirit">
             <div className="about-spirit-label">初心 · Chuxin</div>
@@ -422,7 +423,7 @@ function GuestHome() {
       </div>
 
       <div id="giao-vien" style={{ paddingTop: 60 }}>
-        <h2 className="section-h">Đội ngũ giảng viên</h2>
+        <h2 className="section-h" style={{ textAlign: "center" }}>Đội ngũ giáo viên</h2>
         <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
           Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
           được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
@@ -2042,7 +2043,8 @@ function TeacherHome() {
 
 
       <div id="gioi-thieu" style={{ paddingTop: 60 }}>
-        <h2 className="section-h" style={{ marginTop: 0 }}>Sứ mệnh</h2>
+        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Về chúng tôi</h2>
+        <h3 style={{ textAlign: "center", fontSize: "1.3rem", marginTop: "-10px", marginBottom: "30px", color: "var(--c-text-soft)" }}>Sứ mệnh</h3>
         <div className="about-mission-body">
           <div className="about-spirit">
             <div className="about-spirit-label">初心 · Chuxin</div>
@@ -2111,7 +2113,7 @@ function TeacherHome() {
       </div>
 
       <div id="giao-vien" style={{ paddingTop: 60 }}>
-        <h2 className="section-h">Đội ngũ giảng viên</h2>
+        <h2 className="section-h" style={{ textAlign: "center" }}>Đội ngũ giáo viên</h2>
         <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
           Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
           được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
