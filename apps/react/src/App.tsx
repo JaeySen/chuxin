@@ -35,35 +35,17 @@ export function App() {
             <p>08:00 - 22:30 (Thứ 2 - Thứ 7)</p>
             <p>08:00 - 12:00 (Chủ nhật)</p>
           </div>
-                    <div className="footer-col footer-col-course">
+                              <div className="footer-col footer-col-course">
             <h3 className="desktop-only">Khóa học</h3>
             <h3 className="mobile-only">Liên lạc với chúng tôi</h3>
-            
             <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column' }}>
               <Link to="/course/han1">HSK 1</Link>
               <Link to="/course/han2">HSK 2</Link>
               <Link to="/course/han3">HSK 3</Link>
               <Link to="/course/han4">HSK 4</Link>
             </div>
-            
-            <div className="mobile-only mobile-footer-contacts">
-              <a href={CONTACT.tiktok} target="_blank" rel="noreferrer" className="fc-pill fc-btn-tiktok fc-expanded-inline">
-                <span className="fc-text">Theo dõi trên TikTok</span>
-                <span className="fc-icon"><TikTokIcon /></span>
-              </a>
-              <a href={CONTACT.facebook} target="_blank" rel="noreferrer" className="fc-pill fc-btn-facebook fc-expanded-inline">
-                <span className="fc-text">Theo dõi trên Facebook</span>
-                <span className="fc-icon"><FacebookIcon /></span>
-              </a>
-              <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="fc-pill fc-btn-zalo fc-expanded-inline">
-                <span className="fc-text">Chat qua Zalo</span>
-                <span className="fc-icon"><ZaloIcon /></span>
-              </a>
-              <a href={`tel:${CONTACT.phone}`} className="fc-pill fc-btn-phone fc-expanded-inline">
-                <span className="fc-text">Gọi điện thoại</span>
-                <span className="fc-icon"><PhoneIcon /></span>
-              </a>
-            </div>
+            {/* The mobile inline contacts have been removed so it's empty on mobile, leaving space for the floating contacts! */}
+            <div className="mobile-only" style={{ height: '200px' }} />
           </div>
         </div>
         <div className="footer-bottom">
@@ -436,13 +418,17 @@ function ConsultModal({ close }: { close: () => void }) {
 
 // ── Floating contact bar ──────────────────────────────────────────────────────
 function FloatingContact() {
-  const [expanded, setExpanded] = useState(false);
-  const [atBottom, setAtBottom] = useState(false);
+  const [expandedClick, setExpandedClick] = useState(false);
+  const [atFooter, setAtFooter] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const isBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 120;
-      setAtBottom(isBottom);
+      // If we are near the bottom (in the footer)
+      const isFooter = window.innerHeight + window.scrollY >= document.body.offsetHeight - 350;
+      setAtFooter(isFooter);
+      if (!isFooter) {
+        setExpandedClick(false); // auto-close blur when scrolling away
+      }
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -455,19 +441,22 @@ function FloatingContact() {
     { label: "Điện thoại", href: `tel:${CONTACT.phone}`, text: "Gọi điện thoại", className: "fc-btn-phone", svg: <PhoneIcon /> },
   ];
 
+  const isExpanded = expandedClick || atFooter;
+  const showBlur = expandedClick && !atFooter;
+
   const handleMobileClick = (e: React.MouseEvent, href: string) => {
-    if (window.innerWidth <= 768 && !expanded) {
+    if (window.innerWidth <= 768 && !isExpanded) {
       e.preventDefault();
-      setExpanded(true);
+      setExpandedClick(true);
     }
   };
 
   return (
     <>
-      {expanded && (
-        <div className="fc-backdrop" onClick={() => setExpanded(false)} />
+      {showBlur && (
+        <div className="fc-backdrop" onClick={() => setExpandedClick(false)} />
       )}
-      <div className={`floating-contact ${expanded ? "fc-expanded" : ""} ${atBottom ? "fc-at-bottom" : ""}`} aria-label="Liên hệ">
+      <div className={`floating-contact ${isExpanded ? "fc-expanded" : ""} ${atFooter ? "fc-at-footer" : ""}`} aria-label="Liên hệ">
         {buttons.map((b) => (
           <a key={b.label} href={b.href} className={`fc-pill ${b.className}`}
              target={b.href.startsWith("tel:") ? undefined : "_blank"}

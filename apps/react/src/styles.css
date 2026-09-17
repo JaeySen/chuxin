@@ -3641,20 +3641,71 @@ body {
 .fc-pill:hover, .fc-pill:focus, .fc-pill:active {
   max-width: 250px;
 }
-.fc-expanded-inline {
-  max-width: 100% !important;
-  justify-content: flex-start;
-  flex-direction: row-reverse; /* icon left, text right */
-  margin-bottom: 12px;
-}
-.fc-expanded-inline .fc-text {
-  opacity: 1 !important;
-  max-width: 100% !important;
-  padding-left: 0 !important;
-  padding-right: 16px;
-}
+
+
 
 /* Mobile backdrop and expand logic */
+
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .mobile-only { display: block !important; }
+}
+@media (min-width: 769px) {
+  .desktop-only { display: block !important; }
+  .mobile-only { display: none !important; }
+}
+
+
+/* Floating Contact Fixes */
+.fc-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+/* Ensure perfect centering of the SVG inside the 48x48 icon container */
+.fc-icon svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+.fc-btn-facebook .fc-icon svg {
+  width: 26px;
+  height: 26px;
+}
+.fc-btn-tiktok .fc-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.fc-btn-zalo .fc-icon svg {
+  width: 26px;
+  height: 26px;
+}
+.fc-btn-phone .fc-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.fc-pill {
+  transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease;
+}
+/* Expanded State applies on hover OR via .fc-expanded class */
+.fc-pill:hover, .fc-pill:focus, .fc-pill:active, .floating-contact.fc-expanded .fc-pill {
+  max-width: 250px;
+}
+.fc-text {
+  padding-left: 0;
+  padding-right: 0;
+}
+.fc-pill:hover .fc-text, .fc-pill:focus .fc-text, .fc-pill:active .fc-text, .floating-contact.fc-expanded .fc-text {
+  opacity: 1;
+  padding-left: 20px;
+  padding-right: 4px;
+  max-width: 200px;
+}
+
 .fc-backdrop {
   display: none;
 }
@@ -3668,28 +3719,13 @@ body {
     z-index: 899;
   }
   .floating-contact {
-    transition: bottom 0.3s ease;
+    transition: bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   }
   .floating-contact.fc-expanded {
     z-index: 900;
   }
-  .floating-contact.fc-expanded .fc-pill {
-    max-width: 250px;
+  /* Push higher when at footer to avoid copyright text */
+  .floating-contact.fc-at-footer {
+    bottom: 90px;
   }
-  .floating-contact.fc-expanded .fc-text {
-    opacity: 1;
-    padding-left: 16px;
-    max-width: 200px;
-  }
-  .floating-contact.fc-at-bottom {
-    bottom: 80px; /* Avoid copyright */
-    opacity: 0;
-    pointer-events: none; /* Hide entirely if they prefer, or just move up. Let's hide it completely since it's now in the footer! */
-  }
-  .desktop-only { display: none !important; }
-  .mobile-only { display: block !important; }
-}
-@media (min-width: 769px) {
-  .desktop-only { display: block !important; }
-  .mobile-only { display: none !important; }
 }
