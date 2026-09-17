@@ -279,7 +279,7 @@ function GuestHome() {
         <div className="games-grid">
           {GAMES_INFO.map((g) => (
             <div key={g.title} className="game-card">
-              <div className="game-card-icon">{g.icon}</div>
+              
               {g.image && <img src={g.image} alt={g.title} className="game-card-img" />}
               <h3 className="game-card-title">{g.title}</h3>
               <p className="game-card-desc">{g.desc}</p>
@@ -346,6 +346,7 @@ function GuestHome() {
             <h3>{c.title}</h3>
             <div className="muted">{c.subtitle}</div>
             <div className="tile-bar" style={{ background: c.color }} />
+            <div className="course-view-btn" style={{ color: c.color }}>Xem chi tiết →</div>
           </Link>
         ))}
       </div>
@@ -2034,6 +2035,7 @@ function TeacherHome() {
             <h3>{c.title}</h3>
             <div className="muted">{c.subtitle}</div>
             <div className="tile-bar" style={{ background: c.color }} />
+            <div className="course-view-btn" style={{ color: c.color }}>Xem chi tiết →</div>
           </Link>
         ))}
       </div>

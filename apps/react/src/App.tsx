@@ -81,7 +81,8 @@ const PUBLIC_LINKS = [
     label: "Các khóa học",
     icon: "📚",
     sub: [
-      { to: "/course/han1-2", label: "Hán ngữ 1 & 2 (HSK 1-2)" },
+      { to: "/course/han1", label: "Hán ngữ 1 (HSK 1)" },
+      { to: "/course/han2", label: "Hán ngữ 2 (HSK 2)" },
       { to: "/course/han3", label: "Hán ngữ 3 (HSK 3)" },
       { to: "/course/han4", label: "Hán ngữ 4 (HSK 4)" },
       { to: "/course/han5", label: "Hán ngữ 5 (HSK 5)" },
@@ -191,6 +192,7 @@ function GamesDropdown() {
 
 function Header() {
   const [activeMenu, setActiveMenu] = useState(0);
+  const [activeMobileSub, setActiveMobileSub] = useState<typeof PUBLIC_LINKS[number] | null>(null);
   const [hidden, setHidden] = useState(false);
   const { user, role, logout } = useAuth();
   const [consultOpen, setConsultOpen] = useState(false);
@@ -204,6 +206,7 @@ function Header() {
       const currentY = window.scrollY;
       if (currentY > 500 && currentY > lastY) {
         setHidden(true);
+        setMenuOpen(false);
       } else {
         setHidden(false);
       }
@@ -330,18 +333,43 @@ function Header() {
                   <span className="nav-tile-label">Bài tập tương tác</span>
                 </Link>
               </>
-            ) : role === "student" ? (
+                        ) : role === "student" ? (
               <Link to="/" className="nav-tile">
                 <span className="nav-tile-icon">🏫</span>
                 <span className="nav-tile-label">{user?.classes?.[0]?.name ?? "Lớp học"}</span>
               </Link>
+            ) : activeMobileSub ? (
+              <div className="mobile-sub-menu slide-in-right" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <button className="nav-tile" onClick={() => setActiveMobileSub(null)} style={{ background: "rgba(0,0,0,0.05)" }}>
+                  <span className="nav-tile-icon">←</span>
+                  <span className="nav-tile-label">Quay lại</span>
+                </button>
+                <div style={{ padding: "10px 16px", fontWeight: "bold", color: "var(--c-red-dark)" }}>{activeMobileSub.label}</div>
+                {activeMobileSub.sub?.map((s) => (
+                  <Link key={s.to} to={s.to} className="nav-tile" onClick={() => { setMenuOpen(false); setActiveMobileSub(null); }}>
+                    <span className="nav-tile-label">{s.label}</span>
+                  </Link>
+                ))}
+              </div>
             ) : (
-              mobileTiles.map((l) => (
-                <Link key={l.to} to={l.to} className="nav-tile">
-                  <span className="nav-tile-icon">{l.icon}</span>
-                  <span className="nav-tile-label">{l.label}</span>
-                </Link>
-              ))
+              <div className="mobile-main-menu" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {PUBLIC_LINKS.map((l) => (
+                  <button key={l.to} className="nav-tile" onClick={() => l.sub ? setActiveMobileSub(l) : (setMenuOpen(false), nav(l.to))}>
+                    <span className="nav-tile-icon">{l.icon}</span>
+                    <span className="nav-tile-label">{l.label}</span>
+                    {l.sub && <span className="nav-tile-icon" style={{ marginLeft: "auto", background: "none" }}>›</span>}
+                  </button>
+                ))}
+                
+                <div className="mobile-contact-section" style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+                  <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="btn btn-consult" style={{ width: "100%", justifyContent: "center" }}>
+                    Chat qua Zalo
+                  </a>
+                  <a href={`tel:${CONTACT.phone}`} className="btn btn-primary" style={{ width: "100%", justifyContent: "center", textDecoration: "none" }}>
+                    Gọi: {CONTACT.phone}
+                  </a>
+                </div>
+              </div>
             )}
           </div>
         </nav>
@@ -398,18 +426,19 @@ function ConsultModal({ close }: { close: () => void }) {
 // ── Floating contact bar ──────────────────────────────────────────────────────
 function FloatingContact() {
   const buttons = [
-    { label: "TikTok",    href: CONTACT.tiktok,   className: "fc-btn--tiktok",    svg: <TikTokIcon /> },
-    { label: "Facebook",  href: CONTACT.facebook,  className: "fc-btn--facebook",  svg: <FacebookIcon /> },
-    { label: "Zalo",      href: CONTACT.zalo,      className: "fc-btn--zalo",      svg: <ZaloIcon /> },
-    { label: "Điện thoại", href: `tel:${CONTACT.phone}`, className: "fc-btn--phone", svg: <PhoneIcon /> },
+    { label: "TikTok",    href: CONTACT.tiktok,   text: "Tiktok",    svg: <TikTokIcon /> },
+    { label: "Facebook",  href: CONTACT.facebook,  text: "Facebook",  svg: <FacebookIcon /> },
+    { label: "Zalo",      href: CONTACT.zalo,      text: "Zalo",      svg: <ZaloIcon /> },
+    { label: "Điện thoại", href: `tel:${CONTACT.phone}`, text: "Gọi điện", svg: <PhoneIcon /> },
   ];
   return (
     <div className="floating-contact" aria-label="Liên hệ">
       {buttons.map((b) => (
-        <a key={b.label} href={b.href} className={`fc-btn ${b.className}`}
+        <a key={b.label} href={b.href} className="fc-pill"
            target={b.href.startsWith("tel:") ? undefined : "_blank"}
            rel="noopener noreferrer" aria-label={b.label}>
-          {b.svg}
+          <span className="fc-text">{b.text}</span>
+          <span className="fc-icon">{b.svg}</span>
         </a>
       ))}
     </div>

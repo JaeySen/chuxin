@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CourseIdSchema = z.enum(["han1-2", "han3", "han4", "han5", "han6", "thuong-mai", "tre-em"]);
+export const CourseIdSchema = z.enum(["han1", "han2", "han3", "han4", "han5", "han6", "thuong-mai", "tre-em"]);
 export type CourseId = z.infer<typeof CourseIdSchema>;
 
 export type CourseStatus = "ongoing" | "opening-soon" | "enrolling" | "full" | "coming-soon";
@@ -18,7 +18,8 @@ export const CourseSchema = z.object({
 export type Course = z.infer<typeof CourseSchema>;
 
 export const COURSES: Course[] = [
-  { id: "han1-2", title: "Hán ngữ 1 & 2", subtitle: "HSK 1-2 — Khởi đầu & Tiếp nối", order: 1, color: "#c64a1f", status: "ongoing", lessonIds: [], brochureUrl: "/brochure-hsk1-2.pdf" },
+  { id: "han1", title: "Hán ngữ 1", subtitle: "HSK 1 — Khởi đầu", order: 1, color: "#c64a1f", status: "ongoing", lessonIds: [], brochureUrl: "/brochure-hsk1-2.pdf" },
+  { id: "han2", title: "Hán ngữ 2", subtitle: "HSK 2 — Tiếp nối", order: 2, color: "#d97a1b", status: "ongoing", lessonIds: [], brochureUrl: "/brochure-hsk1-2.pdf" },
   { id: "han3", title: "Hán ngữ 3", subtitle: "HSK 3 — Mở rộng vốn từ",         order: 3, color: "#d97a1b", status: "enrolling",    lessonIds: [] },
   { id: "han4", title: "Hán ngữ 4", subtitle: "HSK 4 — Đọc · Nói · Tranh luận", order: 4, color: "#e6a316", status: "opening-soon", lessonIds: [] },
   { id: "han5", title: "Hán ngữ 5", subtitle: "HSK 5 — Nâng cao",               order: 5, color: "#ffc60b", status: "coming-soon",  lessonIds: [] },
