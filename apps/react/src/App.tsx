@@ -297,9 +297,7 @@ function Header() {
       {/* Mobile nav drawer — absolute overlay, doesn't push content */}
       {menuOpen && (
         <div className="mobile-drawer">
-          <div className="mobile-drawer-header" style={{ justifyContent: 'flex-end', borderBottom: 'none' }}>
-            <button className="mobile-drawer-close" onClick={() => setMenuOpen(false)}>✕</button>
-          </div>
+
           
           <div className="mobile-drawer-body" style={{ padding: '0 20px 20px' }}>
             <div className="mobile-drawer-list">
