@@ -3511,49 +3511,7 @@ body {
   z-index: 900;
   align-items: flex-end;
 }
-.fc-pill {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  background: var(--c-red-dark);
-  color: white !important;
-  border-radius: 999px;
-  height: 48px;
-  text-decoration: none !important;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: background 0.2s, max-width 0.4s ease;
-  max-width: 48px;
-}
-.fc-pill:hover, .fc-pill:focus, .fc-pill:active {
-  max-width: 250px;
-  background: var(--c-red);
-}
-.fc-text {
-  white-space: nowrap;
-  font-weight: 600;
-  opacity: 0;
-  max-width: 0;
-  transition: opacity 0.3s ease, padding 0.3s ease;
-  font-size: 0.95rem;
-}
-.fc-pill:hover .fc-text, .fc-pill:focus .fc-text, .fc-pill:active .fc-text {
-  opacity: 1;
-  padding-left: 16px;
-  max-width: 200px;
-}
-.fc-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.fc-icon svg {
-  width: 24px;
-  height: 24px;
-}
+
 
 /* Course Card View Button */
 .course-view-btn {
@@ -3658,4 +3616,80 @@ body {
   .sotam-subnav-bar {
     display: none !important; /* Hide sub-navbar on mobile */
   }
+}
+
+
+/* Floating Contact Brand Colors */
+.fc-pill {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: white !important;
+  border-radius: 999px;
+  height: 48px;
+  text-decoration: none !important;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: max-width 0.4s ease, transform 0.2s ease;
+  max-width: 48px;
+}
+.fc-btn-facebook { background: #1877F2; }
+.fc-btn-tiktok { background: #000000; }
+.fc-btn-zalo { background: #0068FF; }
+.fc-btn-phone { background: #25D366; }
+
+.fc-pill:hover, .fc-pill:focus, .fc-pill:active {
+  max-width: 250px;
+}
+.fc-expanded-inline {
+  max-width: 100% !important;
+  justify-content: flex-start;
+  flex-direction: row-reverse; /* icon left, text right */
+  margin-bottom: 12px;
+}
+.fc-expanded-inline .fc-text {
+  opacity: 1 !important;
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 16px;
+}
+
+/* Mobile backdrop and expand logic */
+.fc-backdrop {
+  display: none;
+}
+@media (max-width: 768px) {
+  .fc-backdrop {
+    display: block;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    backdrop-filter: blur(5px);
+    background: rgba(0,0,0,0.3);
+    z-index: 899;
+  }
+  .floating-contact {
+    transition: bottom 0.3s ease;
+  }
+  .floating-contact.fc-expanded {
+    z-index: 900;
+  }
+  .floating-contact.fc-expanded .fc-pill {
+    max-width: 250px;
+  }
+  .floating-contact.fc-expanded .fc-text {
+    opacity: 1;
+    padding-left: 16px;
+    max-width: 200px;
+  }
+  .floating-contact.fc-at-bottom {
+    bottom: 80px; /* Avoid copyright */
+    opacity: 0;
+    pointer-events: none; /* Hide entirely if they prefer, or just move up. Let's hide it completely since it's now in the footer! */
+  }
+  .desktop-only { display: none !important; }
+  .mobile-only { display: block !important; }
+}
+@media (min-width: 769px) {
+  .desktop-only { display: block !important; }
+  .mobile-only { display: none !important; }
 }
