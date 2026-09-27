@@ -175,22 +175,28 @@ const FEEDBACKS = [
 
 const GAMES_INFO = [
   {
-    icon: "🎯",
     image: "https://placehold.co/400x250/a71e22/FFF?text=Bingo",
-    title: "Bingo từ vựng",
-    desc: "Giáo viên đọc từ, học viên đánh dấu ô tương ứng trên bảng Bingo cá nhân. Trò chơi rèn kỹ năng nghe — nhận diện từ nhanh trong môi trường áp lực vui vẻ, buộc học viên phải tập trung liên tục suốt tiết học.",
+    title: "Bingo",
   },
   {
-    icon: "🔍",
-    image: "https://placehold.co/400x250/ffc60b/FFF?text=Word+Search",
-    title: "Tìm từ (Word Search)",
-    desc: "Học viên tìm và khoanh từ tiếng Trung ẩn trong ô chữ. Hoạt động củng cố nhận diện mặt chữ Hán, phân biệt nét tương đồng và ghi nhớ hình dạng ký tự — đặc biệt hiệu quả cho người mới bắt đầu.",
+    image: "https://placehold.co/400x250/e55c2f/FFF?text=Ghep+the+bai",
+    title: "Ghép thẻ bài",
   },
   {
-    icon: "🔊",
-    image: "https://placehold.co/400x250/2563eb/FFF?text=Pinyin",
-    title: "Luyện Pinyin",
-    desc: "Bài tập tương tác chọn thanh điệu và âm vần cho từng từ. Phản hồi tức thì giúp học viên sửa lỗi phát âm ngay lập tức, xây dựng nền tảng ngữ âm vững chắc trước khi chuyển sang hội thoại.",
+    image: "https://placehold.co/400x250/c0392b/FFF?text=Tiep+suc+noi+tu",
+    title: "Tiếp sức nối từ",
+  },
+  {
+    image: "https://placehold.co/400x250/8e1a1a/FFF?text=Chiec+hop+bi+mat",
+    title: "Chiếc hộp bí mật",
+  },
+  {
+    image: "https://placehold.co/400x250/d35400/FFF?text=Sap+xep+cau",
+    title: "Sắp xếp trật tự câu",
+  },
+  {
+    image: "https://placehold.co/400x250/c0392b/FFF?text=Tim+tu+dap+bang",
+    title: "Tìm từ đập bảng",
   },
 ];
 
@@ -335,17 +341,15 @@ function GuestHome() {
       <section className="games-section">
         <h2 className="section-h">Học qua trò chơi — hiệu quả hơn bạn nghĩ</h2>
         <p className="games-intro">
-          Nghiên cứu giáo dục cho thấy học qua trò chơi giúp ghi nhớ từ vựng lâu hơn 40% so với
-          phương pháp truyền thống. Tại Sơ Tâm, trò chơi không phải phần thưởng — chúng
-          <em> là</em> bài học.
+          Nhiều nghiên cứu giáo dục cho thấy hoạt động học tập qua trò chơi có thể tăng cường sự hứng thú và khả năng ghi nhớ của người học.
+          <br /><br />
+          Tại Sơ Tâm, trò chơi không phải là phần thưởng sau giờ học — mà chính là một phần của bài học.
         </p>
         <div className="games-grid">
           {GAMES_INFO.map((g) => (
             <div key={g.title} className="game-card">
-              
               {g.image && <img src={g.image} alt={g.title} className="game-card-img" />}
               <h3 className="game-card-title">{g.title}</h3>
-              <p className="game-card-desc">{g.desc}</p>
             </div>
           ))}
         </div>

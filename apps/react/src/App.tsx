@@ -79,8 +79,8 @@ const PUBLIC_LINKS = [
       { to: "/course/han4", label: "HSK 4" },
       { to: "/course/han5", label: "HSK 5" },
       { to: "/course/han6", label: "HSK 6" },
-      { to: "/course/thuong-mai", label: "Thương mại" },
-      { to: "/course/tre-em", label: "Trẻ em" },
+      { to: "/course/thuong-mai", label: "Tiếng Trung Thương mại" },
+      { to: "/course/tre-em", label: "Tiếng Trung Trẻ em" },
     ],
   },
   {
@@ -332,7 +332,13 @@ function Header() {
       <div className="sotam-subnav-bar">
         <div key={activeMenu} className="subnav-slide-in">
           {PUBLIC_LINKS[activeMenu].sub.length > 0 && PUBLIC_LINKS[activeMenu].sub.map((s) => (
-            <Link key={s.to} to={s.to} className="subnav-item">{s.label}</Link>
+            s.to.startsWith("/#")
+              ? <a key={s.to} href={s.to} className="subnav-item" onClick={(e) => {
+                  e.preventDefault();
+                  const id = s.to.replace("/#", "");
+                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                }}>{s.label}</a>
+              : <Link key={s.to} to={s.to} className="subnav-item">{s.label}</Link>
           ))}
         </div>
       </div>
