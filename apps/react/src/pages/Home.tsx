@@ -87,6 +87,57 @@ function TeacherCoverflow() {
   );
 }
 
+
+function OpeningCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0-indexed
+  const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+  const dayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+  
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = now.getDate();
+  
+  // Sample opening dates (highlighted)
+  const openingDates: Record<number, string> = {
+    5: "HSK 1 — 19:00",
+    12: "HSK 2 — 19:00",
+    15: "HSK 3 — 18:30",
+    20: "HSK 1 — 19:00",
+    26: "HSK 4 — 18:30",
+  };
+
+  const cells: React.ReactNode[] = [];
+  for (let i = 0; i < firstDay; i++) {
+    cells.push(<div key={`e${i}`} className="cal-cell cal-cell--empty" />);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today;
+    const isOpening = d in openingDates;
+    cells.push(
+      <div key={d} className={`cal-cell ${isToday ? "cal-cell--today" : ""} ${isOpening ? "cal-cell--opening" : ""}`}>
+        <span className="cal-date">{d}</span>
+        {isOpening && <span className="cal-event">{openingDates[d]}</span>}
+      </div>
+    );
+  }
+
+  return (
+    <div className="opening-calendar">
+      <div className="cal-header">
+        <h3>{monthNames[month]} {year}</h3>
+      </div>
+      <div className="cal-weekdays">
+        {dayNames.map(d => <div key={d} className="cal-weekday">{d}</div>)}
+      </div>
+      <div className="cal-grid">
+        {cells}
+      </div>
+    </div>
+  );
+}
+
 export function Home() {
   const { role, loading } = useAuth();
 
@@ -255,14 +306,26 @@ function GuestHome() {
         <div className="hero-copy">
           <h1>Bắt đầu từ đam mê, <span className="hero-accent" style={{ display: "inline-block", whiteSpace: "nowrap" }}>vươn xa cùng Hán ngữ</span></h1>
           <p>
-            Các khóa học được xây dựng chuẩn hoá theo phương pháp kết hợp lý thuyết và thực hành,
-            cùng hệ thống bài học và trò chơi tương tác như Flashcard, đố vui, ghép cặp đến luyện nghe – nói,
-            mỗi hoạt động đều được thiết kế, chọn lọc và kiểm duyệt kỹ càng bởi đội ngũ giáo viên
-            là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế.
+            Các khóa học tại Sơ Tâm được xây dựng bài bản, kết hợp lý thuyết và thực hành,
+            giúp học viên ghi nhớ kiến thức hiệu quả và từng bước chinh phục mục tiêu tiếng Trung của mình.
           </p>
-          <div className="hero-cta">
-            <a href="#courses" className="btn btn-primary" onClick={scrollToCourses}>Xem các khoá học</a>
-            <Link to="/ve-chung-toi" className="btn btn-secondary">Về chúng tôi</Link>
+          <div className="hero-highlights">
+            <div className="hero-highlight-item">
+              <span className="hero-highlight-icon">🚩</span>
+              <span>Lộ trình học rõ ràng</span>
+            </div>
+            <div className="hero-highlight-item">
+              <span className="hero-highlight-icon">📖</span>
+              <span>Giáo trình HSK 3.0</span>
+            </div>
+            <div className="hero-highlight-item">
+              <span className="hero-highlight-icon">🎓</span>
+              <span>Giáo viên là NCS Tiến sĩ, Thạc sĩ</span>
+            </div>
+            <div className="hero-highlight-item">
+              <span className="hero-highlight-icon">⭐</span>
+              <span>Chú trọng thực hành, ứng dụng thực tế</span>
+            </div>
           </div>
         </div>
         <HeroTestimonials />
@@ -293,7 +356,6 @@ function GuestHome() {
         <div className="portal-grid">
           {/* Student card */}
           <div className="portal-card portal-card--student">
-            <div className="portal-card-icon">📚</div>
             <h3 className="portal-card-title">Bài tập trực tuyến</h3>
             <p className="portal-card-desc">
               Học viên đăng nhập để truy cập bài tập, theo dõi tiến trình học tập
@@ -309,7 +371,6 @@ function GuestHome() {
 
           {/* Teacher card */}
           <div className="portal-card portal-card--teacher">
-            <div className="portal-card-icon">🏫</div>
             <h3 className="portal-card-title">Tham gia với chúng tôi</h3>
             <p className="portal-card-desc">
               Giáo viên đăng nhập để quản lý lớp học, tạo bài tập và theo dõi
@@ -353,8 +414,7 @@ function GuestHome() {
 
 
       <div id="gioi-thieu" style={{ paddingTop: 60 }}>
-        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Về chúng tôi</h2>
-        <h3 style={{ textAlign: "center", fontSize: "1.3rem", marginTop: "-10px", marginBottom: "30px", color: "var(--c-text-soft)" }}>Sứ mệnh</h3>
+        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Giới thiệu trung tâm</h2>
         <div className="about-mission-body">
           <div className="about-spirit">
             <div className="about-spirit-label">初心 · Chuxin</div>
@@ -431,7 +491,17 @@ function GuestHome() {
         <TeacherCoverflow />
       </div>
 
-      <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60 }}>
+
+      {/* Lịch khai giảng */}
+      <div id="lich-khai-giang" style={{ paddingTop: 60, paddingBottom: 60 }}>
+        <h2 className="section-h" style={{ textAlign: "center" }}>Lịch khai giảng</h2>
+        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 30, textAlign: "center" }}>
+          Lịch dự kiến khai giảng các khóa học trong tháng
+        </p>
+        <OpeningCalendar />
+      </div>
+
+      <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60, display: "none" }}>
         <h2 className="section-h">Học viên nói gì về Sơ Tâm?</h2>
         <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
           Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.
@@ -2043,8 +2113,7 @@ function TeacherHome() {
 
 
       <div id="gioi-thieu" style={{ paddingTop: 60 }}>
-        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Về chúng tôi</h2>
-        <h3 style={{ textAlign: "center", fontSize: "1.3rem", marginTop: "-10px", marginBottom: "30px", color: "var(--c-text-soft)" }}>Sứ mệnh</h3>
+        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Giới thiệu trung tâm</h2>
         <div className="about-mission-body">
           <div className="about-spirit">
             <div className="about-spirit-label">初心 · Chuxin</div>
@@ -2121,7 +2190,17 @@ function TeacherHome() {
         <TeacherCoverflow />
       </div>
 
-      <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60 }}>
+
+      {/* Lịch khai giảng */}
+      <div id="lich-khai-giang" style={{ paddingTop: 60, paddingBottom: 60 }}>
+        <h2 className="section-h" style={{ textAlign: "center" }}>Lịch khai giảng</h2>
+        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 30, textAlign: "center" }}>
+          Lịch dự kiến khai giảng các khóa học trong tháng
+        </p>
+        <OpeningCalendar />
+      </div>
+
+      <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60, display: "none" }}>
         <h2 className="section-h">Học viên nói gì về Sơ Tâm?</h2>
         <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
           Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.

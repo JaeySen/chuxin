@@ -62,32 +62,37 @@ const PUBLIC_LINKS = [
   {
     to: "/#gioi-thieu",
     label: "Về chúng tôi",
-    icon: "🏫",
+    icon: "",
     sub: [
       { to: "/#gioi-thieu", label: "Giới thiệu trung tâm" },
-      { to: "/#giao-vien",  label: "Giới thiệu giáo viên" },
-      { to: "/#feedback",   label: "Feedback của học viên" },
+      { to: "/#giao-vien",  label: "Đội ngũ giáo viên" },
     ],
   },
   {
     to: "/#courses",
-    label: "Các khóa học",
-    icon: "📚",
+    label: "Khóa học",
+    icon: "",
     sub: [
-      { to: "/course/han1", label: "Hán ngữ 1 (HSK 1)" },
-      { to: "/course/han2", label: "Hán ngữ 2 (HSK 2)" },
-      { to: "/course/han3", label: "Hán ngữ 3 (HSK 3)" },
-      { to: "/course/han4", label: "Hán ngữ 4 (HSK 4)" },
-      { to: "/course/han5", label: "Hán ngữ 5 (HSK 5)" },
-      { to: "/course/han6", label: "Hán ngữ 6 (HSK 6)" },
-      { to: "/course/thuong-mai", label: "Tiếng Trung Thương mại" },
-      { to: "/course/tre-em", label: "Tiếng Trung Trẻ em" },
+      { to: "/course/han1", label: "HSK 1" },
+      { to: "/course/han2", label: "HSK 2" },
+      { to: "/course/han3", label: "HSK 3" },
+      { to: "/course/han4", label: "HSK 4" },
+      { to: "/course/han5", label: "HSK 5" },
+      { to: "/course/han6", label: "HSK 6" },
+      { to: "/course/thuong-mai", label: "Thương mại" },
+      { to: "/course/tre-em", label: "Trẻ em" },
     ],
+  },
+  {
+    to: "/#lich-khai-giang",
+    label: "Lịch khai giảng",
+    icon: "",
+    sub: [],
   },
   {
     to: "/thu-vien",
     label: "Thư viện",
-    icon: "📄",
+    icon: "",
     sub: [
       { to: "/thu-vien?cap=so",    label: "Sơ cấp" },
       { to: "/thu-vien?cap=trung", label: "Trung cấp" },
@@ -259,7 +264,7 @@ function Header() {
               {PUBLIC_LINKS.map((l, i) => (
                 <div key={l.to} onMouseEnter={() => setActiveMenu(i)}>
                   <Link to={l.to} className="nav-dropdown-btn" style={{ background: activeMenu === i ? 'rgba(0,0,0,0.05)' : '' }}>
-                    {l.icon} {l.label}
+                    {l.label}
                   </Link>
                 </div>
               ))}
@@ -305,7 +310,10 @@ function Header() {
                 Về chúng tôi
               </a>
               <a href="/#courses" className="mobile-list-item" onClick={() => setMenuOpen(false)}>
-                Các khóa học
+                Khóa học
+              </a>
+              <a href="/#lich-khai-giang" className="mobile-list-item" onClick={() => setMenuOpen(false)}>
+                Lịch khai giảng
               </a>
               <a href={PUBLIC_LINKS[2].to} target="_blank" rel="noreferrer" className="mobile-list-item" onClick={() => setMenuOpen(false)}>
                 Thư viện
@@ -323,7 +331,7 @@ function Header() {
       {/* Sub-navbar with Slide Animation */}
       <div className="sotam-subnav-bar">
         <div key={activeMenu} className="subnav-slide-in">
-          {PUBLIC_LINKS[activeMenu].sub.map((s) => (
+          {PUBLIC_LINKS[activeMenu].sub.length > 0 && PUBLIC_LINKS[activeMenu].sub.map((s) => (
             <Link key={s.to} to={s.to} className="subnav-item">{s.label}</Link>
           ))}
         </div>

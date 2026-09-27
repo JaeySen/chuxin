@@ -3778,3 +3778,106 @@ body {
   border-bottom: none;
   font-weight: 600;
 }
+
+/* Hero Highlights (2x2 pill grid) */
+.hero-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+.hero-highlight-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.hero-highlight-icon {
+  font-size: 1.2rem;
+  color: var(--c-red);
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .hero-highlights {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Opening Calendar */
+.opening-calendar {
+  max-width: 700px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 24px;
+}
+.cal-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.cal-header h3 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--c-text-soft);
+  margin-bottom: 8px;
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-cell {
+  min-height: 56px;
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+}
+.cal-cell--empty {
+  background: transparent;
+}
+.cal-date {
+  font-weight: 600;
+}
+.cal-cell--today {
+  background: #f0f0f0;
+  border: 2px solid var(--c-red);
+  border-radius: 8px;
+}
+.cal-cell--today .cal-date {
+  color: var(--c-red);
+}
+.cal-cell--opening {
+  background: #fff0f0;
+}
+.cal-cell--opening .cal-date {
+  color: var(--c-red);
+  font-weight: 700;
+}
+.cal-event {
+  font-size: 0.65rem;
+  color: var(--c-red);
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+@media (max-width: 768px) {
+  .opening-calendar { padding: 12px; }
+  .cal-cell { min-height: 48px; padding: 4px 2px; }
+  .cal-event { font-size: 0.55rem; }
+}
