@@ -10,7 +10,7 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", fontSize: 14, color: "#888" }}>Đang tải…</div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== "admin") return <div style={{ padding: 20 }}>Truy cập bị từ chối. Chỉ dành cho admin.</div>;
+  if (user.email !== "admin@sotam.test") return <div style={{ padding: 20 }}>Truy cập bị từ chối. Chỉ email admin@sotam.test mới có quyền truy cập cổng này.</div>;
   return <>{children}</>;
 }
 

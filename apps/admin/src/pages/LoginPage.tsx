@@ -12,6 +12,10 @@ export function LoginPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (email !== "admin@sotam.test") {
+      setErr("Truy cập bị từ chối. Chỉ admin@sotam.test mới được phép đăng nhập.");
+      return;
+    }
     setBusy(true); setErr(null);
     try {
       await signIn(email, password);

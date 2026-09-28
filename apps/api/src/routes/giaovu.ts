@@ -55,12 +55,7 @@ export async function giaoVuRoutes(app: FastifyInstance) {
     const parsed = LoginBody.safeParse(req.body);
     if (!parsed.success) return reply.status(400).send({ error: "Invalid body" });
 
-    if (!isAllowedEmail(parsed.data.email)) {
-      return reply.status(403).send({
-        error: "DOMAIN_RESTRICTED",
-        message: "Chỉ tài khoản nội bộ mới được truy cập cổng giáo vụ.",
-      });
-    }
+    // Removed domain restriction to allow students to log in.
 
     let user;
     try {
