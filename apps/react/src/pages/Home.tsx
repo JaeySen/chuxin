@@ -329,12 +329,14 @@ function GuestHome() {
               Làm bài trắc nghiệm nhiều lần, xem đáp án ngay sau khi nộp.<br />
               Theo dõi tiến trình và nhận phản hồi từ giáo viên.
             </p>
-            <button
+            <a
               className="btn btn-primary landing-section-btn"
-              onClick={() => setLoginTarget("student")}
+              href="https://thuchanh.hanngusotam.com"
+              target="_blank"
+              rel="noreferrer"
             >
               Đăng nhập học viên →
-            </button>
+            </a>
           </div>
           
         </div>
