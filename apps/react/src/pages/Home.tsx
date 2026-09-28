@@ -32,9 +32,9 @@ const OLD_EXERCISES = [
 
 function TeacherCoverflow() {
   return (
-    <div className="teacher-strip-wrapper">
+    <div className="teacher-strip-wrapper full-bleed">
       <div className="teacher-strip-track">
-        {[...TEACHER_BRIEFS, ...TEACHER_BRIEFS].map((t, idx) => (
+        {[...TEACHER_BRIEFS, ...TEACHER_BRIEFS, ...TEACHER_BRIEFS].map((t, idx) => (
           <div key={idx} className="teacher-strip-card">
             <img src={t.file} alt={t.name} className="teacher-strip-img" />
           </div>
@@ -262,7 +262,7 @@ function GuestHome() {
       }} />
 
       {/* Hero — Jumbotron banner */}
-      <section className="jumbotron-hero">
+      <section className="jumbotron-hero full-bleed">
       <section className="hero">
         <div className="hero-copy">
           <h1>Bắt đầu từ đam mê, <span className="hero-accent" style={{ display: "inline-block", whiteSpace: "nowrap" }}>vươn xa cùng Hán ngữ</span></h1>
@@ -337,28 +337,30 @@ function GuestHome() {
         ))}
       </div>
 
-      {/* Bài tập trực tuyến — below courses */}
-      <section className="portal-section portal-section--student-only" style={{ marginTop: 40 }}>
-        <div className="portal-card portal-card--student portal-card--wide">
-          <div className="portal-card-icon-lg">📚</div>
-          <div className="portal-card-body">
-            <h3 className="portal-card-title">Bài tập trực tuyến</h3>
-            <p className="portal-card-desc">
-              Làm bài trắc nghiệm nhiều lần, xem đáp án ngay sau khi nộp. Theo dõi tiến trình và nhận phản hồi từ giáo viên.
+      {/* Bài tập trực tuyến — landing section */}
+      <section className="landing-section landing-section--student full-bleed">
+        <div className="landing-section-inner">
+          <div className="landing-section-text">
+            <div className="landing-section-eyebrow">Dành cho học viên</div>
+            <h2 className="landing-section-title">Bài tập trực tuyến</h2>
+            <p className="landing-section-desc">
+              Làm bài trắc nghiệm nhiều lần, xem đáp án ngay sau khi nộp.<br />
+              Theo dõi tiến trình và nhận phản hồi từ giáo viên.
             </p>
             <button
-              className="btn btn-primary portal-card-btn"
+              className="btn btn-primary landing-section-btn"
               onClick={() => setLoginTarget("student")}
             >
-              Đăng nhập học viên
+              Đăng nhập học viên →
             </button>
           </div>
+          <div className="landing-section-art">📚</div>
         </div>
       </section>
 
 
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
-        <div className="jumbotron-section">
+        <div className="jumbotron-section full-bleed">
           <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
           <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
         </div>
@@ -439,20 +441,22 @@ function GuestHome() {
         <TeacherCoverflow />
       </div>
 
-      {/* Tham gia với chúng tôi — after teacher section */}
-      <section className="portal-section portal-section--teacher-only" style={{ marginTop: 40 }}>
-        <div className="portal-card portal-card--teacher portal-card--wide">
-          <div className="portal-card-icon-lg">🏫</div>
-          <div className="portal-card-body">
-            <h3 className="portal-card-title">Tham gia với chúng tôi</h3>
-            <p className="portal-card-desc">
-              Giáo viên đăng nhập để quản lý lớp, tạo bài tập và theo dõi kết quả học viên.
+      {/* Tham gia với chúng tôi — landing section */}
+      <section className="landing-section landing-section--teacher full-bleed">
+        <div className="landing-section-inner landing-section-inner--reverse">
+          <div className="landing-section-art">🏫</div>
+          <div className="landing-section-text">
+            <div className="landing-section-eyebrow">Dành cho giáo viên</div>
+            <h2 className="landing-section-title">Tham gia với chúng tôi</h2>
+            <p className="landing-section-desc">
+              Quản lý lớp học, tạo bài tập và theo dõi<br />
+              kết quả học viên trên một nền tảng duy nhất.
             </p>
             <button
-              className="btn btn-secondary portal-card-btn"
+              className="btn btn-secondary landing-section-btn"
               onClick={() => setLoginTarget("teacher")}
             >
-              Đăng nhập giáo viên
+              Đăng nhập giáo viên →
             </button>
           </div>
         </div>
@@ -2079,7 +2083,7 @@ function TeacherHome() {
 
 
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
-        <div className="jumbotron-section">
+        <div className="jumbotron-section full-bleed">
           <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
           <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
         </div>

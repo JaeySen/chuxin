@@ -1,3 +1,14 @@
+
+/* Full-bleed utility: escapes padded container to 100vw */
+.full-bleed {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
 :root {
   /* Brand: red primary, yellow secondary */
   --c-red: #a71e22;
@@ -3915,8 +3926,14 @@ body {
 /* ── Jumbotron banners ─────────────────────────────────────── */
 .jumbotron-hero {
   background: linear-gradient(135deg, var(--c-red-dark) 0%, var(--c-red) 100%);
-  margin: -12px -16px 0;
-  padding: 0 16px;
+  padding: 0;
+  overflow: hidden;
+}
+.jumbotron-hero .container,
+.jumbotron-hero > .hero {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 .jumbotron-hero .hero {
   color: white;
@@ -3933,8 +3950,7 @@ body {
 
 .jumbotron-section {
   background: linear-gradient(135deg, var(--c-red-dark) 0%, var(--c-red) 100%);
-  margin: 0 -16px;
-  padding: 48px 24px 40px;
+  padding: 56px 24px 48px;
   text-align: center;
   color: white;
 }
@@ -3980,31 +3996,30 @@ body {
 
 /* ── Teacher strip (full-width scroll) ─────────────────────── */
 .teacher-strip-wrapper {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
   overflow: hidden;
-  padding: 12px 0;
+  padding: 16px 0;
 }
 .teacher-strip-track {
   display: flex;
-  gap: 16px;
+  gap: 24px;
   width: max-content;
-  animation: teacherScroll 20s linear infinite;
+  animation: teacherScroll 24s linear infinite;
 }
 .teacher-strip-wrapper:hover .teacher-strip-track {
   animation-play-state: paused;
 }
 @keyframes teacherScroll {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(calc(-100% / 3)); }
 }
 .teacher-strip-card {
   flex-shrink: 0;
-  width: 260px;
-  height: 340px;
+  /* 3 cards visible: (100vw - 2*24px gap) / 3 */
+  width: calc((100vw - 48px) / 3);
+  height: 420px;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
 }
 .teacher-strip-img {
   width: 100%;
@@ -4014,7 +4029,10 @@ body {
   display: block;
 }
 @media (max-width: 768px) {
-  .teacher-strip-card { width: 200px; height: 260px; }
+  .teacher-strip-card {
+    width: calc((100vw - 24px) / 2);
+    height: 300px;
+  }
 }
 
 /* ── Lịch khai giảng card grid ─────────────────────────────── */
@@ -4083,4 +4101,71 @@ body {
   color: var(--c-text);
   font-weight: 500;
   font-size: 0.95rem;
+}
+
+
+/* ── Landing sections (Bài tập / Tham gia) ─────────────────── */
+.landing-section {
+  padding: 64px 0;
+}
+.landing-section--student {
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.landing-section--teacher {
+  background: #fff;
+}
+.landing-section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+.landing-section-inner--reverse {
+  flex-direction: row-reverse;
+}
+.landing-section-text { flex: 1; }
+.landing-section-art {
+  font-size: 7rem;
+  flex-shrink: 0;
+  line-height: 1;
+  opacity: 0.9;
+}
+.landing-section-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-red);
+  margin-bottom: 10px;
+}
+.landing-section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 14px;
+  color: var(--c-text);
+  line-height: 1.2;
+}
+.landing-section-desc {
+  font-size: 1.05rem;
+  color: var(--c-text-soft);
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+.landing-section-btn {
+  min-width: 200px;
+}
+@media (max-width: 768px) {
+  .landing-section-inner,
+  .landing-section-inner--reverse {
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+  }
+  .landing-section-art { font-size: 4rem; }
+  .landing-section-title { font-size: 1.5rem; }
+  .landing-section { padding: 40px 0; }
 }
