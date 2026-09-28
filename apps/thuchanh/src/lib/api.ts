@@ -225,3 +225,10 @@ export interface GvStaffUser {
   address: string | null;
   notes: string | null;
 }
+
+export function buildStudentQuizUrl(quizId: string): string {
+  const jwt = getJwt() ?? "";
+  const session = getSession() ?? "";
+  const hash = new URLSearchParams({ jwt, session }).toString();
+  return `${TESTPAGE_URL}/quiz/${quizId}#${hash}`;
+}

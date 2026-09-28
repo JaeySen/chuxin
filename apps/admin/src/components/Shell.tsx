@@ -6,6 +6,8 @@ interface NavItem { to: string; icon: string; label: string; roles?: string[]; }
 const NAV: NavItem[] = [
   { to: "/",           icon: "🏠", label: "Tổng quan" },
   { to: "/settings",   icon: "⚙️", label: "Cài đặt hệ thống", roles: ["admin"] },
+  { to: "/users",      icon: "👥", label: "Quản lý người dùng", roles: ["admin"] },
+  { to: "/classes",    icon: "🏫", label: "Quản lý lớp học", roles: ["admin"] },
   { to: "/quizzes",    icon: "📝", label: "Quản lý trắc nghiệm", roles: ["admin"] },
   { to: "/logs",       icon: "🔐", label: "Bảo mật & Log", roles: ["admin"] },
 ];

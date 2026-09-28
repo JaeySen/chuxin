@@ -4,6 +4,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/auth-context";
 import { LoginPage } from "./pages/LoginPage";
 import { OverviewPage } from "./pages/OverviewPage";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import { QuizImportPage } from "./pages/QuizImportPage";
+
 import "./styles.css";
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
@@ -21,6 +24,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<RequireAuth><OverviewPage /></RequireAuth>} />
+          <Route path="/settings" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+          <Route path="/users" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+          <Route path="/classes" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+          <Route path="/quizzes" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+          <Route path="/logs" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+          <Route path="/quizzes/import" element={<RequireAuth><QuizImportPage /></RequireAuth>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

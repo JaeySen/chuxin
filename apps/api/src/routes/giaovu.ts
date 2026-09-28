@@ -64,7 +64,7 @@ export async function giaoVuRoutes(app: FastifyInstance) {
       return reply.status(401).send({ error: "Invalid credentials" });
     }
 
-    const allowedRoles = ["teacher", "admin", "staff", "assistant"] as const;
+    const allowedRoles = ["teacher", "admin", "staff", "assistant", "student"] as const;
     if (!allowedRoles.includes(user.role as typeof allowedRoles[number])) {
       return reply.status(403).send({
         error: "ROLE_FORBIDDEN",
@@ -83,7 +83,7 @@ export async function giaoVuRoutes(app: FastifyInstance) {
   });
 
   // Current user — used by frontend on refresh
-  app.get("/me", { preHandler: [authenticate, requireRole("teacher", "admin", "staff", "assistant")] }, async (req) => {
+  app.get("/me", { preHandler: [authenticate, requireRole("teacher", "admin", "staff", "assistant", "student")] }, async (req) => {
     const { rows } = await query<{ id: string; email: string; display_name: string; role: string }>(
       `SELECT id, email, display_name, role FROM users WHERE id = $1`, [req.user.uid],
     );
@@ -93,7 +93,7 @@ export async function giaoVuRoutes(app: FastifyInstance) {
   });
 
   // All routes below require auth + giaovu-eligible role
-  const giaoVuGuard = [authenticate, requireRole("teacher", "admin", "staff", "assistant")];
+  const giaoVuGuard = [authenticate, requireRole("teacher", "admin", "staff", "assistant", "student")];
 
   // ── Classes ─────────────────────────────────────────────────────────────
 
@@ -101,7 +101,16 @@ export async function giaoVuRoutes(app: FastifyInstance) {
     const role = req.user.role;
     const uid  = req.user.uid;
 
-    // Teachers see only their own classes; staff/admin see all
+    let where = "1=1";
+    let params: any[] = [];
+    if (role === "teacher") {
+      where = "c.teacher_id = $1";
+      params = [uid];
+    } else if (role === "student") {
+      where = "c.id IN (SELECT class_id FROM enrollments WHERE student_id = $1 AND status = 'active')";
+      params = [uid];
+    }
+
     const { rows } = await query(
       `SELECT c.*,
               u.display_name AS teacher_name,
@@ -109,10 +118,10 @@ export async function giaoVuRoutes(app: FastifyInstance) {
          FROM classes c
          LEFT JOIN users u ON u.id = c.teacher_id
          LEFT JOIN enrollments e ON e.class_id = c.id AND e.status = 'active'
-         ${role === "teacher" ? "WHERE c.teacher_id = $1" : "WHERE 1=1"}
+         WHERE ${where}
          GROUP BY c.id, u.display_name
          ORDER BY c.start_date DESC NULLS LAST`,
-      role === "teacher" ? [uid] : [],
+      params,
     );
     return rows;
   });

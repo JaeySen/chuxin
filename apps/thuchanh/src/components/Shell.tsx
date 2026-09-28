@@ -1,21 +1,22 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/auth-context";
+import { apiFetch } from "../lib/api";
 
-interface NavItem { to: string; icon: string; label: string; roles?: string[]; }
 
-const NAV: NavItem[] = [
-  { to: "/",           icon: "🏠", label: "Tổng quan" },
-  { to: "/class/hsk1", icon: "🏫", label: "Lớp HSK 1 - K23" },
-  { to: "/class/hsk2", icon: "🏫", label: "Lớp HSK 2 - K24" },
-];
 
 export function Shell({ children, title }: { children: React.ReactNode; title?: string }) {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const [classes, setClasses] = useState<{ id: string; name: string }[]>([]);
 
-  const visibleNav = NAV.filter((n) =>
-    !n.roles || n.roles.includes(user?.role ?? ""),
-  );
+  useEffect(() => {
+    if (user) {
+      apiFetch<{ id: string; name: string }[]>("/classes")
+        .then(setClasses)
+        .catch(console.error);
+    }
+  }, [user]);
 
   const roleLabel: Record<string, string> = {
     student: "Học viên",
@@ -35,14 +36,16 @@ export function Shell({ children, title }: { children: React.ReactNode; title?: 
 
         <nav className="gv-sidebar-nav">
           <div className="gv-nav-section">Menu</div>
-          {visibleNav.map((n) => (
+          <Link to="/" className={`gv-nav-link ${location.pathname === "/" ? "active" : ""}`}>
+            <span className="gv-nav-icon">🏠</span> Tổng quan
+          </Link>
+          {classes.map((c) => (
             <Link
-              key={n.to}
-              to={n.to}
-              className={`gv-nav-link ${location.pathname === n.to ? "active" : ""}`}
+              key={c.id}
+              to={`/class/${c.id}`}
+              className={`gv-nav-link ${location.pathname.startsWith(`/class/${c.id}`) ? "active" : ""}`}
             >
-              <span className="gv-nav-icon">{n.icon}</span>
-              {n.label}
+              <span className="gv-nav-icon">🏫</span> {c.name}
             </Link>
           ))}
         </nav>
