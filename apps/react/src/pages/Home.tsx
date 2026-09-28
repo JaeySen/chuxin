@@ -251,7 +251,7 @@ function GuestHome() {
   }
 
   return (
-    <div className="container" style={{ padding: "12px 16px 80px" }}>
+    <div className="container" style={{ padding: "0 16px 80px" }}>
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
