@@ -204,44 +204,6 @@ const HERO_TESTIMONIALS = [
   },
 ];
 
-function HeroTestimonials() {
-  const [idx, setIdx] = useState(0);
-  const t = HERO_TESTIMONIALS[idx];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIdx((i) => (i + 1) % HERO_TESTIMONIALS.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="hero-testimonials">
-      <div className="hero-testimonials-label">💬 Học viên chia sẻ</div>
-      <div className="hero-testimonial-card" key={idx}>
-        <div className="hero-testimonial-top">
-          <span className="hero-testimonial-avatar">{t.avatar}</span>
-          <div>
-            <div className="hero-testimonial-name">{t.name}</div>
-            <div className="hero-testimonial-course">Khoá {t.course}</div>
-          </div>
-          <span className="hero-testimonial-stars">⭐⭐⭐⭐⭐</span>
-        </div>
-        <p className="hero-testimonial-text">"{t.text}"</p>
-      </div>
-      <div className="hero-testimonial-dots">
-        {HERO_TESTIMONIALS.map((_, i) => (
-          <button
-            key={i}
-            className={`hero-testimonial-dot${i === idx ? " hero-testimonial-dot--active" : ""}`}
-            onClick={() => setIdx(i)}
-            aria-label={`Xem đánh giá ${i + 1}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
 
 // ── Guest ─────────────────────────────────────────────────────────────────────
 
@@ -304,7 +266,9 @@ function GuestHome() {
             </div>
           </div>
         </div>
-        <HeroTestimonials />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <img src="/chuxin-logo.jpg" alt="Sơ Tâm" style={{ width: '100%', maxWidth: 440, borderRadius: 24, boxShadow: '0 20px 40px rgba(0,0,0,0.15)', display: 'block' }} />
+        </div>
       </section>
       </section>
 
@@ -314,7 +278,7 @@ function GuestHome() {
         <p className="games-intro">
           Nhiều nghiên cứu giáo dục cho thấy hoạt động học tập qua trò chơi có thể tăng cường sự hứng thú và khả năng ghi nhớ của người học.
           <br /><br />
-          Tại Sơ Tâm, trò chơi không phải là phần thưởng sau giờ học — mà chính là một phần của bài học.
+          Tại Sơ Tâm, trò chơi không phải là phần thưởng sau giờ học <span style={{ whiteSpace: 'nowrap' }}>— mà chính là một phần của bài học.</span>
         </p>
         <div className="games-grid">
           {GAMES_INFO.map((g) => (
@@ -372,7 +336,7 @@ function GuestHome() {
               Đăng nhập học viên →
             </button>
           </div>
-          <div className="landing-section-art">📚</div>
+          
         </div>
       </section>
 
@@ -450,17 +414,14 @@ function GuestHome() {
 
       <div id="giao-vien" style={{ paddingTop: 60 }}>
         <h2 className="section-h" style={{ textAlign: "center" }}>Đội ngũ giáo viên</h2>
-        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
-          Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
-          được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
-        </p>
+
         <TeacherCoverflow />
       </div>
 
       {/* Tham gia với chúng tôi — landing section */}
       <section className="landing-section landing-section--teacher full-bleed">
         <div className="landing-section-inner landing-section-inner--reverse">
-          <div className="landing-section-art">🏫</div>
+          
           <div className="landing-section-text">
             <div className="landing-section-eyebrow">Dành cho giáo viên</div>
             <h2 className="landing-section-title">Tham gia với chúng tôi</h2>
@@ -2176,10 +2137,7 @@ function TeacherHome() {
 
       <div id="giao-vien" style={{ paddingTop: 60 }}>
         <h2 className="section-h" style={{ textAlign: "center" }}>Đội ngũ giáo viên</h2>
-        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
-          Toàn bộ giáo viên của Sơ Tâm là các Thạc sĩ chuyên ngành Hán ngữ Quốc tế,
-          được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
-        </p>
+
         <TeacherCoverflow />
       </div>
 
