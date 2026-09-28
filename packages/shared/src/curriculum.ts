@@ -37,5 +37,5 @@ export const CHAPTERS_BY_COURSE: Record<CourseId, Chapter[]> = {
   han5: [],
   han6: [],
   "thuong-mai": [],
-  "tre-em": [],
+  "tre-em": [], "1-1": [],
 };

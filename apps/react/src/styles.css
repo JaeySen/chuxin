@@ -4240,3 +4240,91 @@ body {
   padding-left: 20px;
   padding-right: 20px;
 }
+
+/* ── Course Tile Redesign (1xN layout) ─────────────────────────── */
+.course-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.course-tile--with-image {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  border-radius: 20px;
+  background: white;
+}
+
+.course-tile-image-wrapper {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--c-border);
+}
+
+.course-tile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.course-tile-content {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.course-tile--with-image h3 {
+  font-size: 1.5rem;
+  margin: 0 0 12px;
+}
+
+.course-tile--with-image .muted {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  color: var(--c-text-soft);
+}
+
+.course-view-btn {
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.course-tile--with-image .tile-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  height: auto;
+  border-radius: 0;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .course-tile--with-image {
+    flex-direction: column;
+  }
+  .course-tile-image-wrapper {
+    width: 100%;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .course-tile--with-image .tile-bar {
+    width: 100%;
+    height: 6px;
+    bottom: auto;
+  }
+  .course-tile-content {
+    padding: 24px;
+  }
+}

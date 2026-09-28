@@ -335,19 +335,22 @@ function GuestHome() {
       )}
 
       {/* Courses */}
-      <h2 className="section-h" id="courses">Các khoá học</h2>
+      <h2 className="section-h" id="courses" style={{ textAlign: 'center' }}>Khóa học</h2>
+      <p style={{ textAlign: 'center', color: 'var(--c-text-soft)', marginBottom: 30, marginTop: -10 }}>Khóa học phù hợp cho mọi lứa tuổi, mọi nhu cầu của người học.</p>
       <div className="course-grid">
         {COURSES.map((c) => (
-          <Link key={c.id} className="course-tile" to={`/course/${c.id}`}>
-            {c.status && (
-              <span className={`course-status-badge ${STATUS_CLASS[c.status]}`}>
-                {STATUS_LABEL[c.status]}
-              </span>
+          <Link key={c.id} className="course-tile course-tile--with-image" to={`/course/${c.id}`}>
+            {c.image && (
+              <div className="course-tile-image-wrapper">
+                <img src={c.image} alt={c.title} className="course-tile-image" />
+              </div>
             )}
-            <h3>{c.title}</h3>
-            <div className="muted">{c.subtitle}</div>
+            <div className="course-tile-content">
+              <h3>{c.title}</h3>
+              <div className="muted">{c.subtitle}</div>
+              <div className="course-view-btn" style={{ color: c.color }}>Xem chi tiết →</div>
+            </div>
             <div className="tile-bar" style={{ background: c.color }} />
-            <div className="course-view-btn" style={{ color: c.color }}>Xem chi tiết →</div>
           </Link>
         ))}
       </div>
@@ -2077,19 +2080,22 @@ function TeacherHome() {
         ))}
       </div>
 
-      <h2 className="section-h" style={{ marginTop: 40 }}>Khoá học</h2>
+      <h2 className="section-h" style={{ marginTop: 40, textAlign: 'center' }}>Khóa học</h2>
+      <p style={{ textAlign: 'center', color: 'var(--c-text-soft)', marginBottom: 30, marginTop: -10 }}>Khóa học phù hợp cho mọi lứa tuổi, mọi nhu cầu của người học.</p>
       <div className="course-grid">
         {COURSES.map((c) => (
-          <Link key={c.id} className="course-tile" to={`/course/${c.id}`}>
-            {c.status && (
-              <span className={`course-status-badge ${STATUS_CLASS[c.status]}`}>
-                {STATUS_LABEL[c.status]}
-              </span>
+          <Link key={c.id} className="course-tile course-tile--with-image" to={`/course/${c.id}`}>
+            {c.image && (
+              <div className="course-tile-image-wrapper">
+                <img src={c.image} alt={c.title} className="course-tile-image" />
+              </div>
             )}
-            <h3>{c.title}</h3>
-            <div className="muted">{c.subtitle}</div>
+            <div className="course-tile-content">
+              <h3>{c.title}</h3>
+              <div className="muted">{c.subtitle}</div>
+              <div className="course-view-btn" style={{ color: c.color }}>Xem chi tiết →</div>
+            </div>
             <div className="tile-bar" style={{ background: c.color }} />
-            <div className="course-view-btn" style={{ color: c.color }}>Xem chi tiết →</div>
           </Link>
         ))}
       </div>
