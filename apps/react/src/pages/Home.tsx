@@ -31,109 +31,63 @@ const OLD_EXERCISES = [
 
 
 function TeacherCoverflow() {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    const interval = setInterval(() => {
-      setActiveIdx((prev) => (prev + 1) % TEACHER_BRIEFS.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [paused]);
-
   return (
-    <div 
-      className="coverflow-container" 
-      onMouseEnter={() => setPaused(true)} 
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={() => setPaused(true)}
-      onTouchEnd={() => setPaused(false)}
-    >
-      {TEACHER_BRIEFS.map((t, idx) => {
-        let offset = idx - activeIdx;
-        const total = TEACHER_BRIEFS.length;
-        if (offset < -Math.floor(total / 2)) offset += total;
-        if (offset > Math.floor(total / 2)) offset -= total;
-        
-        let zIndex = 100 - Math.abs(offset);
-        let tx = offset * 220;
-        let scale = offset === 0 ? 1 : 0.8;
-        let rotateY = offset === 0 ? 0 : (offset > 0 ? 45 : -45);
-        let opacity = Math.abs(offset) > 2 ? 0 : 1;
-
-        return (
-          <div 
-            key={t.name}
-            className={`coverflow-card ${offset === 0 ? 'coverflow-card-active' : ''}`}
-            style={{ 
-              zIndex, 
-              opacity,
-              transform: `translateX(${tx}px) scale(${scale}) perspective(800px) rotateY(${rotateY}deg)`
-            }}
-            onClick={() => setActiveIdx(idx)}
-          >
-            <img src={t.file} alt={t.name} />
-            {offset === 0 && (
-              <div className="coverflow-progress">
-                <div key={activeIdx} className="coverflow-progress-fill" style={{ animationPlayState: paused ? 'paused' : 'running' }} />
-              </div>
-            )}
+    <div className="teacher-strip-wrapper">
+      <div className="teacher-strip-track">
+        {[...TEACHER_BRIEFS, ...TEACHER_BRIEFS].map((t, idx) => (
+          <div key={idx} className="teacher-strip-card">
+            <img src={t.file} alt={t.name} className="teacher-strip-img" />
           </div>
-
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }
 
 
+const OPENING_CLASSES = [
+  {
+    name: "HSK 1 — Lớp 1.1",
+    date: "01.10.2026",
+    schedule: "Tối 3-5 (T3 & T5), 22:00 – 23:30",
+    status: "upcoming" as const,
+    statusLabel: "Sắp diễn ra",
+  },
+  {
+    name: "HSK 1 — Lớp 1.2",
+    date: "04.10.2026",
+    schedule: "Cuối tuần (T7 & CN), 16:00 – 17:30",
+    status: "enrolling" as const,
+    statusLabel: "Đang tuyển sinh",
+  },
+];
+
 function OpeningCalendar() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth(); // 0-indexed
-  const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-  const dayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-  
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const today = now.getDate();
-  
-  // Sample opening dates (highlighted)
-  const openingDates: Record<number, string> = {
-    5: "HSK 1 — 19:00",
-    12: "HSK 2 — 19:00",
-    15: "HSK 3 — 18:30",
-    20: "HSK 1 — 19:00",
-    26: "HSK 4 — 18:30",
-  };
-
-  const cells: React.ReactNode[] = [];
-  for (let i = 0; i < firstDay; i++) {
-    cells.push(<div key={`e${i}`} className="cal-cell cal-cell--empty" />);
-  }
-  for (let d = 1; d <= daysInMonth; d++) {
-    const isToday = d === today;
-    const isOpening = d in openingDates;
-    cells.push(
-      <div key={d} className={`cal-cell ${isToday ? "cal-cell--today" : ""} ${isOpening ? "cal-cell--opening" : ""}`}>
-        <span className="cal-date">{d}</span>
-        {isOpening && <span className="cal-event">{openingDates[d]}</span>}
-      </div>
-    );
-  }
-
   return (
-    <div className="opening-calendar">
-      <div className="cal-header">
-        <h3>{monthNames[month]} {year}</h3>
-      </div>
-      <div className="cal-weekdays">
-        {dayNames.map(d => <div key={d} className="cal-weekday">{d}</div>)}
-      </div>
-      <div className="cal-grid">
-        {cells}
-      </div>
+    <div className="lich-grid">
+      {OPENING_CLASSES.map((cls) => (
+        <div key={cls.name} className={`lich-card lich-card--${cls.status}`}>
+          <div className={`lich-status lich-status--${cls.status}`}>
+            <span className="lich-status-dot" />
+            {cls.statusLabel}
+          </div>
+          <h3 className="lich-name">{cls.name}</h3>
+          <div className="lich-row">
+            <span className="lich-row-icon">📅</span>
+            <div>
+              <div className="lich-row-label">NGÀY KHAI GIẢNG</div>
+              <div className="lich-row-value">{cls.date}</div>
+            </div>
+          </div>
+          <div className="lich-row">
+            <span className="lich-row-icon">🕐</span>
+            <div>
+              <div className="lich-row-label">THỜI GIAN</div>
+              <div className="lich-row-value lich-row-value--normal">{cls.schedule}</div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -307,7 +261,8 @@ function GuestHome() {
         "description": "Trung tâm tiếng Trung Sơ Tâm — Hán ngữ HSK 1–6.",
       }} />
 
-      {/* Hero */}
+      {/* Hero — Jumbotron banner */}
+      <section className="jumbotron-hero">
       <section className="hero">
         <div className="hero-copy">
           <h1>Bắt đầu từ đam mê, <span className="hero-accent" style={{ display: "inline-block", whiteSpace: "nowrap" }}>vươn xa cùng Hán ngữ</span></h1>
@@ -336,6 +291,7 @@ function GuestHome() {
         </div>
         <HeroTestimonials />
       </section>
+      </section>
 
       {/* Games section */}
       <section className="games-section">
@@ -352,41 +308,6 @@ function GuestHome() {
               <h3 className="game-card-title">{g.title}</h3>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* Portal cards */}
-      <section className="portal-section">
-        <div className="portal-grid">
-          {/* Student card */}
-          <div className="portal-card portal-card--student">
-            <h3 className="portal-card-title">Bài tập trực tuyến</h3>
-            <p className="portal-card-desc">
-              Học viên đăng nhập để truy cập bài tập, theo dõi tiến trình học tập
-              và tham gia các hoạt động tương tác trong lớp. Tại đây bạn có thể xem lại kết quả học tập, ôn luyện từ vựng qua flashcard, làm bài tập về nhà và nhận feedback trực tiếp từ giáo viên nhanh chóng.
-            </p>
-            <button
-              className="btn btn-primary portal-card-btn"
-              onClick={() => setLoginTarget("student")}
-            >
-              Đăng nhập học viên
-            </button>
-          </div>
-
-          {/* Teacher card */}
-          <div className="portal-card portal-card--teacher">
-            <h3 className="portal-card-title">Tham gia với chúng tôi</h3>
-            <p className="portal-card-desc">
-              Giáo viên đăng nhập để quản lý lớp học, tạo bài tập và theo dõi
-              kết quả học viên qua bảng điều khiển giáo vụ. Hệ thống cung cấp công cụ chấm điểm tự động, quản lý học viên tiện lợi và hỗ trợ tổ chức các hoạt động lớp học trực tuyến chuyên nghiệp.
-            </p>
-            <button
-              className="btn btn-secondary portal-card-btn"
-              onClick={() => setLoginTarget("teacher")}
-            >
-              Đăng nhập giáo viên
-            </button>
-          </div>
         </div>
       </section>
 
@@ -416,9 +337,32 @@ function GuestHome() {
         ))}
       </div>
 
+      {/* Bài tập trực tuyến — below courses */}
+      <section className="portal-section portal-section--student-only" style={{ marginTop: 40 }}>
+        <div className="portal-card portal-card--student portal-card--wide">
+          <div className="portal-card-icon-lg">📚</div>
+          <div className="portal-card-body">
+            <h3 className="portal-card-title">Bài tập trực tuyến</h3>
+            <p className="portal-card-desc">
+              Làm bài trắc nghiệm nhiều lần, xem đáp án ngay sau khi nộp. Theo dõi tiến trình và nhận phản hồi từ giáo viên.
+            </p>
+            <button
+              className="btn btn-primary portal-card-btn"
+              onClick={() => setLoginTarget("student")}
+            >
+              Đăng nhập học viên
+            </button>
+          </div>
+        </div>
+      </section>
 
-      <div id="gioi-thieu" style={{ paddingTop: 60 }}>
-        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Giới thiệu trung tâm</h2>
+
+      <div id="gioi-thieu" style={{ paddingTop: 0 }}>
+        <div className="jumbotron-section">
+          <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
+          <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
+        </div>
+
         <div className="about-mission-body">
           <div className="about-spirit">
             <div className="about-spirit-label">初心 · Chuxin</div>
@@ -495,6 +439,24 @@ function GuestHome() {
         <TeacherCoverflow />
       </div>
 
+      {/* Tham gia với chúng tôi — after teacher section */}
+      <section className="portal-section portal-section--teacher-only" style={{ marginTop: 40 }}>
+        <div className="portal-card portal-card--teacher portal-card--wide">
+          <div className="portal-card-icon-lg">🏫</div>
+          <div className="portal-card-body">
+            <h3 className="portal-card-title">Tham gia với chúng tôi</h3>
+            <p className="portal-card-desc">
+              Giáo viên đăng nhập để quản lý lớp, tạo bài tập và theo dõi kết quả học viên.
+            </p>
+            <button
+              className="btn btn-secondary portal-card-btn"
+              onClick={() => setLoginTarget("teacher")}
+            >
+              Đăng nhập giáo viên
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Lịch khai giảng */}
       <div id="lich-khai-giang" style={{ paddingTop: 60, paddingBottom: 60 }}>
@@ -2116,8 +2078,12 @@ function TeacherHome() {
       </div>
 
 
-      <div id="gioi-thieu" style={{ paddingTop: 60 }}>
-        <h2 className="section-h" style={{ marginTop: 0, textAlign: "center", fontSize: "2rem" }}>Giới thiệu trung tâm</h2>
+      <div id="gioi-thieu" style={{ paddingTop: 0 }}>
+        <div className="jumbotron-section">
+          <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
+          <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
+        </div>
+
         <div className="about-mission-body">
           <div className="about-spirit">
             <div className="about-spirit-label">初心 · Chuxin</div>
@@ -2194,15 +2160,6 @@ function TeacherHome() {
         <TeacherCoverflow />
       </div>
 
-
-      {/* Lịch khai giảng */}
-      <div id="lich-khai-giang" style={{ paddingTop: 60, paddingBottom: 60 }}>
-        <h2 className="section-h" style={{ textAlign: "center" }}>Lịch khai giảng</h2>
-        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 30, textAlign: "center" }}>
-          Lịch dự kiến khai giảng các khóa học trong tháng
-        </p>
-        <OpeningCalendar />
-      </div>
 
       <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60, display: "none" }}>
         <h2 className="section-h">Học viên nói gì về Sơ Tâm?</h2>

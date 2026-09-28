@@ -3910,3 +3910,177 @@ body {
 @media (max-width: 768px) {
   .games-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+
+/* ── Jumbotron banners ─────────────────────────────────────── */
+.jumbotron-hero {
+  background: linear-gradient(135deg, var(--c-red-dark) 0%, var(--c-red) 100%);
+  margin: -12px -16px 0;
+  padding: 0 16px;
+}
+.jumbotron-hero .hero {
+  color: white;
+}
+.jumbotron-hero .hero h1 { color: white; }
+.jumbotron-hero .hero p { color: rgba(255,255,255,0.88); }
+.jumbotron-hero .hero-highlight-item {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  backdrop-filter: blur(6px);
+}
+.jumbotron-hero .hero-accent { color: #ffe08a; }
+.jumbotron-hero .hero-copy { padding-top: 40px; padding-bottom: 40px; }
+
+.jumbotron-section {
+  background: linear-gradient(135deg, var(--c-red-dark) 0%, var(--c-red) 100%);
+  margin: 0 -16px;
+  padding: 48px 24px 40px;
+  text-align: center;
+  color: white;
+}
+.jumbotron-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  color: white;
+}
+.jumbotron-sub {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.85;
+  font-style: italic;
+}
+
+/* ── Portal cards redesign ─────────────────────────────────── */
+.portal-section--student-only .portal-card--wide,
+.portal-section--teacher-only .portal-card--wide {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 32px;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+.portal-card--wide {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.portal-card-icon-lg { font-size: 3rem; flex-shrink: 0; }
+.portal-card-body { flex: 1; }
+.portal-card-body .portal-card-title { margin: 0 0 8px; font-size: 1.25rem; }
+.portal-card-body .portal-card-desc { margin: 0 0 16px; color: var(--c-text-soft); font-size: 0.95rem; line-height: 1.6; }
+@media (max-width: 600px) {
+  .portal-section--student-only .portal-card--wide,
+  .portal-section--teacher-only .portal-card--wide {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 20px;
+  }
+}
+
+/* ── Teacher strip (full-width scroll) ─────────────────────── */
+.teacher-strip-wrapper {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  overflow: hidden;
+  padding: 12px 0;
+}
+.teacher-strip-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: teacherScroll 20s linear infinite;
+}
+.teacher-strip-wrapper:hover .teacher-strip-track {
+  animation-play-state: paused;
+}
+@keyframes teacherScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.teacher-strip-card {
+  flex-shrink: 0;
+  width: 260px;
+  height: 340px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.teacher-strip-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+@media (max-width: 768px) {
+  .teacher-strip-card { width: 200px; height: 260px; }
+}
+
+/* ── Lịch khai giảng card grid ─────────────────────────────── */
+.lich-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.lich-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  border-top: 4px solid transparent;
+}
+.lich-card--upcoming  { border-top-color: #f59e0b; }
+.lich-card--enrolling { border-top-color: #10b981; }
+.lich-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+.lich-status--upcoming  { color: #b45309; }
+.lich-status--enrolling { color: #065f46; }
+.lich-status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.lich-status--upcoming  .lich-status-dot { background: #f59e0b; }
+.lich-status--enrolling .lich-status-dot { background: #10b981; }
+.lich-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 18px;
+  color: var(--c-text);
+}
+.lich-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.lich-row-icon { font-size: 1.2rem; margin-top: 2px; }
+.lich-row-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--c-text-soft);
+  margin-bottom: 3px;
+}
+.lich-row-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--c-red);
+}
+.lich-row-value--normal {
+  color: var(--c-text);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
