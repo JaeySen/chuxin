@@ -31,15 +31,30 @@ const OLD_EXERCISES = [
 
 
 function TeacherCoverflow() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollByAmount = (direction: number) => {
+    if (scrollRef.current) {
+      const cardWidth = window.innerWidth <= 768 ? window.innerWidth / 2 : window.innerWidth / 3;
+      scrollRef.current.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="teacher-strip-wrapper full-bleed">
-      <div className="teacher-strip-track">
-        {[...TEACHER_BRIEFS, ...TEACHER_BRIEFS, ...TEACHER_BRIEFS].map((t, idx) => (
-          <div key={idx} className="teacher-strip-card">
-            <img src={t.file} alt={t.name} className="teacher-strip-img" />
+    <div className="teacher-slider-wrapper full-bleed">
+      <div className="teacher-slider-track" ref={scrollRef}>
+        {TEACHER_BRIEFS.map((t, idx) => (
+          <div key={idx} className="teacher-slider-card">
+            <img src={t.file} alt={t.name} className="teacher-slider-img" />
           </div>
         ))}
       </div>
+      <button className="teacher-slider-nav teacher-slider-nav--prev" onClick={() => scrollByAmount(-1)}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
+      <button className="teacher-slider-nav teacher-slider-nav--next" onClick={() => scrollByAmount(1)}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
     </div>
   );
 }

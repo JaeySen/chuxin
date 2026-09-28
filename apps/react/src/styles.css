@@ -3995,43 +3995,91 @@ body {
 }
 
 /* ── Teacher strip (full-width scroll) ─────────────────────── */
-.teacher-strip-wrapper {
+
+/* ── Teacher Slider ────────────────────────────────────────── */
+.teacher-slider-wrapper {
+  position: relative;
   overflow: hidden;
   padding: 16px 0;
+  background: var(--c-bg); /* to blend edges if any */
 }
-.teacher-strip-track {
+
+.teacher-slider-track {
   display: flex;
   gap: 24px;
-  width: max-content;
-  animation: teacherScroll 24s linear infinite;
+  padding: 12px 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
-.teacher-strip-wrapper:hover .teacher-strip-track {
-  animation-play-state: paused;
+.teacher-slider-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
-@keyframes teacherScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(calc(-100% / 3)); }
-}
-.teacher-strip-card {
+
+.teacher-slider-card {
   flex-shrink: 0;
-  /* 3 cards visible: (100vw - 2*24px gap) / 3 */
-  width: calc((100vw - 48px) / 3);
-  height: 420px;
+  /* exactly 3 visible including gap: each card is roughly 33.33vw minus gap math */
+  width: calc((100vw - 48px - 48px) / 3); 
+  /* Using padding to offset container bounds? 
+     Wait, 100vw minus 48px is enough. Let's make them slightly smaller to peek next. */
+  width: calc((100vw - 96px) / 3);
+  scroll-snap-align: center;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  height: max-content;
+  display: flex;
 }
-.teacher-strip-img {
+
+.teacher-slider-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  height: auto;
   display: block;
 }
+
+/* Nav Buttons */
+.teacher-slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--c-text);
+  z-index: 10;
+  transition: all 0.2s;
+}
+.teacher-slider-nav:hover {
+  background: var(--c-red);
+  color: white;
+  border-color: var(--c-red);
+}
+.teacher-slider-nav svg {
+  width: 24px;
+  height: 24px;
+}
+.teacher-slider-nav--prev {
+  left: 24px;
+}
+.teacher-slider-nav--next {
+  right: 24px;
+}
+
 @media (max-width: 768px) {
-  .teacher-strip-card {
-    width: calc((100vw - 24px) / 2);
-    height: 300px;
+  .teacher-slider-card {
+    width: calc(100vw - 48px);
+    scroll-snap-align: center;
+  }
+  .teacher-slider-nav {
+    display: none; /* hide arrows on mobile, rely on swipe */
   }
 }
 
