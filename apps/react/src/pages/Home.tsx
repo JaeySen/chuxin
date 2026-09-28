@@ -360,76 +360,74 @@ function GuestHome() {
 
 
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
-        <div className="jumbotron-section full-bleed">
+        <div className="jumbotron-section full-bleed jumbotron-section--tall">
           <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
           <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
-        </div>
 
-        <div className="about-mission-body">
-          <div className="about-spirit">
-            <div className="about-spirit-label">初心 · Chuxin</div>
-            <h3 className="about-spirit-title">Tinh thần Chuxin</h3>
-            <p>
-              <strong>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
-              học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
-              một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa
-              Trung Hoa.
-            </p>
-            <p>
-              Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học
-              viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu
-              hóa cho từng mục tiêu cụ thể. Tại Chuxin, chúng tôi không chỉ giảng dạy ngôn ngữ, mà
-              còn giúp học viên xây dựng sự tự tin, làm chủ kỹ năng giao tiếp thực tế và duy trì
-              nguồn cảm hứng học tập bền bỉ.
-            </p>
-
-            <p className="about-commit-heading"><strong>Cam kết của chúng tôi:</strong></p>
-            <ul className="about-commit-list">
-              <li>
-                <span className="about-commit-icon">🤝</span>
-                <div>
-                  <strong>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
-                </div>
-              </li>
-              <li>
-                <span className="about-commit-icon">🏅</span>
-                <div>
-                  <strong>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
-                </div>
-              </li>
-              <li>
-                <span className="about-commit-icon">🚀</span>
-                <div>
-                  <strong>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả trong học tập, công việc và cuộc sống.
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div className="about-values">
-            <div className="about-value-card">
-              <span className="about-value-icon">🎯</span>
-              <div>
-                <strong>Đúng trọng tâm</strong>
-                <p>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
-              </div>
+          <div className="about-mission-body" style={{ marginTop: 40, textAlign: 'left' }}>
+            <div className="about-spirit" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <div className="about-spirit-label" style={{ color: 'rgba(255,255,255,0.7)' }}>初心 · Chuxin</div>
+              <h3 className="about-spirit-title" style={{ color: 'white' }}>Tinh thần Chuxin</h3>
+              <p style={{ color: 'rgba(255,255,255,0.88)' }}>
+                <strong style={{ color: 'white' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
+                học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
+                một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa Trung Hoa.
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.88)' }}>
+                Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học
+                viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu
+                hóa cho từng mục tiêu cụ thể.
+              </p>
+              <p className="about-commit-heading"><strong style={{ color: 'white' }}>Cam kết của chúng tôi:</strong></p>
+              <ul className="about-commit-list">
+                <li>
+                  <span className="about-commit-icon">🤝</span>
+                  <div style={{ color: 'rgba(255,255,255,0.9)' }}>
+                    <strong style={{ color: 'white' }}>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
+                  </div>
+                </li>
+                <li>
+                  <span className="about-commit-icon">🏅</span>
+                  <div style={{ color: 'rgba(255,255,255,0.9)' }}>
+                    <strong style={{ color: 'white' }}>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
+                  </div>
+                </li>
+                <li>
+                  <span className="about-commit-icon">🚀</span>
+                  <div style={{ color: 'rgba(255,255,255,0.9)' }}>
+                    <strong style={{ color: 'white' }}>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung trong học tập, công việc và cuộc sống.
+                  </div>
+                </li>
+              </ul>
             </div>
-            <div className="about-value-card">
-              <span className="about-value-icon">💬</span>
-              <div>
-                <strong>Tương tác thật sự</strong>
-                <p>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
+
+            <div className="about-values">
+              <div className="about-value-card about-value-card--glass">
+                <span className="about-value-icon">🎯</span>
+                <div>
+                  <strong>Đúng trọng tâm</strong>
+                  <p>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
+                </div>
               </div>
-            </div>
-            <div className="about-value-card">
-              <span className="about-value-icon">📈</span>
-              <div>
-                <strong>Theo dõi tiến độ</strong>
-                <p>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
+              <div className="about-value-card about-value-card--glass">
+                <span className="about-value-icon">💬</span>
+                <div>
+                  <strong>Tương tác thật sự</strong>
+                  <p>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
+                </div>
+              </div>
+              <div className="about-value-card about-value-card--glass">
+                <span className="about-value-icon">📈</span>
+                <div>
+                  <strong>Theo dõi tiến độ</strong>
+                  <p>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+
       </div>
 
       <div id="giao-vien" style={{ paddingTop: 60 }}>

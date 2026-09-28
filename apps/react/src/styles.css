@@ -4169,3 +4169,26 @@ body {
   .landing-section-title { font-size: 1.5rem; }
   .landing-section { padding: 40px 0; }
 }
+
+/* Glass effect for about-value cards inside jumbotron */
+.about-value-card--glass {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  color: var(--c-text);
+}
+.about-value-card--glass p {
+  color: var(--c-text-soft);
+}
+
+.jumbotron-section--tall {
+  padding-bottom: 80px;
+}
+
+.jumbotron-section .about-mission-body {
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
