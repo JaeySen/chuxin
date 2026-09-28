@@ -36,16 +36,18 @@ export function App() {
             <p>08:00 - 12:00 (Chủ nhật)</p>
           </div>
                               <div className="footer-col footer-col-course">
-            <h3 className="desktop-only">Khóa học</h3>
-            <h3 className="mobile-only">Liên lạc với chúng tôi</h3>
-            <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3>Khóa học</h3>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Link to="/course/han1">HSK 1</Link>
               <Link to="/course/han2">HSK 2</Link>
               <Link to="/course/han3">HSK 3</Link>
               <Link to="/course/han4">HSK 4</Link>
+              <Link to="/course/han5">HSK 5</Link>
+              <Link to="/course/han6">HSK 6</Link>
+              <Link to="/course/tre-em">Tiếng Trung Trẻ em</Link>
+              <Link to="/course/thuong-mai">Tiếng Trung Thương mại</Link>
             </div>
-            {/* The mobile inline contacts have been removed so it's empty on mobile, leaving space for the floating contacts! */}
-            <div className="mobile-only" style={{ height: '200px' }} />
+            <div className="mobile-only" style={{ height: '100px' }} />
           </div>
         </div>
         <div className="footer-bottom">

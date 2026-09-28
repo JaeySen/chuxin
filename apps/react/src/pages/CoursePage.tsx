@@ -79,13 +79,9 @@ function CourseHeader({ course, courseId }: { course: typeof COURSES[number] | u
       </h1>
       {course?.subtitle && <p className="muted" style={{ fontSize: 16 }}>{course.subtitle}</p>}
       {course?.brochureUrl && (
-        <>
-          <div className="brochure-thumbnail" onClick={() => setOpenBrochure(true)} title="Xem Brochure">
-            <div className="brochure-thumb-overlay">🔍 Xem chi tiết</div>
-            <img src="https://placehold.co/300x400/a71e22/FFF?text=Brochure" alt="Brochure Thumbnail" />
-          </div>
-          {openBrochure && <BrochureModal url={course.brochureUrl} close={() => setOpenBrochure(false)} />}
-        </>
+        <div style={{ marginTop: 24, marginBottom: 40, width: '100%', height: '85vh', borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 30px rgba(0,0,0,0.12)', border: '1px solid var(--c-border)' }}>
+          <iframe src={course.brochureUrl} title="Brochure" style={{ width: '100%', height: '100%', border: 'none' }} />
+        </div>
       )}
     </>
   );

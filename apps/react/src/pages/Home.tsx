@@ -266,8 +266,8 @@ function GuestHome() {
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <img src="/chuxin-logo.jpg" alt="Sơ Tâm" style={{ width: '100%', maxWidth: 440, borderRadius: 24, boxShadow: '0 20px 40px rgba(0,0,0,0.15)', display: 'block' }} />
+        <div className="hero-logo-container" style={{ display: 'flex', justifyContent: 'center' }}>
+          <img src="/chuxin-logo.jpg" alt="Sơ Tâm" style={{ width: '100%', maxWidth: 340, borderRadius: 24, boxShadow: '0 20px 40px rgba(0,0,0,0.15)', display: 'block' }} />
         </div>
       </section>
       </section>
@@ -429,12 +429,14 @@ function GuestHome() {
               Quản lý lớp học, tạo bài tập và theo dõi<br />
               kết quả học viên trên một nền tảng duy nhất.
             </p>
-            <button
+            <a
               className="btn btn-secondary landing-section-btn"
-              onClick={() => setLoginTarget("teacher")}
+              href="https://giaovu.hanngusotam.com"
+              target="_blank"
+              rel="noreferrer"
             >
               Đăng nhập giáo viên →
-            </button>
+            </a>
           </div>
         </div>
       </section>
