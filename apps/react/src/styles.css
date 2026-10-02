@@ -3898,10 +3898,13 @@ body {
   grid-template-columns: repeat(3, 1fr);
 }
 .game-card {
-  padding: 0;
+  padding: 0 !important;
   overflow: hidden;
   border-radius: 12px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0 !important;
 }
 .game-card-img {
   width: 100%;
@@ -3909,6 +3912,8 @@ body {
   object-fit: cover;
   display: block;
   border-radius: 12px 12px 0 0;
+  margin: 0 !important;
+  border: none !important;
 }
 .game-card-title {
   margin: 0;
