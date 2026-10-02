@@ -131,6 +131,8 @@ const TEACHER_BRIEFS = [
   { file: "/chuxin-teacher-3-huetv.jpg",  name: "Triệu Văn Huệ" },
   { file: "/chuxin-teacher-4-hantg.jpg",  name: "Trần Gia Hân" },
   { file: "/chuxin-teacher-5-dongmv.jpg", name: "Mã Vũ Đồng" },
+  { file: "/chuxin-teacher-6-haint.jpg",  name: "Hải Nguyễn Thị" },
+  { file: "/chuxin-teacher-7-trangptt.jpg", name: "Phan Thị Thu Trang" },
 ];
 
 const FEEDBACKS = [
@@ -301,20 +303,17 @@ function GuestHome() {
       {/* Courses */}
       <h2 className="section-h" id="courses" style={{ textAlign: 'center' }}>Khóa học</h2>
       <p style={{ textAlign: 'center', color: 'var(--c-text-soft)', marginBottom: 30, marginTop: -10 }}>Khóa học phù hợp cho mọi lứa tuổi, mọi nhu cầu của người học.</p>
-      <div className="course-grid">
+      <div className="course-cards-grid">
         {COURSES.map((c) => (
-          <Link key={c.id} className="course-tile course-tile--with-image" to={`/course/${c.id}`}>
-            {c.image && (
-              <div className="course-tile-image-wrapper">
-                <img src={c.image} alt={c.title} className="course-tile-image" />
-              </div>
-            )}
-            <div className="course-tile-content">
-              <h3>{c.title}</h3>
-              <div className="muted">{c.subtitle}</div>
-              <div className="course-view-btn" style={{ color: c.color }}>Xem chi tiết →</div>
+          <Link key={c.id} className="course-card" to={`/course/${c.id}`}>
+            <div className="course-card-img-wrap">
+              {c.image && <img src={c.image} alt={c.title} className="course-card-img" />}
             </div>
-            <div className="tile-bar" style={{ background: c.color }} />
+            <div className="course-card-body">
+              <h3 className="course-card-title">{c.title}</h3>
+              <p className="course-card-desc">{c.subtitle}</p>
+              <div className="course-card-btn" style={{ borderColor: c.color, color: c.color }}>Xem chi tiết</div>
+            </div>
           </Link>
         ))}
       </div>
