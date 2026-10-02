@@ -146,27 +146,27 @@ const FEEDBACKS = [
 
 const GAMES_INFO = [
   {
-    image: "https://placehold.co/400x250/a71e22/FFF?text=Bingo",
+    image: "/games/bingo.jpg",
     title: "Bingo",
   },
   {
-    image: "https://placehold.co/400x250/e55c2f/FFF?text=Ghep+the+bai",
+    image: "/games/ghep-the-bai.jpg",
     title: "Ghép thẻ bài",
   },
   {
-    image: "https://placehold.co/400x250/c0392b/FFF?text=Tiep+suc+noi+tu",
+    image: "/games/tiep-suc-noi-tu.jpg",
     title: "Tiếp sức nối từ",
   },
   {
-    image: "https://placehold.co/400x250/8e1a1a/FFF?text=Chiec+hop+bi+mat",
+    image: "/games/chiec-hop-bi-mat.jpg",
     title: "Chiếc hộp bí mật",
   },
   {
-    image: "https://placehold.co/400x250/d35400/FFF?text=Sap+xep+cau",
+    image: "/games/sap-xep-cau.jpg",
     title: "Sắp xếp trật tự câu",
   },
   {
-    image: "https://placehold.co/400x250/c0392b/FFF?text=Tim+tu+dap+bang",
+    image: "/games/tim-tu-dap-bang.jpg",
     title: "Tìm từ đập bảng",
   },
 ];
@@ -269,7 +269,7 @@ function GuestHome() {
           </div>
         </div>
         <div className="hero-logo-container" style={{ display: 'flex', justifyContent: 'center' }}>
-          <img src="/chuxin-logo.jpg" alt="Sơ Tâm" style={{ width: '100%', maxWidth: 340, borderRadius: 24, boxShadow: '0 20px 40px rgba(0,0,0,0.15)', display: 'block' }} />
+          <img src="/logo-wrapped.png" alt="Sơ Tâm" style={{ width: '100%', maxWidth: 360, display: 'block' }} />
         </div>
       </section>
       </section>
