@@ -52,12 +52,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="documents/:id" element={<DocumentDetailPage />} />
           <Route path="ve-chung-toi" element={<AboutPage />} />
           <Route path="giaovu" element={<GiaovuPage />} />
-          <Route path="admin" element={<AdminDashboard />} />
-          <Route path="admin/quiz-import" element={<QuizImportPage />} />
-        </Route>
+                            </Route>
         {/* Standalone (no shared app chrome) — opened in a new tab from "▶ Thử làm" */}
-        <Route path="admin/quiz/:id/play" element={<QuizPlayerPage />} />
-      </Routes>
+              </Routes>
     </BrowserRouter>
   </React.StrictMode>,
 );

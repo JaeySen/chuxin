@@ -126,13 +126,13 @@ export function Home() {
 
 
 const TEACHER_BRIEFS = [
-  { file: "/chuxin-teacher-1-trungnd.jpg", name: "Nguyễn Đức Trung" },
-  { file: "/chuxin-teacher-2-haltg.jpg",  name: "Lê Thiên Giao Hạ" },
-  { file: "/chuxin-teacher-3-huetv.jpg",  name: "Triệu Văn Huệ" },
-  { file: "/chuxin-teacher-4-hantg.jpg",  name: "Trần Gia Hân" },
-  { file: "/chuxin-teacher-5-dongmv.jpg", name: "Mã Vũ Đồng" },
-  { file: "/chuxin-teacher-6-haint.jpg",  name: "Hải Nguyễn Thị" },
-  { file: "/chuxin-teacher-7-trangptt.jpg", name: "Phan Thị Thu Trang" },
+  { file: "/chuxin-teacher-1-trungnd.webp", name: "Nguyễn Đức Trung" },
+  { file: "/chuxin-teacher-2-haltg.webp",  name: "Lê Thiên Giao Hạ" },
+  { file: "/chuxin-teacher-3-huetv.webp",  name: "Triệu Văn Huệ" },
+  { file: "/chuxin-teacher-4-hantg.webp",  name: "Trần Gia Hân" },
+  { file: "/chuxin-teacher-5-dongmv.webp", name: "Mã Vũ Đồng" },
+  { file: "/chuxin-teacher-6-haint.webp",  name: "Hải Nguyễn Thị" },
+  { file: "/chuxin-teacher-7-trangptt.webp", name: "Phan Thị Thu Trang" },
 ];
 
 const FEEDBACKS = [
@@ -146,27 +146,27 @@ const FEEDBACKS = [
 
 const GAMES_INFO = [
   {
-    image: "/games/bingo.jpg",
+    image: "/games/bingo.webp",
     title: "Bingo",
   },
   {
-    image: "/games/ghep-the-bai.jpg",
+    image: "/games/ghep-the-bai.webp",
     title: "Ghép thẻ bài",
   },
   {
-    image: "/games/tiep-suc-noi-tu.jpg",
+    image: "/games/tiep-suc-noi-tu.webp",
     title: "Tiếp sức nối từ",
   },
   {
-    image: "/games/chiec-hop-bi-mat.jpg",
+    image: "/games/chiec-hop-bi-mat.webp",
     title: "Chiếc hộp bí mật",
   },
   {
-    image: "/games/sap-xep-cau.jpg",
+    image: "/games/sap-xep-cau.webp",
     title: "Sắp xếp trật tự câu",
   },
   {
-    image: "/games/tim-tu-dap-bang.jpg",
+    image: "/games/tim-tu-dap-bang.webp",
     title: "Tìm từ đập bảng",
   },
 ];
@@ -236,7 +236,7 @@ function GuestHome() {
         "@type": "EducationalOrganization",
         "name": "Hán ngữ Sơ Tâm",
         "url": "https://www.hanngusotam.com",
-        "logo": "https://www.hanngusotam.com/chuxin-logo.jpg",
+        "logo": "https://www.hanngusotam.com/chuxin-logo.webp",
         "description": "Trung tâm tiếng Trung Sơ Tâm — Hán ngữ HSK 1–6.",
       }} />
 
@@ -269,7 +269,7 @@ function GuestHome() {
           </div>
         </div>
         <div className="hero-logo-container" style={{ display: 'flex', justifyContent: 'center' }}>
-          <img src="/logo-wrapped.png" alt="Sơ Tâm" style={{ width: '100%', maxWidth: 360, display: 'block' }} />
+          <img src="/logo-wrapped.webp" alt="Sơ Tâm" style={{ width: '100%', maxWidth: 360, display: 'block' }} />
         </div>
       </section>
       </section>

@@ -243,7 +243,7 @@ function Header() {
       <div className="sotam-header-inner">
         {/* Brand */}
         <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
-          <img src="/chuxin-logo.jpg" alt="Sơ Tâm" className="brand-mark" />
+          <img src="/chuxin-logo.webp" alt="Sơ Tâm" className="brand-mark" />
           <span>Hán ngữ Sơ Tâm</span>
         </Link>
 
@@ -452,7 +452,7 @@ function FacebookIcon() {
   );
 }
 function ZaloIcon() {
-  return <img src="/zalo-icon.png" width="22" height="22" alt="Zalo" style={{ display: 'block', borderRadius: '50%' }} />;
+  return <img src="/zalo-icon.webp" width="22" height="22" alt="Zalo" style={{ display: 'block', borderRadius: '50%' }} />;
 }
 function PhoneIcon() {
   return (

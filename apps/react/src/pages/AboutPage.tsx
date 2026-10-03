@@ -1,11 +1,11 @@
 import { useHead } from "../lib/useHead";
 
 const TEACHER_BRIEFS = [
-  { file: "/chuxin-teacher-1-trungnd.jpg", name: "Nguyễn Đức Trung" },
-  { file: "/chuxin-teacher-2-haltg.jpg",  name: "Lê Thiên Giao Hạ" },
-  { file: "/chuxin-teacher-3-huetv.jpg",  name: "Triệu Văn Huệ" },
-  { file: "/chuxin-teacher-4-hantg.jpg",  name: "Trần Gia Hân" },
-  { file: "/chuxin-teacher-5-dongmv.jpg", name: "Mã Vũ Đồng" },
+  { file: "/chuxin-teacher-1-trungnd.webp", name: "Nguyễn Đức Trung" },
+  { file: "/chuxin-teacher-2-haltg.webp",  name: "Lê Thiên Giao Hạ" },
+  { file: "/chuxin-teacher-3-huetv.webp",  name: "Triệu Văn Huệ" },
+  { file: "/chuxin-teacher-4-hantg.webp",  name: "Trần Gia Hân" },
+  { file: "/chuxin-teacher-5-dongmv.webp", name: "Mã Vũ Đồng" },
 ];
 
 const FEEDBACKS = [

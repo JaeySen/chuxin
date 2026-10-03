@@ -25,7 +25,7 @@ export const COURSES: Course[] = [
     subtitle: "Khóa học được thiết kế linh hoạt theo mục tiêu, trình độ và nhu cầu của học viên. Thời gian học chủ động, giáo viên theo sát quá trình học tập, kịp thời hỗ trợ và điều chỉnh phương pháp phù hợp.", 
     order: 0, 
     color: "#a855f7",
-    image: "/chuxin-logo.jpg",
+    image: "/chuxin-logo.webp",
     lessonIds: [] 
   },
   { 
@@ -34,9 +34,9 @@ export const COURSES: Course[] = [
     subtitle: "Làm quen với Pinyin và chữ Hán, xây dựng nền tảng tiếng Trung vững chắc.", 
     order: 1, 
     color: "#c64a1f", 
-    image: "/cover-hsk1.png",
+    image: "/cover-hsk1.webp",
     lessonIds: [], 
-    brochureUrl: "/brochure-hsk1-2.pdf" 
+    brochureUrl: "/brochure-hsk1-2.webp" 
   },
   { 
     id: "han2", 
@@ -44,9 +44,9 @@ export const COURSES: Course[] = [
     subtitle: "Mở rộng vốn từ, luyện giao tiếp qua các chủ đề thường ngày.", 
     order: 2, 
     color: "#d97a1b", 
-    image: "/cover-hsk2.png",
+    image: "/cover-hsk2.webp",
     lessonIds: [], 
-    brochureUrl: "/brochure-hsk1-2.pdf" 
+    brochureUrl: "/brochure-hsk1-2.webp" 
   },
   { 
     id: "han3", 
@@ -54,7 +54,7 @@ export const COURSES: Course[] = [
     subtitle: "Tự tin giao tiếp, vững nền tảng – sẵn sàng chinh phục trình độ trung cấp.",         
     order: 3, 
     color: "#d97a1b", 
-    image: "/cover-hsk3.png",
+    image: "/cover-hsk3.webp",
     lessonIds: [] 
   },
   { 
@@ -63,7 +63,7 @@ export const COURSES: Course[] = [
     subtitle: "Hơn 3.000 từ vựng – tự tin giao tiếp với người bản xứ, chủ động sử dụng tiếng Trung trong học tập, du lịch và đời sống.", 
     order: 4, 
     color: "#e6a316", 
-    image: "/cover-hsk4.jpg",
+    image: "/cover-hsk4.webp",
     lessonIds: [] 
   },
   { 
@@ -81,7 +81,7 @@ export const COURSES: Course[] = [
     subtitle: "Hơn 5.000 từ vựng – tự tin du học và làm việc trong môi trường sử dụng tiếng Trung.",             
     order: 6, 
     color: "#8a6900", 
-    image: "/cover-hsk6.jpg",
+    image: "/cover-hsk6.webp",
     lessonIds: [] 
   },
   { 
@@ -90,7 +90,7 @@ export const COURSES: Course[] = [
     subtitle: "Khơi mở ngôn ngữ, nuôi dưỡng tương lai. Giúp trẻ hình thành phản xạ ngôn ngữ từ sớm.",  
     order: 7, 
     color: "#16a34a", 
-    image: "/tieng-trung-tre-em.jpg",
+    image: "/tieng-trung-tre-em.webp",
     lessonIds: [] 
   },
   { 
@@ -99,7 +99,7 @@ export const COURSES: Course[] = [
     subtitle: "Học tiếng Trung qua các tình huống công việc thực tế, từ giao tiếp với khách hàng đến trao đổi và đàm phán thương mại.", 
     order: 8, 
     color: "#2563eb", 
-    image: "/tieng-trung-thuong-mai.jpg",
+    image: "/tieng-trung-thuong-mai.webp",
     lessonIds: [] 
   }
 ];
