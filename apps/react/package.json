@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "optimize": "node scripts/optimize-media.mjs",
+    "postbuild": "node scripts/preserve-mtime.mjs",
+    "build": "npm run optimize && tsc -b && vite build && npm run postbuild",
     "preview": "vite preview"
   },
   "dependencies": {
