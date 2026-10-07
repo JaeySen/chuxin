@@ -272,61 +272,61 @@ function GuestHome() {
 
       {/* Giới thiệu trung tâm */}
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
-        <div className="jumbotron-section full-bleed jumbotron-section--tall" style={{ padding: "60px 20px" }}>
+        <div style={{ padding: "60px 0" }}>
           <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
           <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
 
           <div className="about-mission-body" style={{ marginTop: 40, textAlign: 'left' }}>
-            <div className="about-spirit" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
-              <div className="about-spirit-label" style={{ color: 'rgba(255,255,255,0.7)' }}>初心 · Chuxin</div>
-              <h3 className="about-spirit-title" style={{ color: 'white' }}>Tinh thần Chuxin</h3>
-              <p style={{ color: 'rgba(255,255,255,0.88)' }}>
-                <strong style={{ color: 'white' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
+            <div className="about-spirit" style={{ background: 'var(--c-bg-soft)', border: '1px solid var(--c-border)' }}>
+              <div className="about-spirit-label" style={{ color: 'var(--c-text-soft)' }}>初心 · Chuxin</div>
+              <h3 className="about-spirit-title" style={{ color: 'var(--c-text)' }}>Tinh thần Chuxin</h3>
+              <p style={{ color: 'var(--c-text)' }}>
+                <strong style={{ color: 'var(--c-text)' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
                 học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
                 một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa Trung Hoa.
               </p>
-              <p style={{ color: 'rgba(255,255,255,0.88)' }}>
+              <p style={{ color: 'var(--c-text)' }}>
                 Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu hóa cho từng mục tiêu cụ thể.
               </p>
-              <p className="about-commit-heading"><strong style={{ color: 'white' }}>Cam kết của chúng tôi:</strong></p>
+              <p className="about-commit-heading"><strong style={{ color: 'var(--c-text)' }}>Cam kết của chúng tôi:</strong></p>
               <ul className="about-commit-list">
                 <li>
                   <span className="about-commit-icon">🤝</span>
-                  <div style={{ color: 'rgba(255,255,255,0.9)' }}>
-                    <strong style={{ color: 'white' }}>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
+                  <div style={{ color: 'var(--c-text)' }}>
+                    <strong style={{ color: 'var(--c-text)' }}>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
                   </div>
                 </li>
                 <li>
                   <span className="about-commit-icon">🏅</span>
-                  <div style={{ color: 'rgba(255,255,255,0.9)' }}>
-                    <strong style={{ color: 'white' }}>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
+                  <div style={{ color: 'var(--c-text)' }}>
+                    <strong style={{ color: 'var(--c-text)' }}>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
                   </div>
                 </li>
                 <li>
                   <span className="about-commit-icon">🚀</span>
-                  <div style={{ color: 'rgba(255,255,255,0.9)' }}>
-                    <strong style={{ color: 'white' }}>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung trong học tập, công việc và cuộc sống.
+                  <div style={{ color: 'var(--c-text)' }}>
+                    <strong style={{ color: 'var(--c-text)' }}>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung trong học tập, công việc và cuộc sống.
                   </div>
                 </li>
               </ul>
             </div>
 
             <div className="about-values">
-              <div className="about-value-card about-value-card--glass">
+              <div className="about-value-card ">
                 <span className="about-value-icon">🎯</span>
                 <div>
                   <strong>Đúng trọng tâm</strong>
                   <p>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
                 </div>
               </div>
-              <div className="about-value-card about-value-card--glass">
+              <div className="about-value-card ">
                 <span className="about-value-icon">💬</span>
                 <div>
                   <strong>Tương tác thật sự</strong>
                   <p>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
                 </div>
               </div>
-              <div className="about-value-card about-value-card--glass">
+              <div className="about-value-card ">
                 <span className="about-value-icon">📈</span>
                 <div>
                   <strong>Theo dõi tiến độ</strong>
@@ -347,10 +347,11 @@ function GuestHome() {
       )}
 
       {/* Courses */}
-      <h2 className="section-h" id="courses" style={{ textAlign: 'center', marginTop: 60 }}>
+      <div className="jumbotron-section full-bleed jumbotron-section--tall" style={{ padding: "60px 20px", marginTop: 40, marginBottom: 40 }}>
+      <h2 className="section-h" id="courses" style={{ textAlign: 'center', color: 'white', marginTop: 0 }}>
         Khóa học
       </h2>
-      <p style={{ textAlign: 'center', color: 'var(--c-text-soft)', marginBottom: 30, marginTop: -10 }}>
+      <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.8)', marginBottom: 30, marginTop: -10 }}>
         Khóa học phù hợp cho mọi lứa tuổi, mọi nhu cầu của người học.
       </p>
       <div className="course-cards-grid">
@@ -369,6 +370,7 @@ function GuestHome() {
       </div>
       <div style={{ textAlign: 'center', marginTop: 24 }}>
         <Link to="/khoa-hoc" className="btn btn-primary" style={{ padding: '12px 32px' }}>Tất cả khóa học →</Link>
+      </div>
       </div>
 
       {/* Games section */}
@@ -394,22 +396,6 @@ function GuestHome() {
         )}
       </section>
 
-      {/* Đội ngũ giáo viên */}
-      <div id="giao-vien" style={{ paddingTop: 80 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <h2 className="section-h" style={{ margin: 0 }}>Đội ngũ giáo viên</h2>
-          <Link to="/giao-vien" className="btn btn-ghost" style={{ fontSize: 14 }}>Tất cả giáo viên →</Link>
-        </div>
-        
-        <div className="teacher-slider-track" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, overflow: 'visible' }}>
-          {TEACHER_BRIEFS.slice(0, 2).map((t, idx) => (
-            <div key={idx} className="teacher-slider-card" style={{ width: '100%', flex: 'none' }}>
-              <img src={t.file} alt={t.name} className="teacher-slider-img" style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Bài tập trực tuyến — landing section */}
       <section className="landing-section landing-section--student full-bleed" style={{ marginTop: 80 }}>
         <div className="landing-section-inner">
@@ -431,6 +417,22 @@ function GuestHome() {
           </div>
         </div>
       </section>
+
+      {/* Đội ngũ giáo viên */}
+      <div id="giao-vien" style={{ paddingTop: 80 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <h2 className="section-h" style={{ margin: 0 }}>Đội ngũ giáo viên</h2>
+          <Link to="/giao-vien" className="btn btn-ghost" style={{ fontSize: 14 }}>Tất cả giáo viên →</Link>
+        </div>
+        
+        <div className="teacher-slider-track" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, overflow: 'visible' }}>
+          {TEACHER_BRIEFS.slice(0, 2).map((t, idx) => (
+            <div key={idx} className="teacher-slider-card" style={{ width: '100%', flex: 'none' }}>
+              <img src={t.file} alt={t.name} className="teacher-slider-img" style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Tham gia với chúng tôi — landing section */}
       <section className="landing-section landing-section--teacher full-bleed">

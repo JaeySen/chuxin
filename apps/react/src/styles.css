@@ -3462,7 +3462,7 @@ body {
   background: var(--c-red);
   transition: width 0.3s ease;
 }
-.nav-dropdown-btn:hover::after, .subnav-item:hover::after {
+.nav-dropdown-btn:hover::after, .subnav-item:hover::after, .nav-dropdown-btn.active::after {
   width: 100%;
 }
 

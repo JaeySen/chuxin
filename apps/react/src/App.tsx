@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 // ── Contact details — update here only ───────────────────────────────────────
 const CONTACT = {
-  phone:    "0989175437",
+  phone:    "0989 175 437",
   zalo:     "https://zalo.me/0989175437",
   facebook: "https://www.facebook.com/profile.php?id=61588907533663",
   tiktok:   "https://www.tiktok.com/@hanngusotam",
@@ -60,10 +60,10 @@ export function App() {
 }
 
 const MAIN_NAV = [
-  { to: "/#gioi-thieu", label: "Giới thiệu" },
-  { to: "/#courses", label: "Khóa học" },
+  { to: "/ve-chung-toi", label: "Giới thiệu" },
+  { to: "/khoa-hoc", label: "Khóa học" },
   { to: "/#lich-khai-giang", label: "Lịch khai giảng" },
-  { to: "/#giao-vien", label: "Giáo viên" },
+  { to: "/giao-vien", label: "Giáo viên" },
 ];
 
 // Games submenu — only rendered when logged in
@@ -92,7 +92,7 @@ function LibraryDropdown() {
 
   return (
     <div className="nav-dropdown" ref={ref} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <button className="nav-dropdown-btn" onClick={() => setOpen((v) => !v)} aria-expanded={open} style={{ fontFamily: 'inherit' }}>
+      <button className={`nav-dropdown-btn ${location.pathname.startsWith('/thu-vien') ? "active" : ""}`} onClick={() => setOpen((v) => !v)} aria-expanded={open} style={{ fontFamily: 'inherit' }}>
         Thư viện <span className="nav-dropdown-caret">{open ? "▴" : "▾"}</span>
       </button>
       {open && (
@@ -224,19 +224,33 @@ function Header() {
             </Link>
           ) : (
             <>
-              {MAIN_NAV.map((l) => (
-                <div key={l.to}>
-                  {l.to.startsWith("/#") ? (
-                    <a href={l.to} className="nav-dropdown-btn" onClick={(e) => {
-                      e.preventDefault();
-                      const id = l.to.replace("/#", "");
-                      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-                    }}>{l.label}</a>
-                  ) : (
-                    <Link to={l.to} className="nav-dropdown-btn">{l.label}</Link>
-                  )}
-                </div>
-              ))}
+              {MAIN_NAV.map((l) => {
+  const isActive = l.to.startsWith("/#") 
+    ? location.hash === l.to.replace("/", "")
+    : (l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to));
+  
+  return (
+    <div key={l.to}>
+      {l.to.startsWith("/#") ? (
+        <a href={l.to} className={`nav-dropdown-btn ${isActive ? "active" : ""}`} onClick={(e) => {
+          e.preventDefault();
+          if (location.pathname !== "/") {
+            nav("/");
+            setTimeout(() => {
+              const id = l.to.replace("/#", "");
+              document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+          } else {
+            const id = l.to.replace("/#", "");
+            document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+          }
+        }}>{l.label}</a>
+      ) : (
+        <Link to={l.to} className={`nav-dropdown-btn ${isActive ? "active" : ""}`}>{l.label}</Link>
+      )}
+    </div>
+  );
+})}
               <LibraryDropdown />
               {user && <GamesDropdown />}
             </>
@@ -253,8 +267,8 @@ function Header() {
               </div>
             ) : (
               <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="btn btn-consult btn-sm desktop-only" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <ZaloIcon /> Liên hệ tư vấn: {CONTACT.phone}
-              </a>
+  <span>Liên hệ tư vấn:</span> <ZaloIcon /> <span>{CONTACT.phone}</span>
+</a>
             )}
           </div>
 
