@@ -26,12 +26,24 @@ const OLD_EXERCISES = [
   { title: "Bingo",         icon: "🎯", to: "/bingo" },
 ];
 
+const URL_TO_COURSE_ID: Record<string, string> = {
+  "hsk1": "han1",
+  "hsk2": "han2",
+  "hsk3": "han3",
+  "hsk4": "han4",
+  "hsk5": "han5",
+  "hsk6": "han6",
+  "tieng-trung-tre-em": "tre-em",
+  "tieng-trung-thuong-mai": "thuong-mai",
+};
+
 export function CoursePage() {
   const { courseId } = useParams();
   const { role } = useAuth();
 
-  const course = COURSES.find((c) => c.id === courseId);
-  const chapters: Chapter[] = courseId ? CHAPTERS_BY_COURSE[courseId as CourseId] ?? [] : [];
+  const mappedCourseId = URL_TO_COURSE_ID[courseId || ""] || courseId;
+  const course = COURSES.find((c) => c.id === mappedCourseId);
+  const chapters: Chapter[] = mappedCourseId ? CHAPTERS_BY_COURSE[mappedCourseId as CourseId] ?? [] : [];
 
   useHead({
     title: course ? `${course.title} · Hán ngữ Sơ Tâm` : "Khoá học · Hán ngữ Sơ Tâm",
@@ -42,10 +54,10 @@ export function CoursePage() {
   });
 
   if (role === "teacher" || role === "admin") {
-    return <TeacherCourseView courseId={courseId} course={course} chapters={chapters} />;
+    return <TeacherCourseView courseId={mappedCourseId} course={course} chapters={chapters} />;
   }
 
-  return <GuestCourseView courseId={courseId} course={course} chapters={chapters} />;
+  return <GuestCourseView courseId={mappedCourseId} course={course} chapters={chapters} />;
 }
 
 

@@ -211,9 +211,11 @@ const HERO_TESTIMONIALS = [
 
 type LoginTarget = null | "student" | "teacher";
 
+
 function GuestHome() {
   const location = useLocation();
   const [loginTarget, setLoginTarget] = useState<LoginTarget>(null);
+  const [showAllGames, setShowAllGames] = useState(false);
 
   useEffect(() => {
     if (location.pathname === "/courses") {
@@ -222,12 +224,6 @@ function GuestHome() {
       }, 80);
     }
   }, [location.pathname]);
-
-  function scrollToCourses(e: React.MouseEvent) {
-    e.preventDefault();
-    document.getElementById("courses")?.scrollIntoView({ behavior: "smooth" });
-    window.history.pushState({}, "", "/courses");
-  }
 
   return (
     <div className="container" style={{ padding: "0 16px 80px" }}>
@@ -274,76 +270,9 @@ function GuestHome() {
       </section>
       </section>
 
-      {/* Games section */}
-      <section className="games-section">
-        <h2 className="section-h">Học qua trò chơi — hiệu quả hơn bạn nghĩ</h2>
-        <p className="games-intro">
-          Nhiều nghiên cứu giáo dục cho thấy hoạt động học tập qua trò chơi có thể tăng cường sự hứng thú và khả năng ghi nhớ của người học.
-          <br /><br />
-          Tại Sơ Tâm, trò chơi không phải là phần thưởng sau giờ học <span style={{ whiteSpace: 'nowrap' }}>— mà chính là một phần của bài học.</span>
-        </p>
-        <div className="games-grid">
-          {GAMES_INFO.map((g) => (
-            <div key={g.title} className="game-card">
-              {g.image && <img src={g.image} alt={g.title} className="game-card-img" />}
-              <h3 className="game-card-title">{g.title}</h3>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {loginTarget && (
-        <SignInModal
-          close={() => setLoginTarget(null)}
-          redirectTo={loginTarget === "teacher" ? "/giaovu" : undefined}
-          heading={loginTarget === "teacher" ? "Đăng nhập giáo viên" : "Đăng nhập học viên"}
-        />
-      )}
-
-      {/* Courses */}
-      <h2 className="section-h" id="courses" style={{ textAlign: 'center' }}>Khóa học</h2>
-      <p style={{ textAlign: 'center', color: 'var(--c-text-soft)', marginBottom: 30, marginTop: -10 }}>Khóa học phù hợp cho mọi lứa tuổi, mọi nhu cầu của người học.</p>
-      <div className="course-cards-grid">
-        {COURSES.map((c) => (
-          <Link key={c.id} className="course-card" to={`/course/${c.id}`}>
-            <div className="course-card-img-wrap">
-              {c.image && <img src={c.image} alt={c.title} className="course-card-img" />}
-            </div>
-            <div className="course-card-body">
-              <h3 className="course-card-title">{c.title}</h3>
-              <p className="course-card-desc">{c.subtitle}</p>
-              <div className="course-card-btn" style={{ borderColor: c.color, color: c.color }}>Xem chi tiết</div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Bài tập trực tuyến — landing section */}
-      <section className="landing-section landing-section--student full-bleed">
-        <div className="landing-section-inner">
-          <div className="landing-section-text">
-            <div className="landing-section-eyebrow">Dành cho học viên</div>
-            <h2 className="landing-section-title">Bài tập trực tuyến</h2>
-            <p className="landing-section-desc">
-              Làm bài trắc nghiệm nhiều lần, xem đáp án ngay sau khi nộp.<br />
-              Theo dõi tiến trình và nhận phản hồi từ giáo viên.
-            </p>
-            <a
-              className="btn btn-primary landing-section-btn"
-              href="https://thuchanh.hanngusotam.com"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Đăng nhập học viên →
-            </a>
-          </div>
-          
-        </div>
-      </section>
-
-
+      {/* Giới thiệu trung tâm */}
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
-        <div className="jumbotron-section full-bleed jumbotron-section--tall">
+        <div className="jumbotron-section full-bleed jumbotron-section--tall" style={{ padding: "60px 20px" }}>
           <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
           <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
 
@@ -357,9 +286,7 @@ function GuestHome() {
                 một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa Trung Hoa.
               </p>
               <p style={{ color: 'rgba(255,255,255,0.88)' }}>
-                Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học
-                viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu
-                hóa cho từng mục tiêu cụ thể.
+                Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu hóa cho từng mục tiêu cụ thể.
               </p>
               <p className="about-commit-heading"><strong style={{ color: 'white' }}>Cam kết của chúng tôi:</strong></p>
               <ul className="about-commit-list">
@@ -409,20 +336,105 @@ function GuestHome() {
             </div>
           </div>
         </div>
-
-
       </div>
 
-      <div id="giao-vien" style={{ paddingTop: 60 }}>
-        <h2 className="section-h" style={{ textAlign: "center" }}>Đội ngũ giáo viên</h2>
+      {loginTarget && (
+        <SignInModal
+          close={() => setLoginTarget(null)}
+          redirectTo={loginTarget === "teacher" ? "/giaovu" : undefined}
+          heading={loginTarget === "teacher" ? "Đăng nhập giáo viên" : "Đăng nhập học viên"}
+        />
+      )}
 
-        <TeacherCoverflow />
+      {/* Courses */}
+      <h2 className="section-h" id="courses" style={{ textAlign: 'center', marginTop: 60 }}>
+        Khóa học
+      </h2>
+      <p style={{ textAlign: 'center', color: 'var(--c-text-soft)', marginBottom: 30, marginTop: -10 }}>
+        Khóa học phù hợp cho mọi lứa tuổi, mọi nhu cầu của người học.
+      </p>
+      <div className="course-cards-grid">
+        {COURSES.filter(c => ['han1', 'han2', '1-1'].includes(c.id)).map((c) => (
+          <Link key={c.id} className="course-card" to={`/khoa-hoc/${c.id === 'han1' ? 'hsk1' : c.id === 'han2' ? 'hsk2' : c.id}`}>
+            <div className="course-card-img-wrap">
+              {c.image && <img src={c.image} alt={c.title} className="course-card-img" />}
+            </div>
+            <div className="course-card-body">
+              <h3 className="course-card-title">{c.title}</h3>
+              <p className="course-card-desc">{c.subtitle}</p>
+              <div className="course-card-btn" style={{ borderColor: c.color, color: c.color }}>Xem chi tiết</div>
+            </div>
+          </Link>
+        ))}
       </div>
+      <div style={{ textAlign: 'center', marginTop: 24 }}>
+        <Link to="/khoa-hoc" className="btn btn-primary" style={{ padding: '12px 32px' }}>Tất cả khóa học →</Link>
+      </div>
+
+      {/* Games section */}
+      <section className="games-section" style={{ marginTop: 80 }}>
+        <h2 className="section-h" style={{ textAlign: 'center' }}>Học qua trò chơi — hiệu quả hơn bạn nghĩ</h2>
+        <p className="games-intro" style={{ textAlign: 'center' }}>
+          Nhiều nghiên cứu giáo dục cho thấy hoạt động học tập qua trò chơi có thể tăng cường sự hứng thú và khả năng ghi nhớ của người học.
+          <br /><br />
+          Tại Sơ Tâm, trò chơi không phải là phần thưởng sau giờ học <span style={{ whiteSpace: 'nowrap' }}>— mà chính là một phần của bài học.</span>
+        </p>
+        <div className="games-grid">
+          {(showAllGames ? GAMES_INFO : GAMES_INFO.slice(0, 3)).map((g) => (
+            <div key={g.title} className="game-card">
+              {g.image && <img src={g.image} alt={g.title} className="game-card-img" />}
+              <h3 className="game-card-title">{g.title}</h3>
+            </div>
+          ))}
+        </div>
+        {!showAllGames && (
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <button className="btn btn-secondary" onClick={() => setShowAllGames(true)}>Trải nghiệm thêm ↓</button>
+          </div>
+        )}
+      </section>
+
+      {/* Đội ngũ giáo viên */}
+      <div id="giao-vien" style={{ paddingTop: 80 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <h2 className="section-h" style={{ margin: 0 }}>Đội ngũ giáo viên</h2>
+          <Link to="/giao-vien" className="btn btn-ghost" style={{ fontSize: 14 }}>Tất cả giáo viên →</Link>
+        </div>
+        
+        <div className="teacher-slider-track" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, overflow: 'visible' }}>
+          {TEACHER_BRIEFS.slice(0, 2).map((t, idx) => (
+            <div key={idx} className="teacher-slider-card" style={{ width: '100%', flex: 'none' }}>
+              <img src={t.file} alt={t.name} className="teacher-slider-img" style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bài tập trực tuyến — landing section */}
+      <section className="landing-section landing-section--student full-bleed" style={{ marginTop: 80 }}>
+        <div className="landing-section-inner">
+          <div className="landing-section-text">
+            <div className="landing-section-eyebrow">Dành cho học viên</div>
+            <h2 className="landing-section-title">Bài tập trực tuyến</h2>
+            <p className="landing-section-desc">
+              Làm bài trắc nghiệm nhiều lần, xem đáp án ngay sau khi nộp.<br />
+              Theo dõi tiến trình và nhận phản hồi từ giáo viên.
+            </p>
+            <a
+              className="btn btn-primary landing-section-btn"
+              href="https://thuchanh.hanngusotam.com"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Đăng nhập học viên →
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* Tham gia với chúng tôi — landing section */}
       <section className="landing-section landing-section--teacher full-bleed">
         <div className="landing-section-inner landing-section-inner--reverse">
-          
           <div className="landing-section-text">
             <div className="landing-section-eyebrow">Dành cho giáo viên</div>
             <h2 className="landing-section-title">Tham gia với chúng tôi</h2>
@@ -449,47 +461,6 @@ function GuestHome() {
           Lịch dự kiến khai giảng các khóa học trong tháng
         </p>
         <OpeningCalendar />
-      </div>
-
-      <div id="feedback" style={{ paddingTop: 60, paddingBottom: 60, display: "none" }}>
-        <h2 className="section-h">Học viên nói gì về Sơ Tâm?</h2>
-        <p style={{ color: "var(--c-text-soft)", marginTop: 0, marginBottom: 20 }}>
-          Hàng trăm học viên đã tin tưởng và gắn bó cùng Sơ Tâm trên hành trình chinh phục tiếng Trung.
-        </p>
-        <div className="feedback-marquee-wrapper">
-          <div className="feedback-marquee-track left">
-            {[...FEEDBACKS.slice(0, 3), ...FEEDBACKS.slice(0, 3), ...FEEDBACKS.slice(0, 3)].map((f, i) => (
-              <div key={i} className="feedback-card marquee-card">
-                <div className="feedback-header">
-                  <span className="feedback-avatar">{f.avatar}</span>
-                  <div className="feedback-meta">
-                    <div className="feedback-name">{f.name}</div>
-                    <div className="feedback-course">Khoá {f.course}</div>
-                  </div>
-                  <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
-                </div>
-                <p className="feedback-text">"{f.text}"</p>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="feedback-marquee-wrapper" style={{ marginTop: 24 }}>
-          <div className="feedback-marquee-track right">
-            {[...FEEDBACKS.slice(3, 6), ...FEEDBACKS.slice(3, 6), ...FEEDBACKS.slice(3, 6)].map((f, i) => (
-              <div key={i} className="feedback-card marquee-card">
-                <div className="feedback-header">
-                  <span className="feedback-avatar">{f.avatar}</span>
-                  <div className="feedback-meta">
-                    <div className="feedback-name">{f.name}</div>
-                    <div className="feedback-course">Khoá {f.course}</div>
-                  </div>
-                  <div className="feedback-stars">{"⭐".repeat(f.rating)}</div>
-                </div>
-                <p className="feedback-text">"{f.text}"</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
     </div>

@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { App } from "./App";
+import { TeacherPage } from "./pages/TeacherPage";
+import { CourseListPage } from "./pages/CourseListPage";
 import { Home } from "./pages/Home";
 import { CoursePage } from "./pages/CoursePage";
 import { LessonPage } from "./pages/LessonPage";
@@ -32,6 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
           <Route path="courses" element={<Home />} />
+          <Route path="khoa-hoc/:courseId" element={<CoursePage />} />
           <Route path="course/:courseId" element={<CoursePage />} />
           <Route path="lesson/:lessonId" element={<LessonPage />} />
           <Route path="me" element={<MePage />} />
@@ -51,6 +54,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="documents" element={<DocumentsPage />} />
           <Route path="documents/:id" element={<DocumentDetailPage />} />
           <Route path="ve-chung-toi" element={<AboutPage />} />
+          <Route path="giao-vien" element={<TeacherPage />} />
+          <Route path="khoa-hoc" element={<CourseListPage />} />
           <Route path="giaovu" element={<GiaovuPage />} />
                             </Route>
         {/* Standalone (no shared app chrome) — opened in a new tab from "▶ Thử làm" */}
