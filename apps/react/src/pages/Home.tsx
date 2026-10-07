@@ -305,18 +305,27 @@ function GuestHome() {
               </ul>
             </div>
 
-            <div className="about-values" style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 40 }}>
-              <div style={{ textAlign: 'center' }}>
-                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Đúng trọng tâm</strong>
-                <p style={{ margin: 0, color: 'var(--c-text)' }}>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
+            <div className="about-values">
+              <div className="about-value-card">
+                <span className="about-value-icon">🎯</span>
+                <div>
+                  <strong style={{ color: 'var(--c-red-dark)' }}>Đúng trọng tâm</strong>
+                  <p>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
+                </div>
               </div>
-              <div style={{ textAlign: 'center' }}>
-                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Tương tác thật sự</strong>
-                <p style={{ margin: 0, color: 'var(--c-text)' }}>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
+              <div className="about-value-card">
+                <span className="about-value-icon">💬</span>
+                <div>
+                  <strong style={{ color: 'var(--c-red-dark)' }}>Tương tác thật sự</strong>
+                  <p>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
+                </div>
               </div>
-              <div style={{ textAlign: 'center' }}>
-                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Theo dõi tiến độ</strong>
-                <p style={{ margin: 0, color: 'var(--c-text)' }}>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
+              <div className="about-value-card">
+                <span className="about-value-icon">📈</span>
+                <div>
+                  <strong style={{ color: 'var(--c-red-dark)' }}>Theo dõi tiến độ</strong>
+                  <p>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
+                </div>
               </div>
             </div>
           </div>
