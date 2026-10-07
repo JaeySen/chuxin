@@ -290,15 +290,15 @@ function GuestHome() {
               </p>
               <p className="about-commit-heading" style={{ textAlign: 'center' }}><strong style={{ color: 'var(--c-red-dark)' }}>Cam kết của chúng tôi:</strong></p>
               <ul className="about-commit-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li style={{ textAlign: 'center', marginBottom: 24 }}>
+                <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
                   <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Đồng hành</strong>
                   <div style={{ color: 'var(--c-text)' }}>Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.</div>
                 </li>
-                <li style={{ textAlign: 'center', marginBottom: 24 }}>
+                <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
                   <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Chất lượng</strong>
                   <div style={{ color: 'var(--c-text)' }}>Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.</div>
                 </li>
-                <li style={{ textAlign: 'center', marginBottom: 24 }}>
+                <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
                   <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Ứng dụng</strong>
                   <div style={{ color: 'var(--c-text)' }}>Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung trong học tập, công việc và cuộc sống.</div>
                 </li>
@@ -2060,24 +2060,18 @@ function TeacherHome() {
             </p>
 
             <p className="about-commit-heading"><strong>Cam kết của chúng tôi:</strong></p>
-            <ul className="about-commit-list">
-              <li>
-                <span className="about-commit-icon">🤝</span>
-                <div>
-                  <strong>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
-                </div>
+            <ul className="about-commit-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
+                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Đồng hành</strong>
+                <div style={{ color: 'var(--c-text)' }}>Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.</div>
               </li>
-              <li>
-                <span className="about-commit-icon">🏅</span>
-                <div>
-                  <strong>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
-                </div>
+              <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
+                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Chất lượng</strong>
+                <div style={{ color: 'var(--c-text)' }}>Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.</div>
               </li>
-              <li>
-                <span className="about-commit-icon">🚀</span>
-                <div>
-                  <strong>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả trong học tập, công việc và cuộc sống.
-                </div>
+              <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
+                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Ứng dụng</strong>
+                <div style={{ color: 'var(--c-text)' }}>Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả trong học tập, công việc và cuộc sống.</div>
               </li>
             </ul>
           </div>
