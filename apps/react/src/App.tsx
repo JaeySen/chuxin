@@ -59,51 +59,12 @@ export function App() {
   );
 }
 
-// Always-visible links (with optional sub-items for dropdown)
-const PUBLIC_LINKS = [
-  {
-    to: "/#gioi-thieu",
-    label: "Về chúng tôi",
-    icon: "",
-    sub: [
-      { to: "/#gioi-thieu", label: "Giới thiệu trung tâm" },
-      { to: "/#giao-vien",  label: "Đội ngũ giáo viên" },
-    ],
-  },
-  {
-    to: "/#courses",
-    label: "Khóa học",
-    icon: "",
-    sub: [
-      { to: "/course/han1", label: "HSK 1" },
-      { to: "/course/han2", label: "HSK 2" },
-      { to: "/course/han3", label: "HSK 3" },
-      { to: "/course/han4", label: "HSK 4" },
-      { to: "/course/han5", label: "HSK 5" },
-      { to: "/course/han6", label: "HSK 6" },
-      { to: "/course/thuong-mai", label: "Tiếng Trung Thương mại" },
-      { to: "/course/tre-em", label: "Tiếng Trung Trẻ em" },
-    ],
-  },
-  {
-    to: "/#lich-khai-giang",
-    label: "Lịch khai giảng",
-    icon: "",
-    sub: [],
-  },
-  {
-    to: "/thu-vien",
-    label: "Thư viện",
-    icon: "",
-    sub: [
-      { to: "/thu-vien?cap=so",    label: "Sơ cấp" },
-      { to: "/thu-vien?cap=trung", label: "Trung cấp" },
-      { to: "/thu-vien?cap=cao",   label: "Cao cấp" },
-    ],
-  },
+const MAIN_NAV = [
+  { to: "/#gioi-thieu", label: "Giới thiệu" },
+  { to: "/#courses", label: "Khóa học" },
+  { to: "/#lich-khai-giang", label: "Lịch khai giảng" },
+  { to: "/#giao-vien", label: "Giáo viên" },
 ];
-
-const ALL_SUB_LINKS = PUBLIC_LINKS.flatMap(l => l.sub);
 
 // Games submenu — only rendered when logged in
 const GAME_LINKS = [
@@ -113,8 +74,9 @@ const GAME_LINKS = [
   { to: "/bai-tap-tuong-tac",   label: "Bài tập tương tác",  icon: "🎮" },
 ];
 
-function NavDropdown({ link }: { link: typeof PUBLIC_LINKS[number] }) {
+function LibraryDropdown() {
   const [open, setOpen] = useState(false);
+  const [subOpen, setSubOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
@@ -130,24 +92,31 @@ function NavDropdown({ link }: { link: typeof PUBLIC_LINKS[number] }) {
 
   return (
     <div className="nav-dropdown" ref={ref} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <button
-        className="nav-dropdown-btn"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-      >
-        {link.label} <span className="nav-dropdown-caret">{open ? "▴" : "▾"}</span>
+      <button className="nav-dropdown-btn" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+        Thư viện <span className="nav-dropdown-caret">{open ? "▴" : "▾"}</span>
       </button>
       {open && (
-        <div className="nav-dropdown-menu">
-          <Link to={link.to} className="nav-dropdown-item nav-dropdown-item--header" onClick={() => setOpen(false)}>
-            {link.icon} {link.label}
-          </Link>
-          <div className="nav-dropdown-divider" />
-          {link.sub.map((s) => (
-            <Link key={s.to} to={s.to} className="nav-dropdown-item" onClick={() => setOpen(false)}>
-              {s.label}
-            </Link>
-          ))}
+        <div className="nav-dropdown-menu" style={{ width: 220 }}>
+          <div 
+            className="nav-dropdown-item has-submenu" 
+            onMouseEnter={() => setSubOpen(true)} 
+            onMouseLeave={() => setSubOpen(false)}
+            style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            Học liệu các cấp <span>▸</span>
+            {subOpen && (
+              <div className="nav-dropdown-menu" style={{ position: 'absolute', left: '100%', top: -8, width: 160, display: 'block' }}>
+                <Link to="/thu-vien?cap=so" className="nav-dropdown-item" onClick={() => setOpen(false)}>Sơ cấp</Link>
+                <Link to="/thu-vien?cap=trung" className="nav-dropdown-item" onClick={() => setOpen(false)}>Trung cấp</Link>
+                <Link to="/thu-vien?cap=cao" className="nav-dropdown-item" onClick={() => setOpen(false)}>Cao cấp</Link>
+              </div>
+            )}
+          </div>
+          <a href="/videos" target="_blank" rel="noreferrer" className="nav-dropdown-item" onClick={() => setOpen(false)}>Video giảng dạy thử</a>
+          <a href="/blog" target="_blank" rel="noreferrer" className="nav-dropdown-item" onClick={() => setOpen(false)}>Blog</a>
+          <div className="nav-dropdown-divider" style={{ margin: '8px 0', borderTop: '1px solid var(--c-divider)' }} />
+          <a href="https://thuchanh.hanngusotam.com" target="_blank" rel="noreferrer" className="nav-dropdown-item" onClick={() => setOpen(false)}>Bài tập trực tuyến</a>
+          <a href="https://giaovu.hanngusotam.com" target="_blank" rel="noreferrer" className="nav-dropdown-item" onClick={() => setOpen(false)}>Hỗ trợ giáo viên</a>
         </div>
       )}
     </div>
@@ -191,11 +160,8 @@ function GamesDropdown() {
 }
 
 function Header() {
-  const [activeMenu, setActiveMenu] = useState(0);
-  const [activeMobileSub, setActiveMobileSub] = useState<typeof PUBLIC_LINKS[number] | null>(null);
   const [hidden, setHidden] = useState(false);
   const { user, role, logout } = useAuth();
-  const [consultOpen, setConsultOpen] = useState(false);
   const [menuOpen, setMenuOpen]       = useState(false);
   const location = useLocation();
   const nav = useNavigate();
@@ -233,11 +199,6 @@ function Header() {
     return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
-  const mobileTiles = [
-    ...PUBLIC_LINKS,
-    ...(user ? GAME_LINKS : []),
-  ];
-
   return (
     <header className={`sotam-header ${hidden ? "header-hidden" : ""}`}>
       <div className="sotam-header-inner">
@@ -263,13 +224,20 @@ function Header() {
             </Link>
           ) : (
             <>
-              {PUBLIC_LINKS.map((l, i) => (
-                <div key={l.to} onMouseEnter={() => setActiveMenu(i)}>
-                  <Link to={l.to} className="nav-dropdown-btn" style={{ background: activeMenu === i ? 'rgba(0,0,0,0.05)' : '' }}>
-                    {l.label}
-                  </Link>
+              {MAIN_NAV.map((l) => (
+                <div key={l.to}>
+                  {l.to.startsWith("/#") ? (
+                    <a href={l.to} className="nav-dropdown-btn" onClick={(e) => {
+                      e.preventDefault();
+                      const id = l.to.replace("/#", "");
+                      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                    }}>{l.label}</a>
+                  ) : (
+                    <Link to={l.to} className="nav-dropdown-btn">{l.label}</Link>
+                  )}
                 </div>
               ))}
+              <LibraryDropdown />
               {user && <GamesDropdown />}
             </>
           )}
@@ -284,9 +252,9 @@ function Header() {
                 <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Đăng xuất</button>
               </div>
             ) : (
-              <button className="btn btn-consult btn-sm desktop-only" onClick={() => setConsultOpen(true)}>
-                Gọi/Zalo để tư vấn: {CONTACT.phone}
-              </button>
+              <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="btn btn-consult btn-sm desktop-only" style={{ textDecoration: 'none' }}>
+                Liên hệ tư vấn
+              </a>
             )}
           </div>
 
@@ -308,78 +276,33 @@ function Header() {
           
           <div className="mobile-drawer-body" style={{ padding: '0 20px 20px' }}>
             <div className="mobile-drawer-list">
-              <a href="/#gioi-thieu" className="mobile-list-item" onClick={() => setMenuOpen(false)}>
-                Về chúng tôi
-              </a>
-              <a href="/#courses" className="mobile-list-item" onClick={() => setMenuOpen(false)}>
-                Khóa học
-              </a>
-              <a href="/#lich-khai-giang" className="mobile-list-item" onClick={() => setMenuOpen(false)}>
-                Lịch khai giảng
-              </a>
-              <a href={PUBLIC_LINKS[2].to} target="_blank" rel="noreferrer" className="mobile-list-item" onClick={() => setMenuOpen(false)}>
-                Thư viện
-              </a>
-              <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="mobile-list-item mobile-list-item--zalo" onClick={() => setMenuOpen(false)}>
-                Tư vấn Zalo
-              </a>
+              {MAIN_NAV.map((l) => (
+                l.to.startsWith("/#") ? (
+                  <a key={l.to} href={l.to} className="mobile-list-item" onClick={(e) => {
+                    setMenuOpen(false);
+                    const id = l.to.replace("/#", "");
+                    setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 100);
+                  }}>{l.label}</a>
+                ) : (
+                  <Link key={l.to} to={l.to} className="mobile-list-item" onClick={() => setMenuOpen(false)}>{l.label}</Link>
+                )
+              ))}
+              <div className="mobile-list-item" style={{ fontWeight: 600, color: 'var(--c-red-dark)', marginTop: 8, paddingBottom: 4 }}>Thư viện</div>
+              <Link to="/thu-vien?cap=so" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Học liệu Sơ cấp</Link>
+              <Link to="/thu-vien?cap=trung" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Học liệu Trung cấp</Link>
+              <Link to="/thu-vien?cap=cao" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Học liệu Cao cấp</Link>
+              <a href="/videos" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Video giảng dạy thử</a>
+              <a href="/blog" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Blog</a>
+              
+              <div className="mobile-list-item" style={{ fontWeight: 600, color: 'var(--c-red-dark)', marginTop: 8, paddingBottom: 4 }}>Dành cho Hệ thống</div>
+              <a href="https://thuchanh.hanngusotam.com" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Bài tập trực tuyến</a>
+              <a href="https://giaovu.hanngusotam.com" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Hỗ trợ giáo viên</a>
             </div>
           </div>
         </div>
       )}
-
-      {consultOpen && <ConsultModal close={() => setConsultOpen(false)} />}
-      
-      {/* Sub-navbar with Slide Animation */}
-      <div className="sotam-subnav-bar">
-        <div key={activeMenu} className="subnav-slide-in">
-          {PUBLIC_LINKS[activeMenu].sub.length > 0 && PUBLIC_LINKS[activeMenu].sub.map((s) => (
-            s.to.startsWith("/#")
-              ? <a key={s.to} href={s.to} className="subnav-item" onClick={(e) => {
-                  e.preventDefault();
-                  const id = s.to.replace("/#", "");
-                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-                }}>{s.label}</a>
-              : <Link key={s.to} to={s.to} className="subnav-item">{s.label}</Link>
-          ))}
-        </div>
-      </div>
     </header>
   );
-}
-
-// ── Consultation / Zalo modal ────────────────────────────────────────────────
-function ConsultModal({ close }: { close: () => void }) {
-  useEffect(() => {
-    const h = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [close]);
-
-  function openZalo() {
-    window.open(CONTACT.zalo, "_blank", "noopener,noreferrer");
-    close();
-  }
-
-  const modal = (
-    <div className="sotam-modal" role="dialog" aria-modal="true" onClick={close}>
-      <div className="sotam-modal-card consult-modal-card" onClick={(e) => e.stopPropagation()}>
-        <p className="consult-modal-label">Liên hệ tư vấn khoá học</p>
-        <p className="consult-modal-phone">{CONTACT.phone}</p>
-        <p className="consult-modal-hint">Nhắn tin qua Zalo để được tư vấn nhanh nhất.</p>
-        <div className="modal-actions" style={{ flexDirection: "column", gap: 10 }}>
-          <button className="btn btn-consult" style={{ width: "100%", justifyContent: "center" }} onClick={openZalo}>
-            Mở Zalo nhắn tin
-          </button>
-          <a href={`tel:${CONTACT.phone}`} className="btn btn-secondary" style={{ width: "100%", justifyContent: "center", textDecoration: "none" }}>
-            Gọi điện trực tiếp
-          </a>
-        </div>
-        <button className="btn btn-text close-x" onClick={close} aria-label="Đóng">✕</button>
-      </div>
-    </div>
-  );
-  return createPortal(modal, document.body);
 }
 
 // ── Floating contact bar ──────────────────────────────────────────────────────
