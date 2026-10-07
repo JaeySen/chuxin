@@ -273,22 +273,22 @@ function GuestHome() {
       {/* Giới thiệu trung tâm */}
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
         <div style={{ padding: "60px 0" }}>
-          <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
-          <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
+          <h2 className="jumbotron-title" style={{ color: '#000', textAlign: 'center' }}>Giới thiệu trung tâm</h2>
+          <p className="jumbotron-sub" style={{ color: '#000', textAlign: 'center' }}>初心 · Hán ngữ Sơ Tâm</p>
 
           <div className="about-mission-body" style={{ marginTop: 40, textAlign: 'left' }}>
             <div className="about-spirit" style={{ background: 'var(--c-bg-soft)', border: '1px solid var(--c-border)' }}>
-              <div className="about-spirit-label" style={{ color: 'var(--c-text-soft)' }}>初心 · Chuxin</div>
-              <h3 className="about-spirit-title" style={{ color: 'var(--c-text)' }}>Tinh thần Chuxin</h3>
-              <p style={{ color: 'var(--c-text)' }}>
+              <div className="about-spirit-label" style={{ color: 'var(--c-text-soft)', textAlign: 'center' }}>初心 · Chuxin</div>
+              <h3 className="about-spirit-title" style={{ color: 'var(--c-text)', textAlign: 'center' }}>Tinh thần Chuxin</h3>
+              <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
                 <strong style={{ color: 'var(--c-text)' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
                 học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
                 một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa Trung Hoa.
               </p>
-              <p style={{ color: 'var(--c-text)' }}>
+              <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
                 Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu hóa cho từng mục tiêu cụ thể.
               </p>
-              <p className="about-commit-heading"><strong style={{ color: 'var(--c-text)' }}>Cam kết của chúng tôi:</strong></p>
+              <p className="about-commit-heading" style={{ textAlign: 'center' }}><strong style={{ color: 'var(--c-text)' }}>Cam kết của chúng tôi:</strong></p>
               <ul className="about-commit-list">
                 <li>
                   <span className="about-commit-icon">🤝</span>
@@ -376,7 +376,7 @@ function GuestHome() {
       {/* Games section */}
       <section className="games-section" style={{ marginTop: 80 }}>
         <h2 className="section-h" style={{ textAlign: 'center' }}>Học qua trò chơi — hiệu quả hơn bạn nghĩ</h2>
-        <p className="games-intro" style={{ textAlign: 'center' }}>
+        <p className="games-intro" style={{ textAlign: 'justify', maxWidth: '800px', margin: '0 auto' }}>
           Nhiều nghiên cứu giáo dục cho thấy hoạt động học tập qua trò chơi có thể tăng cường sự hứng thú và khả năng ghi nhớ của người học.
           <br /><br />
           Tại Sơ Tâm, trò chơi không phải là phần thưởng sau giờ học <span style={{ whiteSpace: 'nowrap' }}>— mà chính là một phần của bài học.</span>
@@ -391,7 +391,7 @@ function GuestHome() {
         </div>
         {!showAllGames && (
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <button className="btn btn-secondary" onClick={() => setShowAllGames(true)}>Trải nghiệm thêm ↓</button>
+            <button className="btn btn-secondary" onClick={() => setShowAllGames(true)}>Trải nghiệm thêm →</button>
           </div>
         )}
       </section>
@@ -420,9 +420,9 @@ function GuestHome() {
 
       {/* Đội ngũ giáo viên */}
       <div id="giao-vien" style={{ paddingTop: 80 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <h2 className="section-h" style={{ margin: 0 }}>Đội ngũ giáo viên</h2>
-          <Link to="/giao-vien" className="btn btn-ghost" style={{ fontSize: 14 }}>Tất cả giáo viên →</Link>
+          <p style={{ color: 'var(--c-text-soft)', marginTop: 12 }}>Đội ngũ giáo viên giàu kinh nghiệm, 100% là các Thạc sĩ, Tiến sĩ chuyên ngành Hán ngữ.</p>
         </div>
         
         <div className="teacher-slider-track" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, overflow: 'visible' }}>
@@ -431,6 +431,9 @@ function GuestHome() {
               <img src={t.file} alt={t.name} className="teacher-slider-img" style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
             </div>
           ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 24 }}>
+          <Link to="/giao-vien" className="btn btn-secondary" style={{ padding: '12px 32px' }}>Tất cả giáo viên →</Link>
         </div>
       </div>
 
@@ -2040,8 +2043,8 @@ function TeacherHome() {
 
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
         <div className="jumbotron-section full-bleed">
-          <h2 className="jumbotron-title">Giới thiệu trung tâm</h2>
-          <p className="jumbotron-sub">初心 · Hán ngữ Sơ Tâm</p>
+          <h2 className="jumbotron-title" style={{ color: '#000', textAlign: 'center' }}>Giới thiệu trung tâm</h2>
+          <p className="jumbotron-sub" style={{ color: '#000', textAlign: 'center' }}>初心 · Hán ngữ Sơ Tâm</p>
         </div>
 
         <div className="about-mission-body">

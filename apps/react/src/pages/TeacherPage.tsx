@@ -24,7 +24,7 @@ export function TeacherPage() {
         được đào tạo tại các trường đại học hàng đầu tại Trung Quốc.
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: 32 }}>
         {TEACHER_BRIEFS.map((t, idx) => (
           <div key={idx} style={{ borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
             <img src={t.file} alt={t.name} style={{ width: '100%', display: 'block' }} />
