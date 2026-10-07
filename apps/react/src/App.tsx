@@ -92,7 +92,7 @@ function LibraryDropdown() {
 
   return (
     <div className="nav-dropdown" ref={ref} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <button className="nav-dropdown-btn" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+      <button className="nav-dropdown-btn" onClick={() => setOpen((v) => !v)} aria-expanded={open} style={{ fontFamily: 'inherit' }}>
         Thư viện <span className="nav-dropdown-caret">{open ? "▴" : "▾"}</span>
       </button>
       {open && (
@@ -288,15 +288,15 @@ function Header() {
                 )
               ))}
               <div className="mobile-list-item" style={{ fontWeight: 600, color: 'var(--c-red-dark)', marginTop: 8, paddingBottom: 4 }}>Thư viện</div>
-              <Link to="/thu-vien/hoc-lieu/so-cap" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Học liệu Sơ cấp</Link>
-              <Link to="/thu-vien/hoc-lieu/trung-cap" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Học liệu Trung cấp</Link>
-              <Link to="/thu-vien/hoc-lieu/cao-cap" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Học liệu Cao cấp</Link>
-              <a href="/thu-vien/video-giang-day-thu" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Video giảng dạy thử</a>
-              <a href="/thu-vien/blog" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32 }} onClick={() => setMenuOpen(false)}>Blog</a>
+              <Link to="/thu-vien/hoc-lieu/so-cap" className="mobile-list-item" style={{ paddingLeft: 16 }} onClick={() => setMenuOpen(false)}>Học liệu Sơ cấp</Link>
+              <Link to="/thu-vien/hoc-lieu/trung-cap" className="mobile-list-item" style={{ paddingLeft: 16 }} onClick={() => setMenuOpen(false)}>Học liệu Trung cấp</Link>
+              <Link to="/thu-vien/hoc-lieu/cao-cap" className="mobile-list-item" style={{ paddingLeft: 16 }} onClick={() => setMenuOpen(false)}>Học liệu Cao cấp</Link>
+              <a href="/thu-vien/video-giang-day-thu" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 16 }} onClick={() => setMenuOpen(false)}>Video giảng dạy thử</a>
+              <a href="/thu-vien/blog" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 16 }} onClick={() => setMenuOpen(false)}>Blog</a>
               
               <div className="mobile-list-item" style={{ fontWeight: 600, color: 'var(--c-red-dark)', marginTop: 8, paddingBottom: 4 }}>Dành cho Hệ thống</div>
-              <a href="https://thuchanh.hanngusotam.com" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setMenuOpen(false)}><span>Bài tập trực tuyến</span> <svg style={{ marginLeft: 4 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-              <a href="https://giaovu.hanngusotam.com" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 32, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setMenuOpen(false)}><span>Hỗ trợ giáo viên</span> <svg style={{ marginLeft: 4 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+              <a href="https://thuchanh.hanngusotam.com" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setMenuOpen(false)}><span>Bài tập trực tuyến</span> <svg style={{ marginLeft: 4 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+              <a href="https://giaovu.hanngusotam.com" target="_blank" rel="noreferrer" className="mobile-list-item" style={{ paddingLeft: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setMenuOpen(false)}><span>Hỗ trợ giáo viên</span> <svg style={{ marginLeft: 4 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
             </div>
           </div>
         </div>

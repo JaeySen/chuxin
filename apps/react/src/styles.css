@@ -1694,6 +1694,7 @@ body {
 .nav-dropdown { position: relative; }
 
 .nav-dropdown-btn {
+  box-sizing: border-box;
   display: flex; align-items: center; gap: 4px;
   background: none; border: none; cursor: pointer;
   font-size: 15.5px; font-weight: 500;
@@ -1704,7 +1705,7 @@ body {
   white-space: nowrap;
 }
 .nav-dropdown-btn:hover { background: rgba(0,0,0,0.05); color: var(--c-text); }
-.nav-dropdown-caret { font-size: 10px; opacity: 0.6; }
+.nav-dropdown-caret { font-size: 14px; opacity: 0.8; }
 
 .nav-dropdown-menu {
   position: absolute;
@@ -1726,8 +1727,10 @@ body {
   border-radius: 8px;
   text-decoration: none;
   color: var(--c-text);
-  font-size: 14px;
+  font-size: 15.5px;
+  font-weight: 500;
   transition: background 0.12s;
+  cursor: pointer;
 }
 .nav-dropdown-item:hover { background: var(--c-red-bg); color: var(--c-red-dark); }
 
@@ -2939,55 +2942,7 @@ body {
   position: relative;
   display: inline-block;
 }
-.nav-dropdown-btn {
-  background: none;
-  border: none;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.nav-dropdown-btn:hover {
-  color: var(--c-red);
-}
-.nav-dropdown-caret {
-  font-size: 0.8em;
-}
-.nav-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: white;
-  min-width: 220px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  border-radius: 8px;
-  padding: 8px 0;
-  z-index: 100;
-  margin-top: 8px;
-}
-.nav-dropdown-item {
-  display: block;
-  padding: 8px 16px;
-  color: var(--c-text);
-  text-decoration: none;
-  transition: all 0.2s;
-}
-.nav-dropdown-item:hover {
-  background: var(--c-red-bg);
-  color: var(--c-red-dark);
-}
-.nav-dropdown-item--header {
-  font-weight: 700;
-  color: var(--c-red-dark);
-}
-.nav-dropdown-divider {
-  height: 1px;
-  background: #eee;
-  margin: 4px 0;
-}
+
 
 /* Hero Testimonials */
 .hero-testimonials {
