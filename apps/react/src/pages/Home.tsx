@@ -273,65 +273,50 @@ function GuestHome() {
       {/* Giới thiệu trung tâm */}
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
         <div style={{ padding: "60px 0" }}>
-          <h2 className="jumbotron-title" style={{ color: '#000', textAlign: 'center' }}>Giới thiệu trung tâm</h2>
-          <p className="jumbotron-sub" style={{ color: '#000', textAlign: 'center' }}>初心 · Hán ngữ Sơ Tâm</p>
+          <h2 className="jumbotron-title" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>Giới thiệu trung tâm</h2>
+          <p className="jumbotron-sub" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>初心 · Hán ngữ Sơ Tâm</p>
 
           <div className="about-mission-body" style={{ marginTop: 40, textAlign: 'left' }}>
             <div className="about-spirit" style={{ background: 'var(--c-bg-soft)', border: '1px solid var(--c-border)' }}>
-              <div className="about-spirit-label" style={{ color: 'var(--c-text-soft)', textAlign: 'center' }}>初心 · Chuxin</div>
-              <h3 className="about-spirit-title" style={{ color: 'var(--c-text)', textAlign: 'center' }}>Tinh thần Chuxin</h3>
+              <div className="about-spirit-label" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>初心 · Chuxin</div>
+              <h3 className="about-spirit-title" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>Tinh thần Chuxin</h3>
               <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
-                <strong style={{ color: 'var(--c-text)' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
+                <strong style={{ color: 'var(--c-red-dark)' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
                 học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
                 một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa Trung Hoa.
               </p>
               <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
                 Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu hóa cho từng mục tiêu cụ thể.
               </p>
-              <p className="about-commit-heading" style={{ textAlign: 'center' }}><strong style={{ color: 'var(--c-text)' }}>Cam kết của chúng tôi:</strong></p>
-              <ul className="about-commit-list">
-                <li>
-                  <span className="about-commit-icon">🤝</span>
-                  <div style={{ color: 'var(--c-text)' }}>
-                    <strong style={{ color: 'var(--c-text)' }}>Đồng hành</strong> — Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.
-                  </div>
+              <p className="about-commit-heading" style={{ textAlign: 'center' }}><strong style={{ color: 'var(--c-red-dark)' }}>Cam kết của chúng tôi:</strong></p>
+              <ul className="about-commit-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ textAlign: 'center', marginBottom: 24 }}>
+                  <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Đồng hành</strong>
+                  <div style={{ color: 'var(--c-text)' }}>Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.</div>
                 </li>
-                <li>
-                  <span className="about-commit-icon">🏅</span>
-                  <div style={{ color: 'var(--c-text)' }}>
-                    <strong style={{ color: 'var(--c-text)' }}>Chất lượng</strong> — Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.
-                  </div>
+                <li style={{ textAlign: 'center', marginBottom: 24 }}>
+                  <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Chất lượng</strong>
+                  <div style={{ color: 'var(--c-text)' }}>Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.</div>
                 </li>
-                <li>
-                  <span className="about-commit-icon">🚀</span>
-                  <div style={{ color: 'var(--c-text)' }}>
-                    <strong style={{ color: 'var(--c-text)' }}>Ứng dụng</strong> — Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung trong học tập, công việc và cuộc sống.
-                  </div>
+                <li style={{ textAlign: 'center', marginBottom: 24 }}>
+                  <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Ứng dụng</strong>
+                  <div style={{ color: 'var(--c-text)' }}>Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung trong học tập, công việc và cuộc sống.</div>
                 </li>
               </ul>
             </div>
 
-            <div className="about-values">
-              <div className="about-value-card ">
-                <span className="about-value-icon">🎯</span>
-                <div>
-                  <strong>Đúng trọng tâm</strong>
-                  <p>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
-                </div>
+            <div className="about-values" style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 40 }}>
+              <div style={{ textAlign: 'center' }}>
+                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Đúng trọng tâm</strong>
+                <p style={{ margin: 0, color: 'var(--c-text)' }}>Nội dung bám sát đề thi HSK 3.0 — không lan man, không lãng phí thời gian.</p>
               </div>
-              <div className="about-value-card ">
-                <span className="about-value-icon">💬</span>
-                <div>
-                  <strong>Tương tác thật sự</strong>
-                  <p>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
-                </div>
+              <div style={{ textAlign: 'center' }}>
+                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Tương tác thật sự</strong>
+                <p style={{ margin: 0, color: 'var(--c-text)' }}>Lớp học trực tuyến qua VOOV, giáo viên sửa bài và phản hồi trong thời gian thực.</p>
               </div>
-              <div className="about-value-card ">
-                <span className="about-value-icon">📈</span>
-                <div>
-                  <strong>Theo dõi tiến độ</strong>
-                  <p>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
-                </div>
+              <div style={{ textAlign: 'center' }}>
+                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Theo dõi tiến độ</strong>
+                <p style={{ margin: 0, color: 'var(--c-text)' }}>Hệ thống ghi nhận từng bài học, điểm số, và hỗ trợ video xem lại sau mỗi buổi.</p>
               </div>
             </div>
           </div>
@@ -2043,8 +2028,8 @@ function TeacherHome() {
 
       <div id="gioi-thieu" style={{ paddingTop: 0 }}>
         <div className="jumbotron-section full-bleed">
-          <h2 className="jumbotron-title" style={{ color: '#000', textAlign: 'center' }}>Giới thiệu trung tâm</h2>
-          <p className="jumbotron-sub" style={{ color: '#000', textAlign: 'center' }}>初心 · Hán ngữ Sơ Tâm</p>
+          <h2 className="jumbotron-title" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>Giới thiệu trung tâm</h2>
+          <p className="jumbotron-sub" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>初心 · Hán ngữ Sơ Tâm</p>
         </div>
 
         <div className="about-mission-body">
