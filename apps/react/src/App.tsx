@@ -266,8 +266,9 @@ function Header() {
                 <button className="btn btn-ghost btn-sm" onClick={handleLogout}>Đăng xuất</button>
               </div>
             ) : (
-              <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="btn btn-consult btn-sm desktop-only" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', flexShrink: 0, minWidth: 'max-content' }}>
-  <span>Tư vấn qua Zalo</span> <ZaloIcon /> <span>{CONTACT.phone}</span>
+              <a href={CONTACT.zalo} target="_blank" rel="noreferrer" className="btn btn-consult btn-sm desktop-only" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+  <img src="/zalo-icon.webp" width="20" height="20" alt="Zalo" style={{ display: 'block', borderRadius: '50%' }} />
+  <span>Tư vấn qua Zalo {CONTACT.phone}</span>
 </a>
             )}
           </div>
