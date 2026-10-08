@@ -277,32 +277,64 @@ function GuestHome() {
           <p className="jumbotron-sub" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>初心 · Hán ngữ Sơ Tâm</p>
 
           <div className="about-mission-body" style={{ marginTop: 40, textAlign: 'left' }}>
-            <div className="about-spirit" style={{ background: 'var(--c-bg-soft)', border: '1px solid var(--c-border)' }}>
-              <div className="about-spirit-label" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>初心 · Chuxin</div>
-              <h3 className="about-spirit-title" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>Tinh thần Chuxin</h3>
-              <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
-                <strong style={{ color: 'var(--c-red-dark)' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
-                học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
-                một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa Trung Hoa.
-              </p>
-              <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
-                Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu hóa cho từng mục tiêu cụ thể.
-              </p>
-              <p className="about-commit-heading" style={{ textAlign: 'center' }}><strong style={{ color: 'var(--c-red-dark)' }}>Cam kết của chúng tôi:</strong></p>
-              <ul className="about-commit-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-                  <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Đồng hành</strong>
-                  <div style={{ color: 'var(--c-text)' }}>Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.</div>
-                </li>
-                <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-                  <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Chất lượng</strong>
-                  <div style={{ color: 'var(--c-text)' }}>Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.</div>
-                </li>
-                <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-                  <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Ứng dụng</strong>
-                  <div style={{ color: 'var(--c-text)' }}>Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung trong học tập, công việc và cuộc sống.</div>
-                </li>
-              </ul>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+              {/* Tinh thần Chuxin */}
+              <div className="about-spirit" style={{ background: 'var(--c-bg-soft)', border: '1px solid var(--c-border)', height: '100%', margin: 0 }}>
+                <div className="about-spirit-label" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>初心 · Chuxin</div>
+                <h3 className="about-spirit-title" style={{ color: 'var(--c-red-dark)', textAlign: 'center' }}>Tinh thần Chuxin</h3>
+                <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
+                  <strong style={{ color: 'var(--c-red-dark)' }}>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
+                  học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
+                  một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa Trung Hoa.
+                </p>
+                <p style={{ color: 'var(--c-text)', textAlign: 'justify' }}>
+                  Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu hóa cho từng mục tiêu cụ thể.
+                </p>
+              </div>
+
+              {/* Cam kết của chúng tôi */}
+              <div className="about-spirit" style={{ background: 'var(--c-bg-soft)', border: '1px solid var(--c-border)', height: '100%', margin: 0 }}>
+                <p className="about-commit-heading" style={{ textAlign: 'center', marginTop: 12, marginBottom: 24 }}><strong style={{ color: 'var(--c-red-dark)' }}>Cam kết của chúng tôi:</strong></p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+                  
+                  {/* Trái tim 1 */}
+                  <div style={{
+                    position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1.2 / 1',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    padding: '24px 32px 36px',
+                    backgroundImage: 'url("data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path fill=\'%23fff0f2\' d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/></svg>")',
+                    backgroundSize: '100% 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', textAlign: 'center'
+                  }}>
+                    <strong style={{ color: 'var(--c-red-dark)', fontSize: '1.1em', marginBottom: 4 }}>Đồng hành</strong>
+                    <div style={{ color: 'var(--c-text-soft)', fontSize: '0.9rem', lineHeight: 1.4 }}>Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.</div>
+                  </div>
+
+                  {/* Trái tim 2 */}
+                  <div style={{
+                    position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1.2 / 1',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    padding: '24px 32px 36px',
+                    backgroundImage: 'url("data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path fill=\'%23fff0f2\' d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/></svg>")',
+                    backgroundSize: '100% 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', textAlign: 'center'
+                  }}>
+                    <strong style={{ color: 'var(--c-red-dark)', fontSize: '1.1em', marginBottom: 4 }}>Chất lượng</strong>
+                    <div style={{ color: 'var(--c-text-soft)', fontSize: '0.9rem', lineHeight: 1.4 }}>Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.</div>
+                  </div>
+
+                  {/* Trái tim 3 */}
+                  <div style={{
+                    position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1.2 / 1',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    padding: '24px 32px 36px',
+                    backgroundImage: 'url("data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path fill=\'%23fff0f2\' d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/></svg>")',
+                    backgroundSize: '100% 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', textAlign: 'center'
+                  }}>
+                    <strong style={{ color: 'var(--c-red-dark)', fontSize: '1.1em', marginBottom: 4 }}>Ứng dụng</strong>
+                    <div style={{ color: 'var(--c-text-soft)', fontSize: '0.9rem', lineHeight: 1.4 }}>Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả.</div>
+                  </div>
+
+                </div>
+              </div>
             </div>
 
             <div className="about-values">
@@ -358,6 +390,10 @@ function GuestHome() {
             <div className="course-card-body">
               <h3 className="course-card-title">{c.title}</h3>
               <p className="course-card-desc">{c.subtitle}</p>
+              <div style={{ fontSize: '0.85rem', color: 'var(--c-text-soft)', marginTop: -6, marginBottom: 12, display: 'flex', gap: 16 }}>
+                <span style={{ fontWeight: 500 }}>Số buổi: 25</span>
+                <span style={{ fontWeight: 500 }}>Hình thức: Online</span>
+              </div>
               <div className="course-card-btn" style={{ borderColor: c.color, color: c.color }}>Xem chi tiết</div>
             </div>
           </Link>
@@ -393,10 +429,11 @@ function GuestHome() {
       
 
       {/* Đội ngũ giáo viên */}
-      <div id="giao-vien" style={{ paddingTop: 80 }}>
+      <div id="giao-vien" className="jumbotron-section full-bleed jumbotron-section--tall" style={{ padding: "60px 0", marginTop: 40, marginBottom: 40 }}>
+        <div className="container">
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 className="section-h" style={{ margin: 0 }}>Đội ngũ giáo viên</h2>
-          <p style={{ color: 'var(--c-text-soft)', marginTop: 12 }}>Đội ngũ giáo viên giàu kinh nghiệm, 100% là các Thạc sĩ, Tiến sĩ chuyên ngành Hán ngữ.</p>
+          <h2 className="section-h" style={{ margin: 0, color: 'white' }}>Đội ngũ giáo viên</h2>
+          <p style={{ color: 'rgba(255,255,255,0.8)', marginTop: 12 }}>Đội ngũ giáo viên giàu kinh nghiệm, 100% là các Thạc sĩ, Tiến sĩ chuyên ngành Hán ngữ.</p>
         </div>
         
         <div className="teacher-slider-track" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, overflow: 'visible' }}>
@@ -409,6 +446,7 @@ function GuestHome() {
         <div style={{ textAlign: 'center', marginTop: 24 }}>
           <Link to="/giao-vien" className="btn btn-secondary" style={{ padding: '12px 32px' }}>Tất cả giáo viên →</Link>
         </div>
+      </div>
       </div>
 
       
@@ -2002,38 +2040,60 @@ function TeacherHome() {
         </div>
 
         <div className="about-mission-body">
-          <div className="about-spirit">
-            <div className="about-spirit-label">初心 · Chuxin</div>
-            <h3 className="about-spirit-title">Tinh thần Chuxin</h3>
-            <p>
-              <strong>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
-              học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
-              một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa
-              Trung Hoa.
-            </p>
-            <p>
-              Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học
-              viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu
-              hóa cho từng mục tiêu cụ thể. Tại Chuxin, chúng tôi không chỉ giảng dạy ngôn ngữ, mà
-              còn giúp học viên xây dựng sự tự tin, làm chủ kỹ năng giao tiếp thực tế và duy trì
-              nguồn cảm hứng học tập bền bỉ.
-            </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+            <div className="about-spirit" style={{ margin: 0, height: '100%' }}>
+              <div className="about-spirit-label">初心 · Chuxin</div>
+              <h3 className="about-spirit-title">Tinh thần Chuxin</h3>
+              <p>
+                <strong>Chuxin – Hán ngữ Sơ Tâm</strong> được thành lập với niềm tin rằng mỗi người
+                học tiếng Trung đều khởi đầu bằng một "sơ tâm" riêng biệt — đó có thể là một ước mơ,
+                một mục tiêu nghề nghiệp, hay niềm yêu thích thuần túy dành cho ngôn ngữ và văn hóa
+                Trung Hoa.
+              </p>
+              <p>
+                Chúng tôi hy vọng có thể tạo ra một môi trường học tập truyền cảm hứng, nơi mỗi học
+                viên đều được đồng hành, định hướng và phát triển theo lộ trình cá nhân hóa, tối ưu
+                hóa cho từng mục tiêu cụ thể. Tại Chuxin, chúng tôi không chỉ giảng dạy ngôn ngữ, mà
+                còn giúp học viên xây dựng sự tự tin, làm chủ kỹ năng giao tiếp thực tế và duy trì
+                nguồn cảm hứng học tập bền bỉ.
+              </p>
+            </div>
 
-            <p className="about-commit-heading"><strong>Cam kết của chúng tôi:</strong></p>
-            <ul className="about-commit-list" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-              <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Đồng hành</strong>
-                <div style={{ color: 'var(--c-text)' }}>Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.</div>
-              </li>
-              <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Chất lượng</strong>
-                <div style={{ color: 'var(--c-text)' }}>Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.</div>
-              </li>
-              <li style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-                <strong style={{ color: 'var(--c-red-dark)', display: 'block', fontSize: '1.1em', marginBottom: 6 }}>Ứng dụng</strong>
-                <div style={{ color: 'var(--c-text)' }}>Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả trong học tập, công việc và cuộc sống.</div>
-              </li>
-            </ul>
+            <div className="about-spirit" style={{ margin: 0, height: '100%' }}>
+              <p className="about-commit-heading" style={{ textAlign: 'center', marginTop: 12, marginBottom: 24 }}><strong>Cam kết của chúng tôi:</strong></p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+                <div style={{
+                  position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1.2 / 1',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  padding: '24px 32px 36px',
+                  backgroundImage: 'url("data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path fill=\'%23fff0f2\' d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/></svg>")',
+                  backgroundSize: '100% 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', textAlign: 'center'
+                }}>
+                  <strong style={{ color: 'var(--c-red-dark)', fontSize: '1.1em', marginBottom: 4 }}>Đồng hành</strong>
+                  <div style={{ color: 'var(--c-text-soft)', fontSize: '0.9rem', lineHeight: 1.4 }}>Sát cánh cùng học viên trên hành trình chinh phục tiếng Trung.</div>
+                </div>
+                <div style={{
+                  position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1.2 / 1',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  padding: '24px 32px 36px',
+                  backgroundImage: 'url("data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path fill=\'%23fff0f2\' d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/></svg>")',
+                  backgroundSize: '100% 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', textAlign: 'center'
+                }}>
+                  <strong style={{ color: 'var(--c-red-dark)', fontSize: '1.1em', marginBottom: 4 }}>Chất lượng</strong>
+                  <div style={{ color: 'var(--c-text-soft)', fontSize: '0.9rem', lineHeight: 1.4 }}>Đảm bảo kiến thức vững chắc theo chuẩn đầu ra của từng khóa học.</div>
+                </div>
+                <div style={{
+                  position: 'relative', width: '100%', maxWidth: '280px', aspectRatio: '1.2 / 1',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  padding: '24px 32px 36px',
+                  backgroundImage: 'url("data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path fill=\'%23fff0f2\' d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/></svg>")',
+                  backgroundSize: '100% 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', textAlign: 'center'
+                }}>
+                  <strong style={{ color: 'var(--c-red-dark)', fontSize: '1.1em', marginBottom: 4 }}>Ứng dụng</strong>
+                  <div style={{ color: 'var(--c-text-soft)', fontSize: '0.9rem', lineHeight: 1.4 }}>Trang bị nền tảng để học viên tự tin sử dụng tiếng Trung hiệu quả trong học tập, công việc và cuộc sống.</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="about-values">

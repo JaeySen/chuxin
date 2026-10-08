@@ -24,6 +24,10 @@ export function CourseListPage() {
             <div className="course-card-body">
               <h3 className="course-card-title">{c.title}</h3>
               <p className="course-card-desc">{c.subtitle}</p>
+              <div style={{ fontSize: '0.85rem', color: 'var(--c-text-soft)', marginTop: -6, marginBottom: 12, display: 'flex', gap: 16 }}>
+                <span style={{ fontWeight: 500 }}>Số buổi: 25</span>
+                <span style={{ fontWeight: 500 }}>Hình thức: Online</span>
+              </div>
               <div className="course-card-btn" style={{ borderColor: c.color, color: c.color }}>Xem chi tiết</div>
             </div>
           </Link>
