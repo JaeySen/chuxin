@@ -341,7 +341,8 @@ function GuestHome() {
       )}
 
       {/* Courses */}
-      <div className="jumbotron-section full-bleed jumbotron-section--tall" style={{ padding: "60px 20px", marginTop: 40, marginBottom: 40 }}>
+      <div className="jumbotron-section full-bleed jumbotron-section--tall" style={{ padding: "60px 0", marginTop: 40, marginBottom: 40 }}>
+      <div className="container">
       <h2 className="section-h" id="courses" style={{ textAlign: 'center', color: 'white', marginTop: 0 }}>
         Khóa học
       </h2>
@@ -363,7 +364,8 @@ function GuestHome() {
         ))}
       </div>
       <div style={{ textAlign: 'center', marginTop: 24 }}>
-        <Link to="/khoa-hoc" className="btn btn-primary" style={{ padding: '12px 32px' }}>Tất cả khóa học →</Link>
+        <Link to="/khoa-hoc" onClick={() => window.scrollTo(0,0)} className="btn btn-secondary" style={{ padding: '12px 32px' }}>Tất cả khóa học →</Link>
+      </div>
       </div>
       </div>
 

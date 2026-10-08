@@ -251,14 +251,19 @@ function Header() {
           ) : (
             <>
               {MAIN_NAV.map((l) => {
-  const isActive = l.to.startsWith("/#") 
-    ? (location.pathname === "/" ? activeHash === l.to : false)
-    : (l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to));
+    const isTabActive = (l: typeof MAIN_NAV[0]) => {
+    if (l.to === "/#courses" && location.pathname.startsWith("/khoa-hoc")) return true;
+    if (l.to === "/#giao-vien" && location.pathname.startsWith("/giao-vien")) return true;
+    if (l.to.startsWith("/#")) {
+      return location.pathname === "/" ? activeHash === l.to : false;
+    }
+    return l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to);
+  };
   
   return (
     <div key={l.to}>
       {l.to.startsWith("/#") ? (
-        <a href={l.to} className={`nav-dropdown-btn ${isActive ? "active" : ""}`} onClick={(e) => {
+        <a href={l.to} className={`nav-dropdown-btn ${isTabActive(l) ? "active" : ""}`} onClick={(e) => {
           e.preventDefault();
           if (location.pathname !== "/") {
             nav("/");
@@ -272,7 +277,7 @@ function Header() {
           }
         }}>{l.label}</a>
       ) : (
-        <Link to={l.to} className={`nav-dropdown-btn ${isActive ? "active" : ""}`}>{l.label}</Link>
+        <Link to={l.to} className={`nav-dropdown-btn ${isTabActive(l) ? "active" : ""}`}>{l.label}</Link>
       )}
     </div>
   );
