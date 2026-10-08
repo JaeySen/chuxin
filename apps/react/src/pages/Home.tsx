@@ -370,9 +370,7 @@ function GuestHome() {
       {/* Games section */}
       <section className="games-section" style={{ marginTop: 80 }}>
         <h2 className="section-h" style={{ textAlign: 'center' }}>Học qua trò chơi — hiệu quả hơn bạn nghĩ</h2>
-        <p className="games-intro" style={{ textAlign: 'justify', maxWidth: '800px', margin: '0 auto' }}>
-          Nhiều nghiên cứu giáo dục cho thấy hoạt động học tập qua trò chơi có thể tăng cường sự hứng thú và khả năng ghi nhớ của người học.
-          <br /><br />
+        <p className="games-intro" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto', paddingBottom: '24px' }}>
           Tại Sơ Tâm, trò chơi không phải là phần thưởng sau giờ học <span style={{ whiteSpace: 'nowrap' }}>— mà chính là một phần của bài học.</span>
         </p>
         <div className="games-grid">
@@ -385,32 +383,12 @@ function GuestHome() {
         </div>
         {!showAllGames && (
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <button className="btn btn-secondary" onClick={() => setShowAllGames(true)}>Trải nghiệm thêm →</button>
+            <Link to="/tro-choi" className="btn btn-secondary">Trải nghiệm thêm →</Link>
           </div>
         )}
       </section>
 
-      {/* Bài tập trực tuyến — landing section */}
-      <section className="landing-section landing-section--student full-bleed" style={{ marginTop: 80 }}>
-        <div className="landing-section-inner">
-          <div className="landing-section-text">
-            <div className="landing-section-eyebrow">Dành cho học viên</div>
-            <h2 className="landing-section-title">Bài tập trực tuyến</h2>
-            <p className="landing-section-desc">
-              Làm bài trắc nghiệm nhiều lần, xem đáp án ngay sau khi nộp.<br />
-              Theo dõi tiến trình và nhận phản hồi từ giáo viên.
-            </p>
-            <a
-              className="btn btn-primary landing-section-btn"
-              href="https://thuchanh.hanngusotam.com"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Đăng nhập học viên →
-            </a>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Đội ngũ giáo viên */}
       <div id="giao-vien" style={{ paddingTop: 80 }}>
@@ -431,27 +409,7 @@ function GuestHome() {
         </div>
       </div>
 
-      {/* Tham gia với chúng tôi — landing section */}
-      <section className="landing-section landing-section--teacher full-bleed">
-        <div className="landing-section-inner landing-section-inner--reverse">
-          <div className="landing-section-text">
-            <div className="landing-section-eyebrow">Dành cho giáo viên</div>
-            <h2 className="landing-section-title">Tham gia với chúng tôi</h2>
-            <p className="landing-section-desc">
-              Quản lý lớp học, tạo bài tập và theo dõi<br />
-              kết quả học viên trên một nền tảng duy nhất.
-            </p>
-            <a
-              className="btn btn-secondary landing-section-btn"
-              href="https://giaovu.hanngusotam.com"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Đăng nhập giáo viên →
-            </a>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Lịch khai giảng */}
       <div id="lich-khai-giang" style={{ paddingTop: 60, paddingBottom: 60 }}>

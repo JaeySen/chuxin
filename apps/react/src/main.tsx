@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { App } from "./App";
 import { TeacherPage } from "./pages/TeacherPage";
+import { GamesListPage } from "./pages/GamesListPage";
 import { CourseListPage } from "./pages/CourseListPage";
 import { Home } from "./pages/Home";
 import { CoursePage } from "./pages/CoursePage";
@@ -56,6 +57,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="ve-chung-toi" element={<AboutPage />} />
           <Route path="giao-vien" element={<TeacherPage />} />
           <Route path="khoa-hoc" element={<CourseListPage />} />
+          <Route path="tro-choi" element={<GamesListPage />} />
           <Route path="giaovu" element={<GiaovuPage />} />
                             </Route>
         {/* Standalone (no shared app chrome) — opened in a new tab from "▶ Thử làm" */}

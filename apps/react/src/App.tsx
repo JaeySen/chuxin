@@ -60,10 +60,10 @@ export function App() {
 }
 
 const MAIN_NAV = [
-  { to: "/ve-chung-toi", label: "Giới thiệu" },
-  { to: "/khoa-hoc", label: "Khóa học" },
+  { to: "/#gioi-thieu", label: "Giới thiệu" },
+  { to: "/#courses", label: "Khóa học" },
   { to: "/#lich-khai-giang", label: "Lịch khai giảng" },
-  { to: "/giao-vien", label: "Giáo viên" },
+  { to: "/#giao-vien", label: "Giáo viên" },
 ];
 
 // Games submenu — only rendered when logged in
@@ -165,6 +165,32 @@ function Header() {
   const [menuOpen, setMenuOpen]       = useState(false);
   const location = useLocation();
   const nav = useNavigate();
+  const [activeHash, setActiveHash] = useState(location.hash);
+
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setActiveHash("");
+      return;
+    }
+    const handleScroll = () => {
+      const sections = ["gioi-thieu", "courses", "giao-vien", "lich-khai-giang"];
+      let current = "";
+      for (const s of sections) {
+        const el = document.getElementById(s);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+            current = "/#" + s;
+          }
+        }
+      }
+      if (current && current !== activeHash) setActiveHash(current);
+      if (window.scrollY < 100) setActiveHash("");
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // init
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [location.pathname, activeHash]);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -226,7 +252,7 @@ function Header() {
             <>
               {MAIN_NAV.map((l) => {
   const isActive = l.to.startsWith("/#") 
-    ? location.hash === l.to.replace("/", "")
+    ? (location.pathname === "/" ? activeHash === l.to : false)
     : (l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to));
   
   return (
