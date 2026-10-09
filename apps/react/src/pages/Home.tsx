@@ -395,7 +395,7 @@ function GuestHome() {
         </div>
         {!showAllGames && (
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Link to="/tro-choi" className="btn btn-secondary">Trải nghiệm thêm →</Link>
+            <Link to="/tro-choi" onClick={() => window.scrollTo(0,0)} className="btn btn-secondary">Trải nghiệm thêm →</Link>
           </div>
         )}
       </section>
@@ -418,7 +418,7 @@ function GuestHome() {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 24 }}>
-          <Link to="/giao-vien" className="btn btn-secondary" style={{ padding: '12px 32px' }}>Tất cả giáo viên →</Link>
+          <Link to="/giao-vien" onClick={() => window.scrollTo(0,0)} className="btn btn-secondary" style={{ padding: '12px 32px' }}>Tất cả giáo viên →</Link>
         </div>
       </div>
       </div>
