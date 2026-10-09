@@ -1,6 +1,7 @@
 import { Link, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { COURSES, type CourseStatus } from "@sotam/shared";
 import { useAuth } from "../lib/auth-context";
+import { OpeningCalendar } from "../components/OpeningCalendar";
 import { useHead } from "../lib/useHead";
 import { JsonLd } from "../components/JsonLd";
 import { useEffect, useRef, useState } from "react";
@@ -60,52 +61,9 @@ function TeacherCoverflow() {
 }
 
 
-const OPENING_CLASSES = [
-  {
-    name: "HSK 1 — Lớp 1.1",
-    date: "01.10.2026",
-    schedule: "Tối 3-5 (T3 & T5), 22:00 – 23:30",
-    status: "upcoming" as const,
-    statusLabel: "Sắp diễn ra",
-  },
-  {
-    name: "HSK 1 — Lớp 1.2",
-    date: "04.10.2026",
-    schedule: "Cuối tuần (T7 & CN), 16:00 – 17:30",
-    status: "enrolling" as const,
-    statusLabel: "Đang tuyển sinh",
-  },
-];
 
-function OpeningCalendar() {
-  return (
-    <div className="lich-grid">
-      {OPENING_CLASSES.map((cls) => (
-        <div key={cls.name} className={`lich-card lich-card--${cls.status}`}>
-          <div className={`lich-status lich-status--${cls.status}`}>
-            <span className="lich-status-dot" />
-            {cls.statusLabel}
-          </div>
-          <h3 className="lich-name">{cls.name}</h3>
-          <div className="lich-row">
-            <span className="lich-row-icon">📅</span>
-            <div>
-              <div className="lich-row-label">NGÀY KHAI GIẢNG</div>
-              <div className="lich-row-value">{cls.date}</div>
-            </div>
-          </div>
-          <div className="lich-row">
-            <span className="lich-row-icon">🕐</span>
-            <div>
-              <div className="lich-row-label">THỜI GIAN</div>
-              <div className="lich-row-value lich-row-value--normal">{cls.schedule}</div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+
+
 
 export function Home() {
   const { role, loading } = useAuth();
@@ -364,10 +322,6 @@ function GuestHome() {
             <div className="course-card-body">
               <h3 className="course-card-title">{c.title}</h3>
               <p className="course-card-desc">{c.subtitle}</p>
-              <div style={{ fontSize: '0.85rem', color: 'var(--c-text-soft)', marginTop: -6, marginBottom: 12, display: 'flex', gap: 16 }}>
-                <span style={{ fontWeight: 500 }}>Số buổi: 25</span>
-                <span style={{ fontWeight: 500 }}>Hình thức: Online</span>
-              </div>
               <div className="course-card-btn" style={{ borderColor: c.color, color: c.color }}>Xem chi tiết</div>
             </div>
           </Link>
@@ -432,6 +386,9 @@ function GuestHome() {
           Lịch dự kiến khai giảng các khóa học trong tháng
         </p>
         <OpeningCalendar />
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <Link to="/lich-khai-giang" onClick={() => window.scrollTo(0,0)} className="btn btn-secondary" style={{ padding: '12px 32px' }}>Xem tất cả lớp →</Link>
+        </div>
       </div>
 
     </div>

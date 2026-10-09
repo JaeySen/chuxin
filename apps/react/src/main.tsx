@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { App } from "./App";
 import { TeacherPage } from "./pages/TeacherPage";
 import { GamesListPage } from "./pages/GamesListPage";
+import { OpeningCalendarPage } from "./pages/OpeningCalendarPage";
 import { CourseListPage } from "./pages/CourseListPage";
 import { Home } from "./pages/Home";
 import { CoursePage } from "./pages/CoursePage";
@@ -57,6 +58,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="ve-chung-toi" element={<AboutPage />} />
           <Route path="giao-vien" element={<TeacherPage />} />
           <Route path="khoa-hoc" element={<CourseListPage />} />
+          <Route path="lich-khai-giang" element={<OpeningCalendarPage />} />
           <Route path="tro-choi" element={<GamesListPage />} />
           <Route path="giaovu" element={<GiaovuPage />} />
                             </Route>

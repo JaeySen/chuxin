@@ -60,10 +60,10 @@ export function App() {
 }
 
 const MAIN_NAV = [
-  { to: "/#gioi-thieu", label: "Giới thiệu" },
-  { to: "/#courses", label: "Khóa học" },
-  { to: "/#lich-khai-giang", label: "Lịch khai giảng" },
-  { to: "/#giao-vien", label: "Giáo viên" },
+  { to: "/", label: "Giới thiệu" },
+  { to: "/khoa-hoc", label: "Khóa học" },
+  { to: "/lich-khai-giang", label: "Lịch khai giảng" },
+  { to: "/giao-vien", label: "Giáo viên" },
 ];
 
 // Games submenu — only rendered when logged in
@@ -165,32 +165,7 @@ function Header() {
   const [menuOpen, setMenuOpen]       = useState(false);
   const location = useLocation();
   const nav = useNavigate();
-  const [activeHash, setActiveHash] = useState(location.hash);
 
-  useEffect(() => {
-    if (location.pathname !== "/") {
-      setActiveHash("");
-      return;
-    }
-    const handleScroll = () => {
-      const sections = ["gioi-thieu", "courses", "giao-vien", "lich-khai-giang"];
-      let current = "";
-      for (const s of sections) {
-        const el = document.getElementById(s);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-            current = "/#" + s;
-          }
-        }
-      }
-      if (current && current !== activeHash) setActiveHash(current);
-      if (window.scrollY < 100) setActiveHash("");
-    };
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // init
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname, activeHash]);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -250,38 +225,17 @@ function Header() {
             </Link>
           ) : (
             <>
+              
               {MAIN_NAV.map((l) => {
-    const isTabActive = (l: typeof MAIN_NAV[0]) => {
-    if (l.to === "/#courses" && location.pathname.startsWith("/khoa-hoc")) return true;
-    if (l.to === "/#giao-vien" && location.pathname.startsWith("/giao-vien")) return true;
-    if (l.to.startsWith("/#")) {
-      return location.pathname === "/" ? activeHash === l.to : false;
-    }
-    return l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to);
-  };
-  
-  return (
-    <div key={l.to}>
-      {l.to.startsWith("/#") ? (
-        <a href={l.to} className={`nav-dropdown-btn ${isTabActive(l) ? "active" : ""}`} onClick={(e) => {
-          e.preventDefault();
-          if (location.pathname !== "/") {
-            nav("/");
-            setTimeout(() => {
-              const id = l.to.replace("/#", "");
-              document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-            }, 100);
-          } else {
-            const id = l.to.replace("/#", "");
-            document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-          }
-        }}>{l.label}</a>
-      ) : (
-        <Link to={l.to} className={`nav-dropdown-btn ${isTabActive(l) ? "active" : ""}`}>{l.label}</Link>
-      )}
-    </div>
-  );
-})}
+                const isActive = l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to);
+                return (
+                  <div key={l.to}>
+                    <Link to={l.to} onClick={() => window.scrollTo(0,0)} className={`nav-dropdown-btn ${isActive ? "active" : ""}`}>
+                      {l.label}
+                    </Link>
+                  </div>
+                );
+              })}
               <LibraryDropdown />
               {user && <GamesDropdown />}
             </>
