@@ -5,6 +5,7 @@ import { App } from "./App";
 import { TeacherPage } from "./pages/TeacherPage";
 import { GamesListPage } from "./pages/GamesListPage";
 import { OpeningCalendarPage } from "./pages/OpeningCalendarPage";
+import { ComingSoonPage } from "./pages/ComingSoonPage";
 import { CourseListPage } from "./pages/CourseListPage";
 import { Home } from "./pages/Home";
 import { CoursePage } from "./pages/CoursePage";
@@ -50,6 +51,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="word-search/:gameId" element={<WordSearchGame />} />
           <Route path="bingo" element={<BingoTeacher />} />
           <Route path="bingo/:gameId" element={<BingoGame />} />
+                    <Route path="thu-vien/hoc-lieu/so-cap" element={<ComingSoonPage />} />
+          <Route path="thu-vien/hoc-lieu/trung-cap" element={<ComingSoonPage />} />
+          <Route path="thu-vien/hoc-lieu/cao-cap" element={<ComingSoonPage />} />
+          <Route path="thu-vien/video-giang-day-thu" element={<ComingSoonPage />} />
+          <Route path="thu-vien/blog" element={<ComingSoonPage />} />
           <Route path="thu-vien" element={<DocumentsPage />} />
           <Route path="thu-vien/:id" element={<DocumentDetailPage />} />
           {/* Legacy redirect alias */}

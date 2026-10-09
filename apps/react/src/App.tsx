@@ -112,8 +112,8 @@ function LibraryDropdown() {
               </div>
             )}
           </div>
-          <a href="/thu-vien/video-giang-day-thu" target="_blank" rel="noreferrer" className="nav-dropdown-item" onClick={() => setOpen(false)}>Video giảng dạy thử</a>
-          <a href="/thu-vien/blog" target="_blank" rel="noreferrer" className="nav-dropdown-item" onClick={() => setOpen(false)}>Blog</a>
+          <Link to="/thu-vien/video-giang-day-thu" target="_blank" className="nav-dropdown-item" onClick={() => setOpen(false)}>Video giảng dạy thử</Link>
+          <Link to="/thu-vien/blog" target="_blank" className="nav-dropdown-item" onClick={() => setOpen(false)}>Blog</Link>
           <div className="nav-dropdown-divider" style={{ margin: '8px 0', borderTop: '1px solid var(--c-divider)' }} />
           <a href="https://thuchanh.hanngusotam.com" target="_blank" rel="noreferrer" className="nav-dropdown-item" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(false)}>Bài tập trực tuyến <svg style={{ marginLeft: 4 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
           <a href="https://giaovu.hanngusotam.com" target="_blank" rel="noreferrer" className="nav-dropdown-item" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(false)}>Hỗ trợ giáo viên <svg style={{ marginLeft: 4 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
